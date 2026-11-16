@@ -69,7 +69,11 @@ export const BLOCKS = [
   ["queued-stack", "Queued message stack (queued-stack)"],
   ["dialog-sidebar", "Settings Dialog (dialog-sidebar)"],
 ];
-export const PAGES = [["sidebar-app", "App Shell (sidebar-app)"]];
+export const PAGES = [
+  ["sidebar-app", "App Shell (sidebar-app)"],
+  ["login", "Login (login)"],
+  ["register", "Register (register)"],
+];
 
 const src = readFileSync(SRC, "utf8");
 

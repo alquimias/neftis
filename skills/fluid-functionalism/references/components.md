@@ -106,6 +106,8 @@ Compositions that fill the screen. The same install as a component.
 | Page                                                             | Registry name                      | What it is                                                                                                               | Craft                              |
 | ---------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
 | [App Shell](https://www.fluidfunctionalism.com/docs/sidebar-app) | `sidebar-app` · `base/sidebar-app` | A complete app shell: workspace header, search field, collapsible sections with badges, user footer, and an inset topbar | [App Shell](craft.md#sidebar-app) |
+| [Login](https://www.fluidfunctionalism.com/docs/login)           | `login` · `base/login`             | A sign-in screen: email, password, remember me, and a link to create an account                                         | [Login](craft.md#login)               |
+| [Register](https://www.fluidfunctionalism.com/docs/register)     | `register` · `base/register`       | An account screen: name, email, password, and a link back to sign in                                                     | [Register](craft.md#register)         |
 
 ## Blocks
 
@@ -127,6 +129,7 @@ part itself.
 ## Choosing quickly
 
 - App shell / navigation → `sidebar-app` page (or `sidebar` to compose your own)
+- Sign in / create an account → `login` and `register` pages
 - Settings surface → `dialog-sidebar` block
 - Chat / AI interface → `input-message` + `chat-message` + `thinking-steps` +
   `thinking-indicator` (+ `queued-stack`, `ask-user-questions`), and

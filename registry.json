@@ -2150,6 +2150,75 @@
       "categories": ["blocks"]
     },
     {
+      "name": "login",
+      "type": "registry:block",
+      "title": "Login",
+      "description": "A sign-in screen: email, password, remember me, and a link to create an account.",
+      "registryDependencies": [
+        "utils",
+        "font-weight",
+        "shape-context",
+        "size-context",
+        "button",
+        "input",
+        "field",
+        "checkbox"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/auth/auth-panel.tsx",
+          "type": "registry:component",
+          "target": "components/auth/auth-panel.tsx"
+        },
+        {
+          "path": "registry/blocks/auth/login-page.tsx",
+          "type": "registry:component",
+          "target": "components/auth/login-page.tsx"
+        },
+        {
+          "path": "registry/blocks/auth/login-route.tsx",
+          "type": "registry:page",
+          "target": "app/login/page.tsx"
+        }
+      ],
+      "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/login. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#login.",
+      "categories": ["blocks"]
+    },
+    {
+      "name": "register",
+      "type": "registry:block",
+      "title": "Register",
+      "description": "An account screen: name, email, password, and a link back to sign in.",
+      "registryDependencies": [
+        "utils",
+        "font-weight",
+        "shape-context",
+        "size-context",
+        "button",
+        "input",
+        "field"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/auth/auth-panel.tsx",
+          "type": "registry:component",
+          "target": "components/auth/auth-panel.tsx"
+        },
+        {
+          "path": "registry/blocks/auth/register-page.tsx",
+          "type": "registry:component",
+          "target": "components/auth/register-page.tsx"
+        },
+        {
+          "path": "registry/blocks/auth/register-route.tsx",
+          "type": "registry:page",
+          "target": "app/register/page.tsx"
+        }
+      ],
+      "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/register. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#register.",
+      "categories": ["blocks"]
+    },
+    {
       "name": "dialog-sidebar",
       "type": "registry:block",
       "title": "Settings Dialog (Sidebar in a Dialog)",

@@ -1828,6 +1828,55 @@ export default function Page() {
       'SidebarInsetTopbar: children? (content after the trigger), className?.',
     ],
   },
+  login: {
+    craft: [
+      "The screen is one column until this element's own container reaches the xl step. Then a muted panel takes the trailing two fifths (w-2/5), with a hairline on its leading edge. Below that width the form is the whole screen, so a phone and a narrow frame keep the same column.",
+      "The mark is the first letter of brand (default Acme), drawn on the button radius from the shape ladder and hidden from assistive tech. Replace that element to use a real logo. The line under it is the title role at semibold.",
+      "The page title is the display role at semibold. The description and the footer line are body, muted. The link in the footer is foreground and semibold. Sizes come from the type scale.",
+      "Fields stay quiet until submit. A missing password or a bad email sets data-invalid on that Field and mounts FieldError under the control. Editing the field clears only its message. emailError is the same check Register uses.",
+      "Remember me is a horizontal Field, so the checkbox and its label are one target. Sign in is a full-width primary button. pending disables the fields and sets the button's loading spinner.",
+      "Create an account is an anchor. registerHref defaults to /register. onSubmit receives { email, password, remember } only after both fields pass, with the email trimmed.",
+    ],
+    usage: `import { LoginPage } from "#components/auth/login-page";
+
+export default function Page() {
+  return <LoginPage />;
+}
+// onSubmit receives { email, password, remember } once the fields are valid.
+// registerHref defaults to "/register".`,
+    props: [
+      'brand?: string (default "Acme"). The word whose first letter becomes the mark on the quiet panel.',
+      'registerHref?: string (default "/register"). Where "Create an account" goes.',
+      'aside?: string (default "Pick up the workspace where you left it."). The line at the bottom of the quiet panel.',
+      'pending?: boolean (default false). Disables the fields and shows the button spinner.',
+      'className?: string. Merged onto the screen. Pass h-full min-h-0 to fill a frame instead of the viewport.',
+      'onSubmit?: (values: { email: string; password: string; remember: boolean }) => void. Called after the fields pass.',
+    ],
+  },
+  register: {
+    craft: [
+      "Register uses the same AuthPanel as Login, so the split, the mark, and the type stay one place. Change the shell once and both screens follow.",
+      "The fields are name, email, and password. Email uses the shared emailError check. The password field asks the browser for a new password (autocomplete new-password). The submitted name and email are trimmed.",
+      "Remember me stays on Login. This screen collects the account itself: name, email, and password.",
+      "Create account is a full-width primary button. pending disables the fields and sets its spinner. The way back is an anchor, loginHref, default /login.",
+      "onSubmit runs only when name, email, and password are all clean, with { name, email, password }.",
+    ],
+    usage: `import { RegisterPage } from "#components/auth/register-page";
+
+export default function Page() {
+  return <RegisterPage />;
+}
+// onSubmit receives { name, email, password } once the fields are valid.
+// loginHref defaults to "/login".`,
+    props: [
+      'brand?: string (default "Acme"). The word whose first letter becomes the mark on the quiet panel.',
+      'loginHref?: string (default "/login"). Where "Sign in" goes.',
+      'aside?: string (default "The workspace starts with this account."). The line at the bottom of the quiet panel.',
+      'pending?: boolean (default false). Disables the fields and shows the button spinner.',
+      'className?: string. Merged onto the screen. Pass h-full min-h-0 to fill a frame instead of the viewport.',
+      'onSubmit?: (values: { name: string; email: string; password: string }) => void. Called after the fields pass.',
+    ],
+  },
   'dialog-sidebar': {
     craft: [
       'The xl Dialog (880px; 800 compact) becomes a layout canvas: p-0, flex, and a FIXED height (min(640px, 100dvh - 4rem)) so the panel scrolls inside it rather than the dialog growing.',

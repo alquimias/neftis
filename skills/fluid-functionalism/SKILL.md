@@ -238,7 +238,8 @@ npx shadcn@latest add @fluid/dialog --overwrite
 ```
 
 Prefer a **page** when the ask is a whole screen. `sidebar-app` (the app
-shell) installs as one item and fills the viewport. Prefer a **block** when
+shell), `login`, and `register` each install as one item and fill the
+viewport. Prefer a **block** when
 one matches a composition that is not itself the screen: `dialog-sidebar`
 (settings dialog), `queued-stack` (queued composer messages). Both install
 as one item with every component they use, already composed.

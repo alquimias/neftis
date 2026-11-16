@@ -58,6 +58,8 @@ Systems first — their craft applies across every component below.
 - [ThinkingSteps](#thinking-steps)
 - [Tooltip](#tooltip)
 - [App Shell (sidebar-app)](#sidebar-app)
+- [Login (login)](#login)
+- [Register (register)](#register)
 - [Queued message stack (queued-stack)](#queued-stack)
 - [Settings Dialog (dialog-sidebar)](#dialog-sidebar)
 
@@ -843,6 +845,27 @@ Systems first — their craft applies across every component below.
 - The user footer rides the shared axes: 20px avatar pulled onto the rows' leading icon axis, trailing glyph on the action axis, and its menu opens upward on the shared popup grid — sized to the trigger +10px and shifted onto the row's edge so the popup's labels line up with the trigger row exactly.
 - The inset topbar's trigger hides while the sidebar is only peeked (the overlay covers it anyway) and fades back in slightly late after a pin (200ms delay) so it appears at its settled position instead of riding the inset's slide.
 - Collapsed means gone — no icon rail. peek='hover' floats the real sidebar, labels and all, the moment the cursor reaches the collapsed edge; pinning from a peek never shifts the rows. Desktop open state persists to the sidebar_state cookie — read it in a server layout for a flicker-free default.
+
+<a id="login"></a>
+
+## Login (login)
+
+- The screen is one column until this element's own container reaches the xl step. Then a muted panel takes the trailing two fifths (w-2/5), with a hairline on its leading edge. Below that width the form is the whole screen, so a phone and a narrow frame keep the same column.
+- The mark is the first letter of brand (default Acme), drawn on the button radius from the shape ladder and hidden from assistive tech. Replace that element to use a real logo. The line under it is the title role at semibold.
+- The page title is the display role at semibold. The description and the footer line are body, muted. The link in the footer is foreground and semibold. Sizes come from the type scale.
+- Fields stay quiet until submit. A missing password or a bad email sets data-invalid on that Field and mounts FieldError under the control. Editing the field clears only its message. emailError is the same check Register uses.
+- Remember me is a horizontal Field, so the checkbox and its label are one target. Sign in is a full-width primary button. pending disables the fields and sets the button's loading spinner.
+- Create an account is an anchor. registerHref defaults to /register. onSubmit receives { email, password, remember } only after both fields pass, with the email trimmed.
+
+<a id="register"></a>
+
+## Register (register)
+
+- Register uses the same AuthPanel as Login, so the split, the mark, and the type stay one place. Change the shell once and both screens follow.
+- The fields are name, email, and password. Email uses the shared emailError check. The password field asks the browser for a new password (autocomplete new-password). The submitted name and email are trimmed.
+- Remember me stays on Login. This screen collects the account itself: name, email, and password.
+- Create account is a full-width primary button. pending disables the fields and sets its spinner. The way back is an anchor, loginHref, default /login.
+- onSubmit runs only when name, email, and password are all clean, with { name, email, password }.
 
 # Blocks
 

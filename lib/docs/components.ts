@@ -402,6 +402,17 @@ export const pageList: ComponentEntry[] = [
     description:
       'A complete app shell: workspace header, search field, collapsible sections with badges, user footer, and an inset topbar.',
   },
+  {
+    slug: 'login',
+    name: 'Login',
+    description:
+      'A sign-in screen: email, password, remember me, and a link to create an account.',
+  },
+  {
+    slug: 'register',
+    name: 'Register',
+    description: 'An account screen: name, email, password, and a link back to sign in.',
+  },
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 /** Combined prev/next navigation order for doc pages.

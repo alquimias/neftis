@@ -159,6 +159,8 @@ Compositions that fill the screen. Install with `npx shadcn@latest add @fluid/<n
 | Page                                                                 | Registry name                      | What it is                                                                                                               |
 | -------------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | [App Shell](https://www.fluidfunctionalism.com/docs/sidebar-app)     | `sidebar-app` · `base/sidebar-app` | A complete app shell: workspace header, search field, collapsible sections with badges, user footer, and an inset topbar |
+| [Login](https://www.fluidfunctionalism.com/docs/login)               | `login` · `base/login`             | A sign-in screen: email, password, remember me, and a link to create an account                                         |
+| [Register](https://www.fluidfunctionalism.com/docs/register)         | `register` · `base/register`       | An account screen: name, email, password, and a link back to sign in                                                     |
 
 ## Systems
 

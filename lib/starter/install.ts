@@ -20,10 +20,11 @@ import { ACCENT_PRESETS, accentCss } from '#lib/accent';
 
 export const SITE = 'https://www.fluidfunctionalism.com';
 
-/** Registry items the starter leaves out: `sidebar-app` writes its own page
- *  route (/sidebar), and the starter generates the same shell files under
- *  the same names for its home page instead. */
-const EXCLUDED = new Set(['sidebar-app']);
+/** Registry items the starter leaves out. Each writes its own page route
+ *  (`/sidebar`, `/login`, `/register`). The starter generates the app shell
+ *  for its home page itself, and leaves the auth screens to be installed
+ *  on their own. */
+const EXCLUDED = new Set(['sidebar-app', 'login', 'register']);
 
 const ICON_SETS: Record<
   Exclude<StarterSettings['icons'], 'lucide'>,
