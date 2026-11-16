@@ -108,15 +108,27 @@ describe("docs pages", () => {
   });
 
   it("every public docs page is listed; the skill page is navigation only", async () => {
-    const { componentList, componentEntries, UNLISTED_SLUGS, systemList, systemNavList } = await import(
-      "../lib/docs/components.ts"
-    );
+    const {
+      componentList,
+      componentEntries,
+      componentNavList,
+      compoundList,
+      COMPOUND_SLUGS,
+      UNLISTED_SLUGS,
+      systemList,
+      systemNavList,
+    } = await import("../lib/docs/components.ts");
     const listed = new Set([...componentEntries, ...systemList].map((e) => e.slug));
     // An unlisted page has its entry but stays out of navigation.
     for (const slug of UNLISTED_SLUGS) {
       expect(listed.has(slug), `${slug} is unlisted but has no entry`).toBe(true);
       expect(componentList.some((e) => e.slug === slug)).toBe(false);
     }
+    for (const slug of COMPOUND_SLUGS) {
+      expect(listed.has(slug), `${slug} is marked compound but has no entry`).toBe(true);
+    }
+    expect(componentNavList.length + compoundList.length).toBe(componentList.length);
+    expect(componentNavList.some((e) => COMPOUND_SLUGS.has(e.slug))).toBe(false);
     const pages = readdirSync(join(ROOT, "app/docs"), { withFileTypes: true })
       .filter((e) => e.isDirectory() && existsSync(join(ROOT, "app/docs", e.name, "page.tsx")))
       .map((e) => e.name);

@@ -12,9 +12,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { Button } from '../ui/button';
-import { InputField, InputGroup } from '../ui/input-group';
+import { InputField, InputGroup } from '../compound/input-group';
 import { Skeleton } from '../ui/skeleton';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../compound/table';
 import { cn } from '../../lib/utils';
 
 declare module '@tanstack/react-table' {

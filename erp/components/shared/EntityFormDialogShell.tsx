@@ -1,7 +1,7 @@
 import type { FormEvent, ReactNode } from 'react';
 import { Pencil } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '../compound/dialog';
 import type { IconComponent } from '../../lib/icon-context';
 
 export interface EntityFormDialogShellProps {

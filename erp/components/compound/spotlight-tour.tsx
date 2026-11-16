@@ -21,8 +21,8 @@ import { ArrowRight } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useShape } from '../../lib/shape-context';
 import { spring } from '../../lib/springs';
-import { Button } from './button';
-import { CarouselDots } from './carousel-dots';
+import { Button } from '../ui/button';
+import { CarouselDots } from '../ui/carousel-dots';
 
 const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 

@@ -68,7 +68,7 @@ Run the registry build script (`npm run registry:build`) to generate the JSON fi
 
 ### 4. Component List Entry (`lib/docs/components.ts`)
 
-Add an entry to `componentList`:
+Add an entry to `componentEntries`:
 
 ```ts
 { slug: "component-name", name: "ComponentName", description: "Short description." }
@@ -76,6 +76,7 @@ Add an entry to `componentList`:
 
 - `slug` must match the folder name under `app/docs/`
 - `description` should be concise (one sentence)
+- If the public API is a family of parts you nest, add the slug to `COMPOUND_SLUGS`. The page then joins the Compounds group (sidebar, ⌘K, README, llms.txt). A single element stays in Components.
 
 ### 5. Documentation Page (`app/docs/<component-name>/page.tsx`)
 
@@ -149,7 +150,7 @@ If the component animates, add it to the `REFERENCE_TIERS` array on the Motion p
 
 ### 7. README (`README.md`)
 
-Add a row to the Components table (or Systems / Blocks) with the docs link, the registry name(s), and a one-line description. A dual-flavor component lists both names: `` `name` · `base/name` ``. `tests/readme-consistency.test.mjs` fails when a docs entry has no README link or a listed name has no `public/r` payload. The README carries no roster counts, so nothing else in its copy changes; [README-guidelines.md](README-guidelines.md) says what the file carries and what it defers.
+Add a row to the Components table, the Compounds table, or Systems / Blocks, with the docs link, the registry name(s), and a one-line description. A compound (its slug is in `COMPOUND_SLUGS`) goes in the Compounds table. A dual-flavor component lists both names: `` `name` · `base/name` ``. `tests/readme-consistency.test.mjs` fails when a docs entry has no README link or a listed name has no `public/r` payload. The README carries no roster counts, so nothing else in its copy changes; [README-guidelines.md](README-guidelines.md) says what the file carries and what it defers.
 
 ---
 
@@ -334,14 +335,14 @@ lib/docs/
   ComponentPreview.tsx         ← preview + code tabs
   PropsTable.tsx               ← props documentation table
   DocPage.tsx                  ← DocPage + DocSection wrappers
-  components.ts                ← component list for sidebar nav
+  components.ts                ← component list; COMPOUND_SLUGS picks the Compounds group
   highlight.ts                 ← Shiki syntax highlighting
   icon-map.tsx                 ← docs-only multi-library icon map (Tabler/Phosphor/…)
   icon-playground.tsx          ← docs-only library switcher provider + "I" shortcut
   shape-shortcut.tsx           ← docs-only "R" radius shortcut
 
 app/docs/
-  layout.tsx                   ← sidebar layout (reads componentList)
+  layout.tsx                   ← sidebar layout (reads docOrder)
   page.tsx                     ← index page (lists all components)
   <component-name>/page.tsx    ← individual doc pages
 

@@ -18,7 +18,7 @@ interface DocPageProps {
   description: ReactNode;
   /** A short paragraph under the description, read before the install. */
   intro?: ReactNode;
-  /** Slug used for prev/next navigation (must match a `componentList` entry). */
+  /** Slug used for prev/next navigation (must match a `docOrder` entry). */
   slug?: string;
   /** Registry slug used for the auto-injected Installation snippet. Defaults to
    *  the page's `systemList` entry, then to `slug`. System pages set it there

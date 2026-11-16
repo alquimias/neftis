@@ -30,7 +30,7 @@ import {
   SidebarMenuButton,
   SidebarMenuBadge,
 } from '#components/flavored/sidebar';
-import { componentList, systemNavList } from '#lib/docs/components';
+import { componentNavList, compoundList, docOrder, systemNavList } from '#lib/docs/components';
 import { useReleaseMarks } from '#lib/changelog/marks';
 import {
   useIcons,
@@ -122,13 +122,7 @@ const PAGES: { href: string; label: string; icon: IconName; keywords: string[] }
   },
 ];
 
-const PAGE_ORDER = [
-  '/',
-  '/docs',
-  '/changelog',
-  ...systemNavList.map((s) => `/docs/${s.slug}`),
-  ...componentList.map((c) => `/docs/${c.slug}`),
-];
+const PAGE_ORDER = ['/', '/docs', '/changelog', ...docOrder.map((entry) => `/docs/${entry.slug}`)];
 
 const THEMES: { value: Theme; label: string; icon: IconName }[] = [
   { value: 'system', label: 'Follow system', icon: 'monitor' },
@@ -248,7 +242,9 @@ export function SiteCommandMenu() {
     [remember, router],
   );
 
-  const currentComponent = componentList.find((c) => `/docs/${c.slug}` === pathname);
+  const currentComponent = [...componentNavList, ...compoundList].find(
+    (c) => `/docs/${c.slug}` === pathname,
+  );
   const pageIndex = PAGE_ORDER.indexOf(pathname);
   // New and Updated follow the latest changelog release, like the sidebar.
   const { isNew, isUpdated } = useReleaseMarks();
@@ -277,7 +273,7 @@ export function SiteCommandMenu() {
         group: 'System',
         onSelect: () => go(`/docs/${s.slug}`),
       })),
-      ...componentList.map((c) => ({
+      ...componentNavList.map((c) => ({
         kind: 'page' as const,
         value: `/docs/${c.slug}`,
         label: c.name,
@@ -285,6 +281,16 @@ export function SiteCommandMenu() {
         description: mark(c.slug),
         keywords: [c.slug, ...c.description.split(/\W+/)],
         group: 'Components',
+        onSelect: () => go(`/docs/${c.slug}`),
+      })),
+      ...compoundList.map((c) => ({
+        kind: 'page' as const,
+        value: `/docs/${c.slug}`,
+        label: c.name,
+        action: `Open ${c.name}`,
+        description: mark(c.slug),
+        keywords: [c.slug, ...c.description.split(/\W+/)],
+        group: 'Compounds',
         onSelect: () => go(`/docs/${c.slug}`),
       })),
     ];

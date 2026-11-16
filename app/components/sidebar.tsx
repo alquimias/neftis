@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from '#components/flavored/sidebar';
-import { componentList, systemNavList } from '#lib/docs/components';
+import { componentNavList, compoundList, systemNavList } from '#lib/docs/components';
 import { KIND_DOT } from '#lib/changelog/kind-style';
 import { useReleaseMarks } from '#lib/changelog/marks';
 import { GitHubStarButton, SettingsContent } from '#app/components/right-panel';
@@ -50,7 +50,7 @@ function NavGroup({
   // Landed since the latest release and listed ahead of the next.
   const { isRecent } = useReleaseMarks();
   return (
-    // A labelled group (System, Components) gets 16px above it instead of
+    // A labelled group (System, Components, Compounds) gets 16px above it instead of
     // the group's 8px, so each section starts clear of the one before.
     <SidebarGroup className={label ? 'pt-4' : undefined}>
       {label && (
@@ -157,9 +157,15 @@ export function SiteSidebar() {
         />
         <NavGroup
           label="Components"
-          entries={componentList}
+          entries={componentNavList}
           pathname={pathname}
           ariaLabel="Component navigation"
+        />
+        <NavGroup
+          label="Compounds"
+          entries={compoundList}
+          pathname={pathname}
+          ariaLabel="Compound navigation"
         />
       </SidebarContent>
     </Sidebar>

@@ -17,15 +17,9 @@ import { RightPanel } from '#app/components/right-panel';
 import { RightRailProvider } from '#lib/right-rail';
 import { ReleaseMarksProvider, type ReleaseMarks } from '#lib/changelog/marks';
 import { showShortcutToast } from '#lib/docs/settings-toast';
-import { systemNavList, componentList } from '#lib/docs/components';
+import { docOrder } from '#lib/docs/components';
 
-const pageOrder = [
-  '/',
-  '/docs',
-  '/changelog',
-  ...systemNavList.map((s) => `/docs/${s.slug}`),
-  ...componentList.map((c) => `/docs/${c.slug}`),
-];
+const pageOrder = ['/', '/docs', '/changelog', ...docOrder.map((entry) => `/docs/${entry.slug}`)];
 
 /** Toasts the sidebar's "[" toggle the way the settings shortcuts toast
  *  theirs: a bare "[" press arms a short window, and the provider's own

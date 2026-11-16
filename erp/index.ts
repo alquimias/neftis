@@ -23,44 +23,44 @@ export * from './components/shared/StaggerReveal';
 export * from './components/shared/StatCard';
 export * from './components/shared/TableRowActionsMenu';
 export * from './components/shared/pageTransitionLoaderConfig';
-export * from './components/ui/accordion';
-export * from './components/ui/alert';
-export * from './components/ui/avatar';
+export * from './components/compound/accordion';
+export * from './components/compound/alert';
+export * from './components/compound/avatar';
 export * from './components/ui/badge';
-export * from './components/ui/breadcrumb';
+export * from './components/compound/breadcrumb';
 export * from './components/ui/button';
-export * from './components/ui/card';
+export * from './components/compound/card';
 export * from './components/ui/carousel-dots';
-export * from './components/ui/chart';
+export * from './components/compound/chart';
 export * from './components/ui/checkbox';
-export * from './components/ui/dialog';
+export * from './components/compound/dialog';
 export * from './components/ui/dotm-square-3';
 export * from './components/ui/dotm-square-5';
-export * from './components/ui/dropdown';
+export * from './components/compound/dropdown';
 export {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './components/ui/dropdown-menu';
+} from './components/compound/dropdown-menu';
 export * from './components/ui/form-input-field';
-export * from './components/ui/input-group';
+export * from './components/compound/input-group';
 export * from './components/ui/input';
 export * from './components/ui/label';
-export * from './components/ui/menu-item';
+export * from './components/compound/menu-item';
 export * from './components/ui/progress';
-export * from './components/ui/scroll-area';
-export * from './components/ui/select';
+export * from './components/compound/scroll-area';
+export * from './components/compound/select';
 export * from './components/ui/separator';
-export * from './components/ui/sheet';
-export * from './components/ui/sidebar';
+export * from './components/compound/sheet';
+export * from './components/compound/sidebar';
 export * from './components/ui/skeleton';
-export * from './components/ui/spotlight-tour';
-export * from './components/ui/table';
-export * from './components/ui/tabs';
+export * from './components/compound/spotlight-tour';
+export * from './components/compound/table';
+export * from './components/compound/tabs';
 export * from './components/ui/textarea';
-export * from './components/ui/tooltip';
+export * from './components/compound/tooltip';
 export * from './hooks/use-animate-when-visible';
 export * from './hooks/use-controlled-state';
 export * from './hooks/use-data-state';

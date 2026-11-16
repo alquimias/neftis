@@ -6,7 +6,7 @@ import {
   InputFileField,
   type InputFieldProps,
   type InputFileFieldProps,
-} from './input-group';
+} from '../compound/input-group';
 
 type FormInputFieldProps<T extends FieldValues> = Omit<
   InputFieldProps,

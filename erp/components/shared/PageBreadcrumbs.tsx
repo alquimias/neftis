@@ -8,7 +8,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '../ui/breadcrumb';
+} from '../compound/breadcrumb';
 
 export interface BreadcrumbTrailItem {
   label: string;

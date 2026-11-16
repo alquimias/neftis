@@ -11,6 +11,7 @@
 // Server-safe on purpose: no React, no "use client" imports.
 import {
   componentEntries,
+  COMPOUND_SLUGS,
   UNLISTED_SLUGS,
   systemList,
   skillEntry,
@@ -40,14 +41,21 @@ const SUMMARY =
 const FONT_LINE =
   'Load Inter with its `opsz` axis as well as `wght` (with next/font: `Inter({ subsets: ["latin"], axes: ["opsz"] })`), so labels change weight without changing width.';
 
-type DocEntry = (SystemEntry | ComponentEntry) & { kind: 'system' | 'component' | 'skill' };
+type DocEntry = (SystemEntry | ComponentEntry) & {
+  kind: 'system' | 'component' | 'compound' | 'skill';
+};
 
 /** Every doc page that has a Markdown version, in sidebar order. */
 export const MARKDOWN_PAGES: DocEntry[] = [
   ...[...systemList, skillEntry]
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((e) => ({ ...e, kind: e === skillEntry ? ('skill' as const) : ('system' as const) })),
-  ...componentEntries.map((e) => ({ ...e, kind: 'component' as const })),
+  ...componentEntries
+    .filter((e) => !COMPOUND_SLUGS.has(e.slug))
+    .map((e) => ({ ...e, kind: 'component' as const })),
+  ...componentEntries
+    .filter((e) => COMPOUND_SLUGS.has(e.slug))
+    .map((e) => ({ ...e, kind: 'compound' as const })),
 ];
 
 /** The pages the indexes (llms.txt, llms-full.txt) list: unlisted ones keep
@@ -113,11 +121,15 @@ export function llmsTxt(): string {
   lines.push('');
 
   lines.push('## System', '');
-  for (const e of LISTED_PAGES.filter((p) => p.kind !== 'component')) {
+  for (const e of LISTED_PAGES.filter((p) => p.kind === 'system' || p.kind === 'skill')) {
     lines.push(`- [${e.name}](${markdownUrl(e.slug)}): ${plainDescription(e.description)}`);
   }
   lines.push('', '## Components', '');
   for (const e of LISTED_PAGES.filter((p) => p.kind === 'component')) {
+    lines.push(`- [${e.name}](${markdownUrl(e.slug)}): ${plainDescription(e.description)}`);
+  }
+  lines.push('', '## Compounds', '');
+  for (const e of LISTED_PAGES.filter((p) => p.kind === 'compound')) {
     lines.push(`- [${e.name}](${markdownUrl(e.slug)}): ${plainDescription(e.description)}`);
   }
   lines.push('', '## Optional', '');

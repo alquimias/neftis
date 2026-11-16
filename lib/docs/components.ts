@@ -326,10 +326,53 @@ export const componentEntries: ComponentEntry[] = [
  *  README, and noindex. Delete a slug here to launch it. */
 export const UNLISTED_SLUGS: ReadonlySet<string> = new Set(['data-table']);
 
-/** The listed components: what navigation, search and indexes show. */
-export const componentList: ComponentEntry[] = componentEntries.filter(
+/**
+ * Public API is a family of parts you nest. The parent holds the state and
+ * each part reads it (`<Select><SelectTrigger/><SelectContent/></Select>`).
+ * A single element stays in the Components group. `data-table` is unlisted
+ * and lands here when it launches.
+ */
+export const COMPOUND_SLUGS: ReadonlySet<string> = new Set([
+  'accordion',
+  'banner',
+  'breadcrumb',
+  'card',
+  'checkbox-group',
+  'color-picker',
+  'combobox',
+  'command-menu',
+  'context-menu',
+  'data-table',
+  'dialog',
+  'dropdown',
+  'field',
+  'input-group',
+  'radio-group',
+  'select',
+  'sidebar',
+  'table',
+  'tabs',
+  'thinking-steps',
+  'tooltip',
+]);
+
+const listedEntries: ComponentEntry[] = componentEntries.filter(
   (c) => !UNLISTED_SLUGS.has(c.slug),
 );
+
+/** The sidebar's Compounds group, alphabetical. */
+export const compoundList: ComponentEntry[] = listedEntries.filter((c) =>
+  COMPOUND_SLUGS.has(c.slug),
+);
+
+/** The sidebar's Components group: one element each, alphabetical. */
+export const componentNavList: ComponentEntry[] = listedEntries.filter(
+  (c) => !COMPOUND_SLUGS.has(c.slug),
+);
+
+/** Every listed component page, both groups. Showcase, compare, search
+ *  indexes and the README link check read this. */
+export const componentList: ComponentEntry[] = listedEntries;
 
 /** The skill page. It sits with the systems in navigation but stays out of
  *  `systemList`: it is not a registry item, and `systemList` feeds the
@@ -349,8 +392,10 @@ export const systemNavList: SystemEntry[] = [...systemList, skillEntry].sort((a,
 
 /** Combined prev/next navigation order for doc pages.
  *  Used by DocPage's arrow nav. Keep in sync with the sidebar order in
- *  `app/components/sidebar.tsx` (Introduction → Changelog → systemNavList → componentList). */
+ *  `app/components/sidebar.tsx` (Introduction → Changelog → systemNavList →
+ *  componentNavList → compoundList). */
 export const docOrder: Array<{ slug: string; name: string }> = [
   ...systemNavList.map((s) => ({ slug: s.slug, name: s.name })),
-  ...componentList.map((c) => ({ slug: c.slug, name: c.name })),
+  ...componentNavList.map((c) => ({ slug: c.slug, name: c.name })),
+  ...compoundList.map((c) => ({ slug: c.slug, name: c.name })),
 ];

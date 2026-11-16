@@ -9,7 +9,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../ui/dialog';
+} from '../compound/dialog';
 import type { IconComponent } from '../../lib/icon-context';
 import { cn } from '../../lib/utils';
 

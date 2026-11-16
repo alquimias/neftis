@@ -1,5 +1,5 @@
 import { CircleAlert } from 'lucide-react';
-import { Alert, AlertDescription } from '../ui/alert';
+import { Alert, AlertDescription } from '../compound/alert';
 import { cn } from '../../lib/utils';
 
 export interface ErrorStateProps {

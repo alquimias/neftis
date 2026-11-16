@@ -4,7 +4,7 @@ import { AuthLoadingState } from '../shared/PageTransitionLoader';
 import { EmptyState } from '../shared/EmptyState';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
-import { InputField, InputGroup } from '../ui/input-group';
+import { InputField, InputGroup } from '../compound/input-group';
 import { LoginBrandIntro, type LoginBrand } from './LoginBrandIntro';
 import { LoginChangelogTimeline, type LoginChangelogUpdate } from './LoginChangelogTimeline';
 import { LoginScreenDivider } from './LoginScreenDivider';

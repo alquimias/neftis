@@ -27,6 +27,22 @@ describe("README", () => {
     }
   });
 
+  it("keeps single elements in Components and part families in Compounds", async () => {
+    const { componentNavList, compoundList } = await import("../lib/docs/components.ts");
+    const components = readme.split("## Components")[1].split("## Compounds")[0];
+    const compounds = readme.split("## Compounds")[1].split("## Systems")[0];
+    for (const entry of componentNavList) {
+      expect(components, `${entry.slug} left the Components table`).toContain(
+        `https://www.fluidfunctionalism.com/docs/${entry.slug})`
+      );
+    }
+    for (const entry of compoundList) {
+      expect(compounds, `${entry.slug} is not in the Compounds table`).toContain(
+        `https://www.fluidfunctionalism.com/docs/${entry.slug})`
+      );
+    }
+  });
+
   it("every registry name in a table cell resolves to a public/r payload", () => {
     // Table rows are `| [Name](url) | \`name\` · \`base/name\` | ... |`; the
     // second cell holds nothing but registry names.

@@ -30,7 +30,7 @@ import { useSize, useSizeVariant } from '../../lib/size-context';
 import { useIcon } from '../../lib/icon-context';
 import { useSurface, SurfaceProvider } from '../../lib/surface-context';
 import { surfaceClasses } from '../../lib/surface-classes';
-import { Button, type ButtonProps } from './button';
+import { Button, type ButtonProps } from '../ui/button';
 import { Tooltip } from './tooltip';
 
 // ─── Constants ───────────────────────────────────────────────────────────────

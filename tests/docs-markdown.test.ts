@@ -123,6 +123,7 @@ describe('llms.txt', () => {
   it('follows the llms.txt shape: H1, summary quote, sections of links', () => {
     expect(txt.startsWith('# Fluid Functionalism\n\n> ')).toBe(true);
     expect(txt).toContain('\n## Components\n');
+    expect(txt).toContain('\n## Compounds\n');
   });
 
   it("links every listed page's Markdown, and no unlisted one", () => {

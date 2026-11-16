@@ -2,8 +2,8 @@ import { createContext, useContext, type ComponentProps, type ReactNode } from '
 import { EllipsisVertical, Loader2 } from 'lucide-react';
 import type { IconComponent } from '../../lib/icon-context';
 import { Button } from '../ui/button';
-import { DropdownMenu, DropdownTrigger, DropdownContent, DropdownSeparator } from '../ui/dropdown';
-import { MenuItem } from '../ui/menu-item';
+import { DropdownMenu, DropdownTrigger, DropdownContent, DropdownSeparator } from '../compound/dropdown';
+import { MenuItem } from '../compound/menu-item';
 
 export type TableRowActionItem = {
   id: string;

@@ -29,7 +29,8 @@ the site.
 | Inter with its `opsz` axis                                    | `registry/default/lib/font-weight.ts`, `app/globals.css`                             | routine                                |
 | Copy prompt paragraph                                         | `lib/docs/install-prompt.ts`                                                         | routine                                |
 | Agent skill paragraph                                         | `skills/fluid-functionalism/SKILL.md`                                                | routine                                |
-| Components table                                              | `componentList` in `lib/docs/components.ts`                                          | test: every slug linked                |
+| Components table                                              | `componentNavList` in `lib/docs/components.ts`                                       | test: every slug linked in this table  |
+| Compounds table                                               | `compoundList` in `lib/docs/components.ts`                                           | test: every slug linked in this table  |
 | Systems table                                                 | `systemList` in `lib/docs/components.ts`; `installSlug` on each system page          | test                                   |
 | Blocks table: top-level compositions only                     | `registry:block` items in `registry.json`, minus the parts of `sidebar-app`          | test: names resolve                    |
 | Presets: the named playgrounds and the URL shapes             | `lib/preset/*-options.ts`, `app/r/preset/[code]/route.ts`                            | routine                                |

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { CardAction, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { CardAction, CardContent, CardHeader, CardTitle } from '../compound/card';
 import { CardBeamShell } from './CardBeamShell';
 import { ReelCounter } from './ReelCounter';
 
