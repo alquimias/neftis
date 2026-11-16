@@ -152,6 +152,14 @@ Components assembled from parts. The parent holds the state, and each part reads
 | [ThinkingSteps](https://www.fluidfunctionalism.com/docs/thinking-steps)         | `thinking-steps` · `base/thinking-steps`         | Chain-of-thought display with sequential animation and collapsible steps                                                                               |
 | [Tooltip](https://www.fluidfunctionalism.com/docs/tooltip)                      | `tooltip` · `base/tooltip`                       | Spring-based floating tooltip with configurable placement                                                                                              |
 
+## Pages
+
+Compositions that fill the screen. Install with `npx shadcn@latest add @fluid/<name>`, the same way as a component above.
+
+| Page                                                                 | Registry name                      | What it is                                                                                                               |
+| -------------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| [App Shell](https://www.fluidfunctionalism.com/docs/sidebar-app)     | `sidebar-app` · `base/sidebar-app` | A complete app shell: workspace header, search field, collapsible sections with badges, user footer, and an inset topbar |
+
 ## Systems
 
 The systems every component shares. Each installs as code, the same way.
@@ -172,7 +180,6 @@ Compositions that install as one item each, with every component they use.
 
 | Block                                                                         | Registry name                            | What it is                                                                                                               |
 | ----------------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| [App Sidebar](https://www.fluidfunctionalism.com/docs/sidebar)                | `sidebar-app` · `base/sidebar-app`       | A complete app shell: workspace header, search field, collapsible sections with badges, user footer, and an inset topbar |
 | [Settings Dialog](https://www.fluidfunctionalism.com/docs/dialog)             | `dialog-sidebar` · `base/dialog-sidebar` | The xl Dialog as a canvas, a Sidebar of sections down its left edge, and a scrolling panel of controls                   |
 | [Queued message stack](https://www.fluidfunctionalism.com/docs/input-message) | `queued-stack` · `base/queued-stack`     | Sonner-style stack of queued composer messages: fan out on hover, drag to reorder, morph into the sent message           |
 

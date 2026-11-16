@@ -55,7 +55,7 @@ describe("the craft reference covers every component", () => {
   it.each(docSlugs)("doc page %s has a section in build-skill-craft.mjs", (slug) => {
     expect(
       listed,
-      `add ["${slug}", "<DisplayName>"] to SYSTEMS, COMPONENTS or BLOCKS in scripts/build-skill-craft.mjs, or it never reaches craft.md`,
+      `add ["${slug}", "<DisplayName>"] to SYSTEMS, COMPONENTS, PAGES or BLOCKS in scripts/build-skill-craft.mjs, or it never reaches craft.md`,
     ).toContain(slug);
   });
 

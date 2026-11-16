@@ -99,27 +99,34 @@ Other installable libs and hooks (usually arrive as dependencies):
 `use-touch-primary`, `use-keyboard-nav-gate`, `use-merge-split` (the merged
 selected-background animation).
 
+## Pages
+
+Compositions that fill the screen. The same install as a component.
+
+| Page                                                             | Registry name                      | What it is                                                                                                               | Craft                              |
+| ---------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| [App Shell](https://www.fluidfunctionalism.com/docs/sidebar-app) | `sidebar-app` · `base/sidebar-app` | A complete app shell: workspace header, search field, collapsible sections with badges, user footer, and an inset topbar | [App Shell](craft.md#sidebar-app) |
+
 ## Blocks
 
-Compositions that install as one item, with every component they use.
+Compositions that install as one item, with every component they use. A composition that fills the screen is a page, above.
 
-| Block                                                                         | Registry name                            | What it is                                                                                                               | Craft                                      |
-| ----------------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
-| [App Sidebar](https://www.fluidfunctionalism.com/docs/sidebar)                | `sidebar-app` · `base/sidebar-app`       | A complete app shell: workspace header, search field, collapsible sections with badges, user footer, and an inset topbar | [App Sidebar](craft.md#sidebar-app)        |
-| [Settings Dialog](https://www.fluidfunctionalism.com/docs/dialog)             | `dialog-sidebar` · `base/dialog-sidebar` | The xl Dialog as a canvas, a Sidebar of sections down its left edge, and a scrolling panel of controls                   | [Settings Dialog](craft.md#dialog-sidebar) |
-| [Queued message stack](https://www.fluidfunctionalism.com/docs/input-message) | `queued-stack` · `base/queued-stack`     | Sonner-style stack of queued composer messages: fan out on hover, drag to reorder, morph into the sent message           | [Queued stack](craft.md#queued-stack)      |
+| Block                                                                         | Registry name                            | What it is                                                                                                     | Craft                                      |
+| ----------------------------------------------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| [Settings Dialog](https://www.fluidfunctionalism.com/docs/dialog)             | `dialog-sidebar` · `base/dialog-sidebar` | The xl Dialog as a canvas, a Sidebar of sections down its left edge, and a scrolling panel of controls         | [Settings Dialog](craft.md#dialog-sidebar) |
+| [Queued message stack](https://www.fluidfunctionalism.com/docs/input-message) | `queued-stack` · `base/queued-stack`     | Sonner-style stack of queued composer messages: fan out on hover, drag to reorder, morph into the sent message | [Queued stack](craft.md#queued-stack)      |
 
 Smaller sidebar blocks also install individually, and each has a Base UI
 flavor too: `sidebar-workspace-header` · `base/sidebar-workspace-header`,
 `sidebar-user-footer` · `base/sidebar-user-footer`, `sidebar-search-field` ·
 `base/sidebar-search-field`, `sidebar-inset-topbar` ·
 `base/sidebar-inset-topbar`. They are parts of the complete shell, so use the
-[App Sidebar craft](craft.md#sidebar-app) plus the installed source for the
+[App Shell craft](craft.md#sidebar-app) plus the installed source for the
 part itself.
 
 ## Choosing quickly
 
-- App shell / navigation → `sidebar-app` block (or `sidebar` to compose your own)
+- App shell / navigation → `sidebar-app` page (or `sidebar` to compose your own)
 - Settings surface → `dialog-sidebar` block
 - Chat / AI interface → `input-message` + `chat-message` + `thinking-steps` +
   `thinking-indicator` (+ `queued-stack`, `ask-user-questions`), and

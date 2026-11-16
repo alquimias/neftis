@@ -237,11 +237,13 @@ that work — review or diff instead of a blind pass.
 npx shadcn@latest add @fluid/dialog --overwrite
 ```
 
-Prefer a **block** when one matches the ask — `sidebar-app` (complete app
-shell), `dialog-sidebar` (settings dialog), `queued-stack` (queued composer
-messages) install as one item with every component they use, already composed.
+Prefer a **page** when the ask is a whole screen. `sidebar-app` (the app
+shell) installs as one item and fills the viewport. Prefer a **block** when
+one matches a composition that is not itself the screen: `dialog-sidebar`
+(settings dialog), `queued-stack` (queued composer messages). Both install
+as one item with every component they use, already composed.
 
-The full catalog — every component, compound, system, and block, with registry names,
+The full catalog — every component, compound, page, system, and block, with registry names,
 flavors, and what each does — is in
 [references/components.md](references/components.md). Read it when choosing
 what to install; guessing names wastes an install round-trip.

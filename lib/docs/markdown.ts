@@ -13,6 +13,7 @@ import {
   componentEntries,
   COMPOUND_SLUGS,
   UNLISTED_SLUGS,
+  pageList,
   systemList,
   skillEntry,
   type ComponentEntry,
@@ -42,7 +43,7 @@ const FONT_LINE =
   'Load Inter with its `opsz` axis as well as `wght` (with next/font: `Inter({ subsets: ["latin"], axes: ["opsz"] })`), so labels change weight without changing width.';
 
 type DocEntry = (SystemEntry | ComponentEntry) & {
-  kind: 'system' | 'component' | 'compound' | 'skill';
+  kind: 'system' | 'component' | 'compound' | 'page' | 'skill';
 };
 
 /** Every doc page that has a Markdown version, in sidebar order. */
@@ -56,6 +57,7 @@ export const MARKDOWN_PAGES: DocEntry[] = [
   ...componentEntries
     .filter((e) => COMPOUND_SLUGS.has(e.slug))
     .map((e) => ({ ...e, kind: 'compound' as const })),
+  ...pageList.map((e) => ({ ...e, kind: 'page' as const })),
 ];
 
 /** The pages the indexes (llms.txt, llms-full.txt) list: unlisted ones keep
@@ -132,6 +134,10 @@ export function llmsTxt(): string {
   for (const e of LISTED_PAGES.filter((p) => p.kind === 'compound')) {
     lines.push(`- [${e.name}](${markdownUrl(e.slug)}): ${plainDescription(e.description)}`);
   }
+  lines.push('', '## Pages', '');
+  for (const e of LISTED_PAGES.filter((p) => p.kind === 'page')) {
+    lines.push(`- [${e.name}](${markdownUrl(e.slug)}): ${plainDescription(e.description)}`);
+  }
   lines.push('', '## Optional', '');
   lines.push(
     `- [Every page in one file](${SITE}/llms-full.txt): this index followed by every page above`,
@@ -162,7 +168,7 @@ function pageMarkdown(entry: DocEntry): string {
   const lines: string[] = [];
   lines.push(`# ${name}`, '', `> ${plainDescription(entry.description)}`, '');
   lines.push(
-    `${entry.kind === 'system' ? 'A system' : 'A component'} of Fluid Functionalism, a shadcn/ui registry of animated React components. Live demos and playground: ${SITE}/docs/${slug}. Every page: ${SITE}/llms.txt`,
+    `${entry.kind === 'system' ? 'A system' : entry.kind === 'page' ? 'A page' : 'A component'} of Fluid Functionalism, a shadcn/ui registry of animated React components. Live demos and playground: ${SITE}/docs/${slug}. Every page: ${SITE}/llms.txt`,
     '',
   );
 

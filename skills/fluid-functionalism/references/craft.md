@@ -57,8 +57,8 @@ Systems first — their craft applies across every component below.
 - [ThinkingIndicator](#thinking-indicator)
 - [ThinkingSteps](#thinking-steps)
 - [Tooltip](#tooltip)
+- [App Shell (sidebar-app)](#sidebar-app)
 - [Queued message stack (queued-stack)](#queued-stack)
-- [App Sidebar (sidebar-app)](#sidebar-app)
 - [Settings Dialog (dialog-sidebar)](#dialog-sidebar)
 
 # Systems
@@ -830,6 +830,20 @@ Systems first — their craft applies across every component below.
 - `contentClassName` exists because Radix copies the content's z-index onto its popper wrapper: pass a z utility there to lift the whole tooltip above other fixed layers (default: the `--z-tooltip` step, 70); on Base UI the same prop lands on the Positioner instead. `className` styles the bubble itself.
 - `forceOpen` pins the tooltip open (or closed) over the hover/focus behavior — `onOpenChange` still reports the internal state before forceOpen is applied.
 
+# Pages
+
+<a id="sidebar-app"></a>
+
+## App Shell (sidebar-app)
+
+- While the sidebar is only peeked, the floating overlay covers the pointer's one way to pin it — so a SidebarTrigger takes the workspace tile's slot, positioned as a sibling over the row (never a button inside the row button). Trigger and tile cross-fade in place (opacity only, 80ms, nothing moves) and the row's constant padding keeps the name pinned on the rows' 32px text axis through the swap.
+- The overlaid trigger deliberately drops its hover fill (its box is off-axis from the tile slot; a background would read as a second, non-concentric rectangle) and pins its glyph to 16px. A container query hides the dropdown chevron once the row is too narrow to show a useful slice of the name.
+- Search sits on the menu rows' own rhythm: leading icon on the rows' 16px icon axis, text starting on the 32px text axis, and the field is composed with the 'New' action row as one block so it reads as the list's first row.
+- Shortcut chips wait invisible at the trailing edge (the search field's command-K, the New row's kbd chip) and fade in over 80ms on hover or focus-within, so the placeholder and label own the row at rest.
+- The user footer rides the shared axes: 20px avatar pulled onto the rows' leading icon axis, trailing glyph on the action axis, and its menu opens upward on the shared popup grid — sized to the trigger +10px and shifted onto the row's edge so the popup's labels line up with the trigger row exactly.
+- The inset topbar's trigger hides while the sidebar is only peeked (the overlay covers it anyway) and fades back in slightly late after a pin (200ms delay) so it appears at its settled position instead of riding the inset's slide.
+- Collapsed means gone — no icon rail. peek='hover' floats the real sidebar, labels and all, the moment the cursor reaches the collapsed edge; pinning from a peek never shifts the rows. Desktop open state persists to the sidebar_state cookie — read it in a server layout for a flicker-free default.
+
 # Blocks
 
 <a id="queued-stack"></a>
@@ -844,18 +858,6 @@ Systems first — their craft applies across every component below.
 - morphLayoutId shares a framer layoutId between a dispatching card and its sent bubble — but only for text-only cards (attachment layouts differ too much; those fade) and only while no drag is in progress (layout projection fights the animated y transform). The consumer clears the morph props ~450ms after dispatch so later transcript reflows don't re-fire it.
 - Edit (pencil, same as double-click) and remove buttons are hidden until hover — out of layout so the text gets the full card width — and always visible on touch; both stopPropagation on pointer-down so they never start a drag. Their tooltips share one TooltipGroup, so the bubble glides from Edit to Remove.
 - Attachment thumbnails and the +N tile derive their radius from the queue card's radius minus the actual 8px inset (~7px compact), so the leading nested corner remains concentric in both rounded and pill modes.
-
-<a id="sidebar-app"></a>
-
-## App Sidebar (sidebar-app)
-
-- While the sidebar is only peeked, the floating overlay covers the pointer's one way to pin it — so a SidebarTrigger takes the workspace tile's slot, positioned as a sibling over the row (never a button inside the row button). Trigger and tile cross-fade in place (opacity only, 80ms, nothing moves) and the row's constant padding keeps the name pinned on the rows' 32px text axis through the swap.
-- The overlaid trigger deliberately drops its hover fill (its box is off-axis from the tile slot; a background would read as a second, non-concentric rectangle) and pins its glyph to 16px. A container query hides the dropdown chevron once the row is too narrow to show a useful slice of the name.
-- Search sits on the menu rows' own rhythm: leading icon on the rows' 16px icon axis, text starting on the 32px text axis, and the field is composed with the 'New' action row as one block so it reads as the list's first row.
-- Shortcut chips wait invisible at the trailing edge (the search field's command-K, the New row's kbd chip) and fade in over 80ms on hover or focus-within, so the placeholder and label own the row at rest.
-- The user footer rides the shared axes: 20px avatar pulled onto the rows' leading icon axis, trailing glyph on the action axis, and its menu opens upward on the shared popup grid — sized to the trigger +10px and shifted onto the row's edge so the popup's labels line up with the trigger row exactly.
-- The inset topbar's trigger hides while the sidebar is only peeked (the overlay covers it anyway) and fades back in slightly late after a pin (200ms delay) so it appears at its settled position instead of riding the inset's slide.
-- Collapsed means gone — no icon rail. peek='hover' floats the real sidebar, labels and all, the moment the cursor reaches the collapsed edge; pinning from a peek never shifts the rows. Desktop open state persists to the sidebar_state cookie — read it in a server layout for a flicker-free default.
 
 <a id="dialog-sidebar"></a>
 

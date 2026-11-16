@@ -390,12 +390,27 @@ export const systemNavList: SystemEntry[] = [...systemList, skillEntry].sort((a,
   a.name.localeCompare(b.name),
 );
 
+/**
+ * A page fills the screen. It installs as one registry item and has its own
+ * doc page. A control you drop into a screen stays in Components or
+ * Compounds. A composition that is not itself the screen stays a block.
+ */
+export const pageList: ComponentEntry[] = [
+  {
+    slug: 'sidebar-app',
+    name: 'App Shell',
+    description:
+      'A complete app shell: workspace header, search field, collapsible sections with badges, user footer, and an inset topbar.',
+  },
+].sort((a, b) => a.name.localeCompare(b.name));
+
 /** Combined prev/next navigation order for doc pages.
  *  Used by DocPage's arrow nav. Keep in sync with the sidebar order in
  *  `app/components/sidebar.tsx` (Introduction → Changelog → systemNavList →
- *  componentNavList → compoundList). */
+ *  componentNavList → compoundList → pageList). */
 export const docOrder: Array<{ slug: string; name: string }> = [
   ...systemNavList.map((s) => ({ slug: s.slug, name: s.name })),
   ...componentNavList.map((c) => ({ slug: c.slug, name: c.name })),
   ...compoundList.map((c) => ({ slug: c.slug, name: c.name })),
+  ...pageList.map((p) => ({ slug: p.slug, name: p.name })),
 ];

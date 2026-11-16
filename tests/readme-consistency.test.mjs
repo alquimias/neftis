@@ -18,8 +18,8 @@ const readme = readFileSync(join(ROOT, "README.md"), "utf-8");
 
 describe("README", () => {
   it("links every component and system docs page", async () => {
-    const { componentList, systemList } = await import("../lib/docs/components.ts");
-    for (const entry of [...componentList, ...systemList]) {
+    const { componentList, pageList, systemList } = await import("../lib/docs/components.ts");
+    for (const entry of [...componentList, ...pageList, ...systemList]) {
       expect(
         readme.includes(`https://www.fluidfunctionalism.com/docs/${entry.slug})`),
         `README.md has no link to /docs/${entry.slug} (${entry.name})`
@@ -28,9 +28,10 @@ describe("README", () => {
   });
 
   it("keeps single elements in Components and part families in Compounds", async () => {
-    const { componentNavList, compoundList } = await import("../lib/docs/components.ts");
+    const { componentNavList, compoundList, pageList } = await import("../lib/docs/components.ts");
     const components = readme.split("## Components")[1].split("## Compounds")[0];
-    const compounds = readme.split("## Compounds")[1].split("## Systems")[0];
+    const compounds = readme.split("## Compounds")[1].split("## Pages")[0];
+    const pages = readme.split("## Pages")[1].split("## Systems")[0];
     for (const entry of componentNavList) {
       expect(components, `${entry.slug} left the Components table`).toContain(
         `https://www.fluidfunctionalism.com/docs/${entry.slug})`
@@ -38,6 +39,11 @@ describe("README", () => {
     }
     for (const entry of compoundList) {
       expect(compounds, `${entry.slug} is not in the Compounds table`).toContain(
+        `https://www.fluidfunctionalism.com/docs/${entry.slug})`
+      );
+    }
+    for (const entry of pageList) {
+      expect(pages, `${entry.slug} is not in the Pages table`).toContain(
         `https://www.fluidfunctionalism.com/docs/${entry.slug})`
       );
     }

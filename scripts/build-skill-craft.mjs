@@ -67,9 +67,9 @@ export const COMPONENTS = [
 ];
 export const BLOCKS = [
   ["queued-stack", "Queued message stack (queued-stack)"],
-  ["sidebar-app", "App Sidebar (sidebar-app)"],
   ["dialog-sidebar", "Settings Dialog (dialog-sidebar)"],
 ];
+export const PAGES = [["sidebar-app", "App Shell (sidebar-app)"]];
 
 const src = readFileSync(SRC, "utf8");
 
@@ -103,12 +103,13 @@ const lines = [
   "## Contents",
   "",
 ];
-for (const [slug, name] of [...SYSTEMS, ...COMPONENTS, ...BLOCKS]) {
+for (const [slug, name] of [...SYSTEMS, ...COMPONENTS, ...PAGES, ...BLOCKS]) {
   lines.push(`- [${name}](#${slug})`);
 }
 for (const [group, list] of [
   ["# Systems", SYSTEMS],
   ["# Components", COMPONENTS],
+  ["# Pages", PAGES],
   ["# Blocks", BLOCKS],
 ]) {
   lines.push("", group);
@@ -140,8 +141,8 @@ lines.push("");
  *  asserts it covers every doc page: a component added to app/docs and to
  *  prompt-entries.ts but not to the lists above would otherwise be missing
  *  from craft.md while both other checks still passed. Blocks are in here
- *  too, and deliberately have no doc page of their own. */
-export const SECTIONS = [...SYSTEMS, ...COMPONENTS, ...BLOCKS];
+ *  too, and deliberately have no doc page of their own. Pages do. */
+export const SECTIONS = [...SYSTEMS, ...COMPONENTS, ...PAGES, ...BLOCKS];
 
 // Only write when run as a script. The test imports SECTIONS, and an import
 // that rewrote craft.md would repair drift before the drift check could see it.

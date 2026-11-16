@@ -10,14 +10,14 @@ import { releasesToMarkdown } from '#lib/changelog/markdown';
 import { entryInstall } from '#lib/changelog/install';
 import { buildUpgradePrompt } from '#lib/changelog/upgrade-prompt';
 import { SHOWCASE_PREVIEW_SLUGS } from '#app/changelog/previews';
-import { componentList, systemNavList } from '#lib/docs/components';
+import { componentList, pageList, systemNavList } from '#lib/docs/components';
 
 // The release files in content/changelog/ follow changelog-guidelines.md.
 // The parser already rejects anything off-format; these checks cover what it
 // cannot see from one file: links that resolve, months in order.
 
 const root = join(__dirname, '..');
-const docSlugs = new Set([...componentList, ...systemNavList].map((e) => e.slug));
+const docSlugs = new Set([...componentList, ...pageList, ...systemNavList].map((e) => e.slug));
 const systemSlugs = new Set(systemNavList.map((e) => e.slug));
 
 /** Where an entry's label sorts inside its section (changelog-guidelines.md). */

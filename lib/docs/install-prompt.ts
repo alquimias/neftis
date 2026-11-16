@@ -1,4 +1,4 @@
-import { componentEntries, systemList } from '#lib/docs/components';
+import { componentEntries, pageList, systemList } from '#lib/docs/components';
 import { installUrl, DUAL_FLAVOR_SLUGS, FLUID_HOVER_SLUGS, type Base } from '#lib/install-url';
 import { PROMPT_ENTRIES, type PromptEntry } from '#lib/docs/prompt-entries';
 import { decodePreset, type PresetComponentDef } from '#lib/preset/components';
@@ -49,7 +49,8 @@ export function buildInstallPrompt({
 }: BuildInstallPromptOptions): string {
   const registrySlug = installSlug ?? slug;
   const system = systemList.find((c) => c.slug === slug);
-  const entry = system ?? componentEntries.find((c) => c.slug === slug);
+  const page = pageList.find((c) => c.slug === slug);
+  const entry = system ?? page ?? componentEntries.find((c) => c.slug === slug);
   const name = entry?.name ?? slug;
   const description = plainDescription(entry?.description ?? '');
   const details: PromptEntry | undefined = PROMPT_ENTRIES[slug];
@@ -59,7 +60,9 @@ export function buildInstallPrompt({
   lines.push(
     system
       ? `Add the ${name} system from Fluid Functionalism to my React app.`
-      : `Add the ${name} component from Fluid Functionalism to my React app.`,
+      : page
+        ? `Add the ${name} page from Fluid Functionalism to my React app.`
+        : `Add the ${name} component from Fluid Functionalism to my React app.`,
   );
   lines.push('');
   lines.push('Install (shadcn CLI, pulls the shared libs and npm dependencies on its own):');

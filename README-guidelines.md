@@ -31,8 +31,9 @@ the site.
 | Agent skill paragraph                                         | `skills/fluid-functionalism/SKILL.md`                                                | routine                                |
 | Components table                                              | `componentNavList` in `lib/docs/components.ts`                                       | test: every slug linked in this table  |
 | Compounds table                                               | `compoundList` in `lib/docs/components.ts`                                           | test: every slug linked in this table  |
+| Pages table                                                   | `pageList` in `lib/docs/components.ts`                                               | test: every slug linked in this table  |
 | Systems table                                                 | `systemList` in `lib/docs/components.ts`; `installSlug` on each system page          | test                                   |
-| Blocks table: top-level compositions only                     | `registry:block` items in `registry.json`, minus the parts of `sidebar-app`          | test: names resolve                    |
+| Blocks table: compositions that are not themselves a screen   | `registry:block` items in `registry.json`, minus `pageList` and the parts of a page  | test: names resolve                    |
 | Presets: the named playgrounds and the URL shapes             | `lib/preset/*-options.ts`, `app/r/preset/[code]/route.ts`                            | routine                                |
 | Icons: the `IconProvider` example and the icon sets           | `registry/default/lib/icon-context.tsx`, `registry/default/lib/icons-*.tsx`          | routine                                |
 | Principles                                                    | the docs Introduction, `app/docs/page.tsx`                                           | stable; changes only with the site     |

@@ -60,7 +60,7 @@ export async function listBriefs(root = ROOT) {
   const { buildInstallPrompt, buildPresetPrompt } = await jiti.import(
     join(root, "lib/docs/install-prompt.ts"),
   );
-  const { systemList, componentList } = await jiti.import(join(root, "lib/docs/components.ts"));
+  const { systemList, componentList, pageList } = await jiti.import(join(root, "lib/docs/components.ts"));
   const presets = await jiti.import(join(root, "lib/preset/components.ts"));
   const { PRESET_GENERATORS } = await jiti.import(join(root, "lib/preset/generators.ts"));
   const { DUAL_FLAVOR_SLUGS, FLAVORED_SINGLE_SOURCE_SLUGS } = await import(
@@ -68,7 +68,7 @@ export async function listBriefs(root = ROOT) {
   );
   const flavored = new Set([...DUAL_FLAVOR_SLUGS, ...FLAVORED_SINGLE_SOURCE_SLUGS]);
   const systems = new Set(systemList.map((s) => s.slug));
-  const names = new Map([...systemList, ...componentList].map((e) => [e.slug, e.name]));
+  const names = new Map([...systemList, ...componentList, ...pageList].map((e) => [e.slug, e.name]));
 
   const briefs = [];
   for (const { slug, installSlug } of docPages(root)) {

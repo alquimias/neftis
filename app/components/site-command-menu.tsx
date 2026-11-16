@@ -30,7 +30,13 @@ import {
   SidebarMenuButton,
   SidebarMenuBadge,
 } from '#components/flavored/sidebar';
-import { componentNavList, compoundList, docOrder, systemNavList } from '#lib/docs/components';
+import {
+  componentNavList,
+  compoundList,
+  docOrder,
+  pageList,
+  systemNavList,
+} from '#lib/docs/components';
 import { useReleaseMarks } from '#lib/changelog/marks';
 import {
   useIcons,
@@ -242,7 +248,7 @@ export function SiteCommandMenu() {
     [remember, router],
   );
 
-  const currentComponent = [...componentNavList, ...compoundList].find(
+  const currentComponent = [...componentNavList, ...compoundList, ...pageList].find(
     (c) => `/docs/${c.slug}` === pathname,
   );
   const pageIndex = PAGE_ORDER.indexOf(pathname);
@@ -260,7 +266,7 @@ export function SiteCommandMenu() {
         action: `Open ${p.label}`,
         icon: icons[p.icon],
         keywords: p.keywords,
-        group: 'Pages',
+        group: 'Site',
         onSelect: () => go(p.href),
       })),
       ...systemNavList.map((s) => ({
@@ -292,6 +298,16 @@ export function SiteCommandMenu() {
         keywords: [c.slug, ...c.description.split(/\W+/)],
         group: 'Compounds',
         onSelect: () => go(`/docs/${c.slug}`),
+      })),
+      ...pageList.map((p) => ({
+        kind: 'page' as const,
+        value: `/docs/${p.slug}`,
+        label: p.name,
+        action: `Open ${p.name}`,
+        description: mark(p.slug),
+        keywords: [p.slug, 'page', ...p.description.split(/\W+/)],
+        group: 'Pages',
+        onSelect: () => go(`/docs/${p.slug}`),
       })),
     ];
     const settings: SiteItem[] = [
