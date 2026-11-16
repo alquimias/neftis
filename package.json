@@ -1,5 +1,5 @@
 {
-  "name": "@erp/neftis",
+  "name": "neftis",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -94,18 +94,10 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
-  "description": "Neftis \u2014 componentes de interfaz del ERP (Fluid Functionalism)",
+  "description": "Neftis \u2014 registro de componentes Fluid Functionalism",
   "sideEffects": [
     "**/*.css"
   ],
-  "exports": {
-    ".": {
-      "@erp/source": "./erp/index.ts",
-      "types": "./erp/index.ts",
-      "default": "./erp/index.ts"
-    },
-    "./styles.css": "./styles.css"
-  },
   "imports": {
     "#*": "./*"
   },

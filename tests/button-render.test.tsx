@@ -10,27 +10,11 @@ import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import { Button as RadixButton } from '#registry/radix/button';
 import { Button as BaseButton } from '#registry/base/button';
-import { Button as ErpButton } from '../erp/components/ui/button';
 
 const flavors = [
   ['radix', RadixButton],
   ['base', BaseButton],
 ] as const;
-
-describe('erp Button', () => {
-  it('keeps the fill inside the link when asChild wraps a link', () => {
-    const { container } = render(
-      <ErpButton asChild>
-        <a href="/sgsst/politica">Ver política SST</a>
-      </ErpButton>,
-    );
-    const link = container.querySelector('a');
-    expect(link?.getAttribute('href')).toBe('/sgsst/politica');
-    expect(link?.textContent).toContain('Ver política SST');
-    expect(link?.querySelector("[aria-hidden='true']")).not.toBeNull();
-    expect(container.querySelector('button')).toBeNull();
-  });
-});
 
 describe.each(flavors)('%s Button', (_name, Button) => {
   it('renders a plain link with asChild', () => {
