@@ -1,19 +1,18 @@
-"use client";
+'use client';
 
-import { forwardRef, useState, type ReactNode } from "react";
-import { motion, type HTMLMotionProps } from "motion/react";
-import { cn } from "@/lib/utils";
-import { spring } from "@/lib/springs";
-import { useShape } from "@/lib/shape-context";
-import { useSize, typeClass, type SizeVariant } from "@/lib/size-context";
-import { useTouchPrimary } from "@/hooks/use-touch-primary";
-import { FileThumbnail } from "@/registry/default/file-thumbnail";
+import { forwardRef, useState, type ReactNode } from 'react';
+import { motion, type HTMLMotionProps } from 'motion/react';
+import { cn } from '#lib/utils';
+import { spring } from '#lib/springs';
+import { useShape } from '#lib/shape-context';
+import { useSize, typeClass, type SizeVariant } from '#lib/size-context';
+import { useTouchPrimary } from '#hooks/use-touch-primary';
+import { FileThumbnail } from '#registry/default/file-thumbnail';
 
-interface ChatMessageProps
-  extends Omit<HTMLMotionProps<"div">, "children"> {
+interface ChatMessageProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   /** Who sent the message. Drives alignment and bubble colour:
    *  `user` → right-aligned accent bubble, `assistant` → left-aligned plain text. */
-  from: "user" | "assistant";
+  from: 'user' | 'assistant';
   /** Optional attachments rendered as square thumbnails above the bubble. */
   files?: File[];
   /** Side length of each attachment thumbnail in pixels. Defaults to 64. */
@@ -43,11 +42,11 @@ interface ChatMessageProps
 const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
   (
     { from, files, thumbnailSize = 64, time, actions, children, size, className, ...props },
-    ref
+    ref,
   ) => {
     const shape = useShape();
-    const compact = useSize(size).variant === "compact";
-    const isUser = from === "user";
+    const compact = useSize(size).variant === 'compact';
+    const isUser = from === 'user';
     // Hover-reveal is unreachable on touch — keep the meta row visible there.
     const isTouch = useTouchPrimary();
     // Timestamps are a user-message affordance; assistant replies show actions only.
@@ -60,26 +59,21 @@ const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
     return (
       <motion.div
         ref={ref}
-        layout={entered ? "position" : false}
+        layout={entered ? 'position' : false}
         initial={{ opacity: 0, y: 8, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={spring.moderate}
         onAnimationComplete={() => setEntered(true)}
-        style={{ transformOrigin: isUser ? "bottom right" : "bottom left" }}
+        style={{ transformOrigin: isUser ? 'bottom right' : 'bottom left' }}
         className={cn(
-          "group flex max-w-[80%] flex-col gap-1.5",
-          isUser ? "items-end self-end" : "items-start self-start",
-          className
+          'group flex max-w-[80%] flex-col gap-1.5',
+          isUser ? 'items-end self-end' : 'items-start self-start',
+          className,
         )}
         {...props}
       >
         {files && files.length > 0 && (
-          <div
-            className={cn(
-              "flex flex-wrap gap-1.5",
-              isUser ? "justify-end" : "justify-start"
-            )}
-          >
+          <div className={cn('flex flex-wrap gap-1.5', isUser ? 'justify-end' : 'justify-start')}>
             {files.map((file, i) => (
               <FileThumbnail
                 key={`${file.name}-${file.size}-${file.lastModified}-${i}`}
@@ -89,27 +83,27 @@ const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
             ))}
           </div>
         )}
-        {children != null && children !== "" && (
+        {children != null && children !== '' && (
           <div
             className={cn(
-              "whitespace-pre-wrap break-words",
-              compact ? "py-1.5" : "py-2",
-              typeClass("subtitle", compact ? "compact" : "default"),
+              'whitespace-pre-wrap break-words',
+              compact ? 'py-1.5' : 'py-2',
+              typeClass('subtitle', compact ? 'compact' : 'default'),
               // User keeps the bubble chrome (rounded fill + horizontal padding);
               // the assistant reply is flush-left plain text with no background.
               isUser
                 ? cn(
                     shape.bg,
-                    compact ? "px-3" : "px-3.5",
+                    compact ? 'px-3' : 'px-3.5',
                     // `text-pretty` is reserved for settled user bubbles. On the
                     // assistant reply it's left off on purpose: `text-wrap: pretty`
                     // re-balances the last lines on every content change, so a
                     // word-by-word stream visibly reflows earlier words to new
                     // lines. Default (normal) wrapping appends left-to-right and
                     // stays put as the text grows.
-                    "text-pretty bg-[color-mix(in_oklab,var(--accent),var(--background)_45%)] text-foreground"
+                    'text-pretty bg-[color-mix(in_oklab,var(--accent),var(--background)_45%)] text-foreground',
                   )
-                : "text-foreground"
+                : 'text-foreground',
             )}
           >
             {children}
@@ -123,27 +117,25 @@ const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
           // show their actions alone. User rows read date → icons left-to-right.
           <div
             className={cn(
-              "flex items-center gap-2 px-1 text-muted-foreground select-none",
-              typeClass("caption", compact ? "compact" : "default"),
+              'flex items-center gap-2 px-1 text-muted-foreground select-none',
+              typeClass('caption', compact ? 'compact' : 'default'),
               !isTouch && [
-                "opacity-0 pointer-events-none transition-opacity duration-150",
-                "group-hover:opacity-100 group-hover:pointer-events-auto",
-                "group-focus-within:opacity-100 group-focus-within:pointer-events-auto",
-              ]
+                'opacity-0 pointer-events-none transition-opacity duration-150',
+                'group-hover:opacity-100 group-hover:pointer-events-auto',
+                'group-focus-within:opacity-100 group-focus-within:pointer-events-auto',
+              ],
             )}
           >
             {showTime && <span className="tabular-nums">{time}</span>}
-            {actions != null && (
-              <span className="flex items-center gap-0.5">{actions}</span>
-            )}
+            {actions != null && <span className="flex items-center gap-0.5">{actions}</span>}
           </div>
         )}
       </motion.div>
     );
-  }
+  },
 );
 
-ChatMessage.displayName = "ChatMessage";
+ChatMessage.displayName = 'ChatMessage';
 
 export { ChatMessage };
 export type { ChatMessageProps };

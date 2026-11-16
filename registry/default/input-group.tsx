@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useRef,
@@ -10,14 +10,14 @@ import {
   type ReactNode,
   type HTMLAttributes,
   type InputHTMLAttributes,
-} from "react";
-import { Field } from "@base-ui/react/field";
-import { useIcons, type IconComponent } from "@/lib/icon-context";
-import { cn } from "@/lib/utils";
-import { fontWeights } from "@/lib/font-weight";
-import { useShape } from "@/lib/shape-context";
-import { SizeProvider, useSize, type SizeVariant } from "@/lib/size-context";
-import { useFluidHover, useRegisterFluidHoverItem } from "@/hooks/use-fluid-hover";
+} from 'react';
+import { Field } from '@base-ui/react/field';
+import { useIcons, type IconComponent } from '#lib/icon-context';
+import { cn } from '#lib/utils';
+import { fontWeights } from '#lib/font-weight';
+import { useShape } from '#lib/shape-context';
+import { SizeProvider, useSize, type SizeVariant } from '#lib/size-context';
+import { useFluidHover, useRegisterFluidHoverItem } from '#hooks/use-fluid-hover';
 
 // ---------------------------------------------------------------------------
 // InputGroup stacks labelled text fields that share one fluid hover scope.
@@ -36,8 +36,7 @@ const InputGroupContext = createContext<InputGroupContextValue | null>(null);
 
 function useInputGroup() {
   const ctx = useContext(InputGroupContext);
-  if (!ctx)
-    throw new Error("useInputGroup must be used within an InputGroup");
+  if (!ctx) throw new Error('useInputGroup must be used within an InputGroup');
   return ctx;
 }
 
@@ -52,12 +51,11 @@ const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
   ({ children, size, className, ...props }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const { activeIndex, handlers, registerItem } =
-      useFluidHover(containerRef);
+    const { activeIndex, handlers, registerItem } = useFluidHover(containerRef);
 
     const contextValue = useMemo(
       () => ({ registerItem, activeIndex }),
-      [registerItem, activeIndex]
+      [registerItem, activeIndex],
     );
 
     const group = (
@@ -65,7 +63,7 @@ const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
         <div
           ref={(node) => {
             (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-            if (typeof ref === "function") ref(node);
+            if (typeof ref === 'function') ref(node);
             else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
           }}
           onMouseEnter={handlers.onMouseEnter}
@@ -75,7 +73,7 @@ const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
           // hook measures items via offsetTop and compares against
           // container-relative mouse coords, so the two coordinate spaces must
           // share this origin (same as every other fluid hover consumer).
-          className={cn("relative flex flex-col gap-3 w-72 max-w-full", className)}
+          className={cn('relative flex flex-col gap-3 w-72 max-w-full', className)}
           {...props}
         >
           {children}
@@ -85,13 +83,15 @@ const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
 
     // A size prop pins every field in the group to one ladder step.
     return size ? <SizeProvider size={size}>{group}</SizeProvider> : group;
-  }
+  },
 );
 
-InputGroup.displayName = "InputGroup";
+InputGroup.displayName = 'InputGroup';
 
-interface InputFieldProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "index"> {
+interface InputFieldProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'onChange' | 'index'
+> {
   label: string;
   /** Keep the label for assistive tech but don't render it — for inline
    *  fields (a toolbar search) where the placeholder carries the meaning. */
@@ -121,7 +121,7 @@ const InputField = forwardRef<HTMLDivElement, InputFieldProps>(
       className,
       ...props
     },
-    ref
+    ref,
   ) => {
     const internalRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLElement | null>(null);
@@ -129,8 +129,8 @@ const InputField = forwardRef<HTMLDivElement, InputFieldProps>(
     const [isFocused, setIsFocused] = useState(false);
     const shape = useShape();
     const sizeClasses = useSize();
-    const compact = sizeClasses.variant === "compact";
-    const AlertIcon = useIcons()["circle-alert"];
+    const compact = sizeClasses.variant === 'compact';
+    const AlertIcon = useIcons()['circle-alert'];
 
     useRegisterFluidHoverItem(registerItem, index, internalRef);
 
@@ -150,12 +150,9 @@ const InputField = forwardRef<HTMLDivElement, InputFieldProps>(
     // The ring never moves at rest, like the Select trigger's border. Focus
     // darkens it to a neutral 40% and wins over the error tint while the
     // value is being fixed; hover only adds the fill.
-    const ringClass = isFocused && !disabled
-      ? "ring-foreground/40"
-      : error
-        ? "ring-destructive/50"
-        : "ring-border";
-    const bgClass = isActive && !isFocused && !disabled ? "bg-hover" : "bg-transparent";
+    const ringClass =
+      isFocused && !disabled ? 'ring-foreground/40' : error ? 'ring-destructive/50' : 'ring-border';
+    const bgClass = isActive && !isFocused && !disabled ? 'bg-hover' : 'bg-transparent';
 
     return (
       // Base UI Field wires the accessibility plumbing: Field.Label's htmlFor
@@ -164,25 +161,20 @@ const InputField = forwardRef<HTMLDivElement, InputFieldProps>(
       <Field.Root
         ref={(node) => {
           (internalRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-          if (typeof ref === "function") ref(node);
+          if (typeof ref === 'function') ref(node);
           else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
         }}
         invalid={!!error}
         disabled={disabled}
         className={cn(
-          "flex flex-col gap-1 cursor-text",
-          disabled && "opacity-50 pointer-events-none",
-          className
+          'flex flex-col gap-1 cursor-text',
+          disabled && 'opacity-50 pointer-events-none',
+          className,
         )}
       >
         {/* Label — sr-only when hidden so the field keeps its accessible
             name and the htmlFor wiring. */}
-        <Field.Label
-          className={cn(
-            labelHidden ? "sr-only" : "inline-grid",
-            sizeClasses.text
-          )}
-        >
+        <Field.Label className={cn(labelHidden ? 'sr-only' : 'inline-grid', sizeClasses.text)}>
           {/* An invisible semibold copy shares the grid cell and reserves the
               bold width, so a heavier label never shifts the layout. */}
           <span
@@ -194,8 +186,8 @@ const InputField = forwardRef<HTMLDivElement, InputFieldProps>(
           </span>
           <span
             className={cn(
-              "col-start-1 row-start-1",
-              error ? "text-destructive" : "text-muted-foreground"
+              'col-start-1 row-start-1',
+              error ? 'text-destructive' : 'text-muted-foreground',
             )}
             style={{
               fontVariationSettings: fontWeights.normal,
@@ -220,7 +212,7 @@ const InputField = forwardRef<HTMLDivElement, InputFieldProps>(
             // exactly on the ladder's control height.
             `flex items-center ${sizeClasses.gap} ${shape.input} ${sizeClasses.px} ${sizeClasses.control} ring-1 ring-inset transition-[color,background-color,border-radius,box-shadow] duration-80`,
             bgClass,
-            ringClass
+            ringClass,
           )}
         >
           {/* The icon wakes with the field: muted → foreground and stroke
@@ -230,10 +222,8 @@ const InputField = forwardRef<HTMLDivElement, InputFieldProps>(
               size={sizeClasses.icon}
               strokeWidth={labelActive ? 2 : 1.5}
               className={cn(
-                "shrink-0 transition-[color,stroke-width] duration-80",
-                labelActive
-                  ? "text-foreground"
-                  : "text-muted-foreground"
+                'shrink-0 transition-[color,stroke-width] duration-80',
+                labelActive ? 'text-foreground' : 'text-muted-foreground',
               )}
             />
           )}
@@ -246,8 +236,8 @@ const InputField = forwardRef<HTMLDivElement, InputFieldProps>(
             onBlur={handleBlur}
             placeholder={placeholder}
             className={cn(
-              "w-full rounded-none bg-transparent text-foreground placeholder:text-muted-foreground outline-none font-[inherit]",
-              sizeClasses.field
+              'w-full rounded-none bg-transparent text-foreground placeholder:text-muted-foreground outline-none font-[inherit]',
+              sizeClasses.field,
             )}
             style={{ fontVariationSettings: fontWeights.normal }}
             {...props}
@@ -260,22 +250,27 @@ const InputField = forwardRef<HTMLDivElement, InputFieldProps>(
           <Field.Error
             match
             className={cn(
-              "flex items-center text-destructive",
+              'flex items-center text-destructive',
               sizeClasses.gap,
-              sizeClasses.type.caption
+              sizeClasses.type.caption,
             )}
             style={{ fontVariationSettings: fontWeights.normal }}
           >
-            <AlertIcon size={compact ? 12 : 14} strokeWidth={1.75} className="shrink-0" aria-hidden />
+            <AlertIcon
+              size={compact ? 12 : 14}
+              strokeWidth={1.75}
+              className="shrink-0"
+              aria-hidden
+            />
             {error}
           </Field.Error>
         )}
       </Field.Root>
     );
-  }
+  },
 );
 
-InputField.displayName = "InputField";
+InputField.displayName = 'InputField';
 
 export { InputGroup, InputField };
 export default InputGroup;

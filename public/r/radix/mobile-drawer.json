@@ -3,10 +3,7 @@
   "name": "mobile-drawer",
   "title": "Mobile Drawer",
   "description": "Slide-in navigation drawer with scrim, focus trap, and scroll lock. Radix flavor.",
-  "dependencies": [
-    "@radix-ui/react-dialog",
-    "motion"
-  ],
+  "dependencies": ["@radix-ui/react-dialog", "motion"],
   "registryDependencies": [
     "https://www.fluidfunctionalism.com/r/springs.json",
     "https://www.fluidfunctionalism.com/r/surface-context.json",
@@ -22,8 +19,6 @@
     }
   ],
   "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useIcon } from "@/lib/icon-context";
+import { useState } from 'react';
+import { useIcon } from '#lib/icon-context';
 import {
   Dropdown,
   DropdownLabel,
@@ -14,15 +14,28 @@ import {
   DropdownSubContent,
   DropdownSearch,
   DropdownEmpty,
-} from "@/components/flavored/dropdown";
-import { MenuItem } from "@/registry/default/menu-item";
-import { Button } from "@/registry/radix/button";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import { DropdownPlayground } from "@/lib/docs/playgrounds/dropdown";
-import { dropdownProps, dropdownMenuProps, dropdownTriggerProps, dropdownContentProps, subProps, subTriggerProps, subContentProps, searchProps, emptyProps, labelProps, separatorProps, menuItemProps } from "@/lib/docs/api/dropdown";
+} from '#components/flavored/dropdown';
+import { MenuItem } from '#registry/default/menu-item';
+import { Button } from '#registry/radix/button';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { DropdownPlayground } from '#lib/docs/playgrounds/dropdown';
+import {
+  dropdownProps,
+  dropdownMenuProps,
+  dropdownTriggerProps,
+  dropdownContentProps,
+  subProps,
+  subTriggerProps,
+  subContentProps,
+  searchProps,
+  emptyProps,
+  labelProps,
+  separatorProps,
+  menuItemProps,
+} from '#lib/docs/api/dropdown';
 
 const basicCode = `import { Dropdown, MenuItem } from "./components";
 import { SquareLibrary, Clock, Star, Users, Lock } from "lucide-react";
@@ -125,7 +138,7 @@ const FOLDERS = ["Inbox", "Design", "Engineering", "Marketing", "Archive"];
   </DropdownContent>
 </DropdownMenu>`;
 
-const FOLDERS = ["Inbox", "Design", "Engineering", "Marketing", "Archive"];
+const FOLDERS = ['Inbox', 'Design', 'Engineering', 'Marketing', 'Archive'];
 
 const searchableCode = `import {
   DropdownMenu, DropdownTrigger, DropdownContent,
@@ -196,7 +209,7 @@ const toggle = (i: number) =>
   </DropdownContent>
 </DropdownMenu>`;
 
-const STATUSES = ["Open", "In progress", "In review", "Blocked", "Done", "Archived"];
+const STATUSES = ['Open', 'In progress', 'In review', 'Blocked', 'Done', 'Archived'];
 
 const searchableMultipleCode = `import {
   DropdownMenu, DropdownTrigger, DropdownContent,
@@ -270,75 +283,75 @@ const canCreate = q !== "" && !components.some((c) => c.toLowerCase() === q.toLo
 </DropdownMenu>`;
 
 const COMPONENTS = [
-  "Accordion",
-  "Badge",
-  "Button",
-  "Card",
-  "CheckboxGroup",
-  "ColorPicker",
-  "Combobox",
-  "Dialog",
-  "Dropdown",
-  "InputGroup",
-  "RadioGroup",
-  "Select",
-  "Sidebar",
-  "Slider",
-  "Switch",
-  "Table",
-  "Tabs",
+  'Accordion',
+  'Badge',
+  'Button',
+  'Card',
+  'CheckboxGroup',
+  'ColorPicker',
+  'Combobox',
+  'Dialog',
+  'Dropdown',
+  'InputGroup',
+  'RadioGroup',
+  'Select',
+  'Sidebar',
+  'Slider',
+  'Switch',
+  'Table',
+  'Tabs',
 ];
 
 const LABELS = [
-  "Bug",
-  "Feature",
-  "Docs",
-  "Design",
-  "Performance",
-  "Accessibility",
-  "Refactor",
-  "Testing",
-  "Infrastructure",
-  "Security",
-  "Good first issue",
-  "Help wanted",
+  'Bug',
+  'Feature',
+  'Docs',
+  'Design',
+  'Performance',
+  'Accessibility',
+  'Refactor',
+  'Testing',
+  'Infrastructure',
+  'Security',
+  'Good first issue',
+  'Help wanted',
 ];
 
 const LANGUAGES = [
-  "Auto detect",
-  "Albanian (Albania)",
-  "Arabic",
-  "Bengali",
-  "Chinese (Simplified)",
-  "Chinese (Traditional)",
-  "Czech",
-  "Danish",
-  "Dutch",
-  "English (UK)",
-  "English (US)",
-  "Finnish",
-  "French",
-  "German",
-  "Greek",
-  "Hebrew",
-  "Hindi",
-  "Hungarian",
-  "Indonesian",
-  "Italian",
-  "Japanese",
-  "Korean",
-  "Norwegian",
-  "Polish",
-  "Portuguese (Brazil)",
-  "Portuguese (Portugal)",
-  "Romanian",
-  "Russian",
-  "Spanish",
-  "Swedish",
-  "Thai",
-  "Turkish",
-  "Ukrainian",
-  "Vietnamese",
+  'Auto detect',
+  'Albanian (Albania)',
+  'Arabic',
+  'Bengali',
+  'Chinese (Simplified)',
+  'Chinese (Traditional)',
+  'Czech',
+  'Danish',
+  'Dutch',
+  'English (UK)',
+  'English (US)',
+  'Finnish',
+  'French',
+  'German',
+  'Greek',
+  'Hebrew',
+  'Hindi',
+  'Hungarian',
+  'Indonesian',
+  'Italian',
+  'Japanese',
+  'Korean',
+  'Norwegian',
+  'Polish',
+  'Portuguese (Brazil)',
+  'Portuguese (Portugal)',
+  'Romanian',
+  'Russian',
+  'Spanish',
+  'Swedish',
+  'Thai',
+  'Turkish',
+  'Ukrainian',
+  'Vietnamese',
 ];
 
 // ── Playground ───────────────────────────────────────────
@@ -363,59 +376,54 @@ function DropdownPlaygroundSection() {
 }
 
 export default function DropdownDoc() {
-  const SquareLibrary = useIcon("square-library");
-  const Clock = useIcon("clock");
-  const Star = useIcon("star");
-  const Users = useIcon("users");
-  const Lock = useIcon("lock");
-  const Mail = useIcon("mail");
-  const Bell = useIcon("bell");
-  const Shield = useIcon("shield");
-  const Settings = useIcon("settings");
-  const Palette = useIcon("palette");
-  const Monitor = useIcon("monitor");
-  const ChevronDown = useIcon("chevron-down");
-  const Plus = useIcon("plus");
-  const Folder = useIcon("folder");
-  const Link = useIcon("link");
-  const Pencil = useIcon("pencil");
+  const SquareLibrary = useIcon('square-library');
+  const Clock = useIcon('clock');
+  const Star = useIcon('star');
+  const Users = useIcon('users');
+  const Lock = useIcon('lock');
+  const Mail = useIcon('mail');
+  const Bell = useIcon('bell');
+  const Shield = useIcon('shield');
+  const Settings = useIcon('settings');
+  const Palette = useIcon('palette');
+  const Monitor = useIcon('monitor');
+  const ChevronDown = useIcon('chevron-down');
+  const Plus = useIcon('plus');
+  const Folder = useIcon('folder');
+  const Link = useIcon('link');
+  const Pencil = useIcon('pencil');
 
   const items = [
-    { icon: SquareLibrary, label: "Teamspaces" },
-    { icon: Clock, label: "Recents" },
-    { icon: Star, label: "Favorites" },
-    { icon: Users, label: "Shared" },
-    { icon: Lock, label: "Private" },
+    { icon: SquareLibrary, label: 'Teamspaces' },
+    { icon: Clock, label: 'Recents' },
+    { icon: Star, label: 'Favorites' },
+    { icon: Users, label: 'Shared' },
+    { icon: Lock, label: 'Private' },
   ];
   const [selected, setSelected] = useState<number | null>(0);
   const [view, setView] = useState(0);
-  const [language, setLanguage] = useState("Auto detect");
+  const [language, setLanguage] = useState('Auto detect');
   const [statuses, setStatuses] = useState<number[]>([0, 1, 2]);
-  const [labels, setLabels] = useState<string[]>(["Bug", "Design"]);
-  const [labelQuery, setLabelQuery] = useState("");
-  const labelMatches = LABELS.filter((l) =>
-    l.toLowerCase().includes(labelQuery.toLowerCase())
-  );
+  const [labels, setLabels] = useState<string[]>(['Bug', 'Design']);
+  const [labelQuery, setLabelQuery] = useState('');
+  const labelMatches = LABELS.filter((l) => l.toLowerCase().includes(labelQuery.toLowerCase()));
   const toggleLabel = (l: string) =>
     setLabels((c) => (c.includes(l) ? c.filter((x) => x !== l) : [...c, l]));
   const toggleStatus = (i: number) =>
     setStatuses((c) => (c.includes(i) ? c.filter((x) => x !== i) : [...c, i]));
   const [components, setComponents] = useState<string[]>(COMPONENTS);
-  const [used, setUsed] = useState<string[]>(["Button", "Combobox"]);
-  const [componentQuery, setComponentQuery] = useState("");
+  const [used, setUsed] = useState<string[]>(['Button', 'Combobox']);
+  const [componentQuery, setComponentQuery] = useState('');
   const componentMatches = components.filter((c) =>
-    c.toLowerCase().includes(componentQuery.toLowerCase())
+    c.toLowerCase().includes(componentQuery.toLowerCase()),
   );
   const toggleUsed = (c: string) =>
     setUsed((u) => (u.includes(c) ? u.filter((x) => x !== c) : [...u, c]));
   const componentQ = componentQuery.trim();
   const canCreateComponent =
-    componentQ !== "" &&
-    !components.some((c) => c.toLowerCase() === componentQ.toLowerCase());
-  const [query, setQuery] = useState("");
-  const matches = LANGUAGES.filter((l) =>
-    l.toLowerCase().includes(query.toLowerCase())
-  );
+    componentQ !== '' && !components.some((c) => c.toLowerCase() === componentQ.toLowerCase());
+  const [query, setQuery] = useState('');
+  const matches = LANGUAGES.filter((l) => l.toLowerCase().includes(query.toLowerCase()));
 
   return (
     <DocPage
@@ -462,14 +470,12 @@ export default function DropdownDoc() {
 
       <DocSection title="Triggered menu">
         <p className="text-site-body text-muted-foreground">
-          3 parts: <code>DropdownMenu</code>, <code>DropdownTrigger</code>,{" "}
+          3 parts: <code>DropdownMenu</code>, <code>DropdownTrigger</code>,{' '}
           <code>DropdownContent</code>. Any element goes in <code>render</code>.
         </p>
         <ComponentPreview code={triggeredCode}>
           <DropdownMenu>
-            <DropdownTrigger
-              render={<Button variant="ghost">Open menu</Button>}
-            />
+            <DropdownTrigger render={<Button variant="ghost">Open menu</Button>} />
             <DropdownContent checkedIndex={view}>
               {items.map((item, i) => (
                 <MenuItem
@@ -488,14 +494,12 @@ export default function DropdownDoc() {
 
       <DocSection title="Submenus">
         <p className="text-site-body text-muted-foreground">
-          Hover Move to, then cut across Share to its submenu: the highlight
-          stays on Move to until you stop on another row.
+          Hover Move to, then cut across Share to its submenu: the highlight stays on Move to until
+          you stop on another row.
         </p>
         <ComponentPreview code={submenuCode} minHeightClass="min-h-[160px]">
           <DropdownMenu>
-            <DropdownTrigger
-              render={<Button variant="ghost">Q3 report.pdf</Button>}
-            />
+            <DropdownTrigger render={<Button variant="ghost">Q3 report.pdf</Button>} />
             <DropdownContent>
               <DropdownSub>
                 <DropdownSubTrigger index={0} icon={Folder} label="Move to" />
@@ -520,14 +524,12 @@ export default function DropdownDoc() {
 
       <DocSection title="Multiple selection">
         <p className="text-site-body text-muted-foreground">
-          Pass <code>checkedIndices</code>: rows become checkboxes, the menu
-          stays open, and touching picks share one background.
+          Pass <code>checkedIndices</code>: rows become checkboxes, the menu stays open, and
+          touching picks share one background.
         </p>
         <ComponentPreview code={multipleCode} minHeightClass="min-h-[160px]">
           <DropdownMenu>
-            <DropdownTrigger
-              render={<Button variant="ghost">Status</Button>}
-            />
+            <DropdownTrigger render={<Button variant="ghost">Status</Button>} />
             <DropdownContent checkedIndices={statuses}>
               {STATUSES.map((s, i) => (
                 <MenuItem
@@ -545,8 +547,8 @@ export default function DropdownDoc() {
 
       <DocSection title="Searchable menu">
         <p className="text-site-body text-muted-foreground">
-          Put a <code>DropdownSearch</code> first and filter the rows you
-          render. Type to filter, arrow down to a row, press Enter.
+          Put a <code>DropdownSearch</code> first and filter the rows you render. Type to filter,
+          arrow down to a row, press Enter.
         </p>
         <ComponentPreview code={searchableCode} minHeightClass="min-h-[160px]">
           <DropdownMenu>
@@ -572,9 +574,7 @@ export default function DropdownDoc() {
                   onSelect={() => setLanguage(l)}
                 />
               ))}
-              {matches.length === 0 && (
-                <DropdownEmpty>No languages found</DropdownEmpty>
-              )}
+              {matches.length === 0 && <DropdownEmpty>No languages found</DropdownEmpty>}
             </DropdownContent>
           </DropdownMenu>
         </ComponentPreview>
@@ -582,20 +582,14 @@ export default function DropdownDoc() {
 
       <DocSection title="Searchable multiple selection">
         <p className="text-site-body text-muted-foreground">
-          Both at once. Compute <code>checkedIndices</code> against the
-          filtered rows; Enter toggles the focused row and the menu stays open.
+          Both at once. Compute <code>checkedIndices</code> against the filtered rows; Enter toggles
+          the focused row and the menu stays open.
         </p>
         <ComponentPreview code={searchableMultipleCode} minHeightClass="min-h-[160px]">
           <DropdownMenu>
-            <DropdownTrigger
-              render={
-                <Button variant="ghost">Labels · {labels.length}</Button>
-              }
-            />
+            <DropdownTrigger render={<Button variant="ghost">Labels · {labels.length}</Button>} />
             <DropdownContent
-              checkedIndices={labelMatches.flatMap((l, i) =>
-                labels.includes(l) ? [i] : []
-              )}
+              checkedIndices={labelMatches.flatMap((l, i) => (labels.includes(l) ? [i] : []))}
             >
               <DropdownSearch
                 value={labelQuery}
@@ -611,9 +605,7 @@ export default function DropdownDoc() {
                   onSelect={() => toggleLabel(l)}
                 />
               ))}
-              {labelMatches.length === 0 && (
-                <DropdownEmpty>No labels found</DropdownEmpty>
-              )}
+              {labelMatches.length === 0 && <DropdownEmpty>No labels found</DropdownEmpty>}
             </DropdownContent>
           </DropdownMenu>
         </ComponentPreview>
@@ -621,20 +613,14 @@ export default function DropdownDoc() {
 
       <DocSection title="Create from the query">
         <p className="text-site-body text-muted-foreground">
-          1 extra row when nothing matches. Type a component that is not
-          there, press ↑ to reach it, then Enter.
+          1 extra row when nothing matches. Type a component that is not there, press ↑ to reach it,
+          then Enter.
         </p>
         <ComponentPreview code={creatableCode} minHeightClass="min-h-[160px]">
           <DropdownMenu>
-            <DropdownTrigger
-              render={
-                <Button variant="ghost">Components · {used.length}</Button>
-              }
-            />
+            <DropdownTrigger render={<Button variant="ghost">Components · {used.length}</Button>} />
             <DropdownContent
-              checkedIndices={componentMatches.flatMap((c, i) =>
-                used.includes(c) ? [i] : []
-              )}
+              checkedIndices={componentMatches.flatMap((c, i) => (used.includes(c) ? [i] : []))}
             >
               <DropdownSearch
                 value={componentQuery}
@@ -659,7 +645,7 @@ export default function DropdownDoc() {
                   onSelect={() => {
                     setComponents((c) => [...c, componentQ]);
                     toggleUsed(componentQ);
-                    setComponentQuery("");
+                    setComponentQuery('');
                   }}
                 />
               )}

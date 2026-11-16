@@ -1,0 +1,8 @@
+@import "./erp/styles/theme.css";
+@import "./erp/styles/neftis-bridge.css";
+
+@source "./registry";
+@source "./components";
+@source "./lib";
+@source "./hooks";
+@source "./erp";

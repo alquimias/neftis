@@ -6,7 +6,7 @@ runs when the user asks for one. Neither writes into the project: facts are
 read again each time, results go in the reply, and only the user's own
 decisions are kept, with their OK ([decisions](#decisions)). Every check
 below maps to a concrete consequence you can explain to the user, which is
-where most of the skill's *advice* comes from.
+where most of the skill's _advice_ comes from.
 
 ## What to check
 
@@ -29,15 +29,15 @@ hand. The tables below say what each fact means.
 
 Checked in this order; the first row that applies decides.
 
-| Found | Verdict |
-|---|---|
-| Installed FF components import one flavor's primitives | **that flavor**: every later install has to match what is already there. `input-group`, `color-picker`, and `ask-user-questions` import Base UI under both flavors, so they never count here |
-| Installed FF components import both | **mixed**: ask the user which side to consolidate on before installing more |
+| Found                                                                                             | Verdict                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Installed FF components import one flavor's primitives                                            | **that flavor**: every later install has to match what is already there. `input-group`, `color-picker`, and `ask-user-questions` import Base UI under both flavors, so they never count here                                                                            |
+| Installed FF components import both                                                               | **mixed**: ask the user which side to consolidate on before installing more                                                                                                                                                                                             |
 | `@base-ui/react` in package.json, but no app code imports it and a shared item above is installed | The shared item brought it, so it doesn't count: read the rows below without it. If that leaves neither, the choice is **open**: Radix by default, but ask the user before the first flavored install, since a project that chose Base UI looks the same from its files |
-| only `@base-ui/react` in package.json | **base**: every flavored install uses the `base/` prefix |
-| only Radix: any `@radix-ui/react-*`, or `radix-ui` | **radix**: bare names |
-| both in package.json | Mixed primitives. Pick the side the app's own code imports more; flag the other as advice ("consider consolidating") |
-| neither | **radix** by default (bare names), but note it's an open choice until the first primitive lands |
+| only `@base-ui/react` in package.json                                                             | **base**: every flavored install uses the `base/` prefix                                                                                                                                                                                                                |
+| only Radix: any `@radix-ui/react-*`, or `radix-ui`                                                | **radix**: bare names                                                                                                                                                                                                                                                   |
+| both in package.json                                                                              | Mixed primitives. Pick the side the app's own code imports more; flag the other as advice ("consider consolidating")                                                                                                                                                    |
+| neither                                                                                           | **radix** by default (bare names), but note it's an open choice until the first primitive lands                                                                                                                                                                         |
 
 The script derives it the same way every run, so the same project always
 gets the same answer. Don't override it from memory of an earlier session:
@@ -45,22 +45,22 @@ that is how flavor mixing happens.
 
 ### 2. Hard requirements (installs break or misbehave without these)
 
-| Check | Where | If missing / off |
-|---|---|---|
-| React 19 | `package.json` | Registry components target React 19; React 18 will fail on `use client` + new ref semantics in places. Flag before installing anything |
-| Tailwind CSS v4 | `package.json`, entry CSS uses `@import "tailwindcss"` | Classes in the components assume v4 (`size-*`, CSS-first config). On v3, installs land but render broken — installs are off the table until a migration (see "When installs are blocked" below) |
-| `motion` v12+ | `package.json` (arrives automatically with any component install; components import `motion/react`) | If the project pins an old major, expect type errors on `Transition`; advise upgrading rather than patching components. If the project also lists **`framer-motion`** directly (the same library's older name), check that both resolve to one copy: `motion` pins an exact `framer-motion` inside, and a second copy splits React context, so a `MotionConfig` imported from one never reaches components animated by the other. Advise moving the app's imports to `motion/react` and dropping the direct `framer-motion` dependency |
-| shadcn wired | `components.json` exists; `@/` path aliases resolve (`tsconfig.json` paths) | Without it the CLI can't install. Run `npx shadcn@latest init` first |
-| Theme tokens | Entry CSS has shadcn CSS variables (`--background`, `--primary`, …) | Components render unstyled. Usually fixed by `shadcn init` or copying a theme |
+| Check           | Where                                                                                               | If missing / off                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| --------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React 19        | `package.json`                                                                                      | Registry components target React 19; React 18 will fail on `use client` + new ref semantics in places. Flag before installing anything                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Tailwind CSS v4 | `package.json`, entry CSS uses `@import "tailwindcss"`                                              | Classes in the components assume v4 (`size-*`, CSS-first config). On v3, installs land but render broken — installs are off the table until a migration (see "When installs are blocked" below)                                                                                                                                                                                                                                                                                                                                        |
+| `motion` v12+   | `package.json` (arrives automatically with any component install; components import `motion/react`) | If the project pins an old major, expect type errors on `Transition`; advise upgrading rather than patching components. If the project also lists **`framer-motion`** directly (the same library's older name), check that both resolve to one copy: `motion` pins an exact `framer-motion` inside, and a second copy splits React context, so a `MotionConfig` imported from one never reaches components animated by the other. Advise moving the app's imports to `motion/react` and dropping the direct `framer-motion` dependency |
+| shadcn wired    | `components.json` exists; `@/` path aliases resolve (`tsconfig.json` paths)                         | Without it the CLI can't install. Run `npx shadcn@latest init` first                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Theme tokens    | Entry CSS has shadcn CSS variables (`--background`, `--primary`, …)                                 | Components render unstyled. Usually fixed by `shadcn init` or copying a theme                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
 ### 3. System wiring (works without, but visibly worse — prime advice material)
 
-| Check | How | Consequence when missing |
-|---|---|---|
-| `MotionConfig reducedMotion="user"` wraps the app | grep the root layout | OS reduced-motion is ignored for transform/layout animations — an accessibility gap, one line to fix |
-| Inter loaded as a variable font **with the `opsz` axis** | `next/font/google`: `Inter({ axes: ["opsz"] })`; `next/font/local`: the call declares `weight: "100 900"` (without a range the variable axis isn't addressable at all); plain CSS: `@font-face` with `font-weight: 100 900` on a variable file | Weight animations still run but labels widen on hover/selection — the "weight without reflow" promise silently breaks. A `localFont` with no weight range breaks harder: `fontVariationSettings` has nothing to move. If the font is static, note the ghost-span machinery is inert — and **cross-check what the code animates**: components animating `font-variation-settings` over static font files are a live site-wide no-op, worth flagging on its own. The fallback there is honest: remap the pattern to plain `font-weight` steps between the shipped weights — the ghost span still prevents reflow, the weight change just snaps instead of animating |
-| Interaction-state tokens (`bg-hover`, `bg-active`) available | entry CSS (installed by `@fluid/tokens`, arrives with components and `use-fluid-hover`) | Custom code can't use the shared hover/active fills; ad-hoc grays creep in |
-| `--overwrite` situation | stock shadcn files present in `components/ui/`? Are they actually stock, or customized (local edits, colocated stories/tests)? | Stock files: every `@fluid` install needs `--overwrite`, one explicit heads-up before the first install. Customized files: `--overwrite` would destroy local work — install to review (or diff the registry source against the local file) instead of a blind pass, and name the customized files in the reply |
+| Check                                                        | How                                                                                                                                                                                                                                            | Consequence when missing                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MotionConfig reducedMotion="user"` wraps the app            | grep the root layout                                                                                                                                                                                                                           | OS reduced-motion is ignored for transform/layout animations — an accessibility gap, one line to fix                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Inter loaded as a variable font **with the `opsz` axis**     | `next/font/google`: `Inter({ axes: ["opsz"] })`; `next/font/local`: the call declares `weight: "100 900"` (without a range the variable axis isn't addressable at all); plain CSS: `@font-face` with `font-weight: 100 900` on a variable file | Weight animations still run but labels widen on hover/selection — the "weight without reflow" promise silently breaks. A `localFont` with no weight range breaks harder: `fontVariationSettings` has nothing to move. If the font is static, note the ghost-span machinery is inert — and **cross-check what the code animates**: components animating `font-variation-settings` over static font files are a live site-wide no-op, worth flagging on its own. The fallback there is honest: remap the pattern to plain `font-weight` steps between the shipped weights — the ghost span still prevents reflow, the weight change just snaps instead of animating |
+| Interaction-state tokens (`bg-hover`, `bg-active`) available | entry CSS (installed by `@fluid/tokens`, arrives with components and `use-fluid-hover`)                                                                                                                                                        | Custom code can't use the shared hover/active fills; ad-hoc grays creep in                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `--overwrite` situation                                      | stock shadcn files present in `components/ui/`? Are they actually stock, or customized (local edits, colocated stories/tests)?                                                                                                                 | Stock files: every `@fluid` install needs `--overwrite`, one explicit heads-up before the first install. Customized files: `--overwrite` would destroy local work — install to review (or diff the registry source against the local file) instead of a blind pass, and name the customized files in the reply                                                                                                                                                                                                                                                                                                                                                    |
 
 ### 4. Inventory (context for suggestions, not warnings)
 
@@ -173,8 +173,8 @@ reply, so the user, or the next session, can re-check it instead of trusting
 it.
 
 If fewer than two entries survive, say so rather than pad. If none survive,
-that is a result, not a failure — write *"No changes recommended: nothing
-measured on <routes> departs from the system"* and stop. An audit that always
+that is a result, not a failure — write _"No changes recommended: nothing
+measured on <routes> departs from the system"_ and stop. An audit that always
 finds something teaches people to ignore it.
 
 ## Replacement shortlist (2–5 items, systems first)
@@ -189,7 +189,7 @@ pad.
 feels. Infrastructure findings — dead dependencies, package-manager notes,
 framework or Tailwind migrations, icon-library consolidation — are stated
 as stack facts, but they never occupy a shortlist slot and
-never lead the conversation. (An infra blocker can still appear *inside* an
+never lead the conversation. (An infra blocker can still appear _inside_ an
 entry, as the reason its effort is L.)
 
 **Systems before components.** Work through the FF system pages
@@ -204,7 +204,7 @@ already exist. Candidates in that order:
 2. **Fluid hover** (`use-fluid-hover`) — a list/menu/table/grid whose glide
    is hand-rolled, or whose per-row `:hover` blinks off between rows and
    drops clicks in the gaps → the one highlight per list. An app where
-   *nothing* animates hover is the ask-first case below, not this one.
+   _nothing_ animates hover is the ask-first case below, not this one.
 3. **Surfaces** (`elevated` + tokens) — popovers/dropdowns/dialogs with
    ad-hoc backgrounds and shadows that break at depth or in dark mode.
 4. **Sizes** (`size-context`) — three-plus control heights in the wild →
@@ -294,7 +294,7 @@ the fix at once.
   mismatch never hides a candidate — it raises its effort and says why.
 
 Each entry: current state → registry item (correct flavor), impact, effort,
-one line of *why* naming the felt difference. **Ground the why in the
+one line of _why_ naming the felt difference. **Ground the why in the
 craft:** before writing an entry, read the candidate's section in
 [craft.md](craft.md) and pick the one or two details the project's current
 component visibly lacks — "your select snaps open and closes on the click;
@@ -309,7 +309,7 @@ using it honestly:
   Reading the current component first is what makes the pitch credible.
 - The same comparison sets the effort honestly: craft the local version
   already replicates means the replacement changes less than it seems
-  (lower risk), while local behaviors the registry item *doesn't* have
+  (lower risk), while local behaviors the registry item _doesn't_ have
   belong in the entry as a named trade-off, not a surprise.
 
 Rank by impact-per-effort within the systems-then-components order — a
@@ -331,8 +331,8 @@ is rarely the advice the user came for. Instead:
   them — look for a `motion.ts`/`springs.ts` citing the FF docs and treat it
   as the project's `@/lib/springs`), exits one tier quicker, one gliding
   highlight per list (a hand-rolled `useFluidHover` equivalent is correct
-  here — the "never hand-roll" rule exists to prevent drift *beside installed
-  components*, and there are none), `bg-hover`/`bg-active`-style state
+  here — the "never hand-roll" rule exists to prevent drift _beside installed
+  components_, and there are none), `bg-hover`/`bg-active`-style state
   tokens, transform/opacity only.
 - **State the blocker and its caveats once**: which requirement fails, and
   what a future migration must watch for (the `--overwrite` review list, the
@@ -341,7 +341,7 @@ is rarely the advice the user came for. Instead:
 - **Advise the migration question once, deliberately**, as its own decision
   with its costs, not as a prerequisite smuggled into every suggestion.
 - **Never present the block as a gate on the list.** A blocked CLI blocks
-  *installs*, not the outcome. Every item on the shortlist is a way this
+  _installs_, not the outcome. Every item on the shortlist is a way this
   interface can feel better, and each one is reachable by hand against the
   project's own tokens, so write the shortlist to read the same either way:
   the blocker changes how an item lands and what it costs, never whether it
@@ -362,14 +362,16 @@ context, one or two lines. Keep it under ~40 lines:
 diff before any --overwrite.
 
 **Shortlist**
-| Now | Replace with | Impact | Effort | Why | Evidence |
-|---|---|---|---|---|---|
-| durations hand-written in 6 files | springs (motion tokens) | high | S | exits reuse the entrance spring today, so dismissals drag; tokens pair every tier with a one-tier-quicker exit tween | components/panel.tsx:44, dock.tsx:18 (+4) |
-| nav + table per-row :hover | use-fluid-hover | high | S | hover blinks off between rows; the highlight glides from row to row (gap-0 rows) and fades in fresh after empty space | audit.mjs / @1280: per-row, dark in the 4px gap |
-| static card grid (projects.tsx), the landing surface | card | med | M | the grid is the first thing anyone sees and nothing answers the cursor on it; the highlight tracks the card under the cursor across both axes and dividers drop beside the active one, with local markup to carry over | audit.mjs / @1280: none on 9 cards |
-| hand-rolled command palette (cmd-k.tsx) | base/command-menu | med | M | keyboard scroll keeps the row centered and travels with the highlight; ⌘K resolves per-platform with a Dvorak-safe fallback, both missing locally | cmd-k.tsx:88 scrollIntoView, :31 metaKey only |
+
+| Now                                                  | Replace with            | Impact | Effort | Why                                                                                                                                                                                                                    | Evidence                                        |
+| ---------------------------------------------------- | ----------------------- | ------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| durations hand-written in 6 files                    | springs (motion tokens) | high   | S      | exits reuse the entrance spring today, so dismissals drag; tokens pair every tier with a one-tier-quicker exit tween                                                                                                   | components/panel.tsx:44, dock.tsx:18 (+4)       |
+| nav + table per-row :hover                           | use-fluid-hover         | high   | S      | hover blinks off between rows; the highlight glides from row to row (gap-0 rows) and fades in fresh after empty space                                                                                                  | audit.mjs / @1280: per-row, dark in the 4px gap |
+| static card grid (projects.tsx), the landing surface | card                    | med    | M      | the grid is the first thing anyone sees and nothing answers the cursor on it; the highlight tracks the card under the cursor across both axes and dividers drop beside the active one, with local markup to carry over | audit.mjs / @1280: none on 9 cards              |
+| hand-rolled command palette (cmd-k.tsx)              | base/command-menu       | med    | M      | keyboard scroll keeps the row centered and travels with the highlight; ⌘K resolves per-platform with a Dvorak-safe fallback, both missing locally                                                                      | cmd-k.tsx:88 scrollIntoView, :31 metaKey only   |
 
 **Also worth fixing**
+
 - Selecting a tab on /settings shoves the tabs beside it, so the row jumps
   each time the section changes; the label needs a ghost span.
   evidence: audit.mjs /settings @1280 — SELECT "General / Billing / Team":
@@ -402,6 +404,7 @@ only when the user makes it, and only with their OK:
 
   ```markdown
   ## Fluid Functionalism
+
   - Fluid hover: declined 2026-09-14, menus stay still on purpose.
   - hooks/use-proximity-hover.ts is this project's use-fluid-hover: extend
     it, don't install beside it.

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Table,
@@ -8,12 +8,12 @@ import {
   TableHead,
   TableCell,
   TableEmpty,
-} from "@/registry/default/table";
-import { Button } from "@/components/ui/button";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { tableProps, rowProps, emptyProps } from "@/lib/docs/api/table";
+} from '#registry/default/table';
+import { Button } from '#components/ui/button';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { tableProps, rowProps, emptyProps } from '#lib/docs/api/table';
 
 const basicCode = `import {
   Table, TableHeader, TableBody,
@@ -127,7 +127,11 @@ export default function TableDoc() {
                   columns={3}
                   title="No members yet"
                   description="People you invite show up here."
-                  action={<Button variant="secondary" size="compact">Invite people</Button>}
+                  action={
+                    <Button variant="secondary" size="compact">
+                      Invite people
+                    </Button>
+                  }
                 />
               </TableBody>
             </Table>

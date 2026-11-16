@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createContext,
@@ -13,12 +13,12 @@ import {
   type HTMLAttributes,
   type InputHTMLAttributes,
   type KeyboardEvent as ReactKeyboardEvent,
-} from "react";
-import { cn } from "@/lib/utils";
-import { useIcons } from "@/lib/icon-context";
-import { useSize } from "@/lib/size-context";
-import { useSurface } from "@/lib/surface-context";
-import { SURFACE_BG } from "@/lib/surface-classes";
+} from 'react';
+import { cn } from '#lib/utils';
+import { useIcons } from '#lib/icon-context';
+import { useSize } from '#lib/size-context';
+import { useSurface } from '#lib/surface-context';
+import { SURFACE_BG } from '#lib/surface-classes';
 
 // ---------------------------------------------------------------------------
 // Search inside a dropdown menu.
@@ -43,8 +43,7 @@ import { SURFACE_BG } from "@/lib/surface-classes";
 // activates), and Escape closes the menu as usual.
 // ---------------------------------------------------------------------------
 
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 interface SearchHandle {
   input: HTMLInputElement | null;
@@ -61,17 +60,15 @@ interface DropdownSearchHostValue {
   open: boolean;
 }
 
-export const DropdownSearchHostContext =
-  createContext<DropdownSearchHostValue | null>(null);
+export const DropdownSearchHostContext = createContext<DropdownSearchHostValue | null>(null);
 
 const ROW_SELECTOR = [
   '[role="menuitem"]:not([aria-disabled="true"])',
   '[role="menuitemradio"]:not([aria-disabled="true"])',
   '[role="menuitemcheckbox"]:not([aria-disabled="true"])',
-].join(", ");
+].join(', ');
 
-const ANY_ROW =
-  '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]';
+const ANY_ROW = '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]';
 
 /** Whether `a` comes before `b` in the document. */
 function precedes(a: Node, b: Node) {
@@ -86,8 +83,8 @@ function menuRows(from: HTMLElement | null): HTMLElement[] {
 /** The box the rows sit in: the search field's parent, skipping
  *  display:contents wrappers (the menu's radio group) that have no box. */
 function rowsBox(from: HTMLElement | null): HTMLElement | null {
-  let el = from?.closest<HTMLElement>(".group\\/search")?.parentElement ?? null;
-  while (el && getComputedStyle(el).display === "contents") el = el.parentElement;
+  let el = from?.closest<HTMLElement>('.group\\/search')?.parentElement ?? null;
+  while (el && getComputedStyle(el).display === 'contents') el = el.parentElement;
   return el;
 }
 
@@ -97,10 +94,7 @@ function scrollToTop(row: HTMLElement) {
   const menu = row.closest<HTMLElement>('[role="menu"]');
   for (let el = row.parentElement; el && menu?.contains(el); el = el.parentElement) {
     const { overflowY } = getComputedStyle(el);
-    if (
-      (overflowY === "auto" || overflowY === "scroll") &&
-      el.scrollHeight > el.clientHeight
-    ) {
+    if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight) {
       el.scrollTop = 0;
       return;
     }
@@ -142,10 +136,10 @@ export function useDropdownSearchHost(open: boolean) {
     if (!handle?.input) return;
     if (e.target === handle.input) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       const target = e.target instanceof HTMLElement ? e.target : null;
       if (!target?.matches(ANY_ROW)) return;
-      const up = e.key === "ArrowUp";
+      const up = e.key === 'ArrowUp';
       const rows = menuRows(target);
       const edge = up ? rows[0] : rows[rows.length - 1];
       // At or past the first / last enabled row. Base UI lets arrows land on
@@ -162,12 +156,12 @@ export function useDropdownSearchHost(open: boolean) {
         // ↓ lands.
         scrollToTop(target);
       }
-    } else if (e.key.length === 1 && e.key !== " ") {
+    } else if (e.key.length === 1 && e.key !== ' ') {
       e.preventDefault();
       e.stopPropagation();
       handle.input.focus();
       handle.append(e.key);
-    } else if (e.key === "Backspace") {
+    } else if (e.key === 'Backspace') {
       e.preventDefault();
       e.stopPropagation();
       handle.input.focus();
@@ -180,10 +174,7 @@ export function useDropdownSearchHost(open: boolean) {
 
   /** Whether a mounted field takes focus when the popup opens, a frame after
    *  the primitive's own open autofocus. */
-  const searchTakesFocus = useCallback(
-    () => handleRef.current?.autoFocus ?? false,
-    []
-  );
+  const searchTakesFocus = useCallback(() => handleRef.current?.autoFocus ?? false, []);
 
   return {
     host,
@@ -198,11 +189,10 @@ export function useDropdownSearchHost(open: boolean) {
 // DropdownSearch
 // ---------------------------------------------------------------------------
 
-export interface DropdownSearchProps
-  extends Omit<
-    InputHTMLAttributes<HTMLInputElement>,
-    "value" | "onChange" | "size" | "defaultValue"
-  > {
+export interface DropdownSearchProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'value' | 'onChange' | 'size' | 'defaultValue'
+> {
   /** The query. Filter the MenuItems you render against it. */
   value: string;
   onValueChange: (value: string) => void;
@@ -219,19 +209,19 @@ const DropdownSearch = forwardRef<HTMLInputElement, DropdownSearchProps>(
     {
       value,
       onValueChange,
-      placeholder = "Search…",
+      placeholder = 'Search…',
       clearOnClose = true,
       autoFocus = true,
       className,
       onKeyDown,
       ...props
     },
-    ref
+    ref,
   ) => {
     const icons = useIcons();
     const SearchIcon = icons.search;
     const sizeClasses = useSize();
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
     const host = useContext(DropdownSearchHostContext);
     // Outside a popup host (an inline panel) the field is simply open.
     const open = host?.open ?? true;
@@ -283,7 +273,7 @@ const DropdownSearch = forwardRef<HTMLInputElement, DropdownSearchProps>(
       const list = listRef.current;
       if (!list) return;
       if (!empty) {
-        list.style.minHeight = "";
+        list.style.minHeight = '';
         heldRef.current = false;
       } else if (shownHeightRef.current) {
         list.style.minHeight = `${shownHeightRef.current}px`;
@@ -318,8 +308,8 @@ const DropdownSearch = forwardRef<HTMLInputElement, DropdownSearchProps>(
     // takes over one frame later so a menu with a search opens ready to type.
     useEffect(() => {
       if (!open) return;
-      if (clearOnCloseRef.current && valueRef.current !== "") {
-        onValueChangeRef.current("");
+      if (clearOnCloseRef.current && valueRef.current !== '') {
+        onValueChangeRef.current('');
       }
       if (!autoFocus) return;
       let inner: number | undefined;
@@ -336,11 +326,11 @@ const DropdownSearch = forwardRef<HTMLInputElement, DropdownSearchProps>(
     // open shows the full list.
     useEffect(
       () => () => {
-        if (clearOnCloseRef.current && valueRef.current !== "") {
-          onValueChangeRef.current("");
+        if (clearOnCloseRef.current && valueRef.current !== '') {
+          onValueChangeRef.current('');
         }
       },
-      []
+      [],
     );
 
     const handleKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
@@ -349,14 +339,14 @@ const DropdownSearch = forwardRef<HTMLInputElement, DropdownSearchProps>(
       // Escape and Tab belong to the menu (close / leave). Everything else is
       // either typing, which the menu's typeahead must not see, or list
       // navigation handled right here.
-      if (e.key === "Escape" || e.key === "Tab") return;
+      if (e.key === 'Escape' || e.key === 'Tab') return;
       e.stopPropagation();
-      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         const rows = menuRows(e.currentTarget);
         if (rows.length === 0) return;
         e.preventDefault();
-        (e.key === "ArrowDown" ? rows[0] : rows[rows.length - 1]).focus();
-      } else if (e.key === "Enter") {
+        (e.key === 'ArrowDown' ? rows[0] : rows[rows.length - 1]).focus();
+      } else if (e.key === 'Enter') {
         // No row has focus, so there is nothing to pick. preventDefault
         // keeps a surrounding form from submitting.
         e.preventDefault();
@@ -372,12 +362,12 @@ const DropdownSearch = forwardRef<HTMLInputElement, DropdownSearchProps>(
         // below it inside the sticky band, and the first row 4px below the
         // divider: the same 4px as the popup's sides.
         className={cn(
-          "group/search sticky top-0 z-20 -mx-1 -mt-1 mb-1 box-content flex shrink-0 items-center border-b border-border/60 py-1",
+          'group/search sticky top-0 z-20 -mx-1 -mt-1 mb-1 box-content flex shrink-0 items-center border-b border-border/60 py-1',
           SURFACE_BG[surface],
           sizeClasses.control,
           sizeClasses.gap,
-          compact ? "px-2.5" : "px-3",
-          className
+          compact ? 'px-2.5' : 'px-3',
+          className,
         )}
       >
         <SearchIcon
@@ -388,7 +378,7 @@ const DropdownSearch = forwardRef<HTMLInputElement, DropdownSearchProps>(
         <input
           ref={(node) => {
             inputRef.current = node;
-            if (typeof ref === "function") ref(node);
+            if (typeof ref === 'function') ref(node);
             else if (ref) ref.current = node;
           }}
           type="text"
@@ -407,21 +397,21 @@ const DropdownSearch = forwardRef<HTMLInputElement, DropdownSearchProps>(
           // elements the shape radius, and a text input clips its caret to
           // its own corners (pill mode nicks the caret at the left edge).
           className={cn(
-            "min-w-0 flex-1 rounded-none bg-transparent text-foreground placeholder:text-muted-foreground outline-none font-[inherit]",
+            'min-w-0 flex-1 rounded-none bg-transparent text-foreground placeholder:text-muted-foreground outline-none font-[inherit]',
             sizeClasses.field,
             // The line box: Safari runs the caret its full height, so the
             // ladder's leading keeps it in proportion to the row. (Chrome
             // sizes the caret to the font itself, whatever the leading.)
-            compact ? "leading-5" : "leading-6"
+            compact ? 'leading-5' : 'leading-6',
           )}
           {...props}
         />
       </div>
     );
-  }
+  },
 );
 
-DropdownSearch.displayName = "DropdownSearch";
+DropdownSearch.displayName = 'DropdownSearch';
 
 // ---------------------------------------------------------------------------
 // DropdownEmpty — the "no results" row a filtered menu shows instead of items.
@@ -437,16 +427,16 @@ const DropdownEmpty = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>
         aria-live="polite"
         className={cn(
           // my-auto centers the message in the height the rows left.
-          "my-auto px-2 py-6 text-center text-muted-foreground",
+          'my-auto px-2 py-6 text-center text-muted-foreground',
           sizeClasses.text,
-          className
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
-DropdownEmpty.displayName = "DropdownEmpty";
+DropdownEmpty.displayName = 'DropdownEmpty';
 
 export { DropdownSearch, DropdownEmpty };

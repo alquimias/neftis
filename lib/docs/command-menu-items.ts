@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { useIcons, type IconName } from "@/lib/icon-context";
-import type { CommandMenuItemData } from "@/registry/default/command-menu";
-import { COMMAND_MENU_ITEMS } from "@/lib/preset/command-menu-options";
+import { useMemo } from 'react';
+import { useIcons, type IconName } from '#lib/icon-context';
+import type { CommandMenuItemData } from '#registry/default/command-menu';
+import { COMMAND_MENU_ITEMS } from '#lib/preset/command-menu-options';
 
 // ---------------------------------------------------------------------------
 // Demo actions shared by the command menu doc page, its playground, the
@@ -20,7 +20,7 @@ export {
   COMMAND_MENU_TYPES,
   COMMAND_MENU_SORTS,
   COMMAND_MENU_COPY,
-} from "@/lib/preset/command-menu-options";
+} from '#lib/preset/command-menu-options';
 
 export interface CommandMenuItemOptions {
   /** Keep the rows' descriptions. @default true */
@@ -46,8 +46,8 @@ export function useCommandMenuItems({
           icon: icons[icon as IconName],
           ...(descriptions && description !== undefined && { description }),
           ...(shortcuts && shortcut !== undefined && { shortcut }),
-        })
+        }),
       ),
-    [icons, descriptions, shortcuts, groups]
+    [icons, descriptions, shortcuts, groups],
   );
 }

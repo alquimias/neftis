@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // Adapted from Lina by SameerJS6 (https://lina.sameer.sh) — lina-radix
 // scroll-area. Changes from the original: Lina's gradient-only ScrollMask is
@@ -19,12 +19,12 @@ import {
   type ComponentRef,
   type ReactNode,
   type UIEventHandler,
-} from "react";
-import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import { cn } from "@/lib/utils";
-import { omit } from "@/lib/omit";
-import { useShape } from "@/lib/shape-context";
-import { useTouchPrimary } from "@/hooks/use-touch-primary";
+} from 'react';
+import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
+import { cn } from '#lib/utils';
+import { omit } from '#lib/omit';
+import { useShape } from '#lib/shape-context';
+import { useTouchPrimary } from '#hooks/use-touch-primary';
 
 // On touch-primary devices the Radix machinery is skipped entirely in favour
 // of native overflow scrolling (better physics, momentum, rubber-banding);
@@ -66,39 +66,30 @@ const StableViewport = memo(function StableViewport({
   onScroll: UIEventHandler<HTMLDivElement>;
 }) {
   return (
-    <ScrollAreaPrimitive.Viewport data-slot="scroll-area-viewport" onScroll={onScroll} className={className}>
+    <ScrollAreaPrimitive.Viewport
+      data-slot="scroll-area-viewport"
+      onScroll={onScroll}
+      className={className}
+    >
       {viewportChildren}
     </ScrollAreaPrimitive.Viewport>
   );
 });
 
-type Orientation = "vertical" | "horizontal" | "both";
+type Orientation = 'vertical' | 'horizontal' | 'both';
 
-interface ScrollAreaProps
-  extends ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> {
+interface ScrollAreaProps extends ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> {
   viewportClassName?: string;
   /** Which axes get scrollbars. Defaults to `"vertical"`. */
   orientation?: Orientation;
 }
 
-const ScrollArea = forwardRef<
-  ComponentRef<typeof ScrollAreaPrimitive.Root>,
-  ScrollAreaProps
->(
-  (
-    {
-      className,
-      children,
-      viewportClassName,
-      orientation = "vertical",
-      ...rest
-    },
-    ref
-  ) => {
+const ScrollArea = forwardRef<ComponentRef<typeof ScrollAreaPrimitive.Root>, ScrollAreaProps>(
+  ({ className, children, viewportClassName, orientation = 'vertical', ...rest }, ref) => {
     // scrollHideDelay is swallowed: hide timing is owned by the fade classes
     // + scroll linger below, not Radix's hover machinery (see type="always"
     // note).
-    const props = omit(rest, ["scrollHideDelay"]);
+    const props = omit(rest, ['scrollHideDelay']);
     const isTouch = useTouchPrimary();
 
     // Hover + scroll visibility, driving the scrollbar fade below. Scroll
@@ -110,7 +101,7 @@ const ScrollArea = forwardRef<
       () => () => {
         if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
       },
-      []
+      [],
     );
     // Stable, so the memoized viewport below doesn't re-render for it.
     const handleScroll = useCallback(() => {
@@ -127,17 +118,17 @@ const ScrollArea = forwardRef<
             role="group"
             data-slot="scroll-area"
             aria-roledescription="scroll area"
-            className={cn("relative overflow-hidden", className)}
+            className={cn('relative overflow-hidden', className)}
             {...props}
           >
             <div
               data-slot="scroll-area-viewport"
               className={cn(
-                "size-full rounded-[inherit] focus-visible:outline-offset-[-1px]",
-                orientation === "vertical" && "overflow-y-auto",
-                orientation === "horizontal" && "overflow-x-auto",
-                orientation === "both" && "overflow-auto",
-                viewportClassName
+                'size-full rounded-[inherit] focus-visible:outline-offset-[-1px]',
+                orientation === 'vertical' && 'overflow-y-auto',
+                orientation === 'horizontal' && 'overflow-x-auto',
+                orientation === 'both' && 'overflow-auto',
+                viewportClassName,
               )}
               tabIndex={0}
             >
@@ -156,32 +147,35 @@ const ScrollArea = forwardRef<
               type="always"
               onPointerEnter={() => setHovering(true)}
               onPointerLeave={() => setHovering(false)}
-              className={cn("relative overflow-hidden", className)}
+              className={cn('relative overflow-hidden', className)}
               {...props}
             >
               <ViewportChildrenContext.Provider value={children}>
                 <StableViewport
                   onScroll={handleScroll}
-                  className={cn("size-full rounded-[inherit] focus-visible:outline-offset-[-1px]", viewportClassName)}
+                  className={cn(
+                    'size-full rounded-[inherit] focus-visible:outline-offset-[-1px]',
+                    viewportClassName,
+                  )}
                 />
               </ViewportChildrenContext.Provider>
-              {orientation !== "horizontal" && <ScrollBar orientation="vertical" />}
-              {orientation !== "vertical" && <ScrollBar orientation="horizontal" />}
-              {orientation === "both" && <ScrollAreaPrimitive.Corner />}
+              {orientation !== 'horizontal' && <ScrollBar orientation="vertical" />}
+              {orientation !== 'vertical' && <ScrollBar orientation="horizontal" />}
+              {orientation === 'both' && <ScrollAreaPrimitive.Corner />}
             </ScrollAreaPrimitive.Root>
           </ScrollbarVisibleContext.Provider>
         )}
       </ScrollAreaContext.Provider>
     );
-  }
+  },
 );
 
-ScrollArea.displayName = "ScrollArea";
+ScrollArea.displayName = 'ScrollArea';
 
 const ScrollBar = forwardRef<
   ComponentRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
   ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
->(({ className, orientation = "vertical", ...props }, ref) => {
+>(({ className, orientation = 'vertical', ...props }, ref) => {
   const isTouch = useContext(ScrollAreaContext);
   const visible = useContext(ScrollbarVisibleContext);
   const shape = useShape();
@@ -198,7 +192,7 @@ const ScrollBar = forwardRef<
       // unmounts through Presence layers a CSS transition can't outlive.
       // data-visible drives the fade; Radix's own data-state stays "visible"
       // under the Root's type="always" and is ignored.
-      data-visible={visible ? "" : undefined}
+      data-visible={visible ? '' : undefined}
       // Scrollbar show/hide is plain CSS opacity matching the cue fade —
       // 160ms in, 120ms out (exits faster, per the animation guidelines);
       // spring tokens are Motion configs and don't apply here.
@@ -206,18 +200,18 @@ const ScrollBar = forwardRef<
         // The 10px track stays as a comfortable hit target; the thumb inside
         // it rests narrow and low-contrast, then widens + darkens on hover so
         // it gets out of the way until you reach for it.
-        "group/scrollbar z-20 flex touch-none select-none",
+        'group/scrollbar z-20 flex touch-none select-none',
         // Show immediately; on hide, wait out the 160ms thumb shrink before
         // fading so the thumb visibly narrows back first instead of the fade
         // masking it.
-        "opacity-0 transition-opacity duration-120 ease-out delay-160",
-        "data-[visible]:opacity-100 data-[visible]:duration-160 data-[visible]:delay-0",
+        'opacity-0 transition-opacity duration-120 ease-out delay-160',
+        'data-[visible]:opacity-100 data-[visible]:duration-160 data-[visible]:delay-0',
         // Faded out = gone: the always-mounted track must not eat clicks or
         // hovers on content along the edge.
-        "pointer-events-none data-[visible]:pointer-events-auto",
-        orientation === "vertical" && "h-full w-2.5",
-        orientation === "horizontal" && "h-2.5 w-full flex-col",
-        className
+        'pointer-events-none data-[visible]:pointer-events-auto',
+        orientation === 'vertical' && 'h-full w-2.5',
+        orientation === 'horizontal' && 'h-2.5 w-full flex-col',
+        className,
       )}
       {...props}
     >
@@ -226,22 +220,22 @@ const ScrollBar = forwardRef<
         className={cn(
           // Fixed surface-relative overlay ramp (8 → 12 → 16%) — same tint
           // direction as the menu hover/active tokens, one notch stronger.
-          "relative bg-[rgb(var(--overlay)/0.08)] transition-[background-color,width,height] duration-160 ease-in-out",
-          "group-hover/scrollbar:bg-[rgb(var(--overlay)/0.12)] active:!bg-[rgb(var(--overlay)/0.16)]",
+          'relative bg-[rgb(var(--overlay)/0.08)] transition-[background-color,width,height] duration-160 ease-in-out',
+          'group-hover/scrollbar:bg-[rgb(var(--overlay)/0.12)] active:!bg-[rgb(var(--overlay)/0.16)]',
           shape.bg,
           // -translate nudges the thumb 2px off the container edge; the track
           // (and its 10px hit target) stays flush so edge-throws still land.
-          orientation === "vertical" &&
-            "mx-auto my-1 w-1 -translate-x-0.5 group-hover/scrollbar:w-1.5",
-          orientation === "horizontal" &&
-            "my-auto mx-1 h-1 -translate-y-0.5 group-hover/scrollbar:h-1.5"
+          orientation === 'vertical' &&
+            'mx-auto my-1 w-1 -translate-x-0.5 group-hover/scrollbar:w-1.5',
+          orientation === 'horizontal' &&
+            'my-auto mx-1 h-1 -translate-y-0.5 group-hover/scrollbar:h-1.5',
         )}
       />
     </ScrollAreaPrimitive.ScrollAreaScrollbar>
   );
 });
 
-ScrollBar.displayName = "ScrollBar";
+ScrollBar.displayName = 'ScrollBar';
 
 export { ScrollArea, ScrollBar };
 export type { ScrollAreaProps };

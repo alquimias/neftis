@@ -1,20 +1,17 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { InputMessage } from "@/registry/default/input-message";
-import { ChatMessage } from "@/registry/default/chat-message";
-import { Button } from "@/registry/radix/button";
-import { useIcon } from "@/lib/icon-context";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import {
-  InputMessagePlayground,
-  SUGGESTIONS,
-} from "@/lib/docs/playgrounds/input-message";
-import { QueuedChatDemo } from "./queued-chat-demo";
-import { inputMessageProps } from "@/lib/docs/api/input-message";
+import { useEffect, useRef, useState } from 'react';
+import { InputMessage } from '#registry/default/input-message';
+import { ChatMessage } from '#registry/default/chat-message';
+import { Button } from '#registry/radix/button';
+import { useIcon } from '#lib/icon-context';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { InputMessagePlayground, SUGGESTIONS } from '#lib/docs/playgrounds/input-message';
+import { QueuedChatDemo } from './queued-chat-demo';
+import { inputMessageProps } from '#lib/docs/api/input-message';
 
 const basicCode = `import { useState } from "react";
 import { InputMessage } from "./components";
@@ -132,7 +129,7 @@ useEffect(() => {
 const leftOnlyCode = `import { useState } from "react";
 import { InputMessage } from "./components";
 import { Button } from "./components";
-import { useIcon } from "@/lib/icon-context";
+import { useIcon } from "#lib/icon-context";
 
 const [value, setValue] = useState("");
 const PlusIcon = useIcon("plus");
@@ -152,7 +149,7 @@ const PlusIcon = useIcon("plus");
 const rightOnlyCode = `import { useState } from "react";
 import { InputMessage } from "./components";
 import { Button } from "./components";
-import { useIcon } from "@/lib/icon-context";
+import { useIcon } from "#lib/icon-context";
 
 const [value, setValue] = useState("");
 const ChevronDownIcon = useIcon("chevron-down");
@@ -198,9 +195,9 @@ const [messages, setMessages] = useState<string[]>([]);
 
 const queuedCode = `import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useAnimationControls } from "motion/react";
-import { spring } from "@/lib/springs";
-import { fontWeights } from "@/lib/font-weight";
-import { useIcon } from "@/lib/icon-context";
+import { spring } from "#lib/springs";
+import { fontWeights } from "#lib/font-weight";
+import { useIcon } from "#lib/icon-context";
 import {
   InputMessage, ChatMessage, ThinkingIndicator, FileThumbnail, type QueuedMessage,
 } from "./components";
@@ -553,36 +550,36 @@ function InputMessagePlaygroundSection() {
 }
 
 export default function InputMessageDoc() {
-  const [basicValue, setBasicValue] = useState("");
-  const [suggestValue, setSuggestValue] = useState("");
-  const [leftValue, setLeftValue] = useState("");
-  const [rightValue, setRightValue] = useState("");
-  const [handlerValue, setHandlerValue] = useState("");
+  const [basicValue, setBasicValue] = useState('');
+  const [suggestValue, setSuggestValue] = useState('');
+  const [leftValue, setLeftValue] = useState('');
+  const [rightValue, setRightValue] = useState('');
+  const [handlerValue, setHandlerValue] = useState('');
   const [messages, setMessages] = useState<string[]>([]);
 
   // "Attachments" demo: a composer pre-filled with a real image + PDF, loaded
   // from public assets at mount. Sending pushes the message (with its
   // attachments) into a transcript and an assistant reply follows.
-  const [attachValue, setAttachValue] = useState("");
+  const [attachValue, setAttachValue] = useState('');
   const [attachFiles, setAttachFiles] = useState<File[]>([]);
   const [attachMessages, setAttachMessages] = useState<
-    { from: "user" | "assistant"; text: string; files?: File[] }[]
+    { from: 'user' | 'assistant'; text: string; files?: File[] }[]
   >([]);
   // Keep the originally-loaded files so "Reset" can re-fill the composer.
   const initialAttachFiles = useRef<File[]>([]);
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      fetch("/micka.png")
+      fetch('/micka.png')
         .then((r) => r.blob())
-        .then((b) => new File([b], "micka.png", { type: b.type || "image/png" })),
-      fetch("/Receipt-2581-4039-8265.pdf")
+        .then((b) => new File([b], 'micka.png', { type: b.type || 'image/png' })),
+      fetch('/Receipt-2581-4039-8265.pdf')
         .then((r) => r.blob())
         .then(
           (b) =>
-            new File([b], "Receipt-2581-4039-8265.pdf", {
-              type: b.type || "application/pdf",
-            })
+            new File([b], 'Receipt-2581-4039-8265.pdf', {
+              type: b.type || 'application/pdf',
+            }),
         ),
     ])
       .then((files) => {
@@ -598,7 +595,7 @@ export default function InputMessageDoc() {
 
   const resetAttachDemo = () => {
     setAttachMessages([]);
-    setAttachValue("");
+    setAttachValue('');
     setAttachFiles(initialAttachFiles.current);
   };
 
@@ -621,9 +618,9 @@ export default function InputMessageDoc() {
     if (el) el.scrollTop = el.scrollHeight;
   }, [attachMessages, attachInputH]);
 
-  const PlusIcon = useIcon("plus");
-  const ChevronDownIcon = useIcon("chevron-down");
-  const ResetIcon = useIcon("rotate-ccw");
+  const PlusIcon = useIcon('plus');
+  const ChevronDownIcon = useIcon('chevron-down');
+  const ResetIcon = useIcon('rotate-ccw');
 
   return (
     <DocPage
@@ -641,7 +638,7 @@ export default function InputMessageDoc() {
             <InputMessage
               value={basicValue}
               onValueChange={setBasicValue}
-              onSend={() => setBasicValue("")}
+              onSend={() => setBasicValue('')}
             />
           </div>
         </ComponentPreview>
@@ -653,7 +650,7 @@ export default function InputMessageDoc() {
             <InputMessage
               value={suggestValue}
               onValueChange={setSuggestValue}
-              onSend={() => setSuggestValue("")}
+              onSend={() => setSuggestValue('')}
               placeholderSuggestion="Why is every other input box so stiff?"
               suggestions={SUGGESTIONS}
             />
@@ -671,17 +668,14 @@ export default function InputMessageDoc() {
             attachMessages.length > 0
               ? {
                   icon: <ResetIcon size={16} strokeWidth={1.5} />,
-                  tooltip: "Reset",
+                  tooltip: 'Reset',
                   onClick: resetAttachDemo,
                 }
               : undefined
           }
         >
           <div className="relative w-full self-stretch">
-            <div
-              ref={attachScrollRef}
-              className="absolute inset-0 overflow-y-auto scrollbar-hide"
-            >
+            <div ref={attachScrollRef} className="absolute inset-0 overflow-y-auto scrollbar-hide">
               <div
                 className="flex min-h-full flex-col justify-start gap-2"
                 style={{ paddingBottom: attachInputH + 12 }}
@@ -702,11 +696,8 @@ export default function InputMessageDoc() {
               onFilesChange={setAttachFiles}
               onSend={(text, attachments) => {
                 if (!text && attachments.length === 0) return;
-                setAttachMessages((prev) => [
-                  ...prev,
-                  { from: "user", text, files: attachments },
-                ]);
-                setAttachValue("");
+                setAttachMessages((prev) => [...prev, { from: 'user', text, files: attachments }]);
+                setAttachValue('');
                 setAttachFiles([]);
               }}
             />
@@ -724,7 +715,7 @@ export default function InputMessageDoc() {
             <InputMessage
               value={leftValue}
               onValueChange={setLeftValue}
-              onSend={() => setLeftValue("")}
+              onSend={() => setLeftValue('')}
               leftSlot={
                 <Button variant="ghost" size="icon-sm" aria-label="Attach">
                   <PlusIcon />
@@ -741,7 +732,7 @@ export default function InputMessageDoc() {
             <InputMessage
               value={rightValue}
               onValueChange={setRightValue}
-              onSend={() => setRightValue("")}
+              onSend={() => setRightValue('')}
               rightSlot={
                 <Button variant="ghost" size="sm" trailingIcon={ChevronDownIcon}>
                   Sonnet 4.6
@@ -760,7 +751,7 @@ export default function InputMessageDoc() {
             messages.length > 0
               ? {
                   icon: <ResetIcon size={16} strokeWidth={1.5} />,
-                  tooltip: "Clear messages",
+                  tooltip: 'Clear messages',
                   onClick: () => setMessages([]),
                 }
               : undefined
@@ -781,7 +772,7 @@ export default function InputMessageDoc() {
               onValueChange={setHandlerValue}
               onSend={(text) => {
                 if (text) setMessages((prev) => [...prev, text]);
-                setHandlerValue("");
+                setHandlerValue('');
               }}
               placeholder="Press Enter to send. Shift+Enter for newline."
             />
@@ -792,11 +783,7 @@ export default function InputMessageDoc() {
       <DocSection title="Disabled">
         <ComponentPreview code={disabledCode} minHeightClass="min-h-[280px]">
           <div className="w-full max-w-xl">
-            <InputMessage
-              value="This composer is disabled"
-              onValueChange={() => {}}
-              disabled
-            />
+            <InputMessage value="This composer is disabled" onValueChange={() => {}} disabled />
           </div>
         </ComponentPreview>
       </DocSection>

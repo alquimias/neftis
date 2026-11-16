@@ -1,13 +1,7 @@
-"use client";
+'use client';
 
-import {
-  createContext,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
-import type { Base } from "./install-url";
+import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import type { Base } from './install-url';
 
 export type { Base };
 
@@ -31,7 +25,7 @@ const BaseContext = createContext<BaseContextValue | null>(null);
  */
 export function BaseProvider({
   children,
-  defaultBase = "base",
+  defaultBase = 'base',
 }: {
   children: ReactNode;
   defaultBase?: Base;
@@ -46,15 +40,11 @@ export function useBase(): BaseContextValue {
   const ctx = useContext(BaseContext);
   if (!ctx) {
     // Fallback: not wrapped in provider — return read-only Radix default.
-    return { base: "radix", setBase: () => {} };
+    return { base: 'radix', setBase: () => {} };
   }
   return ctx;
 }
 
 // The flavour sets and installUrl live in a plain module so server code (the
 // /docs/<slug>.md routes) can use them; re-exported here for client callers.
-export {
-  DUAL_FLAVOR_SLUGS,
-  FLAVORED_SINGLE_SOURCE_SLUGS,
-  installUrl,
-} from "./install-url";
+export { DUAL_FLAVOR_SLUGS, FLAVORED_SINGLE_SOURCE_SLUGS, installUrl } from './install-url';

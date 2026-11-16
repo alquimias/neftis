@@ -31,12 +31,12 @@ function tree(files) {
   return dir;
 }
 
-const SELECT_BASE = `import { Select } from "@base-ui/react/select";\nimport { spring } from "@/lib/springs";\nexport const flavor = "base";\n`;
-const SELECT_RADIX = `import * as Select from "@radix-ui/react-select";\nimport { spring } from "@/lib/springs";\nexport const flavor = "radix";\n`;
+const SELECT_BASE = `import { Select } from "@base-ui/react/select";\nimport { spring } from "#lib/springs";\nexport const flavor = "base";\n`;
+const SELECT_RADIX = `import * as Select from "@radix-ui/react-select";\nimport { spring } from "#lib/springs";\nexport const flavor = "radix";\n`;
 const SPRINGS = `export const spring = {\n  fast: { duration: 0.08 },\n  moderate: { duration: 0.16 },\n};\n`;
 const HOOK = `export function useFluidHover() {}\n`;
-const DIALOG_RADIX = `import * as Dialog from "@radix-ui/react-dialog";\nimport { spring } from "@/lib/springs";\n`;
-const HIGHLIGHT = `import { useFluidHover } from "@/hooks/use-fluid-hover";\nexport function FluidHoverHighlight() {}\n`;
+const DIALOG_RADIX = `import * as Dialog from "@radix-ui/react-dialog";\nimport { spring } from "#lib/springs";\n`;
+const HIGHLIGHT = `import { useFluidHover } from "#hooks/use-fluid-hover";\nexport function FluidHoverHighlight() {}\n`;
 
 const registry = () =>
   tree({
@@ -88,7 +88,7 @@ const project = (extra = {}) =>
 describe("normalize", () => {
   it("drops what an install rewrites: aliases, line endings, trailing spaces", () => {
     expect(normalize(`import { a } from "~/lib/springs";  \r\nimport b from "../hooks/x";\r\n`)).toBe(
-      normalize(`import { a } from "@/lib/springs";\nimport b from "@/hooks/x";\n`),
+      normalize(`import { a } from "#lib/springs";\nimport b from "#hooks/x";\n`),
     );
   });
 

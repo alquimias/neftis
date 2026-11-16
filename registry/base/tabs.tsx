@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Children,
@@ -11,16 +11,16 @@ import {
   forwardRef,
   type ReactNode,
   type HTMLAttributes,
-} from "react";
-import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
-import { motion, AnimatePresence } from "motion/react";
-import type { IconComponent } from "@/lib/icon-context";
-import { cn } from "@/lib/utils";
-import { spring } from "@/lib/springs";
-import { fontWeights } from "@/lib/font-weight";
-import { useShape } from "@/lib/shape-context";
-import { SizeProvider, useSize, type SizeVariant } from "@/lib/size-context";
-import { useFluidHover } from "@/hooks/use-fluid-hover";
+} from 'react';
+import { Tabs as TabsPrimitive } from '@base-ui/react/tabs';
+import { motion, AnimatePresence } from 'motion/react';
+import type { IconComponent } from '#lib/icon-context';
+import { cn } from '#lib/utils';
+import { spring } from '#lib/springs';
+import { fontWeights } from '#lib/font-weight';
+import { useShape } from '#lib/shape-context';
+import { SizeProvider, useSize, type SizeVariant } from '#lib/size-context';
+import { useFluidHover } from '#hooks/use-fluid-hover';
 
 interface TabsContextValue {
   registerTab: (index: number, element: HTMLElement | null) => void;
@@ -34,11 +34,11 @@ const TabsContext = createContext<TabsContextValue | null>(null);
 
 function useTabs() {
   const ctx = useContext(TabsContext);
-  if (!ctx) throw new Error("useTabs must be used within a Tabs");
+  if (!ctx) throw new Error('useTabs must be used within a Tabs');
   return ctx;
 }
 
-interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "onSelect"> {
+interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   children: ReactNode;
   selectedIndex: number;
   onSelect: (index: number) => void;
@@ -52,7 +52,10 @@ interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "onSelect"> {
 }
 
 const Tabs = forwardRef<HTMLDivElement, TabsProps>(
-  ({ children, selectedIndex, onSelect, idPrefix, activeLabel = false, size, className, ...props }, ref) => {
+  (
+    { children, selectedIndex, onSelect, idPrefix, activeLabel = false, size, className, ...props },
+    ref,
+  ) => {
     const containerRef = useRef<HTMLDivElement>(null);
     // Whether the pointer is over the list, for blur, which reads it at
     // the moment it runs.
@@ -66,7 +69,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
       handlers,
       registerItem,
       measureItems: measureTabs,
-    } = useFluidHover(containerRef, { axis: "x" });
+    } = useFluidHover(containerRef, { axis: 'x' });
 
     // Each tab button is watched for resize (a label expanding or
     // collapsing in activeLabel mode) by one observer that lives as long as
@@ -82,7 +85,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
     const registerTab = useCallback(
       (index: number, element: HTMLElement | null) => {
         registerItem(index, element);
-        if (tabObserverRef.current === null && typeof ResizeObserver !== "undefined")
+        if (tabObserverRef.current === null && typeof ResizeObserver !== 'undefined')
           tabObserverRef.current = new ResizeObserver(() => measureTabsRef.current());
         const previous = tabElementsRef.current.get(index);
         if (previous && previous !== element) tabObserverRef.current?.unobserve(previous);
@@ -93,7 +96,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
           tabElementsRef.current.delete(index);
         }
       },
-      [registerItem]
+      [registerItem],
     );
     useEffect(() => () => tabObserverRef.current?.disconnect(), []);
 
@@ -110,7 +113,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
         isMouseInside.current = true;
         handlers.onMouseMove(e);
       },
-      [handlers]
+      [handlers],
     );
 
     const handleMouseLeave = useCallback(() => {
@@ -121,8 +124,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
     const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
 
     const selectedRect = tabRects[selectedIndex];
-    const hoverRect =
-      hoveredIndex !== null ? tabRects[hoveredIndex] : null;
+    const hoverRect = hoveredIndex !== null ? tabRects[hoveredIndex] : null;
     const focusRect = focusedIndex !== null ? tabRects[focusedIndex] : null;
     const isHoveringSelected = hoveredIndex === selectedIndex;
     // The hover pill never travels out of, or across, the selected tab: a
@@ -156,28 +158,26 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
         <TabsPrimitive.Root
           value={selectedIndex}
           onValueChange={(value) => {
-            if (typeof value === "number") onSelect(value);
+            if (typeof value === 'number') onSelect(value);
           }}
           render={
             <TabsPrimitive.List
               activateOnFocus={false}
               ref={(node: HTMLDivElement | null) => {
                 containerRef.current = node;
-                if (typeof ref === "function") ref(node);
+                if (typeof ref === 'function') ref(node);
                 else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
               }}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               onFocus={(e: React.FocusEvent<HTMLDivElement>) => {
                 const indexAttr = (e.target as HTMLElement)
-                  .closest("[data-fluid-hover-index]")
-                  ?.getAttribute("data-fluid-hover-index");
+                  .closest('[data-fluid-hover-index]')
+                  ?.getAttribute('data-fluid-hover-index');
                 if (indexAttr != null) {
                   const idx = Number(indexAttr);
                   setHoveredIndex(idx);
-                  setFocusedIndex(
-                    (e.target as HTMLElement).matches(":focus-visible") ? idx : null
-                  );
+                  setFocusedIndex((e.target as HTMLElement).matches(':focus-visible') ? idx : null);
                 }
               }}
               onBlur={(e: React.FocusEvent<HTMLDivElement>) => {
@@ -193,15 +193,15 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
                 // parents size against the margin box (8px narrower than the
                 // border box), so a plain max-w-full would clamp the list 8px
                 // too small and clip the first/last tab's ring.
-                "relative flex items-center select-none overflow-x-auto max-w-[calc(100%_+_8px)] scrollbar-hide -mx-1 px-1 -my-1 py-1",
-                className
+                'relative flex items-center select-none overflow-x-auto max-w-[calc(100%_+_8px)] scrollbar-hide -mx-1 px-1 -my-1 py-1',
+                className,
               )}
               {...props}
             >
               {/* Selected pill */}
               {selectedRect && (
                 <motion.div
-                  className={cn("absolute bg-active pointer-events-none", shape.bg)}
+                  className={cn('absolute bg-active pointer-events-none', shape.bg)}
                   initial={false}
                   animate={{
                     left: selectedRect.left,
@@ -222,7 +222,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
                 {hoverRect && !isHoveringSelected && (
                   <motion.div
                     key={hoverRun}
-                    className={cn("absolute bg-active pointer-events-none", shape.bg)}
+                    className={cn('absolute bg-active pointer-events-none', shape.bg)}
                     initial={{
                       left: hoverRect.left,
                       width: hoverRect.width,
@@ -250,7 +250,10 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
               <AnimatePresence>
                 {focusRect && (
                   <motion.div
-                    className={cn("absolute pointer-events-none z-20 border border-[color:var(--focus-ring,#6B97FF)]", shape.focusRing)}
+                    className={cn(
+                      'absolute pointer-events-none z-20 border border-[color:var(--focus-ring,#6B97FF)]',
+                      shape.focusRing,
+                    )}
                     initial={false}
                     animate={{
                       left: focusRect.left - 2,
@@ -276,10 +279,10 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 
     // A size prop pins every tab to one ladder step.
     return size ? <SizeProvider size={size}>{root}</SizeProvider> : root;
-  }
+  },
 );
 
-Tabs.displayName = "Tabs";
+Tabs.displayName = 'Tabs';
 
 interface TabsItemProps extends HTMLAttributes<HTMLButtonElement> {
   icon?: IconComponent;
@@ -309,8 +312,7 @@ const TabsItem = forwardRef<HTMLButtonElement, TabsItemProps>(
     }, []);
     const shape = useShape();
     const sizeClasses = useSize();
-    const { registerTab, hoveredIndex, selectedIndex, idPrefix, activeLabel } =
-      useTabs();
+    const { registerTab, hoveredIndex, selectedIndex, idPrefix, activeLabel } = useTabs();
 
     useEffect(() => {
       registerTab(index, internalRef.current);
@@ -325,10 +327,7 @@ const TabsItem = forwardRef<HTMLButtonElement, TabsItemProps>(
     const labelContent = (
       // Both stacked spans carry the text-box trim so the invisible bold
       // sizer and the visible label keep identical boxes.
-      <span
-        ref={measureLabel}
-        className={cn("inline-grid whitespace-nowrap", sizeClasses.text)}
-      >
+      <span ref={measureLabel} className={cn('inline-grid whitespace-nowrap', sizeClasses.text)}>
         <span
           className="col-start-1 row-start-1 invisible [text-box:trim-both_cap_alphabetic]"
           style={{ fontVariationSettings: fontWeights.semibold }}
@@ -338,13 +337,11 @@ const TabsItem = forwardRef<HTMLButtonElement, TabsItemProps>(
         </span>
         <span
           className={cn(
-            "col-start-1 row-start-1 transition-[color,font-variation-settings] duration-80 [text-box:trim-both_cap_alphabetic]",
-            isActive ? "text-foreground" : "text-muted-foreground"
+            'col-start-1 row-start-1 transition-[color,font-variation-settings] duration-80 [text-box:trim-both_cap_alphabetic]',
+            isActive ? 'text-foreground' : 'text-muted-foreground',
           )}
           style={{
-            fontVariationSettings: isSelected
-              ? fontWeights.semibold
-              : fontWeights.normal,
+            fontVariationSettings: isSelected ? fontWeights.semibold : fontWeights.normal,
           }}
         >
           {label}
@@ -361,7 +358,7 @@ const TabsItem = forwardRef<HTMLButtonElement, TabsItemProps>(
         ref={(node: HTMLElement | null) => {
           const button = node as HTMLButtonElement | null;
           internalRef.current = button;
-          if (typeof ref === "function") ref(button);
+          if (typeof ref === 'function') ref(button);
           else if (ref) (ref as React.MutableRefObject<HTMLButtonElement | null>).current = button;
         }}
         value={index}
@@ -373,12 +370,12 @@ const TabsItem = forwardRef<HTMLButtonElement, TabsItemProps>(
           // Fixed heights (was py-2 around a 19.5px line box ≈ 35.5px) so the
           // text-box trim on the label doesn't shrink the tab. Standalone
           // pills sit directly on the ladder's control height.
-          "relative z-10 flex items-center cursor-pointer bg-transparent border-none outline-none",
+          'relative z-10 flex items-center cursor-pointer bg-transparent border-none outline-none',
           sizeClasses.control,
           sizeClasses.px,
           !collapseLabel && sizeClasses.gap,
           shape.bg,
-          className
+          className,
         )}
         {...props}
       >
@@ -387,8 +384,8 @@ const TabsItem = forwardRef<HTMLButtonElement, TabsItemProps>(
             size={sizeClasses.icon}
             strokeWidth={isActive ? 2 : 1.5}
             className={cn(
-              "shrink-0 transition-[color,stroke-width] duration-80",
-              isActive ? "text-foreground" : "text-muted-foreground"
+              'shrink-0 transition-[color,stroke-width] duration-80',
+              isActive ? 'text-foreground' : 'text-muted-foreground',
             )}
           />
         )}
@@ -406,14 +403,14 @@ const TabsItem = forwardRef<HTMLButtonElement, TabsItemProps>(
                 // measured value arrives — the selected tab visibly pulses on
                 // arrival. Plain CSS auto is the true layout width, and the
                 // measured number that follows matches it exactly.
-                style={labelWidth == null ? { width: "auto" } : undefined}
+                style={labelWidth == null ? { width: 'auto' } : undefined}
                 initial={{ width: 0, opacity: 0, marginLeft: 0 }}
                 animate={{
                   ...(labelWidth != null ? { width: labelWidth } : null),
                   opacity: 1,
                   // 8px matches the ladder's icon-to-label gap (gap-2); the
                   // compact 6px is its own value, 2px wider than gap-1.
-                  marginLeft: sizeClasses.variant === "compact" ? 6 : 8,
+                  marginLeft: sizeClasses.variant === 'compact' ? 6 : 8,
                 }}
                 exit={{ width: 0, opacity: 0, marginLeft: 0 }}
                 transition={{
@@ -430,10 +427,10 @@ const TabsItem = forwardRef<HTMLButtonElement, TabsItemProps>(
         )}
       </TabsPrimitive.Tab>
     );
-  }
+  },
 );
 
-TabsItem.displayName = "TabsItem";
+TabsItem.displayName = 'TabsItem';
 
 interface TabsPanelProps extends HTMLAttributes<HTMLDivElement> {
   index: number;
@@ -457,16 +454,16 @@ const TabsPanel = forwardRef<HTMLDivElement, TabsPanelProps>(
         aria-labelledby={`${idPrefix}-tab-${index}`}
         hidden={!isSelected}
         tabIndex={-1}
-        className={cn("outline-none", className)}
+        className={cn('outline-none', className)}
         {...props}
       >
         {isSelected && children}
       </div>
     );
-  }
+  },
 );
 
-TabsPanel.displayName = "TabsPanel";
+TabsPanel.displayName = 'TabsPanel';
 
 export { Tabs, TabsItem, TabsPanel };
 export default Tabs;

@@ -1,10 +1,26 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState, type FocusEvent, type ReactNode, type RefObject, type SyntheticEvent } from "react";
-import { animate, motion, useInView, useMotionValue, useReducedMotion, type MotionValue } from "motion/react";
-import { cn } from "@/registry/default/lib/utils";
-import { usePreviewPlayback } from "@/lib/docs/preview-playback";
-import { useShape } from "@/registry/default/lib/shape-context";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FocusEvent,
+  type ReactNode,
+  type RefObject,
+  type SyntheticEvent,
+} from 'react';
+import {
+  animate,
+  motion,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+  type MotionValue,
+} from 'motion/react';
+import { cn } from '#registry/default/lib/utils';
+import { usePreviewPlayback } from '#lib/docs/preview-playback';
+import { useShape } from '#registry/default/lib/shape-context';
 
 /** Height of every example's frame, so switching tabs never moves the page.
  *  Matches the menu: 5 rows of 36px plus 8px padding top and bottom. */
@@ -20,9 +36,13 @@ const fromVisitor = (e: SyntheticEvent) => !scriptedEvents.has(e.nativeEvent);
  *  keyboard focus until it moves out, so the script never changes what
  *  someone is tabbing through. Only :focus-visible counts: a mouse click
  *  leaves focus on its button after the pointer has gone. */
-export function usePlayback({ stopOnUse = false }: { /** Once a visitor has used the example (a press or a key, more than a
+export function usePlayback({
+  stopOnUse = false,
+}: {
+  /** Once a visitor has used the example (a press or a key, more than a
    *  hover), the script never starts again: what they changed stays as
-   *  they left it. */ stopOnUse?: boolean } = {}) {
+   *  they left it. */ stopOnUse?: boolean;
+} = {}) {
   const rootRef = useRef<HTMLDivElement>(null);
   const inView = useInView(rootRef, { amount: 0.35 });
   const reduced = useReducedMotion();
@@ -71,7 +91,7 @@ export function usePlayback({ stopOnUse = false }: { /** Once a visitor has used
       // A finger landing may be the start of a page scroll: it counts
       // once it lifts as a tap or a drag, not if the browser takes it for
       // scrolling (pointercancel).
-      if ((e.nativeEvent as PointerEvent).pointerType === "touch") touching.current = true;
+      if ((e.nativeEvent as PointerEvent).pointerType === 'touch') touching.current = true;
       else setUsed(true);
     },
     onPointerUp: () => {
@@ -84,25 +104,39 @@ export function usePlayback({ stopOnUse = false }: { /** Once a visitor has used
     // A real key, typed in it. Tab alone only passes through, as a hover does.
     onKeyDown: (e: SyntheticEvent) => {
       const key = (e.nativeEvent as KeyboardEvent).key;
-      if (stopOnUse && e.nativeEvent.isTrusted && !["Tab", "Shift", "Control", "Alt", "Meta"].includes(key)) setUsed(true);
+      if (
+        stopOnUse &&
+        e.nativeEvent.isTrusted &&
+        !['Tab', 'Shift', 'Control', 'Alt', 'Meta'].includes(key)
+      )
+        setUsed(true);
     },
     onMouseLeave: (e: SyntheticEvent) => {
       if (!fromVisitor(e)) return;
       cameFromRoot.current = false;
       setPointerInside(false);
     },
-    onFocus: (e: FocusEvent) => setKeyboardInside(e.target.matches(":focus-visible")),
+    onFocus: (e: FocusEvent) => setKeyboardInside(e.target.matches(':focus-visible')),
     onBlur: (e: FocusEvent) => {
       if (!rootRef.current?.contains(e.relatedTarget)) setKeyboardInside(false);
     },
   };
-  return { rootRef, playing: playback && inView && !reduced && !pointerInside && !keyboardInside && !used, bind };
+  return {
+    rootRef,
+    playing: playback && inView && !reduced && !pointerInside && !keyboardInside && !used,
+    bind,
+  };
 }
 
-export type Side = "generic" | "skill";
+export type Side = 'generic' | 'skill';
 
 /** A scripted pointer event, marked as the script's own. */
-export function firePointer(target: EventTarget, type: string, at: { x: number; y: number }, buttons: number) {
+export function firePointer(
+  target: EventTarget,
+  type: string,
+  at: { x: number; y: number },
+  buttons: number,
+) {
   const event = new PointerEvent(type, {
     bubbles: true,
     cancelable: true,
@@ -110,7 +144,7 @@ export function firePointer(target: EventTarget, type: string, at: { x: number; 
     buttons,
     clientX: at.x,
     clientY: at.y,
-    pointerType: "mouse",
+    pointerType: 'mouse',
     isPrimary: true,
   });
   scriptedEvents.add(event);
@@ -125,7 +159,11 @@ const FIRST_STEP_MS = 400;
  *  Pausing keeps the position, so the script resumes in place; `reset` then
  *  undoes whatever a step left mid-gesture (a button held down, a "Copied!"
  *  waiting to revert), so a visitor taking over finds the example at rest. */
-export function useLoop(playing: boolean, steps: Array<{ ms: number; run: () => void }>, reset?: () => void) {
+export function useLoop(
+  playing: boolean,
+  steps: Array<{ ms: number; run: () => void }>,
+  reset?: () => void,
+) {
   const indexRef = useRef(0);
   const stepsRef = useRef(steps);
   stepsRef.current = steps;
@@ -176,7 +214,7 @@ export function FakeCursor({
   return (
     <motion.span
       aria-hidden
-      className={cn("pointer-events-none absolute z-30 origin-top-left", className)}
+      className={cn('pointer-events-none absolute z-30 origin-top-left', className)}
       style={{ x, y, scale, opacity, left: inset, top: inset }}
     >
       <svg width={size} height={size} viewBox="0 0 24 24">
@@ -204,7 +242,7 @@ export type Cursor = ReturnType<typeof useScriptCursor>;
 /** Set on whatever the scripted cursor is over, and on its ancestors, the
  *  way the browser applies :hover. Script can't trigger :hover itself, so
  *  hover styles in the examples read `:is(:hover,[data-script-hover])`. */
-const HOVER_ATTR = "data-script-hover";
+const HOVER_ATTR = 'data-script-hover';
 
 /** A cursor that travels across a whole Compare, generic side to skill side,
  *  in its root's coordinates. `goto` glides it to the center of the
@@ -218,7 +256,7 @@ export function useScriptCursor(
   playing: boolean,
   /** A selector for what the cursor hovers outside its root: a menu the
    *  example opens, which renders in a portal. */
-  reach?: string
+  reach?: string,
 ) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -234,7 +272,12 @@ export function useScriptCursor(
   const shield = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    const fire = (target: Element, type: string, related: Element | null, at: { x: number; y: number }) => {
+    const fire = (
+      target: Element,
+      type: string,
+      related: Element | null,
+      at: { x: number; y: number },
+    ) => {
       const event = new MouseEvent(type, {
         bubbles: true,
         cancelable: true,
@@ -254,10 +297,10 @@ export function useScriptCursor(
       const prev = hovered.current;
       if (next === prev) return;
       chain(prev).forEach((n) => n.removeAttribute(HOVER_ATTR));
-      chain(next).forEach((n) => n.setAttribute(HOVER_ATTR, ""));
+      chain(next).forEach((n) => n.setAttribute(HOVER_ATTR, ''));
       // React derives enter and leave from this pair, as it does for a mouse.
-      if (prev) fire(prev, "mouseout", next, at);
-      if (next) fire(next, "mouseover", prev, at);
+      if (prev) fire(prev, 'mouseout', next, at);
+      if (next) fire(next, 'mouseover', prev, at);
       hovered.current = next;
     };
     const tip = () => {
@@ -276,30 +319,31 @@ export function useScriptCursor(
       if (!root || !placed.current) return;
       const at = tip();
       const hit = document.elementFromPoint(at.x, at.y);
-      const next = hit && hit !== root && (root.contains(hit) || (reach && hit.closest(reach))) ? hit : null;
+      const next =
+        hit && hit !== root && (root.contains(hit) || (reach && hit.closest(reach))) ? hit : null;
       hoverTo(next, at);
-      if (next) fire(next, "mousemove", null, at);
+      if (next) fire(next, 'mousemove', null, at);
       // On the document's root, as a real pointer's would be (never on the
       // window itself: listeners read the target as a Node), from where it
       // bubbles to the window listeners a drag has set up.
-      if (held.current) firePointer(document.documentElement, "pointermove", at, 1);
+      if (held.current) firePointer(document.documentElement, 'pointermove', at, 1);
     };
     const schedule = () => {
       if (queued) return;
       queued = true;
       queueMicrotask(update);
     };
-    const offX = x.on("change", schedule);
-    const offY = y.on("change", schedule);
+    const offX = x.on('change', schedule);
+    const offY = y.on('change', schedule);
     // The cursor sits on the page and scrolls with it: what is under its
     // tip is the same, but at another place in the window, and hover that
     // remembers where the pointer was (a table's, which follows a scroll)
     // must hear the new one.
-    window.addEventListener("scroll", schedule, { capture: true, passive: true });
+    window.addEventListener('scroll', schedule, { capture: true, passive: true });
     return () => {
       offX();
       offY();
-      window.removeEventListener("scroll", schedule, { capture: true });
+      window.removeEventListener('scroll', schedule, { capture: true });
       hoverTo(null, tip());
     };
   }, [playing, rootRef, x, y, reach]);
@@ -316,7 +360,10 @@ export function useScriptCursor(
         const root = rootRef.current;
         // An element is taken as it is: one outside the root (a menu item
         // in a portal), which a selector can't reach.
-        const target = typeof selector === "string" ? root?.querySelectorAll<HTMLElement>(selector)[index] : selector;
+        const target =
+          typeof selector === 'string'
+            ? root?.querySelectorAll<HTMLElement>(selector)[index]
+            : selector;
         if (!root || !target) return;
         const box = root.getBoundingClientRect();
         const to = target.getBoundingClientRect();
@@ -329,7 +376,7 @@ export function useScriptCursor(
           opacity.set(1);
           placed.current = true;
         }
-        const glide = { duration: GLIDE_MS / 1000, ease: "easeInOut" } as const;
+        const glide = { duration: GLIDE_MS / 1000, ease: 'easeInOut' } as const;
         animate(x, tx, glide);
         animate(y, ty, glide);
       },
@@ -359,13 +406,14 @@ export function useScriptCursor(
         // press is the visitor's turn, and the script lets go.
         const block = (e: PointerEvent) => {
           if (!e.isTrusted) return;
-          if (e.type === "pointerdown") cursor.release(true);
+          if (e.type === 'pointerdown') cursor.release(true);
           else e.stopPropagation();
         };
-        const types = ["pointerdown", "pointermove", "pointerup", "pointercancel"] as const;
+        const types = ['pointerdown', 'pointermove', 'pointerup', 'pointercancel'] as const;
         types.forEach((type) => window.addEventListener(type, block, true));
-        shield.current = () => types.forEach((type) => window.removeEventListener(type, block, true));
-        firePointer(hit, "pointerdown", at, 1);
+        shield.current = () =>
+          types.forEach((type) => window.removeEventListener(type, block, true));
+        firePointer(hit, 'pointerdown', at, 1);
       },
       /** Lets go: the drop. `cancel` abandons the drag instead (a visitor
        *  took over mid-carry), so nothing is left held. */
@@ -377,7 +425,7 @@ export function useScriptCursor(
         animate(scale, 1, { duration: 0.1 });
         const box = rootRef.current?.getBoundingClientRect();
         const at = box ? { x: box.left + x.get(), y: box.top + y.get() } : { x: 0, y: 0 };
-        firePointer(document.documentElement, cancel ? "pointercancel" : "pointerup", at, 0);
+        firePointer(document.documentElement, cancel ? 'pointercancel' : 'pointerup', at, 0);
       },
     };
     return cursor;
@@ -392,7 +440,13 @@ export function glideStep(cursor: Cursor, selector: string, index: number, restM
 
 /** Two steps for one scripted click: glide to the target and rest on it,
  *  then press it and run `act`, then wait `holdMs` before the next step. */
-export function clickStep(cursor: Cursor, selector: string, index: number, act: () => void, holdMs: number) {
+export function clickStep(
+  cursor: Cursor,
+  selector: string,
+  index: number,
+  act: () => void,
+  holdMs: number,
+) {
   return [
     glideStep(cursor, selector, index),
     {
@@ -409,9 +463,9 @@ export function clickStep(cursor: Cursor, selector: string, index: number, act: 
  *  the skill side plays the same one. `turn(side)` returns that side's steps. */
 export function turns(
   setActive: (side: Side) => void,
-  turn: (side: Side) => Array<{ ms: number; run: () => void }>
+  turn: (side: Side) => Array<{ ms: number; run: () => void }>,
 ) {
-  return (["generic", "skill"] as const).flatMap((side) => {
+  return (['generic', 'skill'] as const).flatMap((side) => {
     const [first, ...rest] = turn(side);
     return [
       {
@@ -438,7 +492,7 @@ export function Compare({
   cursor,
 }: {
   rootRef: RefObject<HTMLDivElement | null>;
-  bind: ReturnType<typeof usePlayback>["bind"];
+  bind: ReturnType<typeof usePlayback>['bind'];
   generic: ReactNode;
   skill: ReactNode;
   /** Lists fill their frame themselves; everything else is centered in a
@@ -451,15 +505,15 @@ export function Compare({
 }) {
   const shape = useShape();
   const frame = cn(
-    "relative w-full overflow-hidden",
-    !bare && "flex items-center justify-center",
-    shape.container
+    'relative w-full overflow-hidden',
+    !bare && 'flex items-center justify-center',
+    shape.container,
   );
   const style = bare ? undefined : { height: FRAME_H };
   const labelClass = (side: Side) =>
     cn(
-      "text-site-caption transition-colors duration-150",
-      active === side ? "text-foreground" : "text-muted-foreground"
+      'text-site-caption transition-colors duration-150',
+      active === side ? 'text-foreground' : 'text-muted-foreground',
     );
   return (
     <div
@@ -473,7 +527,7 @@ export function Compare({
         <div data-side="generic" className={frame} style={style}>
           {generic}
         </div>
-        <span className={labelClass("generic")}>
+        <span className={labelClass('generic')}>
           <span aria-hidden="true">❌</span> Generic AI output
         </span>
       </div>
@@ -481,11 +535,13 @@ export function Compare({
         <div data-side="skill" className={frame} style={style}>
           {skill}
         </div>
-        <span className={labelClass("skill")}>
+        <span className={labelClass('skill')}>
           <span aria-hidden="true">✅</span> With the skill
         </span>
       </div>
-      {cursor && <FakeCursor x={cursor.x} y={cursor.y} scale={cursor.scale} opacity={cursor.opacity} />}
+      {cursor && (
+        <FakeCursor x={cursor.x} y={cursor.y} scale={cursor.scale} opacity={cursor.opacity} />
+      )}
     </div>
   );
 }

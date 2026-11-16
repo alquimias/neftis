@@ -3,9 +3,7 @@
   "name": "icon-context",
   "title": "Icon Context",
   "description": "Named icon slots with a Lucide default set; swap any icon via IconProvider.",
-  "dependencies": [
-    "lucide-react"
-  ],
+  "dependencies": ["lucide-react"],
   "files": [
     {
       "path": "registry/default/lib/icon-context.tsx",
@@ -14,8 +12,6 @@
     }
   ],
   "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "lib"
-  ],
+  "categories": ["lib"],
   "type": "registry:lib"
 }

@@ -1,1 +1,1 @@
-export { tablerIcons } from "@/registry/default/lib/icons-tabler";
+export { tablerIcons } from '#registry/default/lib/icons-tabler';

@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef, type MouseEvent, type ReactNode } from "react";
-import { highlightCode } from "./highlight-client";
-import { routeKeyboardOnMouseDown } from "@/lib/click-to-focus";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { useShape } from "@/registry/default/lib/shape-context";
-import { useIcon } from "@/registry/default/lib/icon-context";
-import { Tabs, TabsItem } from "@/components/flavored/tabs";
-import { Tooltip, TooltipGroup } from "@/registry/radix/tooltip";
-import { Switch } from "@/registry/radix/switch";
-import { AnimatePresence } from "motion/react";
-import { InspectOverlay } from "./InspectOverlay";
-import { usePreviewExpand } from "@/lib/docs/preview-expand";
+import { useState, useEffect, useRef, type MouseEvent, type ReactNode } from 'react';
+import { highlightCode } from './highlight-client';
+import { routeKeyboardOnMouseDown } from '#lib/click-to-focus';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { useShape } from '#registry/default/lib/shape-context';
+import { useIcon } from '#registry/default/lib/icon-context';
+import { Tabs, TabsItem } from '#components/flavored/tabs';
+import { Tooltip, TooltipGroup } from '#registry/radix/tooltip';
+import { Switch } from '#registry/radix/switch';
+import { AnimatePresence } from 'motion/react';
+import { InspectOverlay } from './InspectOverlay';
+import { usePreviewExpand } from '#lib/docs/preview-expand';
 
 export interface PlaybackButton {
   icon: ReactNode;
@@ -36,7 +36,7 @@ interface ComponentPreviewProps {
    *  "none" removes the padding entirely so the demo bleeds to the
    *  preview frame (full-width tables, scroll areas).
    *  Defaults to "default". */
-  padding?: "default" | "compact" | "responsive" | "none";
+  padding?: 'default' | 'compact' | 'responsive' | 'none';
   /** Override the minimum height of the preview area. Accepts any Tailwind
    *  min-height class (e.g. `min-h-[280px]`). Defaults to `min-h-[120px]`.
    *  Useful when a demo opens floating UI (popovers, dropdowns) that needs
@@ -45,7 +45,7 @@ interface ComponentPreviewProps {
   /** Vertical alignment of the preview content. Defaults to "center".
    *  "top" suits content that grows downward — an accordion opening a panel
    *  shouldn't shift the rows above it. */
-  align?: "top" | "center" | "bottom";
+  align?: 'top' | 'center' | 'bottom';
   /** Show the Inspect toggle (pixel rulers + box-model inspector). Defaults to
    *  true; set false for previews where an overlay would get in the way. */
   inspectable?: boolean;
@@ -74,9 +74,9 @@ export function ComponentPreview({
   code,
   onReplay,
   playbackButton,
-  padding = "default",
-  minHeightClass = "min-h-[120px]",
-  align = "center",
+  padding = 'default',
+  minHeightClass = 'min-h-[120px]',
+  align = 'center',
   inspectable = true,
   defaultInspect = false,
   inspectRulers = true,
@@ -94,9 +94,9 @@ export function ComponentPreview({
   // Highlighting starts then, so the Code tab usually opens already colored.
   const [codeWanted, setCodeWanted] = useState(false);
   const shape = useShape();
-  const ReplayIcon = useIcon("rotate-ccw");
-  const ExpandIcon = useIcon("maximize");
-  const CollapseIcon = useIcon("minimize");
+  const ReplayIcon = useIcon('rotate-ccw');
+  const ExpandIcon = useIcon('maximize');
+  const CollapseIcon = useIcon('minimize');
   const expand = usePreviewExpand();
   // The expand button always carries its dot (2026-11-13 user call): it
   // marks that the preview has a larger view, used before or not.
@@ -156,7 +156,7 @@ export function ComponentPreview({
       // Expanded, the frame is exactly the layer's height: the header keeps
       // its size and the content takes the rest (a long preview scrolls
       // inside itself, not the layer).
-      className={`relative isolate flex flex-col gap-0 w-full border border-border/60 transition-[border-color] duration-150 ease-out focus-within:border-foreground/40 ${shape.container} ${expand?.expanded ? "h-full" : ""}`}
+      className={`relative isolate flex flex-col gap-0 w-full border border-border/60 transition-[border-color] duration-150 ease-out focus-within:border-foreground/40 ${shape.container} ${expand?.expanded ? 'h-full' : ''}`}
     >
       {/* Tab bar — min-height reserves the playback button's height (h-10 + pt-3)
           so the header doesn't shift when the button mounts/unmounts. A hairline
@@ -164,96 +164,100 @@ export function ComponentPreview({
           opaque background sits above the inspect overlay's ruler layer
           (z-[70] > z-[60]) so the ruler ticks tuck cleanly under it. */}
       {!hideHeader && (
-      <div
-        onPointerEnter={wantCode}
-        onFocus={wantCode}
-        className="relative z-[70] flex items-center gap-0 px-3 py-3 min-h-[52px] border-b border-border/60 bg-background"
-        style={{ borderTopLeftRadius: "inherit", borderTopRightRadius: "inherit" }}
-      >
-        {title && (
-          <span
-            className="px-4 py-2.5 text-site-body text-foreground mr-auto"
-            style={{ fontVariationSettings: fontWeights.semibold }}
-          >
-            {title}
-          </span>
-        )}
-        {!hideTabs && (
-          <Tabs selectedIndex={tab} onSelect={setTab}>
-            <TabsItem index={0} label="Preview" />
-            <TabsItem index={1} label="Code" />
-          </Tabs>
-        )}
-        <div className="ml-auto flex items-center gap-1">
-          {/* The header's icons (the playground pen, replay, expand) share
-              one tooltip bubble that glides between them. */}
-          <TooltipGroup>
-          {inspectable && tab === 0 && (
-            // Toggling Inspect must not dismiss whatever the preview has open
-            // (a dropdown, a popover) — inspecting THAT state is the point.
-            // The demos' menus are non-modal, so they dismiss on any outside
-            // pointerdown reaching the document and on focus moving outside.
-            // stopIMMEDIATEPropagation is what blocks them: the App Router
-            // hydrates React on `document`, so Radix's document listener sits
-            // on the same node as React's delegation and plain stopPropagation
-            // can't cut it off. preventDefault on mousedown keeps focus (and
-            // the focus-out dismissal) where it is; the Switch still toggles
-            // on click.
+        <div
+          onPointerEnter={wantCode}
+          onFocus={wantCode}
+          className="relative z-[70] flex items-center gap-0 px-3 py-3 min-h-[52px] border-b border-border/60 bg-background"
+          style={{ borderTopLeftRadius: 'inherit', borderTopRightRadius: 'inherit' }}
+        >
+          {title && (
             <span
-              onPointerDown={(e) => e.nativeEvent.stopImmediatePropagation()}
-              onMouseDown={(e) => {
-                e.preventDefault();
-                e.nativeEvent.stopImmediatePropagation();
-              }}
+              className="px-4 py-2.5 text-site-body text-foreground mr-auto"
+              style={{ fontVariationSettings: fontWeights.semibold }}
             >
-              <Switch
-                label="Inspect"
-                checked={inspect}
-                onToggle={() => setInspect((v) => !v)}
-                className="h-8 px-2 rounded-md"
-              />
+              {title}
             </span>
           )}
-          {expand?.expanded && expand.menu}
-          {showButton && (
-            <Tooltip content={playbackButton?.tooltip ?? "Replay animation"} side="top">
-              <button
-                onClick={playbackButton?.onClick ?? onReplay}
-                className={`w-10 h-10 flex items-center justify-center ${shape.button} text-muted-foreground hover:text-foreground hover:bg-hover transition-colors duration-100 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]`}
-                aria-label={playbackButton?.tooltip ?? "Replay animation"}
-              >
-                {playbackButton?.icon ?? <ReplayIcon size={16} strokeWidth={1.5} />}
-              </button>
-            </Tooltip>
+          {!hideTabs && (
+            <Tabs selectedIndex={tab} onSelect={setTab}>
+              <TabsItem index={0} label="Preview" />
+              <TabsItem index={1} label="Code" />
+            </Tabs>
           )}
-          {/* Expand last, at the far right, after the replay. */}
-          {expand && (
-            <Tooltip
-              content={expand.expanded ? "Collapse" : "Expand"}
-              shortcut={expand.expanded ? "Esc" : undefined}
-              side="top"
-            >
-              <button
-                type="button"
-                onClick={expand.toggle}
-                aria-label={expand.expanded ? "Collapse preview" : "Expand preview"}
-                aria-pressed={expand.expanded}
-                className={`relative w-10 h-10 flex items-center justify-center ${shape.button} text-muted-foreground hover:text-foreground hover:bg-hover transition-colors duration-100 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]`}
-              >
-                {expand.expanded ? <CollapseIcon size={16} strokeWidth={1.5} /> : <ExpandIcon size={16} strokeWidth={1.5} />}
-                {/* Desktop only: on a phone the preview already fills the width. */}
-                {expandHint && (
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute right-1.5 bottom-1.5 hidden size-1.5 rounded-full bg-[var(--fluid-accent,#6B97FF)] lg:block"
+          <div className="ml-auto flex items-center gap-1">
+            {/* The header's icons (the playground pen, replay, expand) share
+              one tooltip bubble that glides between them. */}
+            <TooltipGroup>
+              {inspectable && tab === 0 && (
+                // Toggling Inspect must not dismiss whatever the preview has open
+                // (a dropdown, a popover) — inspecting THAT state is the point.
+                // The demos' menus are non-modal, so they dismiss on any outside
+                // pointerdown reaching the document and on focus moving outside.
+                // stopIMMEDIATEPropagation is what blocks them: the App Router
+                // hydrates React on `document`, so Radix's document listener sits
+                // on the same node as React's delegation and plain stopPropagation
+                // can't cut it off. preventDefault on mousedown keeps focus (and
+                // the focus-out dismissal) where it is; the Switch still toggles
+                // on click.
+                <span
+                  onPointerDown={(e) => e.nativeEvent.stopImmediatePropagation()}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.nativeEvent.stopImmediatePropagation();
+                  }}
+                >
+                  <Switch
+                    label="Inspect"
+                    checked={inspect}
+                    onToggle={() => setInspect((v) => !v)}
+                    className="h-8 px-2 rounded-md"
                   />
-                )}
-              </button>
-            </Tooltip>
-          )}
-          </TooltipGroup>
+                </span>
+              )}
+              {expand?.expanded && expand.menu}
+              {showButton && (
+                <Tooltip content={playbackButton?.tooltip ?? 'Replay animation'} side="top">
+                  <button
+                    onClick={playbackButton?.onClick ?? onReplay}
+                    className={`w-10 h-10 flex items-center justify-center ${shape.button} text-muted-foreground hover:text-foreground hover:bg-hover transition-colors duration-100 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]`}
+                    aria-label={playbackButton?.tooltip ?? 'Replay animation'}
+                  >
+                    {playbackButton?.icon ?? <ReplayIcon size={16} strokeWidth={1.5} />}
+                  </button>
+                </Tooltip>
+              )}
+              {/* Expand last, at the far right, after the replay. */}
+              {expand && (
+                <Tooltip
+                  content={expand.expanded ? 'Collapse' : 'Expand'}
+                  shortcut={expand.expanded ? 'Esc' : undefined}
+                  side="top"
+                >
+                  <button
+                    type="button"
+                    onClick={expand.toggle}
+                    aria-label={expand.expanded ? 'Collapse preview' : 'Expand preview'}
+                    aria-pressed={expand.expanded}
+                    className={`relative w-10 h-10 flex items-center justify-center ${shape.button} text-muted-foreground hover:text-foreground hover:bg-hover transition-colors duration-100 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]`}
+                  >
+                    {expand.expanded ? (
+                      <CollapseIcon size={16} strokeWidth={1.5} />
+                    ) : (
+                      <ExpandIcon size={16} strokeWidth={1.5} />
+                    )}
+                    {/* Desktop only: on a phone the preview already fills the width. */}
+                    {expandHint && (
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute right-1.5 bottom-1.5 hidden size-1.5 rounded-full bg-[var(--fluid-accent,#6B97FF)] lg:block"
+                      />
+                    )}
+                  </button>
+                </Tooltip>
+              )}
+            </TooltipGroup>
+          </div>
         </div>
-      </div>
       )}
 
       {/* Content. Wrapped so its rectangular bottom corners get clipped
@@ -268,14 +272,14 @@ export function ComponentPreview({
         // `display` as it expands made the browser rebuild the layout tree
         // of everything inside (the whole table) in the frame it starts
         // to grow.
-        className={`overflow-hidden ${expand ? "flex flex-col" : ""} ${expand?.expanded ? "min-h-0 flex-1" : ""}`}
+        className={`overflow-hidden ${expand ? 'flex flex-col' : ''} ${expand?.expanded ? 'min-h-0 flex-1' : ''}`}
         // With no header above it, the content owns all four corners.
         style={
           hideHeader
-            ? { borderRadius: "inherit" }
+            ? { borderRadius: 'inherit' }
             : {
-                borderBottomLeftRadius: "inherit",
-                borderBottomRightRadius: "inherit",
+                borderBottomLeftRadius: 'inherit',
+                borderBottomRightRadius: 'inherit',
               }
         }
       >
@@ -289,34 +293,30 @@ export function ComponentPreview({
             // — holds keyboard scope for the demo without ringing any control.
             tabIndex={-1}
             onMouseDown={handlePreviewMouseDown}
-            className={`relative flex outline-none ${expand?.expanded ? "min-h-0 flex-1 [&>*]:max-h-full" : ""} ${
-              align === "bottom"
-                ? "items-end"
-                : align === "top"
-                  ? "items-start"
-                  : "items-center"
+            className={`relative flex outline-none ${expand?.expanded ? 'min-h-0 flex-1 [&>*]:max-h-full' : ''} ${
+              align === 'bottom' ? 'items-end' : align === 'top' ? 'items-start' : 'items-center'
             } justify-center ${minHeightClass} bg-background ${
-              padding === "none"
-                ? ""
-                : padding === "compact"
-                  ? "px-4 py-4"
-                  : padding === "responsive"
-                    ? "px-4 py-4 sm:px-8 sm:py-12"
-                    : "px-4 py-12 sm:px-8"
+              padding === 'none'
+                ? ''
+                : padding === 'compact'
+                  ? 'px-4 py-4'
+                  : padding === 'responsive'
+                    ? 'px-4 py-4 sm:px-8 sm:py-12'
+                    : 'px-4 py-12 sm:px-8'
             }`}
           >
             {children}
           </div>
         ) : html !== null ? (
           <div
-            className={`overflow-auto text-site-body [&_pre]:m-0 [&_pre]:p-4 ${minHeightClass.replace("min-h-", "[&_pre]:min-h-")} [&_.shiki]:!bg-transparent`}
+            className={`overflow-auto text-site-body [&_pre]:m-0 [&_pre]:p-4 ${minHeightClass.replace('min-h-', '[&_pre]:min-h-')} [&_.shiki]:!bg-transparent`}
             dangerouslySetInnerHTML={{ __html: html }}
           />
         ) : (
           // Plain text in the same box until the colors land, so the tab
           // never opens empty.
           <div
-            className={`overflow-auto text-site-body [&_pre]:m-0 [&_pre]:p-4 ${minHeightClass.replace("min-h-", "[&_pre]:min-h-")}`}
+            className={`overflow-auto text-site-body [&_pre]:m-0 [&_pre]:p-4 ${minHeightClass.replace('min-h-', '[&_pre]:min-h-')}`}
           >
             <pre>
               <code>{code?.trim()}</code>

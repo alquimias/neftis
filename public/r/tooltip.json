@@ -3,10 +3,7 @@
   "name": "tooltip",
   "title": "Tooltip",
   "description": "Floating tooltip with spring-based animations, configurable placement, and rich content support.",
-  "dependencies": [
-    "motion",
-    "@radix-ui/react-tooltip"
-  ],
+  "dependencies": ["motion", "@radix-ui/react-tooltip"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -25,8 +22,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/tooltip. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#tooltip.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

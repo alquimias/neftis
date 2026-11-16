@@ -1,29 +1,40 @@
-"use client";
+'use client';
 
-import type { MouseEvent } from "react";
+import type { MouseEvent } from 'react';
 
 // Anything that can hold keyboard focus. Used to (a) detect clicks that should
 // keep their native focus behaviour, and (b) find the element to focus when the
 // user clicks an empty part of a container.
 export const FOCUSABLE_SELECTOR = [
-  "a[href]",
-  "button:not([disabled])",
-  "input:not([disabled])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
   '[role="slider"]',
   '[tabindex]:not([tabindex="-1"])',
-].join(",");
+].join(',');
 
 // Fields a click away should leave: text-like inputs only (not range,
 // buttons, checkboxes or file pickers, which keep focus like any control).
 const TEXT_ENTRY_SELECTOR = [
-  "textarea",
-  "input:not([type])",
-  ...["text", "search", "email", "url", "tel", "password", "number", "date", "time", "datetime-local", "month", "week"].map(
-    (type) => `input[type=${type}]`
-  ),
-].join(",");
+  'textarea',
+  'input:not([type])',
+  ...[
+    'text',
+    'search',
+    'email',
+    'url',
+    'tel',
+    'password',
+    'number',
+    'date',
+    'time',
+    'datetime-local',
+    'month',
+    'week',
+  ].map((type) => `input[type=${type}]`),
+].join(',');
 
 /**
  * Routes keyboard control into a container on click. When the user clicks an
@@ -41,7 +52,7 @@ const TEXT_ENTRY_SELECTOR = [
 export function routeKeyboardOnMouseDown(
   e: MouseEvent,
   scope: HTMLElement | null,
-  fallback?: HTMLElement | null
+  fallback?: HTMLElement | null,
 ) {
   if (!scope) return;
   const target = e.target as HTMLElement;

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { ComponentEntry } from "@/lib/docs/components";
-import { previewMap } from "@/app/components/bento-previews";
-import { useReleaseMarks } from "@/lib/changelog/marks";
-import { BentoCard, BentoTileContext } from "@/app/components/bento-card";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import type { ComponentEntry } from '#lib/docs/components';
+import { previewMap } from '#app/components/bento-previews';
+import { useReleaseMarks } from '#lib/changelog/marks';
+import { BentoCard, BentoTileContext } from '#app/components/bento-card';
+import { cn } from '#lib/utils';
 
 /**
  * Band layout. At xl (3 cols) the grid reads as horizontal bands: each 2-wide
@@ -22,48 +22,48 @@ import { cn } from "@/lib/utils";
  * one column at xl). Adding a card or changing a gridSize breaks the xl
  * equation — rebalance before shipping or the bottom rows develop holes.
  */
-const displayOrder: { slug: string; side?: "right" }[] = [
-  { slug: "input-message" },                  // band 1 · medium left
-  { slug: "thinking-indicator" },
-  { slug: "color-picker", side: "right" },    // band 2 · large right
-  { slug: "switch" },
-  { slug: "combobox" },
-  { slug: "card" },                           // band 3 · medium left
-  { slug: "select" },
-  { slug: "command-menu", side: "right" },    // band 4 · large right
-  { slug: "tooltip" },
-  { slug: "badge" },
-  { slug: "sidebar" },                        // band 5 · large left
-  { slug: "radio-group" },
-  { slug: "chat-message" },
-  { slug: "thinking-steps", side: "right" },  // band 6 · large right
-  { slug: "tabs" },
-  { slug: "checkbox-group" },
-  { slug: "ask-user-questions" },             // band 7 · large left
-  { slug: "slider" },
-  { slug: "dropdown" },
-  { slug: "banner", side: "right" },          // band 8 · medium right
-  { slug: "input-copy" },
-  { slug: "accordion" },                      // band 9 · medium left
-  { slug: "input-group" },
-  { slug: "carousel-dots", side: "right" },   // band 10 · large right
-  { slug: "button" },
-  { slug: "breadcrumb" },
-  { slug: "data-table" },                     // band 11 · large left
-  { slug: "table" },
-  { slug: "dialog" },
-  { slug: "calendar", side: "right" },        // band 12 · medium right
-  { slug: "date-picker" },
+const displayOrder: { slug: string; side?: 'right' }[] = [
+  { slug: 'input-message' }, // band 1 · medium left
+  { slug: 'thinking-indicator' },
+  { slug: 'color-picker', side: 'right' }, // band 2 · large right
+  { slug: 'switch' },
+  { slug: 'combobox' },
+  { slug: 'card' }, // band 3 · medium left
+  { slug: 'select' },
+  { slug: 'command-menu', side: 'right' }, // band 4 · large right
+  { slug: 'tooltip' },
+  { slug: 'badge' },
+  { slug: 'sidebar' }, // band 5 · large left
+  { slug: 'radio-group' },
+  { slug: 'chat-message' },
+  { slug: 'thinking-steps', side: 'right' }, // band 6 · large right
+  { slug: 'tabs' },
+  { slug: 'checkbox-group' },
+  { slug: 'ask-user-questions' }, // band 7 · large left
+  { slug: 'slider' },
+  { slug: 'dropdown' },
+  { slug: 'banner', side: 'right' }, // band 8 · medium right
+  { slug: 'input-copy' },
+  { slug: 'accordion' }, // band 9 · medium left
+  { slug: 'input-group' },
+  { slug: 'carousel-dots', side: 'right' }, // band 10 · large right
+  { slug: 'button' },
+  { slug: 'breadcrumb' },
+  { slug: 'data-table' }, // band 11 · large left
+  { slug: 'table' },
+  { slug: 'dialog' },
+  { slug: 'calendar', side: 'right' }, // band 12 · medium right
+  { slug: 'date-picker' },
 ];
 
 /** Stage padding overrides, by slug (the default is px-6 py-16). */
 const STAGE_PADDING: Record<string, string> = {
-  sidebar: "px-4 py-8",
-  table: "px-6 py-6",
-  "data-table": "px-6 py-6",
-  card: "px-6 py-5",
-  "command-menu": "px-6 py-8",
-  calendar: "px-4 py-2",
+  sidebar: 'px-4 py-8',
+  table: 'px-6 py-6',
+  'data-table': 'px-6 py-6',
+  card: 'px-6 py-5',
+  'command-menu': 'px-6 py-8',
+  calendar: 'px-4 py-2',
 };
 
 /**
@@ -82,8 +82,8 @@ function useGridCols(): 1 | 2 | 3 | null {
   const [cols, setCols] = useState<1 | 2 | 3 | null>(null);
 
   useEffect(() => {
-    const md = window.matchMedia("(min-width: 768px)");
-    const xl = window.matchMedia("(min-width: 1280px)");
+    const md = window.matchMedia('(min-width: 768px)');
+    const xl = window.matchMedia('(min-width: 1280px)');
     // A window resize listener (reading mq.matches) rather than MediaQueryList
     // "change" events: same signal in real browsers, but it also fires under
     // synthetic resize dispatch, which emulated/test environments rely on.
@@ -91,8 +91,8 @@ function useGridCols(): 1 | 2 | 3 | null {
     // events inside a breakpoint band cost nothing.
     const update = () => setCols(xl.matches ? 3 : md.matches ? 2 : 1);
     update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
   }, []);
 
   return cols;
@@ -106,7 +106,7 @@ function useGridCols(): 1 | 2 | 3 | null {
  * thirty of them. Mounted once, a tile stays mounted.
  */
 const EAGER_TILES = 5;
-const LAZY_MARGIN = "1200px 0px";
+const LAZY_MARGIN = '1200px 0px';
 
 function TileStage({ eager, children }: { eager: boolean; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -119,7 +119,7 @@ function TileStage({ eager, children }: { eager: boolean; children: ReactNode })
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) setMounted(true);
       },
-      { rootMargin: LAZY_MARGIN }
+      { rootMargin: LAZY_MARGIN },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -129,11 +129,11 @@ function TileStage({ eager, children }: { eager: boolean; children: ReactNode })
     <div
       ref={ref}
       className={cn(
-        "reveal-scroll flex size-full min-h-0 items-center justify-center",
+        'reveal-scroll flex size-full min-h-0 items-center justify-center',
         // Below md the rows size to their previews: an empty stage holds
         // roughly a preview's height so tiles don't all crowd into the
         // margin at once and mount together.
-        !mounted && "max-md:min-h-[200px]"
+        !mounted && 'max-md:min-h-[200px]',
       )}
     >
       {mounted ? children : null}
@@ -148,9 +148,9 @@ interface BentoGridProps {
 /** Grid footprint per card size. The reveal-scroll wrapper is the grid
  *  item, so it carries the span; the card inside fills it. */
 const sizeClasses: Record<string, string> = {
-  large: "md:col-span-2 md:row-span-2",
-  medium: "md:col-span-2",
-  small: "col-span-1",
+  large: 'md:col-span-2 md:row-span-2',
+  medium: 'md:col-span-2',
+  small: 'col-span-1',
 };
 
 export function BentoGrid({ components }: BentoGridProps) {
@@ -162,20 +162,16 @@ export function BentoGrid({ components }: BentoGridProps) {
   const cols = useGridCols();
   const { isNew } = useReleaseMarks();
   // An odd number of smalls leaves a half row at md: the last one fills it.
-  const smalls = ordered.filter(({ entry }) => (entry.gridSize ?? "small") === "small");
+  const smalls = ordered.filter(({ entry }) => (entry.gridSize ?? 'small') === 'small');
   const wideAtMd = smalls.length % 2 === 1 ? smalls[smalls.length - 1]?.entry.slug : undefined;
 
   return (
     <div
       className={cn(
-        "grid gap-3 bento-grid",
-        cols === null && "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+        'grid gap-3 bento-grid',
+        cols === null && 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3',
       )}
-      style={
-        cols !== null
-          ? { gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }
-          : undefined
-      }
+      style={cols !== null ? { gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` } : undefined}
     >
       {ordered.map(({ entry: c, side }, order) => {
         const Preview = previewMap[c.slug];
@@ -187,10 +183,10 @@ export function BentoGrid({ components }: BentoGridProps) {
           <div
             key={c.slug}
             className={cn(
-              "reveal-scroll flex",
-              sizeClasses[c.gridSize ?? "small"],
-              side === "right" && "xl:col-start-2",
-              c.slug === wideAtMd && "md:col-span-2 xl:col-span-1"
+              'reveal-scroll flex',
+              sizeClasses[c.gridSize ?? 'small'],
+              side === 'right' && 'xl:col-start-2',
+              c.slug === wideAtMd && 'md:col-span-2 xl:col-span-1',
             )}
           >
             <BentoCard

@@ -1,12 +1,7 @@
-"use client";
+'use client';
 
-import { useState, type ReactNode } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { useState, type ReactNode } from 'react';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '#components/ui/dialog';
 import {
   SidebarProvider,
   Sidebar,
@@ -17,20 +12,15 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-} from "@/components/ui/sidebar";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { InputGroup, InputField } from "@/components/ui/input-group";
-import { useIcons, type IconName } from "@/lib/icon-context";
-import { cn } from "@/lib/utils";
-import { fontWeights } from "@/lib/font-weight";
+} from '#components/ui/sidebar';
+import { ScrollArea } from '#components/ui/scroll-area';
+import { Button } from '#components/ui/button';
+import { Switch } from '#components/ui/switch';
+import { Select, SelectTrigger, SelectContent, SelectItem } from '#components/ui/select';
+import { InputGroup, InputField } from '#components/ui/input-group';
+import { useIcons, type IconName } from '#lib/icon-context';
+import { cn } from '#lib/utils';
+import { fontWeights } from '#lib/font-weight';
 
 // ---------------------------------------------------------------------------
 // A settings dialog: the `xl` Dialog as a canvas, a non-collapsing Sidebar
@@ -52,11 +42,31 @@ interface SettingsSection {
 }
 
 const SECTIONS: SettingsSection[] = [
-  { id: "general", label: "General", icon: "settings", description: "Workspace name, language, and region." },
-  { id: "notifications", label: "Notifications", icon: "bell", description: "What reaches your inbox and when." },
-  { id: "appearance", label: "Appearance", icon: "palette", description: "Theme and density for this device." },
-  { id: "security", label: "Security", icon: "shield", description: "Sign-in protection and active sessions." },
-  { id: "members", label: "Members", icon: "users", description: "Who can access this workspace." },
+  {
+    id: 'general',
+    label: 'General',
+    icon: 'settings',
+    description: 'Workspace name, language, and region.',
+  },
+  {
+    id: 'notifications',
+    label: 'Notifications',
+    icon: 'bell',
+    description: 'What reaches your inbox and when.',
+  },
+  {
+    id: 'appearance',
+    label: 'Appearance',
+    icon: 'palette',
+    description: 'Theme and density for this device.',
+  },
+  {
+    id: 'security',
+    label: 'Security',
+    icon: 'shield',
+    description: 'Sign-in protection and active sessions.',
+  },
+  { id: 'members', label: 'Members', icon: 'users', description: 'Who can access this workspace.' },
 ];
 
 export interface SettingsDialogProps {
@@ -71,7 +81,7 @@ export function SettingsDialog({
   open,
   defaultOpen,
   onOpenChange,
-  defaultSection = "general",
+  defaultSection = 'general',
 }: SettingsDialogProps) {
   const icons = useIcons();
   const [section, setSection] = useState(defaultSection);
@@ -85,12 +95,7 @@ export function SettingsDialog({
         // shell; the height is fixed so the panel scrolls inside it.
         className="flex h-[min(640px,calc(100dvh-4rem))] overflow-hidden p-0"
       >
-        <SidebarProvider
-          persist={false}
-          shortcut={null}
-          width="13rem"
-          className="h-full min-h-0"
-        >
+        <SidebarProvider persist={false} shortcut={null} width="13rem" className="h-full min-h-0">
           <Sidebar
             collapsible="none"
             className="hidden h-full sm:flex bg-[rgb(var(--overlay)/0.03)]"
@@ -181,7 +186,7 @@ export function SettingsDialog({
 
 // Switches carry their own (required) label for assistive tech; the row
 // already shows it, so the switch's copy is visually hidden.
-const SWITCH_LABEL_HIDDEN = "[&>span:last-child]:sr-only";
+const SWITCH_LABEL_HIDDEN = '[&>span:last-child]:sr-only';
 
 function SettingRow({
   label,
@@ -197,14 +202,18 @@ function SettingRow({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-6 border-b border-border/60 py-4 last:border-b-0",
-        className
+        'flex items-center justify-between gap-6 border-b border-border/60 py-4 last:border-b-0',
+        className,
       )}
     >
       <div className="flex min-w-0 flex-col gap-0.5">
-        <span className="text-[length:var(--fs-body,13px)] leading-[var(--lh-body,20px)] text-foreground">{label}</span>
+        <span className="text-[length:var(--fs-body,13px)] leading-[var(--lh-body,20px)] text-foreground">
+          {label}
+        </span>
         {description && (
-          <span className="text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)] text-muted-foreground">{description}</span>
+          <span className="text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)] text-muted-foreground">
+            {description}
+          </span>
         )}
       </div>
       <div className="shrink-0">{children}</div>
@@ -214,13 +223,13 @@ function SettingRow({
 
 function SectionPanel({ id }: { id: string }) {
   switch (id) {
-    case "notifications":
+    case 'notifications':
       return <NotificationsPanel />;
-    case "appearance":
+    case 'appearance':
       return <AppearancePanel />;
-    case "security":
+    case 'security':
       return <SecurityPanel />;
-    case "members":
+    case 'members':
       return <MembersPanel />;
     default:
       return <GeneralPanel />;
@@ -228,9 +237,9 @@ function SectionPanel({ id }: { id: string }) {
 }
 
 function GeneralPanel() {
-  const [name, setName] = useState("Acme Inc");
-  const [language, setLanguage] = useState("en");
-  const [timezone, setTimezone] = useState("utc+1");
+  const [name, setName] = useState('Acme Inc');
+  const [language, setLanguage] = useState('en');
+  const [timezone, setTimezone] = useState('utc+1');
   return (
     <>
       <InputGroup className="w-full">
@@ -247,10 +256,18 @@ function GeneralPanel() {
           <Select value={language} onValueChange={setLanguage}>
             <SelectTrigger placeholder="Language" />
             <SelectContent>
-              <SelectItem index={0} value="en">English</SelectItem>
-              <SelectItem index={1} value="fr">Français</SelectItem>
-              <SelectItem index={2} value="de">Deutsch</SelectItem>
-              <SelectItem index={3} value="ja">日本語</SelectItem>
+              <SelectItem index={0} value="en">
+                English
+              </SelectItem>
+              <SelectItem index={1} value="fr">
+                Français
+              </SelectItem>
+              <SelectItem index={2} value="de">
+                Deutsch
+              </SelectItem>
+              <SelectItem index={3} value="ja">
+                日本語
+              </SelectItem>
             </SelectContent>
           </Select>
         </SettingRow>
@@ -258,11 +275,21 @@ function GeneralPanel() {
           <Select value={timezone} onValueChange={setTimezone}>
             <SelectTrigger placeholder="Timezone" />
             <SelectContent>
-              <SelectItem index={0} value="utc-8">(UTC−8) Pacific</SelectItem>
-              <SelectItem index={1} value="utc-5">(UTC−5) Eastern</SelectItem>
-              <SelectItem index={2} value="utc+0">(UTC+0) London</SelectItem>
-              <SelectItem index={3} value="utc+1">(UTC+1) Paris</SelectItem>
-              <SelectItem index={4} value="utc+9">(UTC+9) Tokyo</SelectItem>
+              <SelectItem index={0} value="utc-8">
+                (UTC−8) Pacific
+              </SelectItem>
+              <SelectItem index={1} value="utc-5">
+                (UTC−5) Eastern
+              </SelectItem>
+              <SelectItem index={2} value="utc+0">
+                (UTC+0) London
+              </SelectItem>
+              <SelectItem index={3} value="utc+1">
+                (UTC+1) Paris
+              </SelectItem>
+              <SelectItem index={4} value="utc+9">
+                (UTC+9) Tokyo
+              </SelectItem>
             </SelectContent>
           </Select>
         </SettingRow>
@@ -278,13 +305,28 @@ function NotificationsPanel() {
   return (
     <div className="flex flex-col">
       <SettingRow label="Daily digest" description="One email each morning with what changed.">
-        <Switch className={SWITCH_LABEL_HIDDEN} label="Daily digest" checked={digest} onToggle={() => setDigest((v) => !v)} />
+        <Switch
+          className={SWITCH_LABEL_HIDDEN}
+          label="Daily digest"
+          checked={digest}
+          onToggle={() => setDigest((v) => !v)}
+        />
       </SettingRow>
       <SettingRow label="Mentions" description="When someone @-mentions you.">
-        <Switch className={SWITCH_LABEL_HIDDEN} label="Mentions" checked={mentions} onToggle={() => setMentions((v) => !v)} />
+        <Switch
+          className={SWITCH_LABEL_HIDDEN}
+          label="Mentions"
+          checked={mentions}
+          onToggle={() => setMentions((v) => !v)}
+        />
       </SettingRow>
       <SettingRow label="Product updates" description="New features, once a month at most.">
-        <Switch className={SWITCH_LABEL_HIDDEN} label="Product updates" checked={updates} onToggle={() => setUpdates((v) => !v)} />
+        <Switch
+          className={SWITCH_LABEL_HIDDEN}
+          label="Product updates"
+          checked={updates}
+          onToggle={() => setUpdates((v) => !v)}
+        />
       </SettingRow>
     </div>
   );
@@ -292,17 +334,23 @@ function NotificationsPanel() {
 
 function AppearancePanel() {
   const icons = useIcons();
-  const [theme, setTheme] = useState("system");
-  const [density, setDensity] = useState("default");
+  const [theme, setTheme] = useState('system');
+  const [density, setDensity] = useState('default');
   return (
     <div className="flex flex-col">
       <SettingRow label="Theme" description="Follows the system unless you pick one.">
         <Select value={theme} onValueChange={setTheme}>
           <SelectTrigger placeholder="Theme" />
           <SelectContent>
-            <SelectItem index={0} value="system" icon={icons.monitor}>System</SelectItem>
-            <SelectItem index={1} value="light" icon={icons.sun}>Light</SelectItem>
-            <SelectItem index={2} value="dark" icon={icons.moon}>Dark</SelectItem>
+            <SelectItem index={0} value="system" icon={icons.monitor}>
+              System
+            </SelectItem>
+            <SelectItem index={1} value="light" icon={icons.sun}>
+              Light
+            </SelectItem>
+            <SelectItem index={2} value="dark" icon={icons.moon}>
+              Dark
+            </SelectItem>
           </SelectContent>
         </Select>
       </SettingRow>
@@ -310,8 +358,12 @@ function AppearancePanel() {
         <Select value={density} onValueChange={setDensity}>
           <SelectTrigger placeholder="Density" />
           <SelectContent>
-            <SelectItem index={0} value="default">Default</SelectItem>
-            <SelectItem index={1} value="compact">Compact</SelectItem>
+            <SelectItem index={0} value="default">
+              Default
+            </SelectItem>
+            <SelectItem index={1} value="compact">
+              Compact
+            </SelectItem>
           </SelectContent>
         </Select>
       </SettingRow>
@@ -324,28 +376,43 @@ function SecurityPanel() {
   const [alerts, setAlerts] = useState(true);
   return (
     <div className="flex flex-col">
-      <SettingRow label="Two-factor authentication" description="A code from your authenticator app at sign-in.">
-        <Switch className={SWITCH_LABEL_HIDDEN} label="Two-factor authentication" checked={twoFactor} onToggle={() => setTwoFactor((v) => !v)} />
+      <SettingRow
+        label="Two-factor authentication"
+        description="A code from your authenticator app at sign-in."
+      >
+        <Switch
+          className={SWITCH_LABEL_HIDDEN}
+          label="Two-factor authentication"
+          checked={twoFactor}
+          onToggle={() => setTwoFactor((v) => !v)}
+        />
       </SettingRow>
       <SettingRow label="New sign-in alerts" description="Email when a new device signs in.">
-        <Switch className={SWITCH_LABEL_HIDDEN} label="New sign-in alerts" checked={alerts} onToggle={() => setAlerts((v) => !v)} />
+        <Switch
+          className={SWITCH_LABEL_HIDDEN}
+          label="New sign-in alerts"
+          checked={alerts}
+          onToggle={() => setAlerts((v) => !v)}
+        />
       </SettingRow>
       <SettingRow label="Active sessions" description="3 devices are signed in right now.">
-        <Button variant="secondary" size="sm">Sign out everywhere</Button>
+        <Button variant="secondary" size="sm">
+          Sign out everywhere
+        </Button>
       </SettingRow>
     </div>
   );
 }
 
 const MEMBERS = [
-  { name: "Jane Doe", email: "jane@acme.com", role: "owner" },
-  { name: "Sam Park", email: "sam@acme.com", role: "admin" },
-  { name: "Ravi Patel", email: "ravi@acme.com", role: "member" },
+  { name: 'Jane Doe', email: 'jane@acme.com', role: 'owner' },
+  { name: 'Sam Park', email: 'sam@acme.com', role: 'admin' },
+  { name: 'Ravi Patel', email: 'ravi@acme.com', role: 'member' },
 ];
 
 function MembersPanel() {
   const [roles, setRoles] = useState<Record<string, string>>(
-    Object.fromEntries(MEMBERS.map((m) => [m.email, m.role]))
+    Object.fromEntries(MEMBERS.map((m) => [m.email, m.role])),
   );
   return (
     <div className="flex flex-col">
@@ -357,15 +424,23 @@ function MembersPanel() {
           >
             <SelectTrigger placeholder="Role" variant="borderless" />
             <SelectContent>
-              <SelectItem index={0} value="owner">Owner</SelectItem>
-              <SelectItem index={1} value="admin">Admin</SelectItem>
-              <SelectItem index={2} value="member">Member</SelectItem>
+              <SelectItem index={0} value="owner">
+                Owner
+              </SelectItem>
+              <SelectItem index={1} value="admin">
+                Admin
+              </SelectItem>
+              <SelectItem index={2} value="member">
+                Member
+              </SelectItem>
             </SelectContent>
           </Select>
         </SettingRow>
       ))}
       <div className="pt-4">
-        <Button variant="secondary" size="sm">Invite people</Button>
+        <Button variant="secondary" size="sm">
+          Invite people
+        </Button>
       </div>
     </div>
   );

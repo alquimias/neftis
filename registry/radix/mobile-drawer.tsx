@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState, type ReactNode, type RefObject } from "react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { motion } from "motion/react";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { useSurface, SurfaceProvider } from "@/lib/surface-context";
-import { surfaceClasses } from "@/lib/surface-classes";
+import { useEffect, useState, type ReactNode, type RefObject } from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { motion } from 'motion/react';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { useSurface, SurfaceProvider } from '#lib/surface-context';
+import { surfaceClasses } from '#lib/surface-classes';
 
 // Built on Radix Dialog: it provides scroll lock, focus trap, focus restore,
 // Esc + outside-click dismissal, while leaving the slide animation to
@@ -22,12 +22,7 @@ interface MobileDrawerProps {
   triggerRef?: RefObject<HTMLElement | null>;
 }
 
-export function MobileDrawer({
-  open,
-  onClose,
-  children,
-  triggerRef,
-}: MobileDrawerProps) {
+export function MobileDrawer({ open, onClose, children, triggerRef }: MobileDrawerProps) {
   const substrate = useSurface();
   const level = Math.min(substrate + 2, 8);
 
@@ -92,8 +87,8 @@ export function MobileDrawer({
           >
             <motion.div
               className={`fixed top-0 left-0 bottom-0 w-64 ${surfaceClasses(level, 3)} z-[var(--z-modal,50)] overflow-y-auto p-4`}
-              initial={{ x: "-100%" }}
-              animate={{ x: open ? 0 : "-100%" }}
+              initial={{ x: '-100%' }}
+              animate={{ x: open ? 0 : '-100%' }}
               // spring.moderate: critically damped, so the panel decelerates
               // into x: 0 without overshooting (a bounce briefly exposed the
               // page background through the gap on the left edge).
@@ -108,9 +103,7 @@ export function MobileDrawer({
                   element (aria-label alone does not satisfy it), so ship a
                   visually hidden Title; aria-labelledby then resolves to
                   it, giving the drawer its "Navigation" accessible name. */}
-              <DialogPrimitive.Title className="sr-only">
-                Navigation
-              </DialogPrimitive.Title>
+              <DialogPrimitive.Title className="sr-only">Navigation</DialogPrimitive.Title>
               <SurfaceProvider value={level}>{children}</SurfaceProvider>
             </motion.div>
           </DialogPrimitive.Content>

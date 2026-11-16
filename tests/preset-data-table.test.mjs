@@ -360,7 +360,7 @@ describe("data table preset install generator", () => {
       const p = { ...DEFAULT_DATA_TABLE_PRESET, ...randomPreset(rand) };
       for (const file of generateDataTablePresetFiles(p)) {
         expect(file.content).not.toContain("@/lib/docs");
-        expect(file.content).not.toContain('from "@/registry/');
+        expect(file.content).not.toContain('from "#registry/');
         expect(file.content).not.toContain("—");
       }
     }

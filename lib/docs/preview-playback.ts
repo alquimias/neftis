@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { createContext, useContext } from "react";
+import { createContext, useContext } from 'react';
 
 /** Whether a live preview may run its own animation (an autoplay, a
  *  scripted cursor, a looping example). On by default, so the Showcase and

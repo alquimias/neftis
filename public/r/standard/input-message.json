@@ -3,9 +3,7 @@
   "name": "input-message",
   "title": "Input Message",
   "description": "Chat-style message composer with auto-resizing textarea, drag-and-drop file attachments (PNG / JPEG / PDF), flexible left/right action slots, and a built-in send button on a Surface-2 substrate.",
-  "dependencies": [
-    "motion"
-  ],
+  "dependencies": ["motion"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -32,8 +30,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/input-message. Related block: queued-stack. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#input-message.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

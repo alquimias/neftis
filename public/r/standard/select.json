@@ -3,12 +3,7 @@
   "name": "select",
   "title": "Select",
   "description": "Animated select menu with collision-aware positioning, typeahead, fluid hover, spring-animated popover, and animated checkmark. Radix flavor.",
-  "dependencies": [
-    "@radix-ui/react-select",
-    "motion",
-    "class-variance-authority",
-    "lucide-react"
-  ],
+  "dependencies": ["@radix-ui/react-select", "motion", "class-variance-authority", "lucide-react"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -34,8 +29,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/select. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#select.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

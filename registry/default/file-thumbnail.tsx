@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
-import { cn } from "@/lib/utils";
-import { useShape } from "@/lib/shape-context";
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
+import { cn } from '#lib/utils';
+import { useShape } from '#lib/shape-context';
 
 // ─── Lazy pdfjs loader ────────────────────────────────────────────────────
 // Imports pdfjs-dist on first PDF, caches the module, and points the worker
 // at the matching CDN build. Consumers don't need bundler-side worker config.
 // Sites whose CSP blocks jsDelivr call `setPdfWorkerSrc` with a worker they
 // host themselves (copy `pdfjs-dist/build/pdf.worker.min.mjs` to `public/`).
-type PdfjsModule = typeof import("pdfjs-dist");
+type PdfjsModule = typeof import('pdfjs-dist');
 let pdfjsPromise: Promise<PdfjsModule> | null = null;
 let pdfWorkerSrc: string | null = null;
 
@@ -23,7 +23,7 @@ function setPdfWorkerSrc(src: string) {
 
 async function loadPdfjs(): Promise<PdfjsModule> {
   if (!pdfjsPromise) {
-    pdfjsPromise = import("pdfjs-dist").then((mod) => {
+    pdfjsPromise = import('pdfjs-dist').then((mod) => {
       if (pdfWorkerSrc) {
         mod.GlobalWorkerOptions.workerSrc = pdfWorkerSrc;
       } else if (!mod.GlobalWorkerOptions.workerSrc) {
@@ -43,11 +43,11 @@ async function renderPdfFirstPage(file: File, targetWidth: number): Promise<stri
   const baseViewport = page.getViewport({ scale: 1 });
   const scale = (targetWidth * 2) / baseViewport.width; // 2× for retina
   const viewport = page.getViewport({ scale });
-  const canvas = document.createElement("canvas");
+  const canvas = document.createElement('canvas');
   canvas.width = viewport.width;
   canvas.height = viewport.height;
   await page.render({ canvas, viewport }).promise;
-  return canvas.toDataURL("image/png");
+  return canvas.toDataURL('image/png');
 }
 
 // ─── Object URLs ──────────────────────────────────────────────────────────
@@ -75,14 +75,11 @@ function subscribeObjectUrl(file: File) {
 }
 
 function useObjectUrl(file: File | null): string | null {
-  const subscribe = useCallback(
-    () => (file ? subscribeObjectUrl(file) : () => {}),
-    [file]
-  );
+  const subscribe = useCallback(() => (file ? subscribeObjectUrl(file) : () => {}), [file]);
   return useSyncExternalStore(
     subscribe,
     () => (file ? (objectUrls.get(file)?.url ?? null) : null),
-    () => null
+    () => null,
   );
 }
 
@@ -104,8 +101,8 @@ interface FileThumbnailProps {
 
 function FileThumbnail({ file, size, radius, className }: FileThumbnailProps) {
   const shape = useShape();
-  const isImage = file.type.startsWith("image/");
-  const isPdf = file.type === "application/pdf";
+  const isImage = file.type.startsWith('image/');
+  const isPdf = file.type === 'application/pdf';
 
   // The URL exists from the commit on, so the first render has none. That
   // one-frame "before URL" state is covered by the bg-accent (no fallback
@@ -152,9 +149,9 @@ function FileThumbnail({ file, size, radius, className }: FileThumbnailProps) {
       className={cn(
         // Paint the hairline over the preview: unlike a border, it costs no
         // space, and pure neutral ink stays clean over every surface tint.
-        "relative shrink-0 overflow-hidden bg-accent outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10",
+        'relative shrink-0 overflow-hidden bg-accent outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10',
         shape.bg,
-        className
+        className,
       )}
       style={{
         width: size,

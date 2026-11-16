@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // The site's copy of `@/hooks/use-fluid-hover`, which every registry
 // component imports. It runs both implementations and hands the component
@@ -7,10 +7,10 @@
 // are always called so the hook order never changes when the setting flips;
 // rows register with both, the pointer only drives the active one.
 
-import { useCallback, useEffect, type RefObject } from "react";
-import * as Fluid from "@/registry/default/hooks/use-fluid-hover";
-import * as Standard from "@/registry/standard/hooks/use-fluid-hover";
-import { useHoverMode } from "@/lib/docs/hover-mode";
+import { useCallback, useEffect, type RefObject } from 'react';
+import * as Fluid from '#registry/default/hooks/use-fluid-hover';
+import * as Standard from '#registry/standard/hooks/use-fluid-hover';
+import { useHoverMode } from '#lib/docs/hover-mode';
 
 export {
   useRegisterFluidHoverItem,
@@ -19,26 +19,36 @@ export {
   ACTIVE_INDEX_ATTR,
   pickNearest,
   isOwnEvent,
-} from "@/registry/default/hooks/use-fluid-hover";
-export type { FluidHoverActiveStore, ItemRect, PickNearestInput, UseFluidHoverReturn, UseFluidHoverOptions } from "@/registry/default/hooks/use-fluid-hover";
+} from '#registry/default/hooks/use-fluid-hover';
+export type {
+  FluidHoverActiveStore,
+  ItemRect,
+  PickNearestInput,
+  UseFluidHoverReturn,
+  UseFluidHoverOptions,
+} from '#registry/default/hooks/use-fluid-hover';
 
 export function useFluidHover<T extends HTMLElement>(
   containerRef: RefObject<T | null>,
-  options: Fluid.UseFluidHoverOptions = {}
+  options: Fluid.UseFluidHoverOptions = {},
 ): Fluid.UseFluidHoverReturn {
   const fluid = Fluid.useFluidHover(containerRef, options);
   const standard = Standard.useFluidHover(containerRef, options);
   const mode = useHoverMode();
-  const active = mode === "standard" ? standard : fluid;
+  const active = mode === 'standard' ? standard : fluid;
 
   // The idle one lets go of its highlight, so only the active one marks a row.
   const { setActiveIndex: clearFluid } = fluid;
   const { setActiveIndex: clearStandard } = standard;
   useEffect(() => {
-    (mode === "standard" ? clearFluid : clearStandard)(null);
+    (mode === 'standard' ? clearFluid : clearStandard)(null);
   }, [mode, clearFluid, clearStandard]);
 
-  const { registerItem: registerFluid, remeasure: remeasureFluid, measureItems: measureFluid } = fluid;
+  const {
+    registerItem: registerFluid,
+    remeasure: remeasureFluid,
+    measureItems: measureFluid,
+  } = fluid;
   const {
     registerItem: registerStandard,
     remeasure: remeasureStandard,
@@ -49,7 +59,7 @@ export function useFluidHover<T extends HTMLElement>(
       registerFluid(index, element);
       registerStandard(index, element);
     },
-    [registerFluid, registerStandard]
+    [registerFluid, registerStandard],
   );
   const remeasure = useCallback(() => {
     remeasureFluid();

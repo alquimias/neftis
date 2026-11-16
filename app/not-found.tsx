@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
-import { Button } from "@/registry/radix/button";
-import { spring } from "@/lib/springs";
+import Link from 'next/link';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { ArrowUpRight } from 'lucide-react';
+import { Button } from '#registry/radix/button';
+import { spring } from '#lib/springs';
 
 /* ANIMATION STORYBOARD
  * Rest         zero sits a little below the fours; no entrance or idle loop.
@@ -15,8 +15,8 @@ import { spring } from "@/lib/springs";
  * Reduced      keep the displaced composition still.
  */
 const ZERO = {
-  displacedY: "0.12em",
-  alignedY: "0em",
+  displacedY: '0.12em',
+  alignedY: '0em',
   spring: spring.slow,
 };
 
@@ -32,12 +32,12 @@ export default function NotFound() {
     >
       {/* No settings panel beside a 404. A rule that lives and dies with
           this page, so the layout needs no `:has()` to know it's here. */}
-      <style>{"[data-site-right-panel]{display:none}"}</style>
+      <style>{'[data-site-right-panel]{display:none}'}</style>
       <motion.div
         className="flex flex-col items-center text-center"
         initial={false}
-        animate={!reduceMotion && stage >= 1 ? "aligned" : "rest"}
-        whileHover={reduceMotion ? undefined : "aligned"}
+        animate={!reduceMotion && stage >= 1 ? 'aligned' : 'rest'}
+        whileHover={reduceMotion ? undefined : 'aligned'}
         onFocusCapture={() => setStage(1)}
         onBlurCapture={() => setStage(0)}
       >
@@ -65,9 +65,7 @@ export default function NotFound() {
         >
           <span className="sr-only">404. </span>A little out of place.
         </h1>
-        <p className="mt-2 text-site-body text-muted-foreground">
-          We couldn’t find this page.
-        </p>
+        <p className="mt-2 text-site-body text-muted-foreground">We couldn’t find this page.</p>
         <Button asChild variant="tertiary" trailingIcon={ArrowUpRight} className="mt-7">
           <Link href="/">Back to showcase</Link>
         </Button>

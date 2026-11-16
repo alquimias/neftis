@@ -1,1 +1,1 @@
-export { fontWeights } from "@/registry/default/lib/font-weight";
+export { fontWeights } from '#registry/default/lib/font-weight';

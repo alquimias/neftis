@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   Banner,
   BannerTitle,
@@ -10,9 +10,9 @@ import {
   type BannerContrast,
   type BannerStatus,
   type BannerVariant,
-} from "@/registry/default/banner";
-import { Button } from "@/registry/radix/button";
-import { Switch } from "@/registry/radix/switch";
+} from '#registry/default/banner';
+import { Button } from '#registry/radix/button';
+import { Switch } from '#registry/radix/switch';
 import {
   PLAY_SWITCH,
   PlayField,
@@ -20,8 +20,8 @@ import {
   PlaySection,
   PlayDivider,
   PlaygroundPanel,
-} from "@/lib/docs/playground";
-import type { PlaygroundProps } from "./types";
+} from '#lib/docs/playground';
+import type { PlaygroundProps } from './types';
 
 // ── Banner playground ────────────────────────────────────
 // One real Banner driven by the controls, with the matching code kept in sync
@@ -34,43 +34,44 @@ export const BANNER_COPY: Record<
   { title: string; description: string; primary: string; secondary: string; ghost: string }
 > = {
   default: {
-    title: "Banner is new in Fluid Functionalism",
-    description: "5 statuses, 2 contrasts and a dismiss that collapses its height.",
-    primary: "Read the docs",
-    secondary: "Changelog",
-    ghost: "Not now",
+    title: 'Banner is new in Fluid Functionalism',
+    description: '5 statuses, 2 contrasts and a dismiss that collapses its height.',
+    primary: 'Read the docs',
+    secondary: 'Changelog',
+    ghost: 'Not now',
   },
   info: {
-    title: "The registry has new components",
-    description: "Run the install command again to pull the latest versions.",
-    primary: "Copy command",
+    title: 'The registry has new components',
+    description: 'Run the install command again to pull the latest versions.',
+    primary: 'Copy command',
     secondary: "What's new",
-    ghost: "Later",
+    ghost: 'Later',
   },
   success: {
-    title: "Fluid Functionalism is installed",
-    description: "Button, Card and Dialog were added to components/ui.",
-    primary: "Open the docs",
-    secondary: "Add more",
-    ghost: "Share",
+    title: 'Fluid Functionalism is installed',
+    description: 'Button, Card and Dialog were added to components/ui.',
+    primary: 'Open the docs',
+    secondary: 'Add more',
+    ghost: 'Share',
   },
   warning: {
-    title: "Inter is missing its opsz axis",
-    description: 'Labels shift when their weight changes. Add axes: ["opsz"] to your next/font call.',
-    primary: "Show the fix",
-    secondary: "Read the guide",
-    ghost: "Ignore",
+    title: 'Inter is missing its opsz axis',
+    description:
+      'Labels shift when their weight changes. Add axes: ["opsz"] to your next/font call.',
+    primary: 'Show the fix',
+    secondary: 'Read the guide',
+    ghost: 'Ignore',
   },
   error: {
     title: "Couldn't reach the registry",
     description: "shadcn couldn't fetch button.json from fluidfunctionalism.com.",
-    primary: "Retry",
-    secondary: "Status page",
-    ghost: "Report issue",
+    primary: 'Retry',
+    secondary: 'Status page',
+    ghost: 'Report issue',
   },
 };
 
-const STATUSES: BannerStatus[] = ["default", "info", "success", "warning", "error"];
+const STATUSES: BannerStatus[] = ['default', 'info', 'success', 'warning', 'error'];
 
 interface PlayState {
   variant: BannerVariant;
@@ -86,10 +87,10 @@ interface PlayState {
 function buildBannerCode(o: PlayState) {
   const copy = BANNER_COPY[o.status];
   const attrs: string[] = [];
-  if (o.variant !== "inline") attrs.push(`variant="${o.variant}"`);
-  if (o.status !== "default") attrs.push(`status="${o.status}"`);
-  if (o.contrast !== "low") attrs.push(`contrast="${o.contrast}"`);
-  if (o.dismissible) attrs.push("dismissible");
+  if (o.variant !== 'inline') attrs.push(`variant="${o.variant}"`);
+  if (o.status !== 'default') attrs.push(`status="${o.status}"`);
+  if (o.contrast !== 'low') attrs.push(`contrast="${o.contrast}"`);
+  if (o.dismissible) attrs.push('dismissible');
 
   const lines = [`  <BannerTitle>${copy.title}</BannerTitle>`];
   if (o.description) {
@@ -98,13 +99,13 @@ function buildBannerCode(o: PlayState) {
   // Written strongest first (that's the tab order); the banner lays them
   // out by variant.
   if (o.primary || o.secondary || o.ghost) {
-    lines.push("  <BannerActions>");
+    lines.push('  <BannerActions>');
     if (o.primary) lines.push(`    <BannerAction variant="primary">${copy.primary}</BannerAction>`);
     if (o.secondary) lines.push(`    <BannerAction>${copy.secondary}</BannerAction>`);
     if (o.ghost) lines.push(`    <BannerAction variant="ghost">${copy.ghost}</BannerAction>`);
-    lines.push("  </BannerActions>");
+    lines.push('  </BannerActions>');
   }
-  return `<Banner${attrs.length ? " " + attrs.join(" ") : ""}>\n${lines.join("\n")}\n</Banner>`;
+  return `<Banner${attrs.length ? ' ' + attrs.join(' ') : ''}>\n${lines.join('\n')}\n</Banner>`;
 }
 
 const ROW_WIDTHS = [92, 84, 88, 60, 95, 78, 86, 70, 50, 90, 82, 94, 66, 88, 74, 58];
@@ -124,7 +125,7 @@ function SkeletonLines({ widths }: { widths: number[] }) {
  *  right under it, and page content that scrolls on its own below both. */
 export function MockPage({
   children,
-  className = "h-[240px]",
+  className = 'h-[240px]',
 }: {
   children: ReactNode;
   className?: string;
@@ -198,9 +199,9 @@ function useHeldHeight(open: boolean, resetKey: string) {
 }
 
 export function BannerPlayground({ children }: PlaygroundProps) {
-  const [variant, setVariant] = useState<BannerVariant>("inline");
-  const [status, setStatus] = useState<BannerStatus>("success");
-  const [contrast, setContrast] = useState<BannerContrast>("low");
+  const [variant, setVariant] = useState<BannerVariant>('inline');
+  const [status, setStatus] = useState<BannerStatus>('success');
+  const [contrast, setContrast] = useState<BannerContrast>('low');
   const [description, setDescription] = useState(true);
   const [primary, setPrimary] = useState(true);
   const [secondary, setSecondary] = useState(true);
@@ -209,7 +210,7 @@ export function BannerPlayground({ children }: PlaygroundProps) {
   const [open, setOpen] = useState(true);
   const [pageRef, pageHeight] = useHeldHeight(
     open,
-    [variant, status, contrast, description, primary, secondary, ghost, dismissible].join()
+    [variant, status, contrast, description, primary, secondary, ghost, dismissible].join(),
   );
 
   const state: PlayState = {
@@ -227,9 +228,9 @@ export function BannerPlayground({ children }: PlaygroundProps) {
 
   const randomize = () => {
     const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
-    setVariant(Math.random() > 0.75 ? "fixed" : "inline");
+    setVariant(Math.random() > 0.75 ? 'fixed' : 'inline');
     setStatus(pick(STATUSES));
-    setContrast(pick(["low", "high"] as const));
+    setContrast(pick(['low', 'high'] as const));
     setDescription(Math.random() > 0.4);
     setPrimary(Math.random() > 0.3);
     setSecondary(Math.random() > 0.5);
@@ -247,8 +248,8 @@ export function BannerPlayground({ children }: PlaygroundProps) {
             value={variant}
             onChange={(v) => setVariant(v as BannerVariant)}
             options={[
-              { value: "inline", label: "Inline" },
-              { value: "fixed", label: "Fixed" },
+              { value: 'inline', label: 'Inline' },
+              { value: 'fixed', label: 'Fixed' },
             ]}
           />
         </PlayField>
@@ -257,11 +258,11 @@ export function BannerPlayground({ children }: PlaygroundProps) {
             value={status}
             onChange={(v) => setStatus(v as BannerStatus)}
             options={[
-              { value: "default", label: "Default" },
-              { value: "info", label: "Info" },
-              { value: "success", label: "Success" },
-              { value: "warning", label: "Warning" },
-              { value: "error", label: "Error" },
+              { value: 'default', label: 'Default' },
+              { value: 'info', label: 'Info' },
+              { value: 'success', label: 'Success' },
+              { value: 'warning', label: 'Warning' },
+              { value: 'error', label: 'Error' },
             ]}
           />
         </PlayField>
@@ -270,8 +271,8 @@ export function BannerPlayground({ children }: PlaygroundProps) {
             value={contrast}
             onChange={(v) => setContrast(v as BannerContrast)}
             options={[
-              { value: "low", label: "Low" },
-              { value: "high", label: "High" },
+              { value: 'low', label: 'Low' },
+              { value: 'high', label: 'High' },
             ]}
           />
         </PlayField>
@@ -350,7 +351,7 @@ export function BannerPlayground({ children }: PlaygroundProps) {
   // and dismiss move real content: the line above stays put and the ones
   // below slide. The page holds its height (see useHeldHeight).
   const render = (maxWidth: string, mockHeight: string) =>
-    variant === "fixed" ? (
+    variant === 'fixed' ? (
       <div className={`w-full ${maxWidth}`}>
         <MockPage className={mockHeight}>{banner}</MockPage>
       </div>
@@ -365,8 +366,8 @@ export function BannerPlayground({ children }: PlaygroundProps) {
     );
 
   return children({
-    preview: render("max-w-[560px]", "h-[280px]"),
-    demoPreview: render("max-w-[420px]", "h-[260px]"),
+    preview: render('max-w-[560px]', 'h-[280px]'),
+    demoPreview: render('max-w-[420px]', 'h-[260px]'),
     controls,
     code,
     onReplay: () => setOpen(true),

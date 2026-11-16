@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import { useAccent } from "@/lib/docs/accent";
+import { useMemo, useState } from 'react';
+import { useAccent } from '#lib/docs/accent';
 import {
   Card,
   CardGroup,
@@ -12,9 +12,9 @@ import {
   CardMedia,
   CardImage,
   CardButton,
-} from "@/registry/default/card";
-import { useIcons, type IconComponent } from "@/lib/icon-context";
-import { Switch } from "@/registry/radix/switch";
+} from '#registry/default/card';
+import { useIcons, type IconComponent } from '#lib/icon-context';
+import { Switch } from '#registry/radix/switch';
 import {
   PLAY_SWITCH,
   PlayField,
@@ -22,7 +22,7 @@ import {
   PlaySection,
   PlayDivider,
   PlaygroundPanel,
-} from "@/lib/docs/playground";
+} from '#lib/docs/playground';
 import {
   CARD_PRESET_DEF,
   CARD_DEFAULT_CODE,
@@ -33,13 +33,9 @@ import {
   encodeCardPreset,
   decodeCardPreset,
   type CardPreset,
-} from "@/lib/preset/card-options";
-import {
-  usePresetGlobals,
-  usePresetUrlSync,
-  GetCodeDialog,
-} from "@/lib/docs/preset-ui";
-import type { PlaygroundProps } from "./types";
+} from '#lib/preset/card-options';
+import { usePresetGlobals, usePresetUrlSync, GetCodeDialog } from '#lib/docs/preset-ui';
+import type { PlaygroundProps } from './types';
 
 // ── Card playground ──────────────────────────────────────
 // A live sandbox: the controls drive a real CardGroup so every combination of
@@ -57,13 +53,13 @@ export function useCardArt() {
   const { hex } = useAccent();
   return useMemo(
     () => ({ banner: tintCardArt(CARD_BANNER, hex), thumb: tintCardArt(CARD_THUMB, hex) }),
-    [hex]
+    [hex],
   );
 }
 
-type PlayOrientation = "card" | "inline";
-type PlayBorder = "none" | "outlined";
-type PlayMedia = "icon" | "logo" | "image" | "none";
+type PlayOrientation = 'card' | 'inline';
+type PlayBorder = 'none' | 'outlined';
+type PlayMedia = 'icon' | 'logo' | 'image' | 'none';
 
 function buildPlaygroundCode(o: {
   orientation: PlayOrientation;
@@ -79,31 +75,31 @@ function buildPlaygroundCode(o: {
   selected: boolean;
 }) {
   const groupProps: string[] = [];
-  if (o.orientation !== "card") groupProps.push(`orientation="${o.orientation}"`);
+  if (o.orientation !== 'card') groupProps.push(`orientation="${o.orientation}"`);
   if (o.cols !== 1) groupProps.push(`columns={${o.cols}}`);
-  if (o.border !== "none") groupProps.push(`border="${o.border}"`);
-  if (o.separated) groupProps.push("separated");
-  if (!o.fluidHover) groupProps.push("fluidHover={false}");
-  const attr = groupProps.length ? " " + groupProps.join(" ") : "";
-  const isInline = o.orientation === "inline";
+  if (o.border !== 'none') groupProps.push(`border="${o.border}"`);
+  if (o.separated) groupProps.push('separated');
+  if (!o.fluidHover) groupProps.push('fluidHover={false}');
+  const attr = groupProps.length ? ' ' + groupProps.join(' ') : '';
+  const isInline = o.orientation === 'inline';
 
   const smallMedia =
-    o.media === "icon"
-      ? "<CardMedia icon={Search} />"
-      : o.media === "logo"
-        ? "<CardMedia logo={logo} size={32} />"
+    o.media === 'icon'
+      ? '<CardMedia icon={Search} />'
+      : o.media === 'logo'
+        ? '<CardMedia logo={logo} size={32} />'
         : null;
-  const imageLine = o.media === "image" ? "<CardImage src={image} />" : null;
+  const imageLine = o.media === 'image' ? '<CardImage src={image} />' : null;
   const btns: string[] = [];
-  if (o.primaryBtn) btns.push("<CardButton variant=\"primary\">Get started</CardButton>");
-  if (o.secondaryBtn) btns.push("<CardButton variant=\"secondary\">Learn more</CardButton>");
-  if (o.ghostBtn) btns.push("<CardButton>Connect</CardButton>");
-  const ordered = isInline && o.media !== "image" ? [...btns].reverse() : btns;
+  if (o.primaryBtn) btns.push('<CardButton variant="primary">Get started</CardButton>');
+  if (o.secondaryBtn) btns.push('<CardButton variant="secondary">Learn more</CardButton>');
+  if (o.ghostBtn) btns.push('<CardButton>Connect</CardButton>');
+  const ordered = isInline && o.media !== 'image' ? [...btns].reverse() : btns;
   const footer = ordered.length
-    ? ["<CardFooter>", ...ordered.map((b) => "  " + b), "</CardFooter>"]
+    ? ['<CardFooter>', ...ordered.map((b) => '  ' + b), '</CardFooter>']
     : null;
   const descLine = o.description
-    ? "<CardDescription>Analyze recent commits…</CardDescription>"
+    ? '<CardDescription>Analyze recent commits…</CardDescription>'
     : null;
 
   const lead = (s: string) => `    ${s}`;
@@ -111,25 +107,25 @@ function buildPlaygroundCode(o: {
     ? [
         imageLine && lead(imageLine),
         smallMedia && lead(smallMedia),
-        lead("<CardHeader>"),
-        lead("  <CardTitle>Find critical bugs</CardTitle>"),
+        lead('<CardHeader>'),
+        lead('  <CardTitle>Find critical bugs</CardTitle>'),
         descLine && lead(`  ${descLine}`),
-        lead("</CardHeader>"),
+        lead('</CardHeader>'),
         ...(footer ? footer.map(lead) : []),
       ]
     : [
         imageLine && lead(imageLine),
-        lead("<CardHeader>"),
+        lead('<CardHeader>'),
         smallMedia && lead(`  ${smallMedia}`),
-        lead("  <CardTitle>Find critical bugs</CardTitle>"),
+        lead('  <CardTitle>Find critical bugs</CardTitle>'),
         descLine && lead(`  ${descLine}`),
-        lead("</CardHeader>"),
+        lead('</CardHeader>'),
         ...(footer ? footer.map(lead) : []),
       ];
 
   return `<CardGroup${attr}>
-  <Card${o.selected ? ' label="Find critical bugs" selected onClick={() => setSelected(0)}' : ""}>
-${inner.filter(Boolean).join("\n")}
+  <Card${o.selected ? ' label="Find critical bugs" selected onClick={() => setSelected(0)}' : ''}>
+${inner.filter(Boolean).join('\n')}
   </Card>
   {/* …three more */}
 </CardGroup>`;
@@ -139,12 +135,12 @@ export function CardPlayground({ children }: PlaygroundProps) {
   const art = useCardArt();
   const icons = useIcons();
 
-  const [orientation, setOrientation] = useState<PlayOrientation>("card");
-  const [columns, setColumns] = useState("2");
-  const [border, setBorder] = useState<PlayBorder>("none");
+  const [orientation, setOrientation] = useState<PlayOrientation>('card');
+  const [columns, setColumns] = useState('2');
+  const [border, setBorder] = useState<PlayBorder>('none');
   const [separated, setSeparated] = useState(false);
   const [fluidHover, setFluidHover] = useState(true);
-  const [media, setMedia] = useState<PlayMedia>("icon");
+  const [media, setMedia] = useState<PlayMedia>('icon');
   const [primaryBtn, setPrimaryBtn] = useState(false);
   const [secondaryBtn, setSecondaryBtn] = useState(false);
   const [ghostBtn, setGhostBtn] = useState(false);
@@ -156,7 +152,7 @@ export function CardPlayground({ children }: PlaygroundProps) {
   // an installed block renders exactly what the preview shows.
   const allItems = CARD_ITEMS.map((item) => ({ ...item, icon: icons[item.icon] }));
 
-  const isInline = orientation === "inline";
+  const isInline = orientation === 'inline';
   // Inline cards are a full-width list — a multi-column grid crams them until
   // the media, wrapped title, and footer collide. Force a single column there.
   const cols = isInline ? 1 : Number(columns);
@@ -165,13 +161,25 @@ export function CardPlayground({ children }: PlaygroundProps) {
   // A selection made while more items were shown (cols 3 → 6) would otherwise
   // point past a now-shorter list; clamp so the selection stays visible.
   const activeSelected = Math.min(selectedIndex, items.length - 1);
-  const isImage = media === "image";
-  const isSmall = media === "icon" || media === "logo";
+  const isImage = media === 'image';
+  const isSmall = media === 'icon' || media === 'logo';
   // The prominent image needs each card to clip it to its own rounded corners,
   // so it only reads right on separated tiles — force (and lock) Separated on.
   const effectiveSeparated = isImage || separated;
 
-  const code = buildPlaygroundCode({ orientation, cols, border, separated: effectiveSeparated, fluidHover, media, description, primaryBtn, secondaryBtn, ghostBtn, selected: selectedOn });
+  const code = buildPlaygroundCode({
+    orientation,
+    cols,
+    border,
+    separated: effectiveSeparated,
+    fluidHover,
+    media,
+    description,
+    primaryBtn,
+    secondaryBtn,
+    ghostBtn,
+    selected: selectedOn,
+  });
 
   // ── Get code (presets) ─────────────────────────────────
   // The rail's configuration bit-packs into a stateless code (shadcn's
@@ -187,7 +195,7 @@ export function CardPlayground({ children }: PlaygroundProps) {
     secondaryBtn,
     ghostBtn,
     orientation,
-    columns: Number(columns) as CardPreset["columns"],
+    columns: Number(columns) as CardPreset['columns'],
     border,
     separated,
     fluidHover,
@@ -215,9 +223,9 @@ export function CardPlayground({ children }: PlaygroundProps) {
   // Small media (icon / logo) — sits in the header when stacked, leading when
   // inline. The prominent "image" is handled separately with CardImage.
   const renderSmall = (icon: IconComponent) =>
-    media === "icon" ? (
+    media === 'icon' ? (
       <CardMedia icon={icon} />
-    ) : media === "logo" ? (
+    ) : media === 'logo' ? (
       <CardMedia logo={art.thumb} size={32} />
     ) : null;
 
@@ -227,8 +235,18 @@ export function CardPlayground({ children }: PlaygroundProps) {
     // image card drops the actions below the text, where they keep the natural
     // left-to-right order.
     const btns: React.ReactNode[] = [];
-    if (primaryBtn) btns.push(<CardButton key="p" variant="primary">Get started</CardButton>);
-    if (secondaryBtn) btns.push(<CardButton key="s" variant="secondary">Learn more</CardButton>);
+    if (primaryBtn)
+      btns.push(
+        <CardButton key="p" variant="primary">
+          Get started
+        </CardButton>,
+      );
+    if (secondaryBtn)
+      btns.push(
+        <CardButton key="s" variant="secondary">
+          Learn more
+        </CardButton>,
+      );
     if (ghostBtn) btns.push(<CardButton key="g">Connect</CardButton>);
     if (!btns.length) return null;
     const reverse = isInline && !isImage;
@@ -238,18 +256,17 @@ export function CardPlayground({ children }: PlaygroundProps) {
   // Roll the whole panel to random values — the derived constraints (image
   // forces Separated, inline forces one column) still apply on top.
   const randomize = () => {
-    const pick = <T,>(arr: readonly T[]) =>
-      arr[Math.floor(Math.random() * arr.length)];
-    setMedia(pick(["icon", "logo", "image", "none"] as const));
+    const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
+    setMedia(pick(['icon', 'logo', 'image', 'none'] as const));
     setDescription(Math.random() > 0.25);
     setPrimaryBtn(Math.random() > 0.4);
     setSecondaryBtn(Math.random() > 0.6);
     setGhostBtn(Math.random() > 0.6);
     setSelectedOn(Math.random() > 0.6);
     setSelectedIndex(Math.floor(Math.random() * 4));
-    setOrientation(pick(["card", "inline"] as const));
-    setColumns(pick(["1", "2", "3"] as const));
-    setBorder(pick(["none", "outlined"] as const));
+    setOrientation(pick(['card', 'inline'] as const));
+    setColumns(pick(['1', '2', '3'] as const));
+    setBorder(pick(['none', 'outlined'] as const));
     setSeparated(Math.random() > 0.5);
     setFluidHover(Math.random() > 0.2);
   };
@@ -264,10 +281,10 @@ export function CardPlayground({ children }: PlaygroundProps) {
             value={media}
             onChange={(v) => setMedia(v as PlayMedia)}
             options={[
-              { value: "icon", label: "Icon" },
-              { value: "logo", label: "Logo" },
-              { value: "image", label: "Image" },
-              { value: "none", label: "None" },
+              { value: 'icon', label: 'Icon' },
+              { value: 'logo', label: 'Logo' },
+              { value: 'image', label: 'Image' },
+              { value: 'none', label: 'None' },
             ]}
           />
         </PlayField>
@@ -297,7 +314,6 @@ export function CardPlayground({ children }: PlaygroundProps) {
         />
       </div>
 
-
       {/* Card group (layout props) */}
       <PlayDivider />
       <PlaySection label="Card group" />
@@ -307,19 +323,19 @@ export function CardPlayground({ children }: PlaygroundProps) {
             value={orientation}
             onChange={(v) => setOrientation(v as PlayOrientation)}
             options={[
-              { value: "card", label: "Card" },
-              { value: "inline", label: "Inline" },
+              { value: 'card', label: 'Card' },
+              { value: 'inline', label: 'Inline' },
             ]}
           />
         </PlayField>
         <PlayField label="Columns" disabled={isInline}>
           <PlaySelect
-            value={isInline ? "1" : columns}
+            value={isInline ? '1' : columns}
             onChange={setColumns}
             options={[
-              { value: "1", label: "1" },
-              { value: "2", label: "2" },
-              { value: "3", label: "3" },
+              { value: '1', label: '1' },
+              { value: '2', label: '2' },
+              { value: '3', label: '3' },
             ]}
           />
         </PlayField>
@@ -328,8 +344,8 @@ export function CardPlayground({ children }: PlaygroundProps) {
             value={border}
             onChange={(v) => setBorder(v as PlayBorder)}
             options={[
-              { value: "none", label: "None" },
-              { value: "outlined", label: "Outlined" },
+              { value: 'none', label: 'None' },
+              { value: 'outlined', label: 'Outlined' },
             ]}
           />
         </PlayField>

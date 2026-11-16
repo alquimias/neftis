@@ -1,1 +1,1 @@
-export * from "@/registry/default/dropdown-search";
+export * from '#registry/default/dropdown-search';

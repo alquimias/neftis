@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { usePathname } from "next/navigation";
-import { type ReactNode } from "react";
-import { NavMenu } from "@/components/ui/nav-menu";
-import { NavItem } from "@/components/ui/nav-item";
-import { useIcon } from "@/lib/icon-context";
-import { RightPanel } from "@/app/components/right-panel";
-import { ScrollArea } from "@/registry/base/scroll-area";
+import { usePathname } from 'next/navigation';
+import { type ReactNode } from 'react';
+import { NavMenu } from '#components/ui/nav-menu';
+import { NavItem } from '#components/ui/nav-item';
+import { useIcon } from '#lib/icon-context';
+import { RightPanel } from '#app/components/right-panel';
+import { ScrollArea } from '#registry/base/scroll-area';
 
 interface ConceptFrameProps {
   children: ReactNode;
@@ -16,10 +16,10 @@ interface ConceptFrameProps {
 }
 
 const CONCEPTS = [
-  { slug: "lumen", name: "Lumen" },
-  { slug: "atlas", name: "Atlas" },
-  { slug: "beacon", name: "Beacon" },
-  { slug: "quill", name: "Quill" },
+  { slug: 'lumen', name: 'Lumen' },
+  { slug: 'atlas', name: 'Atlas' },
+  { slug: 'beacon', name: 'Beacon' },
+  { slug: 'quill', name: 'Quill' },
 ];
 
 // ConceptFrame wraps every concept screen with the same chrome as the main app:
@@ -47,7 +47,7 @@ export function ConceptFrame({ children, bare = false }: ConceptFrameProps) {
 
 function ConceptNav() {
   const pathname = usePathname();
-  const Home = useIcon("home");
+  const Home = useIcon('home');
 
   return (
     <aside className="sticky top-0 hidden h-screen w-56 shrink-0 flex-col lg:flex">
@@ -55,12 +55,7 @@ function ConceptNav() {
         <NavMenu activeSlug={pathname} aria-label="Concept screens">
           <NavItem index={0} href="/" label="Home" icon={Home} />
           {CONCEPTS.map((c, i) => (
-            <NavItem
-              key={c.slug}
-              index={i + 1}
-              href={`/concepts/${c.slug}`}
-              label={c.name}
-            />
+            <NavItem key={c.slug} index={i + 1} href={`/concepts/${c.slug}`} label={c.name} />
           ))}
         </NavMenu>
       </ScrollArea>

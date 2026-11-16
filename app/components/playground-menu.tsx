@@ -1,22 +1,15 @@
-"use client";
+'use client';
 
-import {
-  createContext,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
-import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Button } from "@/registry/radix/button";
-import { Elevated } from "@/lib/elevated";
-import { ScrollArea } from "@/registry/radix/scroll-area";
-import { Tooltip } from "@/registry/radix/tooltip";
-import { useIcon } from "@/lib/icon-context";
-import { useShape } from "@/lib/shape-context";
-import { spring } from "@/lib/springs";
+import { createContext, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { Button } from '#registry/radix/button';
+import { Elevated } from '#lib/elevated';
+import { ScrollArea } from '#registry/radix/scroll-area';
+import { Tooltip } from '#registry/radix/tooltip';
+import { useIcon } from '#lib/icon-context';
+import { useShape } from '#lib/shape-context';
+import { spring } from '#lib/springs';
 
 // ---------------------------------------------------------------------------
 // Pen menu for demo cards: a small ghost button in the card's bottom-right
@@ -54,7 +47,7 @@ export function PlaygroundMenu({
   const buttonRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
-  const PencilIcon = useIcon("pencil");
+  const PencilIcon = useIcon('pencil');
   const shape = useShape();
 
   // Anchor: the panel's right edge lines up with the button's, and it opens
@@ -77,10 +70,7 @@ export function PlaygroundMenu({
     // after scrolling, and a raw button-relative offset would push the panel
     // off-screen in both cases.
     const bottom = Math.max(vh - rect.top + PANEL_GAP, VIEWPORT_MARGIN);
-    const top = Math.max(
-      Math.min(rect.bottom + PANEL_GAP, vh - VIEWPORT_MARGIN),
-      VIEWPORT_MARGIN
-    );
+    const top = Math.max(Math.min(rect.bottom + PANEL_GAP, vh - VIEWPORT_MARGIN), VIEWPORT_MARGIN);
     const above = vh - bottom - VIEWPORT_MARGIN;
     const below = vh - top - VIEWPORT_MARGIN;
     // Up unless down genuinely has more room — the panel is tall and the pen
@@ -93,11 +83,11 @@ export function PlaygroundMenu({
   useEffect(() => {
     if (!open) return;
     measure();
-    window.addEventListener("resize", measure);
-    window.addEventListener("scroll", measure, true);
+    window.addEventListener('resize', measure);
+    window.addEventListener('scroll', measure, true);
     return () => {
-      window.removeEventListener("resize", measure);
-      window.removeEventListener("scroll", measure, true);
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('scroll', measure, true);
     };
   }, [open, measure]);
 
@@ -128,11 +118,8 @@ export function PlaygroundMenu({
   }, [open, pos]);
 
   const panelHeight =
-    pos && contentHeight != null
-      ? Math.min(contentHeight, pos.maxHeight)
-      : undefined;
-  const overflowing =
-    pos != null && contentHeight != null && contentHeight > pos.maxHeight + 1;
+    pos && contentHeight != null ? Math.min(contentHeight, pos.maxHeight) : undefined;
+  const overflowing = pos != null && contentHeight != null && contentHeight > pos.maxHeight + 1;
 
   // Light dismiss: outside pointerdown, or Escape (which also hands focus
   // back to the pen button so keyboard flow continues where it left off).
@@ -140,25 +127,28 @@ export function PlaygroundMenu({
     if (!open) return;
     const onPointerDown = (e: PointerEvent) => {
       const t = e.target as Node;
-      if (buttonRef.current?.contains(t) || panelRef.current?.contains(t))
-        return;
+      if (buttonRef.current?.contains(t) || panelRef.current?.contains(t)) return;
       // Selects inside the panel portal their own popups to <body> — a click
       // in one of those must not read as "outside".
-      if ((t as Element).closest?.("[data-radix-popper-content-wrapper], [role='listbox'], [data-floating-ui-portal]"))
+      if (
+        (t as Element).closest?.(
+          "[data-radix-popper-content-wrapper], [role='listbox'], [data-floating-ui-portal]",
+        )
+      )
         return;
       setOpen(false);
     };
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         setOpen(false);
-        buttonRef.current?.querySelector("button")?.focus();
+        buttonRef.current?.querySelector('button')?.focus();
       }
     };
-    window.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('keydown', onKeyDown);
     return () => {
-      window.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('keydown', onKeyDown);
     };
   }, [open]);
 
@@ -169,34 +159,42 @@ export function PlaygroundMenu({
   useEffect(() => {
     if (!large || open) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== "/" || e.defaultPrevented) return;
+      if (e.key !== '/' || e.defaultPrevented) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       // From inside the preview too: these are its own controls. A field
       // in it keeps the character (below).
       const target = e.target instanceof HTMLElement ? e.target : null;
-      if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable) return;
-      if (target?.closest('[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]')) return;
-      const shown = [...document.querySelectorAll<HTMLElement>("[data-play-search]")].some((el) => el.offsetParent);
+      if (
+        target?.tagName === 'INPUT' ||
+        target?.tagName === 'TEXTAREA' ||
+        target?.isContentEditable
+      )
+        return;
+      if (
+        target?.closest(
+          '[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]',
+        )
+      )
+        return;
+      const shown = [...document.querySelectorAll<HTMLElement>('[data-play-search]')].some(
+        (el) => el.offsetParent,
+      );
       if (shown) return;
       e.preventDefault();
       setOpen(true);
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [large, open]);
 
   return (
     <>
       <div ref={buttonRef} className="relative">
-        <Tooltip
-          content="Change playground variant"
-          shortcut={large ? "/" : undefined}
-          side="top"
-        >
+        <Tooltip content="Change playground variant" shortcut={large ? '/' : undefined} side="top">
           <Button
             variant="ghost"
-            size={large ? "icon" : "icon-compact"}
-            className={large ? "size-10 [&_svg]:size-4" : undefined}
+            size={large ? 'icon' : 'icon-compact'}
+            className={large ? 'size-10 [&_svg]:size-4' : undefined}
             aria-label={label}
             aria-haspopup="dialog"
             aria-expanded={open}
@@ -211,12 +209,12 @@ export function PlaygroundMenu({
         <span
           aria-hidden
           className={
-            "pointer-events-none absolute size-1.5 rounded-full bg-[var(--fluid-accent,#6B97FF)] " +
-            (large ? "right-1.5 top-1.5" : "right-0.5 top-0.5")
+            'pointer-events-none absolute size-1.5 rounded-full bg-[var(--fluid-accent,#6B97FF)] ' +
+            (large ? 'right-1.5 top-1.5' : 'right-0.5 top-0.5')
           }
         />
       </div>
-      {typeof document !== "undefined" &&
+      {typeof document !== 'undefined' &&
         createPortal(
           <AnimatePresence>
             {open && pos && (
@@ -232,8 +230,7 @@ export function PlaygroundMenu({
                   bottom: pos.bottom,
                   width: PANEL_WIDTH,
                   // Grow from the anchored edge — the one nearest the pen.
-                  transformOrigin:
-                    pos.bottom != null ? "bottom right" : "top right",
+                  transformOrigin: pos.bottom != null ? 'bottom right' : 'top right',
                 }}
                 initial={
                   reduceMotion
@@ -244,11 +241,7 @@ export function PlaygroundMenu({
                         scaleY: 0.96,
                       }
                 }
-                animate={
-                  reduceMotion
-                    ? { opacity: 1 }
-                    : { opacity: 1, y: 0, scaleY: 1 }
-                }
+                animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scaleY: 1 }}
                 exit={{ opacity: 0, transition: spring.fast.exit }}
                 transition={spring.fast}
               >
@@ -261,20 +254,22 @@ export function PlaygroundMenu({
                   <ScrollArea
                     className="rounded-[inherit]"
                     style={{ height: panelHeight, maxHeight: pos.maxHeight }}
-                    viewportClassName={overflowing ? "scroll-fade" : undefined}
+                    viewportClassName={overflowing ? 'scroll-fade' : undefined}
                   >
                     {/* Measured for the height above — must not be the
                         scrolling box itself, so its height stays
                         content-driven. */}
                     <div ref={contentRef} className="p-2">
-                      <InPlaygroundMenuContext.Provider value>{children}</InPlaygroundMenuContext.Provider>
+                      <InPlaygroundMenuContext.Provider value>
+                        {children}
+                      </InPlaygroundMenuContext.Provider>
                     </div>
                   </ScrollArea>
                 </Elevated>
               </motion.div>
             )}
           </AnimatePresence>,
-          document.body
+          document.body,
         )}
     </>
   );

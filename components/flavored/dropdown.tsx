@@ -1,29 +1,25 @@
-"use client";
+'use client';
 
-import type { ComponentType, ReactElement } from "react";
-import * as Base from "@/registry/base/dropdown";
-import * as Radix from "@/registry/radix/dropdown";
-import { flavored } from "@/components/flavored/flavored";
+import type { ComponentType, ReactElement } from 'react';
+import * as Base from '#registry/base/dropdown';
+import * as Radix from '#registry/radix/dropdown';
+import { flavored } from '#components/flavored/flavored';
 
-export const Dropdown = flavored(
-  Base.Dropdown,
-  Radix.Dropdown,
-  "Flavored(Dropdown)"
-);
+export const Dropdown = flavored(Base.Dropdown, Radix.Dropdown, 'Flavored(Dropdown)');
 export const DropdownLabel = flavored(
   Base.DropdownLabel,
   Radix.DropdownLabel,
-  "Flavored(DropdownLabel)"
+  'Flavored(DropdownLabel)',
 );
 export const DropdownSeparator = flavored(
   Base.DropdownSeparator,
   Radix.DropdownSeparator,
-  "Flavored(DropdownSeparator)"
+  'Flavored(DropdownSeparator)',
 );
 export const DropdownMenu = flavored(
   Base.DropdownMenu,
   Radix.DropdownMenu,
-  "Flavored(DropdownMenu)"
+  'Flavored(DropdownMenu)',
 );
 
 /** The site only composes triggers via `render`, so the flavored wrapper
@@ -40,7 +36,7 @@ interface FlavoredDropdownTriggerProps {
 export const DropdownTrigger = flavored(
   Base.DropdownTrigger as unknown as ComponentType<FlavoredDropdownTriggerProps>,
   Radix.DropdownTrigger as unknown as ComponentType<FlavoredDropdownTriggerProps>,
-  "Flavored(DropdownTrigger)"
+  'Flavored(DropdownTrigger)',
 );
 
 export const DropdownContent = flavored(
@@ -48,35 +44,31 @@ export const DropdownContent = flavored(
   // Structurally identical public props; only the side/align unions differ
   // (Base UI accepts a few extra logical values).
   Radix.DropdownContent as unknown as typeof Base.DropdownContent,
-  "Flavored(DropdownContent)"
+  'Flavored(DropdownContent)',
 );
 
-export const DropdownSub = flavored(
-  Base.DropdownSub,
-  Radix.DropdownSub,
-  "Flavored(DropdownSub)"
-);
+export const DropdownSub = flavored(Base.DropdownSub, Radix.DropdownSub, 'Flavored(DropdownSub)');
 export const DropdownSubTrigger = flavored(
   Base.DropdownSubTrigger,
   Radix.DropdownSubTrigger,
-  "Flavored(DropdownSubTrigger)"
+  'Flavored(DropdownSubTrigger)',
 );
 export const DropdownSubContent = flavored(
   Base.DropdownSubContent,
   Radix.DropdownSubContent,
-  "Flavored(DropdownSubContent)"
+  'Flavored(DropdownSubContent)',
 );
 
 // Primitive-free parts live in the shared file; both flavors re-export
 // the same implementation.
-export { DropdownSearch, DropdownEmpty } from "@/registry/default/dropdown-search";
-export type { DropdownSearchProps } from "@/registry/default/dropdown-search";
+export { DropdownSearch, DropdownEmpty } from '#registry/default/dropdown-search';
+export type { DropdownSearchProps } from '#registry/default/dropdown-search';
 
 // Both flavors provide the SAME context object (it lives in menu-item.tsx,
 // the shared file), so no flavor probing is needed — whichever flavor's
 // provider wraps the caller wins, which also keeps side-by-side renders
 // (e.g. /compare-bases) working regardless of the global flavor switch.
-export { useDropdown } from "@/registry/default/menu-item";
+export { useDropdown } from '#registry/default/menu-item';
 
 export type {
   DropdownProps,
@@ -87,6 +79,6 @@ export type {
   DropdownSubContentProps,
   DropdownContextValue,
   MenuItemRenderOptions,
-} from "@/registry/base/dropdown";
+} from '#registry/base/dropdown';
 
 export default Dropdown;

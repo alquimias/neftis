@@ -1,1 +1,1 @@
-export * from "@/registry/default/input";
+export * from '#registry/default/input';

@@ -10,11 +10,11 @@ export {
   typeClasses,
   typeClass,
   fieldTouchClass,
-} from "@/registry/default/lib/size-context";
+} from '#registry/default/lib/size-context';
 export type {
   SizeVariant,
   SizeClasses,
   TypeScaleRole,
   TypeScalePair,
   TypeScaleStep,
-} from "@/registry/default/lib/size-context";
+} from '#registry/default/lib/size-context';

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   forwardRef,
@@ -16,38 +16,38 @@ import {
   type HTMLAttributes,
   type InputHTMLAttributes,
   type KeyboardEvent as ReactKeyboardEvent,
-} from "react";
-import { motion, AnimatePresence, animate, useMotionValue, type MotionValue } from "motion/react";
-import { cva, type VariantProps } from "class-variance-authority";
-import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { useIcons, type IconComponent } from "@/lib/icon-context";
-import { cn } from "@/lib/utils";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { omit } from "@/lib/omit";
+} from 'react';
+import { motion, AnimatePresence, animate, useMotionValue, type MotionValue } from 'motion/react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import * as PopoverPrimitive from '@radix-ui/react-popover';
+import { useIcons, type IconComponent } from '#lib/icon-context';
+import { cn } from '#lib/utils';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { omit } from '#lib/omit';
 import {
   useFluidHover,
   useFluidHoverSelect,
   useRegisterFluidHoverItem,
   type FluidHoverActiveStore,
   type ItemRect,
-} from "@/hooks/use-fluid-hover";
+} from '#hooks/use-fluid-hover';
 import {
   useMergeSplitBlocks,
   useSelectionRuns,
   SelectionBackgrounds,
-} from "@/hooks/use-merge-split";
-import { useShape, usePopupShape } from "@/lib/shape-context";
-import { SizeProvider, useSize, typeClass, type SizeVariant } from "@/lib/size-context";
-import { Elevated } from "@/lib/elevated";
+} from '#hooks/use-merge-split';
+import { useShape, usePopupShape } from '#lib/shape-context';
+import { SizeProvider, useSize, typeClass, type SizeVariant } from '#lib/size-context';
+import { Elevated } from '#lib/elevated';
 import {
   PopupShield,
   popupMotionClass,
   popupScrollAreaClass,
   popupViewportClass,
   isDisabledRow,
-} from "@/lib/popup";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
+} from '#lib/popup';
+import { ScrollArea } from '#components/ui/scroll-area';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
 
 // ---------------------------------------------------------------------------
 // Combobox
@@ -66,29 +66,26 @@ import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
 // object items carry `{ value, label }` plus anything else you need.
 // ---------------------------------------------------------------------------
 
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 type ComboboxItemData = string | { value: string; label: string };
 
 function itemValue(item: ComboboxItemData): string {
-  return typeof item === "string" ? item : item.value;
+  return typeof item === 'string' ? item : item.value;
 }
 
 function itemLabel(item: ComboboxItemData): string {
-  return typeof item === "string" ? item : item.label;
+  return typeof item === 'string' ? item : item.label;
 }
 
 function defaultFilter(item: ComboboxItemData, query: string) {
-  return itemLabel(item)
-    .toLocaleLowerCase()
-    .includes(query.toLocaleLowerCase());
+  return itemLabel(item).toLocaleLowerCase().includes(query.toLocaleLowerCase());
 }
 
 // The create row is one more row in the filtered list, so Enter and the
 // arrows reach it like any row. Its value can't collide with a consumer's;
 // its label is the query it would create.
-const CREATE_VALUE = "\u0000create";
+const CREATE_VALUE = '\u0000create';
 
 function isCreateItem(item: ComboboxItemData): boolean {
   return itemValue(item) === CREATE_VALUE;
@@ -105,9 +102,7 @@ interface Highlight {
   keyboard: boolean;
 }
 
-type ComboboxValue<Multiple extends boolean> = Multiple extends true
-  ? string[]
-  : string;
+type ComboboxValue<Multiple extends boolean> = Multiple extends true ? string[] : string;
 
 interface ComboboxContextValue {
   /** Selected values — one entry in single mode, any number in multiple. */
@@ -150,8 +145,7 @@ const ComboboxHighlightContext = createContext<Highlight | null>(null);
 
 function useComboboxContext() {
   const ctx = useContext(ComboboxContext);
-  if (!ctx)
-    throw new Error("Combobox compound components must be inside <Combobox>");
+  if (!ctx) throw new Error('Combobox compound components must be inside <Combobox>');
   return ctx;
 }
 
@@ -161,8 +155,7 @@ interface ComboboxContentContextValue {
   activeStore: FluidHoverActiveStore;
 }
 
-const ComboboxContentContext =
-  createContext<ComboboxContentContextValue | null>(null);
+const ComboboxContentContext = createContext<ComboboxContentContextValue | null>(null);
 
 // Each rendered row learns its index from the list, so consumers never
 // number rows by hand.
@@ -211,13 +204,10 @@ interface ComboboxProps<
 function toValues(v: string | readonly string[] | undefined): string[] {
   if (v === undefined) return [];
   if (Array.isArray(v)) return v as string[];
-  return v === "" ? [] : [v as string];
+  return v === '' ? [] : [v as string];
 }
 
-function Combobox<
-  T extends ComboboxItemData = ComboboxItemData,
-  Multiple extends boolean = false,
->({
+function Combobox<T extends ComboboxItemData = ComboboxItemData, Multiple extends boolean = false>({
   children,
   items,
   multiple,
@@ -238,9 +228,7 @@ function Combobox<
   const anchorRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const [internalValues, setInternalValues] = useState<string[]>(() =>
-    toValues(defaultValue)
-  );
+  const [internalValues, setInternalValues] = useState<string[]>(() => toValues(defaultValue));
   // Memoized on the prop identity: a string value is stable by nature and a
   // consumer's array is state, so the derived array (and everything keyed on
   // it) only changes when the selection does.
@@ -256,15 +244,15 @@ function Combobox<
   // Single mode shows the selection's label in the field; multiple keeps
   // the field for typing only (the chips carry the selection).
   const selectedLabel = useMemo(() => {
-    if (isMultiple) return "";
+    if (isMultiple) return '';
     const item = values[0] !== undefined ? itemsByValue.get(values[0]) : undefined;
-    return item ? itemLabel(item) : "";
+    return item ? itemLabel(item) : '';
   }, [isMultiple, values, itemsByValue]);
 
   // What the field shows vs. what filters the list: opening with a selection
   // shows its label but lists everything, until the user types.
   const [inputValue, setInputValueState] = useState(selectedLabel);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [open, setOpenState] = useState(false);
   const [highlight, setHighlight] = useState<Highlight | null>(null);
   const highlightRef = useRef<Highlight | null>(null);
@@ -280,7 +268,7 @@ function Combobox<
   // The create row appears once the trimmed query matches no label exactly.
   const trimmedQuery = query.trim();
   const createItem = useMemo<ComboboxItemData | null>(() => {
-    if (!onCreate || trimmedQuery === "") return null;
+    if (!onCreate || trimmedQuery === '') return null;
     const lower = trimmedQuery.toLocaleLowerCase();
     const exists = items.some((item) => itemLabel(item).toLocaleLowerCase() === lower);
     return exists ? null : { value: CREATE_VALUE, label: trimmedQuery };
@@ -292,17 +280,16 @@ function Combobox<
   const hideChecked = hideSelected && isMultiple;
   const filteredItems = useMemo(() => {
     const match = filter ?? defaultFilter;
-    let visible = query === "" ? items : items.filter((item) => match(item, query));
+    let visible = query === '' ? items : items.filter((item) => match(item, query));
     if (hideChecked) visible = visible.filter((item) => !values.includes(itemValue(item)));
     return createItem ? [...visible, createItem] : visible;
   }, [items, query, filter, hideChecked, values, createItem]);
   const allSelected =
-    hideChecked && trimmedQuery === "" && items.length > 0 && filteredItems.length === 0;
+    hideChecked && trimmedQuery === '' && items.length > 0 && filteredItems.length === 0;
 
   // A highlight past the rendered rows (a query that matches nothing, or a
   // list that just shrank) would point aria-activedescendant at no element.
-  const safeHighlight =
-    highlight && highlight.index < filteredItems.length ? highlight : null;
+  const safeHighlight = highlight && highlight.index < filteredItems.length ? highlight : null;
   useIsoLayoutEffect(() => {
     highlightRef.current = safeHighlight;
   });
@@ -310,11 +297,9 @@ function Combobox<
   const commitValues = useCallback(
     (next: string[]) => {
       if (value === undefined) setInternalValues(next);
-      onValueChange?.(
-        (isMultiple ? next : (next[0] ?? "")) as ComboboxValue<Multiple>
-      );
+      onValueChange?.((isMultiple ? next : (next[0] ?? '')) as ComboboxValue<Multiple>);
     },
-    [value, onValueChange, isMultiple]
+    [value, onValueChange, isMultiple],
   );
 
   const setOpen = useCallback(
@@ -322,12 +307,12 @@ function Combobox<
       setOpenState(next);
       if (!next) {
         // Closing without a pick reverts the field to the selection.
-        setQuery("");
+        setQuery('');
         setHighlight(null);
         setInputValueState(selectedLabel);
       }
     },
-    [selectedLabel]
+    [selectedLabel],
   );
 
   const onCreateRef = useRef(onCreate);
@@ -344,11 +329,11 @@ function Combobox<
         const made = onCreateRef.current?.(itemLabel(item));
         if (made != null) {
           commitValues(isMultiple ? [...values, itemValue(made)] : [itemValue(made)]);
-          setInputValueState(isMultiple ? "" : itemLabel(made));
+          setInputValueState(isMultiple ? '' : itemLabel(made));
         } else {
-          setInputValueState(isMultiple ? "" : selectedLabel);
+          setInputValueState(isMultiple ? '' : selectedLabel);
         }
-        setQuery("");
+        setQuery('');
         setHighlight(null);
         setOpenState(false);
         return;
@@ -359,9 +344,9 @@ function Combobox<
         // the next one; a pick made while filtering closes it and clears
         // the query.
         commitValues(values.includes(v) ? values.filter((x) => x !== v) : [...values, v]);
-        if (query !== "") {
-          setInputValueState("");
-          setQuery("");
+        if (query !== '') {
+          setInputValueState('');
+          setQuery('');
           setHighlight(null);
           setOpenState(false);
         }
@@ -369,11 +354,11 @@ function Combobox<
       }
       commitValues([v]);
       setInputValueState(itemLabel(item));
-      setQuery("");
+      setQuery('');
       setHighlight(null);
       setOpenState(false);
     },
-    [commitValues, isMultiple, values, query, selectedLabel]
+    [commitValues, isMultiple, values, query, selectedLabel],
   );
 
   const remove = useCallback(
@@ -381,27 +366,24 @@ function Combobox<
       commitValues(values.filter((x) => x !== v));
       inputRef.current?.focus();
     },
-    [commitValues, values]
+    [commitValues, values],
   );
 
   const clear = useCallback(() => {
     commitValues([]);
-    setInputValueState("");
-    setQuery("");
+    setInputValueState('');
+    setQuery('');
     setHighlight(null);
     inputRef.current?.focus();
   }, [commitValues]);
 
-  const setInputValue = useCallback(
-    (next: string) => {
-      setInputValueState(next);
-      setQuery(next);
-      setOpenState(true);
-      // The first match is highlighted while typing so Enter picks it.
-      setHighlight({ index: 0, keyboard: true });
-    },
-    []
-  );
+  const setInputValue = useCallback((next: string) => {
+    setInputValueState(next);
+    setQuery(next);
+    setOpenState(true);
+    // The first match is highlighted while typing so Enter picks it.
+    setHighlight({ index: 0, keyboard: true });
+  }, []);
 
   // The first row is highlighted the moment the list opens, whatever opened
   // it (a click, the chevron, typing), so Enter always has a target. An
@@ -452,38 +434,36 @@ function Combobox<
       remove,
       clear,
       setInputValue,
-    ]
+    ],
   );
 
   // A size prop pins the whole compound (field + portalled popup — React
   // context crosses portals) to one step of the ladder.
   const root = (
     <ComboboxContext.Provider value={ctx}>
-    <ComboboxHighlightContext.Provider value={safeHighlight}>
-      {/* Root is always controlled by `open` so ComboboxContent can drive
+      <ComboboxHighlightContext.Provider value={safeHighlight}>
+        {/* Root is always controlled by `open` so ComboboxContent can drive
           the exit animation before the portal unmounts. Non-modal: the page
           keeps scrolling and the popup tracks its anchor. */}
-      <PopoverPrimitive.Root open={open} onOpenChange={setOpen} modal={false}>
-        {children}
-        {name &&
-          (isMultiple ? (
-            values.map((v) => (
-              <input key={v} type="hidden" name={name} value={v} />
-            ))
-          ) : (
-            <input type="hidden" name={name} value={values[0] ?? ""} required={required} />
-          ))}
-      </PopoverPrimitive.Root>
-      {/* The field stays live under the open list: typing, chips, clear. */}
-      <PopupShield open={open} anchor={anchorRef} />
-    </ComboboxHighlightContext.Provider>
+        <PopoverPrimitive.Root open={open} onOpenChange={setOpen} modal={false}>
+          {children}
+          {name &&
+            (isMultiple ? (
+              values.map((v) => <input key={v} type="hidden" name={name} value={v} />)
+            ) : (
+              <input type="hidden" name={name} value={values[0] ?? ''} required={required} />
+            ))}
+        </PopoverPrimitive.Root>
+        {/* The field stays live under the open list: typing, chips, clear. */}
+        <PopupShield open={open} anchor={anchorRef} />
+      </ComboboxHighlightContext.Provider>
     </ComboboxContext.Provider>
   );
 
   return size ? <SizeProvider size={size}>{root}</SizeProvider> : root;
 }
 
-Combobox.displayName = "Combobox";
+Combobox.displayName = 'Combobox';
 
 // ---------------------------------------------------------------------------
 // ComboboxInput — the field: leading icon, text input, clear ✕, chevron.
@@ -491,63 +471,63 @@ Combobox.displayName = "Combobox";
 
 const fieldVariants = cva(
   [
-    "group flex items-center ring-1 cursor-text",
+    'group flex items-center ring-1 cursor-text',
     // Listed, never `all`: the chips field springs its height, and size or
     // padding changes must snap instead of easing against that spring.
-    "transition-[color,background-color,border-radius,box-shadow,opacity] duration-80",
-    "data-[disabled]:opacity-50 data-[disabled]:pointer-events-none",
+    'transition-[color,background-color,border-radius,box-shadow,opacity] duration-80',
+    'data-[disabled]:opacity-50 data-[disabled]:pointer-events-none',
   ],
   {
     variants: {
       variant: {
         // Framed at rest; the fills step up on hover and focus like an
         // input field.
-        bordered:
-          "ring-border bg-transparent hover:bg-muted/50 focus-within:bg-card",
+        bordered: 'ring-border bg-transparent hover:bg-muted/50 focus-within:bg-card',
         // Invisible at rest — the InputGroup field ladder: muted fill +
         // ring on hover, card fill when focused.
         borderless:
-          "ring-transparent bg-transparent hover:bg-muted/50 hover:ring-border focus-within:bg-card focus-within:ring-border",
+          'ring-transparent bg-transparent hover:bg-muted/50 hover:ring-border focus-within:bg-card focus-within:ring-border',
       },
     },
     defaultVariants: {
-      variant: "bordered",
+      variant: 'bordered',
     },
-  }
+  },
 );
 
 // The clear and chevron buttons share one quiet style; they sit inside the
 // field's ring so they need no frame of their own.
 // Chips and the small buttons inside the field follow the shape: round for
 // pill, 1px for sharp. Rounded keeps each class's own radius.
-const chipRadius = { pill: "rounded-full", rounded: "rounded-md", sharp: "rounded-[1px]" };
-const fieldButtonRadius = { pill: "rounded-full", rounded: "", sharp: "rounded-[1px]" };
+const chipRadius = { pill: 'rounded-full', rounded: 'rounded-md', sharp: 'rounded-[1px]' };
+const fieldButtonRadius = { pill: 'rounded-full', rounded: '', sharp: 'rounded-[1px]' };
 
 const fieldButtonClass =
-  "flex shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors duration-80 hover:text-foreground focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] disabled:pointer-events-none";
+  'flex shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors duration-80 hover:text-foreground focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] disabled:pointer-events-none';
 // The clear ✕ is a real icon button: the hover fill says "press me", where
 // the chevron beside it only decorates the field it belongs to.
 const clearButtonClass = cn(
   fieldButtonClass,
-  "hover:bg-hover active:bg-active transition-[color,background-color]"
+  'hover:bg-hover active:bg-active transition-[color,background-color]',
 );
 // The clear target grows to the field's full height, and only 2px sideways so
 // it never reaches the chevron across the gap.
 const clearHitArea = (compact: boolean) =>
-  cn("relative before:absolute before:-inset-x-0.5", compact ? "before:-inset-y-1" : "before:-inset-y-1.5");
+  cn(
+    'relative before:absolute before:-inset-x-0.5',
+    compact ? 'before:-inset-y-1' : 'before:-inset-y-1.5',
+  );
 // A chip's ✕ sits on the chip's own hover-tinted fill, so it steps up a notch.
 // The 16/20px × grows by the chip's own 2px edge (a pseudo-element), so the
 // target reaches the chip's full height without overlapping the next chip.
 const chipRemoveClass = cn(
   fieldButtonClass,
-  "relative rounded hover:bg-active before:absolute before:-inset-0.5"
+  'relative rounded hover:bg-active before:absolute before:-inset-0.5',
 );
 
 interface ComboboxFieldProps
-  extends Omit<
-      InputHTMLAttributes<HTMLInputElement>,
-      "size" | "value" | "defaultValue" | "onChange"
-    >,
+  extends
+    Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange'>,
     VariantProps<typeof fieldVariants> {
   icon?: IconComponent;
   placeholder?: string;
@@ -567,7 +547,7 @@ type ComboboxChipsProps = ComboboxFieldProps;
  *  shared by the single field and the chips field. */
 const FieldInput = forwardRef<
   HTMLInputElement,
-  Omit<ComboboxFieldProps, "variant" | "icon" | "error" | "clearable" | "size"> & {
+  Omit<ComboboxFieldProps, 'variant' | 'icon' | 'error' | 'clearable' | 'size'> & {
     invalid?: boolean;
     inputClassName?: string;
     /** The input's `size` attribute: its intrinsic width in characters. */
@@ -575,7 +555,7 @@ const FieldInput = forwardRef<
   }
 >(({ placeholder, invalid, inputClassName, inputSize, onKeyDown, onClick, ...rest }, ref) => {
   // className styles the field around the input (FieldFrame), not the input.
-  const props = omit(rest, ["className"]);
+  const props = omit(rest, ['className']);
   const sizeClasses = useSize();
   const {
     values,
@@ -599,14 +579,14 @@ const FieldInput = forwardRef<
     if (e.defaultPrevented || disabled) return;
     const count = filteredItems.length;
     switch (e.key) {
-      case "ArrowDown":
-      case "ArrowUp": {
+      case 'ArrowDown':
+      case 'ArrowUp': {
         e.preventDefault();
         if (!open) {
           setOpen(true);
           if (count > 0)
             setHighlight({
-              index: e.key === "ArrowDown" ? 0 : count - 1,
+              index: e.key === 'ArrowDown' ? 0 : count - 1,
               keyboard: true,
             });
           return;
@@ -615,14 +595,14 @@ const FieldInput = forwardRef<
         // Loop through the field: past the last row the highlight clears
         // (the input is the stop), and the next press wraps to the first
         // row — the APG combobox pattern.
-        const step = e.key === "ArrowDown" ? 1 : -1;
+        const step = e.key === 'ArrowDown' ? 1 : -1;
         const current = highlight?.index ?? (step === 1 ? -1 : count);
         const next = current + step;
         if (next < 0 || next >= count) setHighlight(null);
         else setHighlight({ index: next, keyboard: true });
         return;
       }
-      case "Enter": {
+      case 'Enter': {
         if (!open) return;
         e.preventDefault();
         if (highlight && filteredItems[highlight.index]) {
@@ -630,16 +610,16 @@ const FieldInput = forwardRef<
         }
         return;
       }
-      case "Escape": {
+      case 'Escape': {
         if (open) {
           e.preventDefault();
           setOpen(false);
         }
         return;
       }
-      case "Backspace": {
+      case 'Backspace': {
         // Multiple: an empty field backspaces into the chips.
-        if (multiple && e.currentTarget.value === "" && values.length > 0) {
+        if (multiple && e.currentTarget.value === '' && values.length > 0) {
           e.preventDefault();
           remove(values[values.length - 1]);
         }
@@ -654,7 +634,7 @@ const FieldInput = forwardRef<
     <input
       ref={(node) => {
         inputRef.current = node;
-        if (typeof ref === "function") ref(node);
+        if (typeof ref === 'function') ref(node);
         else if (ref) ref.current = node;
       }}
       type="text"
@@ -663,9 +643,7 @@ const FieldInput = forwardRef<
       aria-expanded={open}
       aria-controls={open ? listId : undefined}
       aria-autocomplete="list"
-      aria-activedescendant={
-        open && highlight ? `${listId}-${highlight.index}` : undefined
-      }
+      aria-activedescendant={open && highlight ? `${listId}-${highlight.index}` : undefined}
       aria-invalid={invalid || undefined}
       autoComplete="off"
       autoCorrect="off"
@@ -680,18 +658,18 @@ const FieldInput = forwardRef<
       }}
       onKeyDown={handleKeyDown}
       className={cn(
-        "min-w-0 flex-1 rounded-none bg-transparent text-foreground placeholder:text-muted-foreground outline-none font-[inherit]",
+        'min-w-0 flex-1 rounded-none bg-transparent text-foreground placeholder:text-muted-foreground outline-none font-[inherit]',
         sizeClasses.field,
         // The caret is as tall as the line box (Chrome, Safari); the
         // ladder's leading keeps it in proportion to the field.
-        sizeClasses.variant === "compact" ? "leading-5" : "leading-6",
-        inputClassName
+        sizeClasses.variant === 'compact' ? 'leading-5' : 'leading-6',
+        inputClassName,
       )}
       {...props}
     />
   );
 });
-FieldInput.displayName = "ComboboxFieldInput";
+FieldInput.displayName = 'ComboboxFieldInput';
 
 /** The trailing clear ✕ and chevron, shared by both fields. */
 function FieldControls({
@@ -706,8 +684,7 @@ function FieldControls({
   const icons = useIcons();
   const XIcon = icons.x;
   const shape = useShape();
-  const { values, inputValue, open, disabled, setOpen, clear, inputRef } =
-    useComboboxContext();
+  const { values, inputValue, open, disabled, setOpen, clear, inputRef } = useComboboxContext();
   return (
     <>
       {clearable && (
@@ -717,9 +694,15 @@ function FieldControls({
           type="button"
           aria-label="Clear"
           disabled={disabled}
-          hidden={!(values.length > 0 || inputValue !== "")}
+          hidden={!(values.length > 0 || inputValue !== '')}
           onClick={clear}
-          className={cn(clearButtonClass, fieldButtonRadius[shape.variant], "[&[hidden]]:invisible [&[hidden]]:flex", compact ? "size-5" : "size-6", clearHitArea(compact))}
+          className={cn(
+            clearButtonClass,
+            fieldButtonRadius[shape.variant],
+            '[&[hidden]]:invisible [&[hidden]]:flex',
+            compact ? 'size-5' : 'size-6',
+            clearHitArea(compact),
+          )}
         >
           <XIcon size={iconSize} strokeWidth={1.5} />
         </button>
@@ -734,7 +717,7 @@ function FieldControls({
           inputRef.current?.focus();
           setOpen(!open);
         }}
-        className={cn(fieldButtonClass, compact ? "size-5" : "size-6")}
+        className={cn(fieldButtonClass, compact ? 'size-5' : 'size-6')}
       >
         <svg
           width={iconSize}
@@ -765,7 +748,7 @@ function FieldControls({
  *  (transformed) size, so under a scaled ancestor (the /demo card) the
  *  spring would overshoot. Layout metrics are transform-immune. */
 function useChipRowHeight(padY: number) {
-  const height = useMotionValue<number | "auto">("auto");
+  const height = useMotionValue<number | 'auto'>('auto');
   const roRef = useRef<ResizeObserver | null>(null);
   const padRef = useRef(padY);
   useIsoLayoutEffect(() => {
@@ -779,7 +762,7 @@ function useChipRowHeight(padY: number) {
       const measure = () => {
         if (el.offsetHeight <= 0) return;
         const target = el.offsetHeight + padRef.current;
-        if (height.get() === "auto") height.set(target);
+        if (height.get() === 'auto') height.set(target);
         else if (height.get() !== target) animate(height, target, spring.fast);
       };
       // The observer reports the row once on observing, before the next
@@ -790,7 +773,7 @@ function useChipRowHeight(padY: number) {
       ro.observe(el);
       roRef.current = ro;
     },
-    [height]
+    [height],
   );
   return { measure, height };
 }
@@ -805,7 +788,7 @@ function FieldFrame({
   children,
 }: {
   className: string;
-  height?: MotionValue<number | "auto">;
+  height?: MotionValue<number | 'auto'>;
   children: ReactNode;
 }) {
   const { open, disabled, anchorRef, inputRef } = useComboboxContext();
@@ -818,7 +801,7 @@ function FieldFrame({
         style={height ? { height } : undefined}
         onMouseDown={(e) => {
           if (e.target === inputRef.current) return;
-          if ((e.target as HTMLElement).closest("button")) return;
+          if ((e.target as HTMLElement).closest('button')) return;
           e.preventDefault();
           inputRef.current?.focus();
         }}
@@ -836,17 +819,17 @@ const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps>(
       className,
       variant,
       icon: Icon,
-      placeholder = "Search…",
+      placeholder = 'Search…',
       error,
       clearable = false,
       size,
       ...props
     },
-    ref
+    ref,
   ) => {
     const shape = useShape();
     const sizeClasses = useSize(size);
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
 
     return (
       <div className="flex flex-col gap-1">
@@ -857,11 +840,12 @@ const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps>(
             fieldVariants({ variant }),
             sizeClasses.control,
             sizeClasses.gap,
-            compact ? "px-2" : "px-2.5",
-            compact ? "min-w-[128px]" : "min-w-[160px]",
+            compact ? 'px-2' : 'px-2.5',
+            compact ? 'min-w-[128px]' : 'min-w-[160px]',
             shape.input,
-            error && "ring-destructive/50 hover:ring-destructive/50 focus-within:ring-destructive/50",
-            className
+            error &&
+              'ring-destructive/50 hover:ring-destructive/50 focus-within:ring-destructive/50',
+            className,
           )}
         >
           {Icon && (
@@ -875,14 +859,16 @@ const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps>(
           <FieldControls clearable={clearable} compact={compact} iconSize={sizeClasses.icon} />
         </FieldFrame>
         {error && (
-          <span className="text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)] text-destructive pl-3">{error}</span>
+          <span className="text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)] text-destructive pl-3">
+            {error}
+          </span>
         )}
       </div>
     );
-  }
+  },
 );
 
-ComboboxInput.displayName = "ComboboxInput";
+ComboboxInput.displayName = 'ComboboxInput';
 
 // ---------------------------------------------------------------------------
 // ComboboxChips — the multiple-selection field: one chip per selected item
@@ -897,23 +883,21 @@ const ComboboxChips = forwardRef<HTMLInputElement, ComboboxChipsProps>(
       className,
       variant,
       icon: Icon,
-      placeholder = "Search…",
+      placeholder = 'Search…',
       error,
       clearable = false,
       size,
       ...props
     },
-    ref
+    ref,
   ) => {
     const icons = useIcons();
     const XIcon = icons.x;
     const shape = useShape();
     const sizeClasses = useSize(size);
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
     const { values, itemsByValue, disabled, remove, inputValue } = useComboboxContext();
-    const { measure: measureChipRows, height: chipRowsHeight } = useChipRowHeight(
-      compact ? 8 : 12
-    );
+    const { measure: measureChipRows, height: chipRowsHeight } = useChipRowHeight(compact ? 8 : 12);
 
     return (
       <div className="flex flex-col gap-1">
@@ -927,19 +911,20 @@ const ComboboxChips = forwardRef<HTMLInputElement, ComboboxChipsProps>(
             // icon and controls hold the first line while chips wrap; the
             // vertical padding is exactly what centers one 24px (20px
             // compact) row inside the ladder height.
-            "!items-start",
-            compact ? "min-h-7 py-1" : "min-h-9 py-1.5",
+            '!items-start',
+            compact ? 'min-h-7 py-1' : 'min-h-9 py-1.5',
             sizeClasses.gap,
-            compact ? "px-2" : "px-2.5",
-            compact ? "min-w-[128px]" : "min-w-[160px]",
+            compact ? 'px-2' : 'px-2.5',
+            compact ? 'min-w-[128px]' : 'min-w-[160px]',
             shape.input,
-            error && "ring-destructive/50 hover:ring-destructive/50 focus-within:ring-destructive/50",
-            className
+            error &&
+              'ring-destructive/50 hover:ring-destructive/50 focus-within:ring-destructive/50',
+            className,
           )}
         >
           {Icon && (
             // A row-height box keeps the icon centered on the first line.
-            <span className={cn("flex shrink-0 items-center", compact ? "h-5" : "h-6")}>
+            <span className={cn('flex shrink-0 items-center', compact ? 'h-5' : 'h-6')}>
               <Icon
                 size={sizeClasses.icon}
                 strokeWidth={1.5}
@@ -952,14 +937,14 @@ const ComboboxChips = forwardRef<HTMLInputElement, ComboboxChipsProps>(
             aria-label="Selected"
             ref={measureChipRows}
             className={cn(
-              "relative flex min-w-0 flex-1 flex-wrap items-center gap-1",
+              'relative flex min-w-0 flex-1 flex-wrap items-center gap-1',
               // A chip leads the field: the row pulls left so the chip sits
               // an even distance from every edge. The offset lives here, not
               // on the container's padding, so it can never be eased against
               // the chip's spring and drag the caret with it; the row snaps
               // instead, in the same frame as the chip. An icon keeps the full inset — it leads,
               // not the chip.
-              !Icon && values.length > 0 && "-ml-1"
+              !Icon && values.length > 0 && '-ml-1',
             )}
           >
             {/* Chips pop in and out on the fast tier and slide into their
@@ -976,17 +961,22 @@ const ComboboxChips = forwardRef<HTMLInputElement, ComboboxChipsProps>(
                     layout
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9, pointerEvents: "none", transition: spring.fast.exit }}
+                    exit={{
+                      opacity: 0,
+                      scale: 0.9,
+                      pointerEvents: 'none',
+                      transition: spring.fast.exit,
+                    }}
                     transition={spring.fast}
                     // Grow from the left edge, where the typed text just
                     // was — not from the middle of the chip.
                     style={{ originX: 0 }}
                     aria-label={label}
                     className={cn(
-                      "inline-flex max-w-full shrink-0 items-center gap-0.5 bg-hover pl-2 pr-0.5 text-foreground",
+                      'inline-flex max-w-full shrink-0 items-center gap-0.5 bg-hover pl-2 pr-0.5 text-foreground',
                       chipRadius[shape.variant],
-                      compact ? "h-5" : "h-6",
-                      typeClass("caption", compact ? "compact" : "default")
+                      compact ? 'h-5' : 'h-6',
+                      typeClass('caption', compact ? 'compact' : 'default'),
                     )}
                   >
                     <span className="truncate">{label}</span>
@@ -995,7 +985,11 @@ const ComboboxChips = forwardRef<HTMLInputElement, ComboboxChipsProps>(
                       aria-label={`Remove ${label}`}
                       disabled={disabled}
                       onClick={() => remove(v)}
-                      className={cn(chipRemoveClass, fieldButtonRadius[shape.variant], compact ? "size-4" : "size-5")}
+                      className={cn(
+                        chipRemoveClass,
+                        fieldButtonRadius[shape.variant],
+                        compact ? 'size-4' : 'size-5',
+                      )}
                     >
                       <XIcon size={compact ? 10 : 12} strokeWidth={2} />
                     </button>
@@ -1015,7 +1009,7 @@ const ComboboxChips = forwardRef<HTMLInputElement, ComboboxChipsProps>(
                 inputSize={Math.max(1, inputValue.length + 1)}
                 placeholder={values.length ? undefined : placeholder}
                 invalid={!!error}
-                inputClassName={cn("w-full", compact ? "h-5 leading-5" : "h-6 leading-6")}
+                inputClassName={cn('w-full', compact ? 'h-5 leading-5' : 'h-6 leading-6')}
                 {...props}
               />
             </span>
@@ -1023,28 +1017,28 @@ const ComboboxChips = forwardRef<HTMLInputElement, ComboboxChipsProps>(
           <FieldControls clearable={clearable} compact={compact} iconSize={sizeClasses.icon} />
         </FieldFrame>
         {error && (
-          <span className="text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)] text-destructive pl-3">{error}</span>
+          <span className="text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)] text-destructive pl-3">
+            {error}
+          </span>
         )}
       </div>
     );
-  }
+  },
 );
 
-ComboboxChips.displayName = "ComboboxChips";
+ComboboxChips.displayName = 'ComboboxChips';
 
 // ---------------------------------------------------------------------------
 // ComboboxContent — the popup surface. Holds ComboboxEmpty and ComboboxList.
 // ---------------------------------------------------------------------------
 
-type ContentPrimitiveProps = React.ComponentPropsWithoutRef<
-  typeof PopoverPrimitive.Content
->;
+type ContentPrimitiveProps = React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>;
 
 interface ComboboxContentProps {
   className?: string;
   children: ReactNode;
-  side?: ContentPrimitiveProps["side"];
-  align?: ContentPrimitiveProps["align"];
+  side?: ContentPrimitiveProps['side'];
+  align?: ContentPrimitiveProps['align'];
   sideOffset?: number;
   /** Keeps the popup inside this element's box rather than the window's
    *  (a table's, a panel's): it shifts or flips to stay within. */
@@ -1054,7 +1048,18 @@ interface ComboboxContentProps {
 }
 
 const ComboboxContent = forwardRef<HTMLDivElement, ComboboxContentProps>(
-  ({ className, children, side = "bottom", align = "start", sideOffset = 6, collisionBoundary, collisionPadding }, ref) => {
+  (
+    {
+      className,
+      children,
+      side = 'bottom',
+      align = 'start',
+      sideOffset = 6,
+      collisionBoundary,
+      collisionPadding,
+    },
+    ref,
+  ) => {
     const { open, anchorRef } = useComboboxContext();
     const shape = usePopupShape();
 
@@ -1079,9 +1084,7 @@ const ComboboxContent = forwardRef<HTMLDivElement, ComboboxContentProps>(
 
     // Interactions on the field itself are not "outside": focus stays in
     // the input, and a press on the chevron toggles rather than dismisses.
-    const guardAnchor = (
-      e: { target: EventTarget | null; preventDefault: () => void }
-    ) => {
+    const guardAnchor = (e: { target: EventTarget | null; preventDefault: () => void }) => {
       if (anchorRef.current?.contains(e.target as Node)) e.preventDefault();
     };
 
@@ -1109,12 +1112,12 @@ const ComboboxContent = forwardRef<HTMLDivElement, ComboboxContentProps>(
           onInteractOutside={guardAnchor}
         >
           <motion.div
-            className={cn("z-[var(--z-popover,60)] outline-none", popupMotionClass)}
-            initial={{ opacity: 0, y: "var(--popup-enter-y)", scaleY: 0.96 }}
+            className={cn('z-[var(--z-popover,60)] outline-none', popupMotionClass)}
+            initial={{ opacity: 0, y: 'var(--popup-enter-y)', scaleY: 0.96 }}
             animate={
               open
                 ? { opacity: 1, y: 0, scaleY: 1 }
-                : { opacity: 0, y: "var(--popup-enter-y)", scaleY: 0.96 }
+                : { opacity: 0, y: 'var(--popup-enter-y)', scaleY: 0.96 }
             }
             transition={open ? spring.fast : spring.fast.exit}
             // Release the deferred unmount once the exit spring has finished
@@ -1131,7 +1134,7 @@ const ComboboxContent = forwardRef<HTMLDivElement, ComboboxContentProps>(
                 // Radix's equivalent of Base UI's --available-height. The
                 // list inside owns padding and scrolling.
                 `flex flex-col min-w-[var(--radix-popover-trigger-width)] max-h-[min(300px,var(--radix-popover-content-available-height))] overflow-hidden ${shape.container} select-none outline-none`,
-                className
+                className,
               )}
             >
               {children}
@@ -1140,10 +1143,10 @@ const ComboboxContent = forwardRef<HTMLDivElement, ComboboxContentProps>(
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
     );
-  }
+  },
 );
 
-ComboboxContent.displayName = "ComboboxContent";
+ComboboxContent.displayName = 'ComboboxContent';
 
 // ---------------------------------------------------------------------------
 // ComboboxList — renders a row per matching item, carrying the fluid hover
@@ -1193,10 +1196,7 @@ const ComboboxList = forwardRef<HTMLDivElement, ComboboxListProps>(
     // picks rebuild the array without moving a row, and their merge/split
     // glide must survive) and holds until the rects measured from that row
     // set land — measurement coalesces on a rAF, one render behind.
-    const rowsSig = useMemo(
-      () => filteredItems.map(itemValue).join("\u0000"),
-      [filteredItems]
-    );
+    const rowsSig = useMemo(() => filteredItems.map(itemValue).join('\u0000'), [filteredItems]);
     // `armedRects` holds the rects of the old row set while armed; the flag
     // clears a frame after rects from the new row set have rendered.
     const [reflow, setReflow] = useState<{
@@ -1212,7 +1212,7 @@ const ComboboxList = forwardRef<HTMLDivElement, ComboboxListProps>(
       if (!reflowLanded) return;
       const armed = reflow.armedRects;
       const frame = requestAnimationFrame(() =>
-        setReflow((r) => (r.armedRects === armed ? { ...r, armedRects: null } : r))
+        setReflow((r) => (r.armedRects === armed ? { ...r, armedRects: null } : r)),
       );
       return () => cancelAnimationFrame(frame);
     }, [reflowLanded, reflow.armedRects]);
@@ -1223,7 +1223,7 @@ const ComboboxList = forwardRef<HTMLDivElement, ComboboxListProps>(
         filteredItems
           .map((item, i) => (values.includes(itemValue(item)) ? i : -1))
           .filter((i) => i !== -1),
-      [filteredItems, values]
+      [filteredItems, values],
     );
 
     // A keyboard (or auto) highlight drives the hover background — the only
@@ -1239,9 +1239,9 @@ const ComboboxList = forwardRef<HTMLDivElement, ComboboxListProps>(
       if (!highlight.keyboard) return;
       setActiveIndex(highlight.index);
       const row = containerRef.current?.querySelector<HTMLElement>(
-        `[data-fluid-hover-index="${highlight.index}"]`
+        `[data-fluid-hover-index="${highlight.index}"]`,
       );
-      row?.scrollIntoView({ block: "nearest" });
+      row?.scrollIntoView({ block: 'nearest' });
     }, [highlight, setActiveIndex]);
 
     // Reset every overlay index as the close begins, so the reopen doesn't
@@ -1259,20 +1259,11 @@ const ComboboxList = forwardRef<HTMLDivElement, ComboboxListProps>(
     // of checked rows — merging and splitting like CheckboxGroup as picks
     // bridge or break a run.
     const checkedRect =
-      isMeasured && !multiple && checkedIndices.length > 0
-        ? itemRects[checkedIndices[0]]
-        : null;
+      isMeasured && !multiple && checkedIndices.length > 0 ? itemRects[checkedIndices[0]] : null;
     const runs = useSelectionRuns(multiple ? checkedIndices : []);
-    const blocks = useMergeSplitBlocks(
-      runs,
-      isMeasured && open ? itemRects : [],
-      shape.bgRadius
-    );
+    const blocks = useMergeSplitBlocks(runs, isMeasured && open ? itemRects : [], shape.bgRadius);
 
-    const contentCtx = useMemo(
-      () => ({ registerItem, activeStore }),
-      [registerItem, activeStore]
-    );
+    const contentCtx = useMemo(() => ({ registerItem, activeStore }), [registerItem, activeStore]);
 
     // No matches keeps the popup at the height the last matches gave it, so
     // ComboboxEmpty sits where the rows were and the popup doesn't jump on
@@ -1285,7 +1276,7 @@ const ComboboxList = forwardRef<HTMLDivElement, ComboboxListProps>(
       let shownHeight = 0;
       const sync = () => {
         if (list.querySelector('[role="option"]')) {
-          surface.style.minHeight = "";
+          surface.style.minHeight = '';
           shownHeight = surface.offsetHeight;
         } else if (shownHeight) {
           surface.style.minHeight = `${shownHeight}px`;
@@ -1296,7 +1287,7 @@ const ComboboxList = forwardRef<HTMLDivElement, ComboboxListProps>(
       observer.observe(list, { childList: true, subtree: true });
       return () => {
         observer.disconnect();
-        surface.style.minHeight = "";
+        surface.style.minHeight = '';
       };
     }, []);
 
@@ -1307,105 +1298,103 @@ const ComboboxList = forwardRef<HTMLDivElement, ComboboxListProps>(
         {/* With no options the list gives up its flex-1, so the free height
             the floor holds goes to ComboboxEmpty's my-auto and centers it. */}
         <ScrollArea
-          className={cn(popupScrollAreaClass, "[&:not(:has([role=option]))]:flex-none")}
-          viewportClassName={cn(popupViewportClass, "scroll-fade")}
+          className={cn(popupScrollAreaClass, '[&:not(:has([role=option]))]:flex-none')}
+          viewportClassName={cn(popupViewportClass, 'scroll-fade')}
         >
-        <div
-          ref={(node: HTMLDivElement | null) => {
-            (containerRef as React.MutableRefObject<HTMLDivElement | null>).current =
-              node;
-            if (typeof ref === "function") ref(node);
-            else if (ref)
-              (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-          }}
-          id={listId}
-          role="listbox"
-          tabIndex={-1}
-          data-empty={empty || undefined}
-          onMouseEnter={handlers.onMouseEnter}
-          onMouseMove={handlers.onMouseMove}
-          onClick={handlers.onClick}
-          onMouseLeave={() => {
-            handlers.onMouseLeave();
-            // Leaving the list drops a pointer highlight; a keyboard one
-            // stays so Enter still means what the ring shows.
-            if (highlight && !highlight.keyboard) setHighlight(null);
-          }}
-          className={cn(
-            // The list is the overlays' offsetParent, so rows and overlays
-            // scroll together inside the ScrollArea. Padding collapses when
-            // the list is empty (ComboboxEmpty takes over).
-            "relative flex flex-col p-1 outline-none data-[empty]:p-0",
-            className
-          )}
-        >
-          {/* The three overlays are torn down as the close begins rather
+          <div
+            ref={(node: HTMLDivElement | null) => {
+              (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+              if (typeof ref === 'function') ref(node);
+              else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+            }}
+            id={listId}
+            role="listbox"
+            tabIndex={-1}
+            data-empty={empty || undefined}
+            onMouseEnter={handlers.onMouseEnter}
+            onMouseMove={handlers.onMouseMove}
+            onClick={handlers.onClick}
+            onMouseLeave={() => {
+              handlers.onMouseLeave();
+              // Leaving the list drops a pointer highlight; a keyboard one
+              // stays so Enter still means what the ring shows.
+              if (highlight && !highlight.keyboard) setHighlight(null);
+            }}
+            className={cn(
+              // The list is the overlays' offsetParent, so rows and overlays
+              // scroll together inside the ScrollArea. Padding collapses when
+              // the list is empty (ComboboxEmpty takes over).
+              'relative flex flex-col p-1 outline-none data-[empty]:p-0',
+              className,
+            )}
+          >
+            {/* The three overlays are torn down as the close begins rather
               than exit-animated: an overlay still mounted when the popup
               reopens is one AnimatePresence re-adopts under its old key and
               animates from the row it had before. */}
-          {/* Selected background */}
-          {open && multiple && (
-            <SelectionBackgrounds
-              blocks={reflowSnap ? blocks.map((b) => ({ ...b, instant: true })) : blocks}
-            />
-          )}
-          {open && !multiple && (
-            <AnimatePresence>
-              {checkedRect && (
-                <motion.div
-                  key="checked"
-                  aria-hidden
-                  className={`absolute ${shape.bg} bg-active pointer-events-none`}
-                  initial={false}
-                  animate={{
-                    top: checkedRect.top,
-                    left: checkedRect.left,
-                    width: checkedRect.width,
-                    height: checkedRect.height,
-                    opacity: 1,
-                  }}
-                  exit={{ opacity: 0, transition: spring.moderate.exit }}
-                  transition={
-                    reflowSnap
-                      ? { duration: 0 }
-                      : { ...spring.moderate, opacity: { duration: 0.08 } }
-                  }
-                />
-              )}
-            </AnimatePresence>
-          )}
+            {/* Selected background */}
+            {open && multiple && (
+              <SelectionBackgrounds
+                blocks={reflowSnap ? blocks.map((b) => ({ ...b, instant: true })) : blocks}
+              />
+            )}
+            {open && !multiple && (
+              <AnimatePresence>
+                {checkedRect && (
+                  <motion.div
+                    key="checked"
+                    aria-hidden
+                    className={`absolute ${shape.bg} bg-active pointer-events-none`}
+                    initial={false}
+                    animate={{
+                      top: checkedRect.top,
+                      left: checkedRect.left,
+                      width: checkedRect.width,
+                      height: checkedRect.height,
+                      opacity: 1,
+                    }}
+                    exit={{ opacity: 0, transition: spring.moderate.exit }}
+                    transition={
+                      reflowSnap
+                        ? { duration: 0 }
+                        : { ...spring.moderate, opacity: { duration: 0.08 } }
+                    }
+                  />
+                )}
+              </AnimatePresence>
+            )}
 
-          {/* Hover background. Snaps (no travel) while a filter reflow is
+            {/* Hover background. Snaps (no travel) while a filter reflow is
               moving the rows underneath. */}
-          {open && (
-            <FluidHoverHighlight
-              hover={hover}
-              className={shape.bg}
-              transition={reflowSnap ? false : undefined}
-            />
-          )}
+            {open && (
+              <FluidHoverHighlight
+                hover={hover}
+                className={shape.bg}
+                transition={reflowSnap ? false : undefined}
+              />
+            )}
 
-          {filteredItems.map((item, index) => (
-            <ComboboxItemIndexContext.Provider key={itemValue(item)} value={index}>
-              {/* The create row is the list's, not the consumer's: it reads
+            {filteredItems.map((item, index) => (
+              <ComboboxItemIndexContext.Provider key={itemValue(item)} value={index}>
+                {/* The create row is the list's, not the consumer's: it reads
                   the label from the root and picks like any row. */}
-              {isCreateItem(item) ? (
-                <ComboboxItem value={CREATE_VALUE} icon={PlusIcon}>
-                  {createRow}
-                </ComboboxItem>
-              ) : (
-                children(item, index)
-              )}
-            </ComboboxItemIndexContext.Provider>
-          ))}
-        </div>
+                {isCreateItem(item) ? (
+                  <ComboboxItem value={CREATE_VALUE} icon={PlusIcon}>
+                    {createRow}
+                  </ComboboxItem>
+                ) : (
+                  children(item, index)
+                )}
+              </ComboboxItemIndexContext.Provider>
+            ))}
+          </div>
         </ScrollArea>
       </ComboboxContentContext.Provider>
     );
-  }
+  },
 );
 
-ComboboxList.displayName = "ComboboxList";
+ComboboxList.displayName = 'ComboboxList';
 
 // ---------------------------------------------------------------------------
 // ComboboxItem
@@ -1422,130 +1411,124 @@ interface ComboboxItemProps extends HTMLAttributes<HTMLDivElement> {
 // highlight context) and builds its rows inline, so without memo every row
 // would render again per pointer move. Rows read their own lit state from
 // the fluid hover store.
-const ComboboxItem = memo(forwardRef<HTMLDivElement, ComboboxItemProps>(
-  (
-    { className, children, icon: Icon, value, disabled = false, onClick, ...props },
-    ref
-  ) => {
-    const comboboxCtx = useComboboxContext();
-    const contentCtx = useContext(ComboboxContentContext);
-    const index = useContext(ComboboxItemIndexContext);
-    const internalRef = useRef<HTMLDivElement>(null);
-    const shape = usePopupShape();
-    const sizeClasses = useSize();
-    const compact = sizeClasses.variant === "compact";
+const ComboboxItem = memo(
+  forwardRef<HTMLDivElement, ComboboxItemProps>(
+    ({ className, children, icon: Icon, value, disabled = false, onClick, ...props }, ref) => {
+      const comboboxCtx = useComboboxContext();
+      const contentCtx = useContext(ComboboxContentContext);
+      const index = useContext(ComboboxItemIndexContext);
+      const internalRef = useRef<HTMLDivElement>(null);
+      const shape = usePopupShape();
+      const sizeClasses = useSize();
+      const compact = sizeClasses.variant === 'compact';
 
-    // Register with fluid hover. Depends on the (stable) registerItem
-    // rather than the content context, which is rebuilt on every activeIndex
-    // change.
-    const registerItem = contentCtx?.registerItem;
-    useRegisterFluidHoverItem(registerItem, index, internalRef);
+      // Register with fluid hover. Depends on the (stable) registerItem
+      // rather than the content context, which is rebuilt on every activeIndex
+      // change.
+      const registerItem = contentCtx?.registerItem;
+      useRegisterFluidHoverItem(registerItem, index, internalRef);
 
-    const isActive = useFluidHoverSelect(contentCtx?.activeStore, (i) => i === index);
-    const isChecked = comboboxCtx.values.includes(value);
-    const item = comboboxCtx.filteredItems[index];
+      const isActive = useFluidHoverSelect(contentCtx?.activeStore, (i) => i === index);
+      const isChecked = comboboxCtx.values.includes(value);
+      const item = comboboxCtx.filteredItems[index];
 
-    return (
-      <div
-        ref={(node: HTMLDivElement | null) => {
-          (internalRef as React.MutableRefObject<HTMLDivElement | null>).current =
-            node;
-          if (typeof ref === "function") ref(node);
-          else if (ref)
-            (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-        }}
-        id={`${comboboxCtx.listId}-${index}`}
-        role="option"
-        aria-selected={isChecked}
-        aria-disabled={disabled || undefined}
-        data-fluid-hover-index={index}
-        data-value={value}
-        // Keep DOM focus in the input: a press on a row must not blur it.
-        onPointerDown={(e) => e.preventDefault()}
-        onPointerMove={() => {
-          if (disabled) return;
-          const h = comboboxCtx.highlightRef.current;
-          if (!h || h.index !== index || h.keyboard)
-            comboboxCtx.setHighlight({ index, keyboard: false });
-        }}
-        onClick={(e) => {
-          onClick?.(e);
-          if (e.defaultPrevented || disabled || !item) return;
-          comboboxCtx.select(item);
-        }}
-        className={cn(
-          // Fixed height so the text-box trim on the label doesn't shrink
-          // the row; shrink-0 because the list is a max-height flex column.
-          `relative z-10 flex ${sizeClasses.control} shrink-0 items-center ${sizeClasses.gap} ${shape.item} ${sizeClasses.itemPx} ${sizeClasses.text} cursor-pointer outline-none select-none`,
-          "transition-[color] duration-80",
-          isActive || isChecked ? "text-foreground" : "text-muted-foreground",
-          disabled && "opacity-50 pointer-events-none",
-          className
-        )}
-        {...props}
-      >
-        {Icon && (
-          <Icon
-            size={sizeClasses.icon}
-            strokeWidth={isActive || isChecked ? 2 : 1.5}
-            className="shrink-0 transition-[color,stroke-width] duration-80"
-          />
-        )}
-
-        {/* py-1/-my-1 keeps truncate's overflow:hidden from clipping
-            ascenders/descenders outside the trimmed box. */}
-        <span className="flex-1 min-w-0 truncate [text-box:trim-both_cap_alphabetic] py-1 -my-1">
-          {children}
-        </span>
-
-        {/* Always-rendered fixed slot so the check appearing/disappearing
-            never changes the row's intrinsic width. */}
-        <span
-          aria-hidden
-          className={cn("shrink-0", compact ? "w-3.5 h-3.5" : "w-4 h-4")}
+      return (
+        <div
+          ref={(node: HTMLDivElement | null) => {
+            (internalRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+            if (typeof ref === 'function') ref(node);
+            else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          }}
+          id={`${comboboxCtx.listId}-${index}`}
+          role="option"
+          aria-selected={isChecked}
+          aria-disabled={disabled || undefined}
+          data-fluid-hover-index={index}
+          data-value={value}
+          // Keep DOM focus in the input: a press on a row must not blur it.
+          onPointerDown={(e) => e.preventDefault()}
+          onPointerMove={() => {
+            if (disabled) return;
+            const h = comboboxCtx.highlightRef.current;
+            if (!h || h.index !== index || h.keyboard)
+              comboboxCtx.setHighlight({ index, keyboard: false });
+          }}
+          onClick={(e) => {
+            onClick?.(e);
+            if (e.defaultPrevented || disabled || !item) return;
+            comboboxCtx.select(item);
+          }}
+          className={cn(
+            // Fixed height so the text-box trim on the label doesn't shrink
+            // the row; shrink-0 because the list is a max-height flex column.
+            `relative z-10 flex ${sizeClasses.control} shrink-0 items-center ${sizeClasses.gap} ${shape.item} ${sizeClasses.itemPx} ${sizeClasses.text} cursor-pointer outline-none select-none`,
+            'transition-[color] duration-80',
+            isActive || isChecked ? 'text-foreground' : 'text-muted-foreground',
+            disabled && 'opacity-50 pointer-events-none',
+            className,
+          )}
+          {...props}
         >
-          {/* initial={false}: a row checked at mount shows the finished
+          {Icon && (
+            <Icon
+              size={sizeClasses.icon}
+              strokeWidth={isActive || isChecked ? 2 : 1.5}
+              className="shrink-0 transition-[color,stroke-width] duration-80"
+            />
+          )}
+
+          {/* py-1/-my-1 keeps truncate's overflow:hidden from clipping
+            ascenders/descenders outside the trimmed box. */}
+          <span className="flex-1 min-w-0 truncate [text-box:trim-both_cap_alphabetic] py-1 -my-1">
+            {children}
+          </span>
+
+          {/* Always-rendered fixed slot so the check appearing/disappearing
+            never changes the row's intrinsic width. */}
+          <span aria-hidden className={cn('shrink-0', compact ? 'w-3.5 h-3.5' : 'w-4 h-4')}>
+            {/* initial={false}: a row checked at mount shows the finished
               check instead of drawing it, so default selections don't
               animate on page load. */}
-          <AnimatePresence initial={false}>
-            {isChecked && (
-              <motion.svg
-                key="check"
-                width={sizeClasses.icon}
-                height={sizeClasses.icon}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-foreground"
-                initial={{ opacity: 1 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 1 }}
-              >
-                <motion.path
-                  d="M4 12L9 17L20 6"
-                  initial={{ pathLength: 0 }}
-                  animate={{
-                    pathLength: 1,
-                    transition: { duration: 0.08, ease: "easeOut" },
-                  }}
-                  exit={{
-                    pathLength: 0,
-                    transition: { duration: 0.04, ease: "easeIn" },
-                  }}
-                />
-              </motion.svg>
-            )}
-          </AnimatePresence>
-        </span>
-      </div>
-    );
-  }
-));
+            <AnimatePresence initial={false}>
+              {isChecked && (
+                <motion.svg
+                  key="check"
+                  width={sizeClasses.icon}
+                  height={sizeClasses.icon}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-foreground"
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 1 }}
+                >
+                  <motion.path
+                    d="M4 12L9 17L20 6"
+                    initial={{ pathLength: 0 }}
+                    animate={{
+                      pathLength: 1,
+                      transition: { duration: 0.08, ease: 'easeOut' },
+                    }}
+                    exit={{
+                      pathLength: 0,
+                      transition: { duration: 0.04, ease: 'easeIn' },
+                    }}
+                  />
+                </motion.svg>
+              )}
+            </AnimatePresence>
+          </span>
+        </div>
+      );
+    },
+  ),
+);
 
-ComboboxItem.displayName = "ComboboxItem";
+ComboboxItem.displayName = 'ComboboxItem';
 
 // ---------------------------------------------------------------------------
 // ComboboxEmpty — shown in place of the list when nothing matches.
@@ -1569,9 +1552,9 @@ const ComboboxEmpty = forwardRef<HTMLDivElement, ComboboxEmptyProps>(
         role="status"
         aria-live="polite"
         className={cn(
-          "my-auto px-3 text-center text-muted-foreground [&:not(:empty)]:py-6",
+          'my-auto px-3 text-center text-muted-foreground [&:not(:empty)]:py-6',
           sizeClasses.text,
-          className
+          className,
         )}
         {...props}
       >
@@ -1582,10 +1565,10 @@ const ComboboxEmpty = forwardRef<HTMLDivElement, ComboboxEmptyProps>(
           : null}
       </div>
     );
-  }
+  },
 );
 
-ComboboxEmpty.displayName = "ComboboxEmpty";
+ComboboxEmpty.displayName = 'ComboboxEmpty';
 
 // ---------------------------------------------------------------------------
 // Exports

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { useIcon } from "@/lib/icon-context";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { apiReference } from "@/lib/docs/api/data-table";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import { DataTablePlayground } from "@/lib/docs/playgrounds/data-table";
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { useIcon } from '#lib/icon-context';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { apiReference } from '#lib/docs/api/data-table';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { DataTablePlayground } from '#lib/docs/playgrounds/data-table';
 import {
   TeamTable,
   teamCode,
@@ -26,9 +26,9 @@ import {
   filtersCode,
   ColumnsTable,
   columnsCode,
-} from "./capability-demos";
-import { SortableTable, SearchTable, LoadingTable } from "./demo-data";
-import { KeyboardShortcuts } from "./keyboard";
+} from './capability-demos';
+import { SortableTable, SearchTable, LoadingTable } from './demo-data';
+import { KeyboardShortcuts } from './keyboard';
 
 const sortCode = `import { useDataTable, DataTable, DataTableColumnHeader, type ColumnDef } from "./components";
 
@@ -79,7 +79,7 @@ const table = useDataTable({ data: data ?? [], columns });
 // ── Playground ───────────────────────────────────────────
 
 function DataTablePlaygroundSection() {
-  const ReloadIcon = useIcon("rotate-ccw");
+  const ReloadIcon = useIcon('rotate-ccw');
   return (
     <DataTablePlayground>
       {({ preview, controls, code, onExpandedChange, onReplay }) => (
@@ -95,7 +95,11 @@ function DataTablePlaygroundSection() {
               padding="none"
               align="top"
               playbackButton={
-                onReplay && { icon: <ReloadIcon size={16} strokeWidth={1.5} />, tooltip: "Reload data", onClick: onReplay }
+                onReplay && {
+                  icon: <ReloadIcon size={16} strokeWidth={1.5} />,
+                  tooltip: 'Reload data',
+                  onClick: onReplay,
+                }
               }
             >
               {preview}
@@ -120,9 +124,9 @@ export default function DataTableDoc() {
 
       <DocSection title="Selection and actions">
         <p className="text-site-body text-muted-foreground">
-          Select a few people, then press ⌘K to act on all of them at once. Right-click a row for its
-          menu, or add a filter on a column. Remove someone, then press ⌘Z in the table to bring them
-          back.
+          Select a few people, then press ⌘K to act on all of them at once. Right-click a row for
+          its menu, or add a filter on a column. Remove someone, then press ⌘Z in the table to bring
+          them back.
         </p>
         <ComponentPreview code={teamCode}>
           <TeamTable />
@@ -132,7 +136,8 @@ export default function DataTableDoc() {
       <DocSection title="Filters">
         <p className="text-site-body text-muted-foreground">
           4 kinds of filter, one per kind of column: text, a few values, a number range, a range of
-          days. Each filter is a chip above the table: click a part to change it, or the × to remove it.
+          days. Each filter is a chip above the table: click a part to change it, or the × to remove
+          it.
         </p>
         <ComponentPreview code={filtersCode}>
           <FiltersTable />
@@ -161,9 +166,9 @@ export default function DataTableDoc() {
 
       <DocSection title="Resizing and reordering columns">
         <p className="text-site-body text-muted-foreground">
-          Drag a column&apos;s right edge to resize it, and drag a header to move it. From the keyboard:
-          ← / → on a focused edge steps its width by 16px, Alt + ← / → on a focused header moves its
-          column.
+          Drag a column&apos;s right edge to resize it, and drag a header to move it. From the
+          keyboard: ← / → on a focused edge steps its width by 16px, Alt + ← / → on a focused header
+          moves its column.
         </p>
         <ComponentPreview code={columnsCode}>
           <ColumnsTable />
@@ -173,8 +178,8 @@ export default function DataTableDoc() {
       <DocSection title="Frozen columns">
         <p className="text-site-body text-muted-foreground">
           Scroll sideways: the boxes and the first column stay on the left, the row menus on the
-          right. A hairline marks each frozen edge while content passes under it. Open a header&apos;s
-          menu to freeze the columns up to it.
+          right. A hairline marks each frozen edge while content passes under it. Open a
+          header&apos;s menu to freeze the columns up to it.
         </p>
         <ComponentPreview code={frozenCode}>
           <FrozenTable />
@@ -183,8 +188,10 @@ export default function DataTableDoc() {
 
       <DocSection title="Reordering rows">
         <p className="text-site-body text-muted-foreground">
-          Drag a row by its handle, or press Alt + ↑ / ↓ on the row under the pointer or holding focus. Select a few and drag one
-          to move them together: every row you carry shows in the drag, where it was. While a column sorts the table, dropping a row (or pressing the keys) asks whether to remove the sort first.
+          Drag a row by its handle, or press Alt + ↑ / ↓ on the row under the pointer or holding
+          focus. Select a few and drag one to move them together: every row you carry shows in the
+          drag, where it was. While a column sorts the table, dropping a row (or pressing the keys)
+          asks whether to remove the sort first.
         </p>
         <ComponentPreview code={reorderCode}>
           <ReorderTable />
@@ -232,10 +239,10 @@ export default function DataTableDoc() {
 
       <DocSection title="Loading">
         <p className="text-site-body text-muted-foreground">
-          While a request runs, each cell holds a skeleton the size of its text. When the data lands,
-          every skeleton fades out as its cell fades in, so nothing jumps and no cell sits empty.
-          Requests that finish within 160ms never show one. This table is held in loading: press
-          Finish loading to land its rows.
+          While a request runs, each cell holds a skeleton the size of its text. When the data
+          lands, every skeleton fades out as its cell fades in, so nothing jumps and no cell sits
+          empty. Requests that finish within 160ms never show one. This table is held in loading:
+          press Finish loading to land its rows.
         </p>
         <ComponentPreview code={loadingCode}>
           <LoadingTable />

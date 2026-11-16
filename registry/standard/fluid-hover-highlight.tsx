@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useLayoutEffect, useRef, type ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import type { ItemRect, UseFluidHoverReturn } from "@/hooks/use-fluid-hover";
+import { useLayoutEffect, useRef, type ReactNode } from 'react';
+import { cn } from '#lib/utils';
+import type { ItemRect, UseFluidHoverReturn } from '#hooks/use-fluid-hover';
 
 // ---------------------------------------------------------------------------
 // Standard hover's highlight: a plain fill on the lit item. It appears and
@@ -17,7 +17,7 @@ import type { ItemRect, UseFluidHoverReturn } from "@/hooks/use-fluid-hover";
 /** What the highlight reads off the hook. */
 export type FluidHoverSource = Pick<
   UseFluidHoverReturn,
-  "activeIndex" | "itemRects" | "isMeasured" | "session"
+  'activeIndex' | 'itemRects' | 'isMeasured' | 'session'
 >;
 
 interface HighlightFromHook {
@@ -62,9 +62,7 @@ export function FluidHoverHighlight(props: FluidHoverHighlightProps) {
   if (props.hover) {
     const { activeIndex, itemRects, isMeasured } = props.hover;
     rect =
-      !props.hidden && isMeasured && activeIndex !== null
-        ? (itemRects[activeIndex] ?? null)
-        : null;
+      !props.hidden && isMeasured && activeIndex !== null ? (itemRects[activeIndex] ?? null) : null;
   } else rect = props.rect;
   const { onFrame } = props;
   const top = rect?.top ?? null;
@@ -80,7 +78,7 @@ export function FluidHoverHighlight(props: FluidHoverHighlightProps) {
   return (
     <div
       data-slot="fluid-hover-highlight"
-      className={cn("pointer-events-none absolute left-0 top-0 bg-hover", props.className)}
+      className={cn('pointer-events-none absolute left-0 top-0 bg-hover', props.className)}
       style={{
         transform: `translate(${rect.left}px, ${rect.top}px)`,
         width: rect.width,

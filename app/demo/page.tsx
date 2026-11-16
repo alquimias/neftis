@@ -1,28 +1,36 @@
-"use client";
+'use client';
 
-import { inKeyboardScope } from "@/lib/keyboard-scope";
-import { CarouselDots } from "@/registry/default/carousel-dots";
-import { Suspense, useState, useEffect, useLayoutEffect, useRef, useCallback, type ReactNode } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { motion } from "motion/react";
-import { componentList } from "@/lib/docs/components";
-import { useReleaseMarks } from "@/lib/changelog/marks";
-import { previewMap } from "@/app/components/bento-previews";
-import { playgroundMap } from "@/lib/docs/playgrounds";
-import { BentoCard } from "@/app/components/bento-card";
-import { PlaygroundMenu } from "@/app/components/playground-menu";
-import { PlaygroundOverlay } from "@/lib/docs/playground";
-import { SettingsContent } from "@/app/components/right-panel";
-import { Button } from "@/registry/radix/button";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { spring } from "@/lib/springs";
-import { useIcon } from "@/lib/icon-context";
-import { useSizeVariant } from "@/lib/size-context";
-import { Tooltip, TooltipGroup, TooltipPortalContainer } from "@/registry/radix/tooltip";
-import { ColorPickerPortalContainer } from "@/registry/default/color-picker";
+import { inKeyboardScope } from '#lib/keyboard-scope';
+import { CarouselDots } from '#registry/default/carousel-dots';
+import {
+  Suspense,
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useCallback,
+  type ReactNode,
+} from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { motion } from 'motion/react';
+import { componentList } from '#lib/docs/components';
+import { useReleaseMarks } from '#lib/changelog/marks';
+import { previewMap } from '#app/components/bento-previews';
+import { playgroundMap } from '#lib/docs/playgrounds';
+import { BentoCard } from '#app/components/bento-card';
+import { PlaygroundMenu } from '#app/components/playground-menu';
+import { PlaygroundOverlay } from '#lib/docs/playground';
+import { SettingsContent } from '#app/components/right-panel';
+import { Button } from '#registry/radix/button';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { spring } from '#lib/springs';
+import { useIcon } from '#lib/icon-context';
+import { useSizeVariant } from '#lib/size-context';
+import { Tooltip, TooltipGroup, TooltipPortalContainer } from '#registry/radix/tooltip';
+import { ColorPickerPortalContainer } from '#registry/default/color-picker';
 
-const SETTINGS_SLUG = "settings";
+const SETTINGS_SLUG = 'settings';
 const BASE_WIDTH = 680;
 const BASE_HEIGHT = 420;
 
@@ -43,8 +51,7 @@ export default function DemoPage() {
 function DemoPageInner() {
   const router = useRouter();
   // Square icon buttons follow the site-wide size step (see /docs/sizes).
-  const iconSize =
-    useSizeVariant() === "compact" ? ("icon-compact" as const) : ("icon" as const);
+  const iconSize = useSizeVariant() === 'compact' ? ('icon-compact' as const) : ('icon' as const);
   const searchParams = useSearchParams();
   const { isNew } = useReleaseMarks();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -54,54 +61,56 @@ function DemoPageInner() {
   const [scaleOn, setScaleOn] = useState(false);
   const [scaleEl, setScaleEl] = useState<HTMLDivElement | null>(null);
   const slideOrder = [
-    "checkbox-group",
-    "accordion",
-    "radio-group",
-    "slider",
-    "ask-user-questions",
-    "input-message",
-    "sidebar",
-    "button",
-    "dropdown",
-    "combobox",
-    "calendar",
-    "date-picker",
-    "command-menu",
-    "color-picker",
-    "input-group",
-    "switch",
-    "table",
-    "data-table",
-    "card",
-    "tabs",
-    "thinking-indicator",
-    "thinking-steps",
-    "banner",
-    "input-copy",
-    "carousel-dots",
+    'checkbox-group',
+    'accordion',
+    'radio-group',
+    'slider',
+    'ask-user-questions',
+    'input-message',
+    'sidebar',
+    'button',
+    'dropdown',
+    'combobox',
+    'calendar',
+    'date-picker',
+    'command-menu',
+    'color-picker',
+    'input-group',
+    'switch',
+    'table',
+    'data-table',
+    'card',
+    'tabs',
+    'thinking-indicator',
+    'thinking-steps',
+    'banner',
+    'input-copy',
+    'carousel-dots',
     // Any component with a registered playground gets a slide automatically
     // (see lib/docs/playgrounds) — a playground on the doc page always shows
     // up here too, under the pen menu. Curate the position by naming the slug
     // above; anything unnamed lands at the end.
     ...Object.keys(playgroundMap),
     // "Make them yours" always closes the deck, after every component.
-    "__settings__",
+    '__settings__',
   ].filter((slug, i, all) => all.indexOf(slug) === i);
 
   const componentMap = new Map(componentList.map((c) => [c.slug, c]));
 
-  const slides = slideOrder.map((slug) => {
-    if (slug === "__settings__") {
-      return { slug: SETTINGS_SLUG, name: "Make them yours", type: "settings" as const };
-    }
-    const c = componentMap.get(slug);
-    // A slide needs either a static bento preview or a registered playground
-    // (which brings its own state-driven preview + pen menu).
-    if (!c || (!previewMap[c.slug] && !playgroundMap[c.slug])) return null;
-    return { slug: c.slug, name: c.name, isNew: isNew(c.slug), type: "component" as const };
-  }).filter((s): s is NonNullable<typeof s> => s != null);
+  const slides = slideOrder
+    .map((slug) => {
+      if (slug === '__settings__') {
+        return { slug: SETTINGS_SLUG, name: 'Make them yours', type: 'settings' as const };
+      }
+      const c = componentMap.get(slug);
+      // A slide needs either a static bento preview or a registered playground
+      // (which brings its own state-driven preview + pen menu).
+      if (!c || (!previewMap[c.slug] && !playgroundMap[c.slug])) return null;
+      return { slug: c.slug, name: c.name, isNew: isNew(c.slug), type: 'component' as const };
+    })
+    .filter((s): s is NonNullable<typeof s> => s != null);
 
-  const paramSlug = searchParams.get("c");
+  const paramSlug = searchParams.get('c');
   const paramIndex = slides.findIndex((s) => s.slug === paramSlug);
   const [currentIndex, setCurrentIndex] = useState(paramIndex >= 0 ? paramIndex : 0);
 
@@ -118,7 +127,7 @@ function DemoPageInner() {
       const slug = slides[index].slug;
       router.replace(`/demo?c=${slug}`, { scroll: false });
     },
-    [slides, router]
+    [slides, router],
   );
 
   useLayoutEffect(() => {
@@ -147,46 +156,45 @@ function DemoPageInner() {
       if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
 
       const tag = (e.target as HTMLElement).tagName;
-      const role = (e.target as HTMLElement).getAttribute("role");
+      const role = (e.target as HTMLElement).getAttribute('role');
       if (
-        tag === "INPUT" ||
-        tag === "TEXTAREA" ||
-        tag === "SELECT" ||
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
         (e.target as HTMLElement).isContentEditable ||
-        role === "slider" ||
-        role === "tablist" ||
-        role === "radiogroup" ||
-        role === "listbox" ||
-        role === "menu"
-      ) return;
+        role === 'slider' ||
+        role === 'tablist' ||
+        role === 'radiogroup' ||
+        role === 'listbox' ||
+        role === 'menu'
+      )
+        return;
 
       const closest = (e.target as HTMLElement).closest(
-        "[role=slider],[role=tablist],[role=radiogroup],[role=listbox],[role=menu],[role=menubar]"
+        '[role=slider],[role=tablist],[role=radiogroup],[role=listbox],[role=menu],[role=menubar]',
       );
       if (closest) return;
 
-      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault();
         goToRef.current(currentIndexRef.current + 1);
-      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault();
         goToRef.current(currentIndexRef.current - 1);
       }
     }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const current = slides[currentIndex];
   // Slides with a registered playground swap the static bento preview for the
   // playground-driven one and gain the pen menu (see lib/docs/playgrounds).
   const Playground =
-    current && current.type === "component"
-      ? playgroundMap[current.slug]
-      : undefined;
-  const ArrowRight = useIcon("arrow-right");
-  const ScalingIcon = useIcon("scaling");
+    current && current.type === 'component' ? playgroundMap[current.slug] : undefined;
+  const ArrowRight = useIcon('arrow-right');
+  const ScalingIcon = useIcon('scaling');
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
   const nextSlide = currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
@@ -206,12 +214,10 @@ function DemoPageInner() {
       initial={false}
       animate={{ scale: scaleOn ? scale : 1 }}
       transition={spring.moderate}
-      style={{ transformOrigin: "center", maxWidth }}
+      style={{ transformOrigin: 'center', maxWidth }}
     >
       <TooltipPortalContainer value={scaleEl}>
-        <ColorPickerPortalContainer value={scaleEl}>
-          {children}
-        </ColorPickerPortalContainer>
+        <ColorPickerPortalContainer value={scaleEl}>{children}</ColorPickerPortalContainer>
       </TooltipPortalContainer>
     </motion.div>
   );
@@ -220,11 +226,11 @@ function DemoPageInner() {
   // the slide has one.
   const cardActions = (playgroundMenu?: ReactNode) => (
     <div className="flex items-center gap-1">
-      <Tooltip content={scaleOn ? "Actual size" : "Scale to fit"} side="top">
+      <Tooltip content={scaleOn ? 'Actual size' : 'Scale to fit'} side="top">
         <Button
           variant="ghost"
           size="icon-compact"
-          aria-label={scaleOn ? "Show preview at actual size" : "Scale preview to fit the card"}
+          aria-label={scaleOn ? 'Show preview at actual size' : 'Scale preview to fit the card'}
           aria-pressed={scaleOn}
           active={scaleOn}
           onClick={() => setScaleOn((v) => !v)}
@@ -252,17 +258,24 @@ function DemoPageInner() {
             </p>
             <div className="flex items-center gap-2 mt-2">
               <Link href="/docs">
-                <Button variant="primary" size="sm">Learn more</Button>
+                <Button variant="primary" size="sm">
+                  Learn more
+                </Button>
               </Link>
               <Link href="/compare">
-                <Button variant="tertiary" size="sm">Compare</Button>
+                <Button variant="tertiary" size="sm">
+                  Compare
+                </Button>
               </Link>
             </div>
           </div>
           <div className="flex items-center gap-1 shrink-0">
             {/* Prev and next share one gliding tooltip. */}
             <TooltipGroup>
-              <Tooltip content={prevSlide ? prevSlide.name : "No previous"} shortcut={prevSlide ? "←" : undefined}>
+              <Tooltip
+                content={prevSlide ? prevSlide.name : 'No previous'}
+                shortcut={prevSlide ? '←' : undefined}
+              >
                 <Button
                   variant="ghost"
                   size={iconSize}
@@ -273,7 +286,10 @@ function DemoPageInner() {
                   <ArrowRight className="rotate-180" />
                 </Button>
               </Tooltip>
-              <Tooltip content={nextSlide ? nextSlide.name : "No next"} shortcut={nextSlide ? "→" : undefined}>
+              <Tooltip
+                content={nextSlide ? nextSlide.name : 'No next'}
+                shortcut={nextSlide ? '→' : undefined}
+              >
                 <Button
                   variant="ghost"
                   size={iconSize}
@@ -295,13 +311,13 @@ function DemoPageInner() {
           aspectRatio: `${BASE_WIDTH} / ${BASE_HEIGHT}`,
         }}
       >
-        {current && (
-          current.type === "settings" ? (
+        {current &&
+          (current.type === 'settings' ? (
             <BentoCard
               key={current.slug}
               slug=""
               name={current.name}
-              style={{ height: "100%" }}
+              style={{ height: '100%' }}
               action={cardActions()}
             >
               {stage(<SettingsContent />)}
@@ -312,15 +328,13 @@ function DemoPageInner() {
                 <BentoCard
                   slug={current.slug}
                   name={current.name}
-                  isNew={"isNew" in current ? current.isNew : undefined}
-                  style={{ height: "100%" }}
+                  isNew={'isNew' in current ? current.isNew : undefined}
+                  style={{ height: '100%' }}
                   // Anchors the playground overlay to the preview area,
                   // above the footer and outside the stage's scaling.
                   previewClassName="relative"
                   action={cardActions(
-                    <PlaygroundMenu label={`Customize ${current.name}`}>
-                      {controls}
-                    </PlaygroundMenu>
+                    <PlaygroundMenu label={`Customize ${current.name}`}>{controls}</PlaygroundMenu>,
                   )}
                 >
                   {stage(demoPreview, demoMaxWidth)}
@@ -333,14 +347,13 @@ function DemoPageInner() {
               key={current.slug}
               slug={current.slug}
               name={current.name}
-              isNew={"isNew" in current ? current.isNew : undefined}
-              style={{ height: "100%" }}
+              isNew={'isNew' in current ? current.isNew : undefined}
+              style={{ height: '100%' }}
               action={cardActions()}
             >
               {stage(<SlidePreview slug={current.slug} />)}
             </BentoCard>
-          )
-        )}
+          ))}
       </div>
 
       {/* Progress indicator */}

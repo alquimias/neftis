@@ -1,1 +1,1 @@
-export { omit } from "@/registry/default/lib/omit";
+export { omit } from '#registry/default/lib/omit';

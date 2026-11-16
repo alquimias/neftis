@@ -1,4 +1,4 @@
-import { type IconName } from "@/lib/icon-context";
+import { type IconName } from '#lib/icon-context';
 
 // ---------------------------------------------------------------------------
 // Seed navigation data — replace with your own. Icons are keys into the
@@ -18,19 +18,19 @@ export interface NavSection {
 
 export const NAV_SECTIONS: NavSection[] = [
   {
-    label: "Platform",
+    label: 'Platform',
     items: [
-      { label: "Home", icon: "star" },
-      { label: "Inbox", icon: "mail", badge: "12" },
-      { label: "Calendar", icon: "clock" },
+      { label: 'Home', icon: 'star' },
+      { label: 'Inbox', icon: 'mail', badge: '12' },
+      { label: 'Calendar', icon: 'clock' },
     ],
   },
   {
-    label: "Workspace",
+    label: 'Workspace',
     items: [
-      { label: "Notifications", icon: "bell", badge: "3" },
-      { label: "Members", icon: "users" },
-      { label: "Settings", icon: "settings" },
+      { label: 'Notifications', icon: 'bell', badge: '3' },
+      { label: 'Members', icon: 'users' },
+      { label: 'Settings', icon: 'settings' },
     ],
   },
 ];

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import { showSuccessToast } from "@/lib/docs/settings-toast";
+import { useMemo, useState } from 'react';
+import { showSuccessToast } from '#lib/docs/settings-toast';
 import {
   CommandMenu,
   CommandMenuDialog,
@@ -15,23 +15,18 @@ import {
   CommandMenuFooter,
   useIsMac,
   type CommandMenuItemData,
-} from "@/registry/default/command-menu";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/flavored/select";
-import { Button } from "@/registry/radix/button";
-import { Elevated } from "@/lib/elevated";
-import { useShape } from "@/lib/shape-context";
-import { useIcon } from "@/lib/icon-context";
-import { cn } from "@/lib/utils";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import { CommandMenuPlayground } from "@/lib/docs/playgrounds/command-menu";
+} from '#registry/default/command-menu';
+import { Select, SelectTrigger, SelectContent, SelectItem } from '#components/flavored/select';
+import { Button } from '#registry/radix/button';
+import { Elevated } from '#lib/elevated';
+import { useShape } from '#lib/shape-context';
+import { useIcon } from '#lib/icon-context';
+import { cn } from '#lib/utils';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { CommandMenuPlayground } from '#lib/docs/playgrounds/command-menu';
 import {
   COMMAND_MENU_SUGGESTIONS,
   COMMAND_MENU_TABS,
@@ -39,8 +34,19 @@ import {
   COMMAND_MENU_SORTS,
   COMMAND_MENU_COPY,
   useCommandMenuItems,
-} from "@/lib/docs/command-menu-items";
-import { itemDataProps, rootProps, dialogProps, inputProps, listProps, itemProps, tabsProps, footerProps, shortcutProps, platformProps } from "@/lib/docs/api/command-menu";
+} from '#lib/docs/command-menu-items';
+import {
+  itemDataProps,
+  rootProps,
+  dialogProps,
+  inputProps,
+  listProps,
+  itemProps,
+  tabsProps,
+  footerProps,
+  shortcutProps,
+  platformProps,
+} from '#lib/docs/api/command-menu';
 
 // ---------------------------------------------------------------------------
 // Code snippets
@@ -269,7 +275,11 @@ function Panel({ children, className }: { children: React.ReactNode; className?:
     <Elevated
       offset={2}
       shadowLevel={3}
-      className={cn("flex max-h-[360px] w-full max-w-[520px] flex-col overflow-hidden", shape.container, className)}
+      className={cn(
+        'flex max-h-[360px] w-full max-w-[520px] flex-col overflow-hidden',
+        shape.container,
+        className,
+      )}
     >
       {children}
     </Elevated>
@@ -279,24 +289,24 @@ function Panel({ children, className }: { children: React.ReactNode; className?:
 const TABS = COMMAND_MENU_TABS;
 
 export default function CommandMenuDoc() {
-  const PlusIcon = useIcon("plus");
+  const PlusIcon = useIcon('plus');
   const mac = useIsMac();
   const plain = useCommandMenuItems({ descriptions: false, shortcuts: false });
   const full = useCommandMenuItems();
   const run = (item: CommandMenuItemData) => showSuccessToast(`Ran “${item.label}”`);
 
-  const [tab, setTab] = useState("all");
-  const [footerTab, setFooterTab] = useState("all");
+  const [tab, setTab] = useState('all');
+  const [footerTab, setFooterTab] = useState('all');
   const tabbed = useMemo(
-    () => (tab === "all" ? full : full.filter((item) => item.group === tab)),
-    [full, tab]
+    () => (tab === 'all' ? full : full.filter((item) => item.group === tab)),
+    [full, tab],
   );
 
-  const [type, setType] = useState("all");
-  const [sort, setSort] = useState("default");
+  const [type, setType] = useState('all');
+  const [sort, setSort] = useState('default');
   const filtered = useMemo(() => {
-    const rows = type === "all" ? full : full.filter((item) => item.group === type);
-    return sort === "az" ? [...rows].sort((a, b) => a.label.localeCompare(b.label)) : rows;
+    const rows = type === 'all' ? full : full.filter((item) => item.group === type);
+    return sort === 'az' ? [...rows].sort((a, b) => a.label.localeCompare(b.label)) : rows;
   }, [full, type, sort]);
 
   const [open, setOpen] = useState(false);
@@ -314,8 +324,8 @@ export default function CommandMenuDoc() {
 
       <DocSection title="Basic">
         <p className="text-site-body text-muted-foreground">
-          Type to filter, press ↓ ↑ to move, Enter to run. Rows come from{" "}
-          <code>items</code>, grouped by <code>group</code>.
+          Type to filter, press ↓ ↑ to move, Enter to run. Rows come from <code>items</code>,
+          grouped by <code>group</code>.
         </p>
         <ComponentPreview code={basicCode} minHeightClass="min-h-[400px]">
           <Panel>
@@ -331,9 +341,9 @@ export default function CommandMenuDoc() {
 
       <DocSection title="Descriptions, shortcuts, disabled rows">
         <p className="text-site-body text-muted-foreground">
-          3 more fields per row: <code>description</code>, <code>shortcut</code>{" "}
-          caps, and <code>disabled</code>, which the arrows skip. Type{" "}
-          <code>clipboard</code>: keywords match too.
+          3 more fields per row: <code>description</code>, <code>shortcut</code> caps, and{' '}
+          <code>disabled</code>, which the arrows skip. Type <code>clipboard</code>: keywords match
+          too.
         </p>
         <ComponentPreview code={detailsCode} minHeightClass="min-h-[400px]">
           <Panel>
@@ -349,8 +359,7 @@ export default function CommandMenuDoc() {
 
       <DocSection title="Suggestions">
         <p className="text-site-body text-muted-foreground">
-          3 suggested rows lead until you type 1 letter, then the groups take
-          over.
+          3 suggested rows lead until you type 1 letter, then the groups take over.
         </p>
         <ComponentPreview code={suggestionsCode} minHeightClass="min-h-[400px]">
           <Panel>
@@ -371,9 +380,8 @@ export default function CommandMenuDoc() {
 
       <DocSection title="Tabs">
         <p className="text-site-body text-muted-foreground">
-          Click a tab or press ← →, then derive <code>items</code> from the
-          value. Children hug the row&apos;s end: put{" "}
-          <code>CommandMenuFilters</code> there to share the line.
+          Click a tab or press ← →, then derive <code>items</code> from the value. Children hug the
+          row&apos;s end: put <code>CommandMenuFilters</code> there to share the line.
         </p>
         <ComponentPreview code={tabsCode} minHeightClass="min-h-[400px]">
           <Panel>
@@ -390,8 +398,7 @@ export default function CommandMenuDoc() {
 
       <DocSection title="Filters">
         <p className="text-site-body text-muted-foreground">
-          A frameless compact row under the field: drop borderless Selects or
-          ghost Buttons in.
+          A frameless compact row under the field: drop borderless Selects or ghost Buttons in.
         </p>
         <ComponentPreview code={filtersCode} minHeightClass="min-h-[400px]">
           <Panel>
@@ -429,9 +436,9 @@ export default function CommandMenuDoc() {
 
       <DocSection title="Dialog and trigger shortcut">
         <p className="text-site-body text-muted-foreground">
-          Press {mac ? "⌘P" : "Ctrl+P"} anywhere on this page: this demo binds its
-          own combo, and the default {mac ? "⌘K" : "Ctrl+K"} opens the playground
-          above. A pick or Escape closes it.
+          Press {mac ? '⌘P' : 'Ctrl+P'} anywhere on this page: this demo binds its own combo, and
+          the default {mac ? '⌘K' : 'Ctrl+K'} opens the playground above. A pick or Escape closes
+          it.
         </p>
         <ComponentPreview code={dialogCode}>
           <div className="flex flex-wrap items-center gap-3">
@@ -440,11 +447,7 @@ export default function CommandMenuDoc() {
               <CommandMenuShortcut keys="mod+p" className="ml-1" />
             </Button>
             <CommandMenuDialog open={open} onOpenChange={setOpen} shortcut="mod+p">
-              <CommandMenu
-                items={full}
-                suggestions={COMMAND_MENU_SUGGESTIONS}
-                onSelect={run}
-              >
+              <CommandMenu items={full} suggestions={COMMAND_MENU_SUGGESTIONS} onSelect={run}>
                 <CommandMenuInput placeholder={COMMAND_MENU_COPY.placeholder} />
                 <CommandMenuList>
                   <CommandMenuEmpty>{COMMAND_MENU_COPY.empty}</CommandMenuEmpty>
@@ -468,10 +471,9 @@ export default function CommandMenuDoc() {
 
       <DocSection title="Footer hints">
         <p className="text-site-body text-muted-foreground">
-          4 hints at most, following the menu: ← → with tabs, Esc in a
-          dialog, and ↵ named after the highlighted row (its{" "}
-          <code>action</code>, or its label). Pass <code>hints</code> for
-          your own.
+          4 hints at most, following the menu: ← → with tabs, Esc in a dialog, and ↵ named after the
+          highlighted row (its <code>action</code>, or its label). Pass <code>hints</code> for your
+          own.
         </p>
         <ComponentPreview code={footerCode} minHeightClass="min-h-[400px]">
           <Panel>
@@ -489,8 +491,8 @@ export default function CommandMenuDoc() {
 
       <DocSection title="Custom rows">
         <p className="text-site-body text-muted-foreground">
-          1 <code>CommandMenuItem</code> per row from <code>renderItem</code>:
-          children replace the label, the icon and caps stay.
+          1 <code>CommandMenuItem</code> per row from <code>renderItem</code>: children replace the
+          label, the icon and caps stay.
         </p>
         <ComponentPreview code={customRowsCode} minHeightClass="min-h-[400px]">
           <Panel>

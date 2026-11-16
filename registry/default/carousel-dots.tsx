@@ -1,12 +1,6 @@
-"use client";
+'use client';
 
-import {
-  forwardRef,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  type HTMLAttributes,
-} from "react";
+import { forwardRef, useEffect, useLayoutEffect, useRef, type HTMLAttributes } from 'react';
 import {
   isMotionValue,
   motion,
@@ -14,12 +8,12 @@ import {
   useReducedMotion,
   useTransform,
   type MotionValue,
-} from "motion/react";
-import { cn } from "@/lib/utils";
-import { useShape } from "@/lib/shape-context";
-import { spring } from "@/lib/springs";
-import { useFluidHover, useRegisterFluidHoverItem } from "@/hooks/use-fluid-hover";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
+} from 'motion/react';
+import { cn } from '#lib/utils';
+import { useShape } from '#lib/shape-context';
+import { spring } from '#lib/springs';
+import { useFluidHover, useRegisterFluidHoverItem } from '#hooks/use-fluid-hover';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
 
 // ─── CarouselDots ───────────────────────────────────────────────────────
 // A row of 6px dots, one per slide. The current one stretches into a 24px
@@ -28,8 +22,7 @@ import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
 // 18px round click area, and one fluid highlight glides between those areas
 // on hover, so the target you are about to hit is always visible.
 
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 /** Dot height, and the diameter of every resting dot. */
 const DOT_PX = 6;
@@ -37,8 +30,9 @@ const DOT_PX = 6;
 const PILL_PX = 24;
 
 /** The light track every dot shares; the playing pill's fill is darker. */
-const TRACK_COLOR = "color-mix(in oklab, var(--foreground), transparent 85%)";
-const FILL_COLOR = "color-mix(in oklab, var(--foreground), transparent 60%)";
+const TRACK_COLOR = 'color-mix(in oklab, var(--foreground), transparent 85%)';
+const FILL_COLOR = 'color-mix(in oklab, var(--foreground), transparent 60%)';
+const ALERT_COLOR = 'var(--destructive)';
 
 /** The fill is a full-width pill slid in from the left, never scaled:
  *  scaling would squash its rounded end. At 0 a full dot shows, so the
@@ -57,8 +51,7 @@ interface CarouselDotsAutoplay {
   loop?: boolean;
 }
 
-interface CarouselDotsProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
+interface CarouselDotsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   /** How many dots to show. */
   count: number;
   /** Index of the current dot. */
@@ -75,6 +68,10 @@ interface CarouselDotsProps
   progress?: number | MotionValue<number>;
   /** Accessible name for each dot. Defaults to "Go to slide N". */
   getLabel?: (index: number) => string;
+  /** Index of a blocked step: that dot turns red and shakes. */
+  alertIndex?: number;
+  /** Increment to replay the shake while `alertIndex` stays the same. */
+  alertPulse?: number;
 }
 
 const defaultLabel = (index: number) => `Go to slide ${index + 1}`;
@@ -91,13 +88,15 @@ const CarouselDots = forwardRef<HTMLDivElement, CarouselDotsProps>(
       autoplay,
       progress,
       getLabel = defaultLabel,
+      alertIndex,
+      alertPulse = 0,
       className,
       ...props
     },
-    ref
+    ref,
   ) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const hover = useFluidHover(containerRef, { axis: "x" });
+    const hover = useFluidHover(containerRef, { axis: 'x' });
     const reduced = useReducedMotion();
 
     const options = autoplay === true ? {} : autoplay || null;
@@ -108,11 +107,9 @@ const CarouselDots = forwardRef<HTMLDivElement, CarouselDotsProps>(
 
     // One local motion value serves every mode: a static pill sits at 1, a
     // number is copied in, and autoplay advances it on its own clock.
-    const local = useMotionValue(
-      typeof progress === "number" ? progress : autoplaying ? 0 : 1
-    );
+    const local = useMotionValue(typeof progress === 'number' ? progress : autoplaying ? 0 : 1);
     useEffect(() => {
-      if (typeof progress === "number") local.set(progress);
+      if (typeof progress === 'number') local.set(progress);
       else if (progress === undefined && !autoplaying) local.set(1);
     }, [progress, autoplaying, local]);
 
@@ -163,18 +160,18 @@ const CarouselDots = forwardRef<HTMLDivElement, CarouselDotsProps>(
     const fillTransform = useTransform(source, fillAt);
 
     // Sharp squares the dots, the pill and the highlight; otherwise round.
-    const round = useShape().variant === "sharp" ? "rounded-none" : "rounded-full";
+    const round = useShape().variant === 'sharp' ? 'rounded-none' : 'rounded-full';
 
     return (
       <div
         ref={(node) => {
           containerRef.current = node;
-          if (typeof ref === "function") ref(node);
+          if (typeof ref === 'function') ref(node);
           else if (ref) ref.current = node;
         }}
         role="group"
         aria-label="Slides"
-        className={cn("relative flex w-fit items-center", className)}
+        className={cn('relative flex w-fit items-center', className)}
         {...hover.handlers}
         {...props}
       >
@@ -185,6 +182,8 @@ const CarouselDots = forwardRef<HTMLDivElement, CarouselDotsProps>(
             index={i}
             label={getLabel(i)}
             current={i === value}
+            alert={i === alertIndex}
+            alertPulse={alertPulse}
             fillTransform={fillTransform}
             reduced={reduced === true}
             registerItem={hover.registerItem}
@@ -194,15 +193,17 @@ const CarouselDots = forwardRef<HTMLDivElement, CarouselDotsProps>(
         ))}
       </div>
     );
-  }
+  },
 );
 
-CarouselDots.displayName = "CarouselDots";
+CarouselDots.displayName = 'CarouselDots';
 
 function Dot({
   index,
   label,
   current,
+  alert,
+  alertPulse,
   fillTransform,
   reduced,
   registerItem,
@@ -212,6 +213,8 @@ function Dot({
   index: number;
   label: string;
   current: boolean;
+  alert: boolean;
+  alertPulse: number;
   fillTransform: MotionValue<string>;
   reduced: boolean;
   registerItem: (index: number, element: HTMLElement | null) => void;
@@ -226,16 +229,28 @@ function Dot({
       type="button"
       onClick={() => onSelect?.(index)}
       aria-label={label}
-      aria-current={current ? "true" : undefined}
+      aria-current={current ? 'true' : undefined}
+      aria-invalid={alert ? true : undefined}
+      data-alert={alert ? 'true' : undefined}
       // Equal padding on every side: an 18px round click area per dot, and
       // 12px between dots. No gap, so the highlight never drops out.
-      className={cn("relative z-10 flex items-center p-1.5 outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]", round)}
+      className={cn(
+        'relative z-10 flex items-center p-1.5 outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
+        round,
+      )}
     >
       <motion.span
-        className={cn("relative block overflow-hidden", round)}
-        style={{ height: DOT_PX, backgroundColor: TRACK_COLOR }}
+        key={alert ? `alert-${alertPulse}` : 'idle'}
+        className={cn('relative block overflow-hidden', round)}
+        style={{
+          height: DOT_PX,
+          backgroundColor: alert ? ALERT_COLOR : TRACK_COLOR,
+        }}
         initial={false}
-        animate={{ width: current ? PILL_PX : DOT_PX }}
+        animate={{
+          width: current ? PILL_PX : DOT_PX,
+          x: alert && !reduced ? [0, 6, -6, 4, 0] : 0,
+        }}
         // Width is a layout value, which MotionConfig's reduced motion does
         // not cover, so the dot gates it itself: instant under reduced motion.
         transition={reduced ? { duration: 0 } : spring.moderate}
@@ -243,7 +258,7 @@ function Dot({
         {current && (
           <motion.span
             aria-hidden
-            className={cn("absolute inset-0", round)}
+            className={cn('absolute inset-0', round)}
             style={{ backgroundColor: FILL_COLOR, transform: fillTransform }}
           />
         )}

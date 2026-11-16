@@ -3,9 +3,7 @@
   "name": "badge",
   "title": "Badge",
   "description": "Compact label with solid, dot, and ghost variants, Tailwind color palette, and three sizes.",
-  "dependencies": [
-    "class-variance-authority"
-  ],
+  "dependencies": ["class-variance-authority"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/shape-context.json",
@@ -21,8 +19,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/badge. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#badge.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

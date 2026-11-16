@@ -1,1 +1,1 @@
-export * from "@/registry/default/context-menu";
+export * from '#registry/default/context-menu';

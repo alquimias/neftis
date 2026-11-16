@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createContext,
@@ -20,32 +20,30 @@ import {
   type ReactNode,
   type RefObject,
   type SetStateAction,
-} from "react";
-import { animate, motion, useReducedMotion } from "motion/react";
-import { cn } from "@/lib/utils";
-import { KeyCaps } from "@/lib/key-cap";
-import { spring } from "@/lib/springs";
-import { useIcons, type IconComponent } from "@/lib/icon-context";
-import { usePopupShape } from "@/lib/shape-context";
-import { SizeProvider, useSize, typeClass, fieldTouchClass, type SizeVariant } from "@/lib/size-context";
-import { isDisabledRow } from "@/lib/popup";
+} from 'react';
+import { animate, motion, useReducedMotion } from 'motion/react';
+import { cn } from '#lib/utils';
+import { KeyCaps } from '#lib/key-cap';
+import { spring } from '#lib/springs';
+import { useIcons, type IconComponent } from '#lib/icon-context';
+import { usePopupShape } from '#lib/shape-context';
+import {
+  SizeProvider,
+  useSize,
+  typeClass,
+  fieldTouchClass,
+  type SizeVariant,
+} from '#lib/size-context';
+import { isDisabledRow } from '#lib/popup';
 import {
   useFluidHover,
   useRegisterFluidHoverItem,
   type UseFluidHoverReturn,
-} from "@/hooks/use-fluid-hover";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  FluidHoverHighlight,
-  type FluidHoverSource,
-} from "@/components/ui/fluid-hover-highlight";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Tabs, TabsItem } from "@/components/ui/tabs";
+} from '#hooks/use-fluid-hover';
+import { ScrollArea } from '#components/ui/scroll-area';
+import { FluidHoverHighlight, type FluidHoverSource } from '#components/ui/fluid-hover-highlight';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '#components/ui/dialog';
+import { Tabs, TabsItem } from '#components/ui/tabs';
 
 // ---------------------------------------------------------------------------
 // Command menu
@@ -125,48 +123,48 @@ export interface ParsedShortcut {
   key: string;
 }
 
-const MODIFIER_TOKENS: Record<string, keyof Omit<ParsedShortcut, "key">> = {
-  mod: "mod",
-  cmd: "meta",
-  command: "meta",
-  meta: "meta",
-  win: "meta",
-  super: "meta",
-  ctrl: "ctrl",
-  control: "ctrl",
-  alt: "alt",
-  option: "alt",
-  opt: "alt",
-  shift: "shift",
+const MODIFIER_TOKENS: Record<string, keyof Omit<ParsedShortcut, 'key'>> = {
+  mod: 'mod',
+  cmd: 'meta',
+  command: 'meta',
+  meta: 'meta',
+  win: 'meta',
+  super: 'meta',
+  ctrl: 'ctrl',
+  control: 'ctrl',
+  alt: 'alt',
+  option: 'alt',
+  opt: 'alt',
+  shift: 'shift',
 };
 
 /** Named keys, as `KeyboardEvent.key` spells them (lowercased). */
 const KEY_ALIASES: Record<string, string> = {
-  esc: "escape",
-  return: "enter",
-  space: " ",
-  spacebar: " ",
-  up: "arrowup",
-  down: "arrowdown",
-  left: "arrowleft",
-  right: "arrowright",
-  del: "delete",
-  plus: "+",
+  esc: 'escape',
+  return: 'enter',
+  space: ' ',
+  spacebar: ' ',
+  up: 'arrowup',
+  down: 'arrowdown',
+  left: 'arrowleft',
+  right: 'arrowright',
+  del: 'delete',
+  plus: '+',
 };
 
 /** Splits a combo on "+", keeping a trailing "+" as the key itself. */
 function shortcutTokens(shortcut: string): string[] {
   const trimmed = shortcut.trim();
-  if (trimmed === "") return [];
-  const tokens = trimmed.split("+").map((t) => t.trim());
+  if (trimmed === '') return [];
+  const tokens = trimmed.split('+').map((t) => t.trim());
   // "mod++" splits into ["mod", "", ""]: the empties were a literal "+".
   const out: string[] = [];
   for (let i = 0; i < tokens.length; i++) {
-    if (tokens[i] === "" && i > 0) {
-      if (out[out.length - 1] !== "+") out.push("+");
+    if (tokens[i] === '' && i > 0) {
+      if (out[out.length - 1] !== '+') out.push('+');
       continue;
     }
-    if (tokens[i] !== "") out.push(tokens[i]);
+    if (tokens[i] !== '') out.push(tokens[i]);
   }
   return out;
 }
@@ -178,7 +176,7 @@ export function parseShortcut(shortcut: string): ParsedShortcut {
     ctrl: false,
     alt: false,
     shift: false,
-    key: "",
+    key: '',
   };
   for (const token of shortcutTokens(shortcut)) {
     const lower = token.toLowerCase();
@@ -196,10 +194,10 @@ export function parseShortcut(shortcut: string): ParsedShortcut {
  *  letter is taken at face value, so on Dvorak or AZERTY the key that types
  *  "t" is never read as the physical K. */
 export function matchesShortcut(
-  e: Pick<KeyboardEvent, "key" | "code" | "metaKey" | "ctrlKey" | "altKey" | "shiftKey">,
-  parsed: ParsedShortcut
+  e: Pick<KeyboardEvent, 'key' | 'code' | 'metaKey' | 'ctrlKey' | 'altKey' | 'shiftKey'>,
+  parsed: ParsedShortcut,
 ): boolean {
-  if (parsed.key === "") return false;
+  if (parsed.key === '') return false;
   const key = e.key.toLowerCase();
   const byCode =
     parsed.key.length === 1 &&
@@ -226,21 +224,21 @@ export function hasModifier(parsed: ParsedShortcut): boolean {
 }
 
 const CAP_LABELS: Record<string, { mac: string; other: string }> = {
-  mod: { mac: "⌘", other: "Ctrl" },
-  meta: { mac: "⌘", other: "Win" },
-  ctrl: { mac: "⌃", other: "Ctrl" },
-  alt: { mac: "⌥", other: "Alt" },
-  shift: { mac: "⇧", other: "Shift" },
-  enter: { mac: "↵", other: "Enter" },
-  escape: { mac: "Esc", other: "Esc" },
-  backspace: { mac: "⌫", other: "Backspace" },
-  delete: { mac: "⌦", other: "Del" },
-  tab: { mac: "⇥", other: "Tab" },
-  " ": { mac: "Space", other: "Space" },
-  arrowup: { mac: "↑", other: "↑" },
-  arrowdown: { mac: "↓", other: "↓" },
-  arrowleft: { mac: "←", other: "←" },
-  arrowright: { mac: "→", other: "→" },
+  mod: { mac: '⌘', other: 'Ctrl' },
+  meta: { mac: '⌘', other: 'Win' },
+  ctrl: { mac: '⌃', other: 'Ctrl' },
+  alt: { mac: '⌥', other: 'Alt' },
+  shift: { mac: '⇧', other: 'Shift' },
+  enter: { mac: '↵', other: 'Enter' },
+  escape: { mac: 'Esc', other: 'Esc' },
+  backspace: { mac: '⌫', other: 'Backspace' },
+  delete: { mac: '⌦', other: 'Del' },
+  tab: { mac: '⇥', other: 'Tab' },
+  ' ': { mac: 'Space', other: 'Space' },
+  arrowup: { mac: '↑', other: '↑' },
+  arrowdown: { mac: '↓', other: '↓' },
+  arrowleft: { mac: '←', other: '←' },
+  arrowright: { mac: '→', other: '→' },
 };
 
 const PREFORMATTED = /^[⌘⌃⌥⇧↵⌫⌦⇥↑↓←→]+[A-Za-z0-9]?$/;
@@ -256,7 +254,7 @@ export function formatShortcut(shortcut: string, mac: boolean): string[] {
     }
     const lower = token.toLowerCase();
     const modifier = MODIFIER_TOKENS[lower];
-    const name = modifier ?? (KEY_ALIASES[lower] ?? lower);
+    const name = modifier ?? KEY_ALIASES[lower] ?? lower;
     const cap = CAP_LABELS[name];
     if (cap) caps.push(mac ? cap.mac : cap.other);
     else if (name.length === 1) caps.push(name.toUpperCase());
@@ -267,9 +265,9 @@ export function formatShortcut(shortcut: string, mac: boolean): string[] {
 
 /** Whether the page runs on a Mac — the platform that draws ⌘ and ⌥. */
 export function isMacPlatform(): boolean {
-  if (typeof navigator === "undefined") return false;
+  if (typeof navigator === 'undefined') return false;
   const nav = navigator as Navigator & { userAgentData?: { platform?: string } };
-  const platform = nav.userAgentData?.platform ?? nav.platform ?? "";
+  const platform = nav.userAgentData?.platform ?? nav.platform ?? '';
   return /mac|iphone|ipad|ipod/i.test(platform);
 }
 
@@ -298,15 +296,15 @@ export function useIsMac(): boolean {
 }
 
 // Layout effects have no server counterpart; on the server they are no-ops.
-const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 function isEditable(target: EventTarget | null): boolean {
   const el = target as HTMLElement | null;
   if (!el) return false;
   return (
-    el.tagName === "INPUT" ||
-    el.tagName === "TEXTAREA" ||
-    el.tagName === "SELECT" ||
+    el.tagName === 'INPUT' ||
+    el.tagName === 'TEXTAREA' ||
+    el.tagName === 'SELECT' ||
     el.isContentEditable
   );
 }
@@ -318,14 +316,11 @@ function isEditable(target: EventTarget | null): boolean {
 /** Every word of the query appears somewhere in the label, description, or
  *  keywords, case-insensitively. Order is kept: rows never re-sort under
  *  the cursor as the query grows. */
-export function defaultCommandMenuFilter(
-  item: CommandMenuItemData,
-  query: string
-): boolean {
+export function defaultCommandMenuFilter(item: CommandMenuItemData, query: string): boolean {
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (words.length === 0) return true;
-  const haystack = [item.label, item.description ?? "", ...(item.keywords ?? [])]
-    .join(" ")
+  const haystack = [item.label, item.description ?? '', ...(item.keywords ?? [])]
+    .join(' ')
     .toLowerCase();
   return words.every((word) => haystack.includes(word));
 }
@@ -336,11 +331,11 @@ export function sectionRows(
   visible: readonly CommandMenuItemData[],
   suggestions: readonly string[] | undefined,
   suggestionsLabel: string,
-  query: string
+  query: string,
 ): CommandMenuSection[] {
   const sections: CommandMenuSection[] = [];
   const byHeading = new Map<string | null, CommandMenuSection>();
-  const suggested = new Set(query === "" ? suggestions ?? [] : []);
+  const suggested = new Set(query === '' ? (suggestions ?? []) : []);
   let index = 0;
   const push = (heading: string | null, id: string, item: CommandMenuItemData) => {
     let section = byHeading.get(heading);
@@ -357,12 +352,12 @@ export function sectionRows(
     const pool = new Map(visible.map((item) => [item.value, item]));
     for (const value of suggestions ?? []) {
       const item = pool.get(value);
-      if (item) push(suggestionsLabel, "suggestions", item);
+      if (item) push(suggestionsLabel, 'suggestions', item);
     }
   }
   for (const item of visible) {
     if (suggested.has(item.value)) continue;
-    push(item.group ?? null, item.group ? `group:${item.group}` : "ungrouped", item);
+    push(item.group ?? null, item.group ? `group:${item.group}` : 'ungrouped', item);
   }
   for (const section of sections) {
     section.start = index;
@@ -396,13 +391,13 @@ interface CommandMenuContextValue {
   /** The fluid hover hook's stable parts. The changing parts (the index,
    *  the rects) travel through `highlight` and CommandMenuFillContext so
    *  this value holds still while the pointer moves. */
-  registerItem: UseFluidHoverReturn["registerItem"];
+  registerItem: UseFluidHoverReturn['registerItem'];
   setActiveIndex: Dispatch<SetStateAction<number | null>>;
-  listHandlers: UseFluidHoverReturn["handlers"];
+  listHandlers: UseFluidHoverReturn['handlers'];
   highlight: HighlightStore;
   select: (item: CommandMenuItemData) => void;
   /** Moves the highlight from the keyboard: a step (wrapping), or an end. */
-  move: (to: 1 | -1 | "first" | "last") => void;
+  move: (to: 1 | -1 | 'first' | 'last') => void;
   /** The mounted CommandMenuTabs, so ← and → in the field switch tabs. */
   tabsRef: RefObject<CommandMenuTabsHandle | null>;
   tabsMounted: boolean;
@@ -423,8 +418,7 @@ const CommandMenuContext = createContext<CommandMenuContextValue | null>(null);
 
 function useCommandMenu(): CommandMenuContextValue {
   const ctx = useContext(CommandMenuContext);
-  if (!ctx)
-    throw new Error("CommandMenu compound components must be inside <CommandMenu>");
+  if (!ctx) throw new Error('CommandMenu compound components must be inside <CommandMenu>');
   return ctx;
 }
 
@@ -442,8 +436,7 @@ const CommandMenuDialogContext = createContext<CommandMenuDialogContextValue | n
 // CommandMenu (root)
 // ---------------------------------------------------------------------------
 
-export interface CommandMenuProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "onSelect"> {
+export interface CommandMenuProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   /** The actions. Keep the array stable (state, a module constant, or a
    *  memo): the highlight resets to the first row when it changes. */
   items: readonly CommandMenuItemData[];
@@ -477,17 +470,17 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
       onSelect,
       filter = defaultCommandMenuFilter,
       query: queryProp,
-      defaultQuery = "",
+      defaultQuery = '',
       onQueryChange,
       suggestions,
-      suggestionsLabel = "Suggestions",
+      suggestionsLabel = 'Suggestions',
       closeOnSelect = true,
       size,
       className,
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     const listId = useId();
     const listRef = useRef<HTMLDivElement | null>(null);
@@ -503,7 +496,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
         if (queryProp === undefined) setInternalQuery(next);
         onQueryChange?.(next);
       },
-      [queryProp, onQueryChange]
+      [queryProp, onQueryChange],
     );
 
     const itemsByValue = useMemo(() => {
@@ -513,7 +506,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
     }, [items]);
 
     const sections = useMemo(() => {
-      const visible = query === "" ? items : items.filter((item) => filter(item, query));
+      const visible = query === '' ? items : items.filter((item) => filter(item, query));
       return sectionRows(visible, suggestions, suggestionsLabel, query);
     }, [items, query, filter, suggestions, suggestionsLabel]);
     const rows = useMemo(() => sections.flatMap((s) => s.items), [sections]);
@@ -521,7 +514,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
     // re-runs the memos every render, and only a real change may reset the
     // highlight.
     // Joined on a NUL so values with spaces cannot collide.
-    const rowsKey = rows.map((row) => row.value).join("\u0000");
+    const rowsKey = rows.map((row) => row.value).join('\u0000');
 
     // The highlight lives in the fluid hover hook. It is created here, at the
     // root, so the input can drive it; the list attaches `listRef` as its
@@ -532,7 +525,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
     const { onMouseEnter, onMouseMove, onMouseLeave, onClick } = hover.handlers;
     const listHandlers = useMemo(
       () => ({ onMouseEnter, onMouseMove, onMouseLeave, onClick }),
-      [onMouseEnter, onMouseMove, onMouseLeave, onClick]
+      [onMouseEnter, onMouseMove, onMouseLeave, onClick],
     );
 
     // The highlight, published as a store right after each commit: rows and
@@ -550,7 +543,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
           };
         },
       }),
-      []
+      [],
     );
     useIsoLayoutEffect(() => {
       highlightRef.current = activeIndex;
@@ -558,7 +551,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
     }, [activeIndex]);
     const fill = useMemo<FluidHoverSource>(
       () => ({ activeIndex, itemRects, isMeasured, session }),
-      [activeIndex, itemRects, isMeasured, session]
+      [activeIndex, itemRects, isMeasured, session],
     );
 
     // Scrolling is the root's, done the moment a move is decided rather
@@ -576,13 +569,13 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
     const reduceMotion = useReducedMotion() ?? false;
     const scrollAnimationRef = useRef<{ stop: () => void } | null>(null);
     const scrollToRow = useCallback(
-      (index: number, mode: "center" | "top") => {
+      (index: number, mode: 'center' | 'top') => {
         const list = listRef.current;
         const viewport = list?.closest<HTMLElement>('[data-slot="scroll-area-viewport"]');
         if (!list || !viewport) return;
         scrollAnimationRef.current?.stop();
         scrollAnimationRef.current = null;
-        if (mode === "top" || index === 0) {
+        if (mode === 'top' || index === 0) {
           viewport.scrollTop = 0;
           return;
         }
@@ -593,8 +586,8 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
           0,
           Math.min(
             rowTop + row.offsetHeight / 2 - viewport.clientHeight / 2,
-            viewport.scrollHeight - viewport.clientHeight
-          )
+            viewport.scrollHeight - viewport.clientHeight,
+          ),
         );
         if (reduceMotion) {
           viewport.scrollTop = target;
@@ -607,7 +600,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
           },
         });
       },
-      [reduceMotion]
+      [reduceMotion],
     );
     useEffect(() => () => scrollAnimationRef.current?.stop(), []);
 
@@ -620,19 +613,19 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
     useEffect(() => {
       const first = rowsRef.current.findIndex((row) => !row.disabled);
       setActiveIndex(first === -1 ? null : first);
-      scrollToRow(0, "top");
+      scrollToRow(0, 'top');
     }, [rowsKey, setActiveIndex, scrollToRow]);
 
     const move = useCallback(
-      (to: 1 | -1 | "first" | "last") => {
+      (to: 1 | -1 | 'first' | 'last') => {
         const enabled: number[] = [];
         rowsRef.current.forEach((row, i) => {
           if (!row.disabled) enabled.push(i);
         });
         if (enabled.length === 0) return;
         let next: number;
-        if (to === "first") next = enabled[0];
-        else if (to === "last") next = enabled[enabled.length - 1];
+        if (to === 'first') next = enabled[0];
+        else if (to === 'last') next = enabled[enabled.length - 1];
         else {
           const current = highlightRef.current;
           const pos = current === null ? -1 : enabled.indexOf(current);
@@ -642,9 +635,9 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
           else next = enabled[(pos + to + enabled.length) % enabled.length];
         }
         setActiveIndex(next);
-        scrollToRow(next, "center");
+        scrollToRow(next, 'center');
       },
-      [setActiveIndex, scrollToRow]
+      [setActiveIndex, scrollToRow],
     );
 
     const onSelectRef = useRef(onSelect);
@@ -658,7 +651,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
         onSelectRef.current?.(item);
         if (closeOnSelect) dialog?.close();
       },
-      [closeOnSelect, dialog]
+      [closeOnSelect, dialog],
     );
 
     const ctx = useMemo<CommandMenuContextValue>(
@@ -695,7 +688,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
         select,
         move,
         tabsMounted,
-      ]
+      ],
     );
 
     // The panel follows its rows: the column inside is measured (offsetHeight,
@@ -708,7 +701,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
     const [height, setHeight] = useState<number | null>(null);
     useEffect(() => {
       const el = columnRef.current;
-      if (!el || typeof ResizeObserver === "undefined") return;
+      if (!el || typeof ResizeObserver === 'undefined') return;
       const update = () => setHeight(el.offsetHeight);
       update();
       const ro = new ResizeObserver(update);
@@ -722,7 +715,7 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
           <div
             ref={ref}
             data-slot="command-menu"
-            className={cn("relative w-full max-h-[inherit] overflow-hidden", className)}
+            className={cn('relative w-full max-h-[inherit] overflow-hidden', className)}
             {...props}
           >
             <motion.div
@@ -741,36 +734,32 @@ const CommandMenu = forwardRef<HTMLDivElement, CommandMenuProps>(
     );
 
     return size ? <SizeProvider size={size}>{root}</SizeProvider> : root;
-  }
+  },
 );
 
-CommandMenu.displayName = "CommandMenu";
+CommandMenu.displayName = 'CommandMenu';
 
 // ---------------------------------------------------------------------------
 // CommandMenuInput — the search field. Keeps focus; arrows and Enter act on
 // the list through aria-activedescendant.
 // ---------------------------------------------------------------------------
 
-export interface CommandMenuInputProps
-  extends Omit<
-    InputHTMLAttributes<HTMLInputElement>,
-    "value" | "defaultValue" | "onChange" | "size"
-  > {
+export interface CommandMenuInputProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'value' | 'defaultValue' | 'onChange' | 'size'
+> {
   placeholder?: string;
   /** Leading icon. @default the search icon */
   icon?: IconComponent | null;
 }
 
 const CommandMenuInput = forwardRef<HTMLInputElement, CommandMenuInputProps>(
-  (
-    { className, placeholder = "Type a command or search…", icon, onKeyDown, ...props },
-    ref
-  ) => {
+  ({ className, placeholder = 'Type a command or search…', icon, onKeyDown, ...props }, ref) => {
     const icons = useIcons();
     const SearchIcon = icons.search;
     const Icon = icon === undefined ? SearchIcon : icon;
     const sizeClasses = useSize();
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
     const { query, setQuery, rows, listId, inputRef, highlight, select, move, tabsRef } =
       useCommandMenu();
     const activeIndex = useSyncExternalStore(highlight.subscribe, highlight.get, () => null);
@@ -784,59 +773,52 @@ const CommandMenuInput = forwardRef<HTMLInputElement, CommandMenuInputProps>(
       // keyCode 229 after compositionend.)
       if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return;
       switch (e.key) {
-        case "ArrowLeft":
-        case "ArrowRight": {
+        case 'ArrowLeft':
+        case 'ArrowRight': {
           // With tabs under the field, ← and → switch tabs (wrapping) instead
           // of moving the caret. Modified presses keep their editing meaning —
           // Shift+Arrow in particular must still extend the selection.
           const tabs = tabsRef.current;
-          if (
-            !tabs ||
-            tabs.tabs.length === 0 ||
-            e.shiftKey ||
-            e.altKey ||
-            e.metaKey ||
-            e.ctrlKey
-          )
+          if (!tabs || tabs.tabs.length === 0 || e.shiftKey || e.altKey || e.metaKey || e.ctrlKey)
             return;
           e.preventDefault();
           const count = tabs.tabs.length;
           const current = tabs.tabs.findIndex((tab) => tab.value === tabs.value);
-          const step = e.key === "ArrowRight" ? 1 : -1;
+          const step = e.key === 'ArrowRight' ? 1 : -1;
           const next = ((current === -1 ? 0 : current) + step + count) % count;
           tabs.onValueChange(tabs.tabs[next].value);
           return;
         }
-        case "ArrowDown":
+        case 'ArrowDown':
           e.preventDefault();
           move(1);
           return;
-        case "ArrowUp":
+        case 'ArrowUp':
           e.preventDefault();
           move(-1);
           return;
-        case "Home":
-          if (query !== "") return; // the caret's own Home
+        case 'Home':
+          if (query !== '') return; // the caret's own Home
           e.preventDefault();
-          move("first");
+          move('first');
           return;
-        case "End":
-          if (query !== "") return;
+        case 'End':
+          if (query !== '') return;
           e.preventDefault();
-          move("last");
+          move('last');
           return;
-        case "Enter": {
+        case 'Enter': {
           e.preventDefault();
           const row = activeIndex === null ? undefined : rows[activeIndex];
           if (row) select(row);
           return;
         }
-        case "Escape":
+        case 'Escape':
           // In a dialog the shell closes on Escape. Inline, Escape clears
           // what was typed.
-          if (dialog || query === "") return;
+          if (dialog || query === '') return;
           e.preventDefault();
-          setQuery("");
+          setQuery('');
           return;
         default:
           return;
@@ -847,8 +829,8 @@ const CommandMenuInput = forwardRef<HTMLInputElement, CommandMenuInputProps>(
       <div
         data-slot="command-menu-input"
         className={cn(
-          "group/command-input flex shrink-0 items-center",
-          compact ? "h-10 gap-2 px-3" : "h-12 gap-2.5 px-4"
+          'group/command-input flex shrink-0 items-center',
+          compact ? 'h-10 gap-2 px-3' : 'h-12 gap-2.5 px-4',
         )}
       >
         {Icon && (
@@ -861,7 +843,7 @@ const CommandMenuInput = forwardRef<HTMLInputElement, CommandMenuInputProps>(
         <input
           ref={(node) => {
             inputRef.current = node;
-            if (typeof ref === "function") ref(node);
+            if (typeof ref === 'function') ref(node);
             else if (ref) ref.current = node;
           }}
           type="text"
@@ -880,21 +862,23 @@ const CommandMenuInput = forwardRef<HTMLInputElement, CommandMenuInputProps>(
           // rounded-none: the base :focus-visible rule hands focused elements
           // the shape radius, and a text input clips its caret to its corners.
           className={cn(
-            "min-w-0 flex-1 rounded-none bg-transparent text-foreground placeholder:text-muted-foreground outline-none font-[inherit]",
+            'min-w-0 flex-1 rounded-none bg-transparent text-foreground placeholder:text-muted-foreground outline-none font-[inherit]',
             // One notch above the rows' body size: the field is the palette's
             // title line. The line box keeps the caret in proportion.
-            compact ? "text-[length:var(--fs-subtitle-compact,13px)] leading-5" : "text-[length:var(--fs-subtitle,14px)] leading-6",
+            compact
+              ? 'text-[length:var(--fs-subtitle-compact,13px)] leading-5'
+              : 'text-[length:var(--fs-subtitle,14px)] leading-6',
             fieldTouchClass,
-            className
+            className,
           )}
           {...props}
         />
       </div>
     );
-  }
+  },
 );
 
-CommandMenuInput.displayName = "CommandMenuInput";
+CommandMenuInput.displayName = 'CommandMenuInput';
 
 // ---------------------------------------------------------------------------
 // CommandMenuTabs — tabs under the field. The tabs are state you own:
@@ -907,7 +891,7 @@ export interface CommandMenuTab {
   icon?: IconComponent;
 }
 
-export interface CommandMenuTabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "onSelect"> {
+export interface CommandMenuTabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   tabs: readonly CommandMenuTab[];
   value: string;
   onValueChange: (value: string) => void;
@@ -923,11 +907,11 @@ const TabsRowContext = createContext(false);
 const CommandMenuTabs = forwardRef<HTMLDivElement, CommandMenuTabsProps>(
   ({ tabs, value, onValueChange, className, children, ...props }, ref) => {
     const sizeClasses = useSize();
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
     const { tabsRef, setTabsMounted } = useCommandMenu();
     const selectedIndex = Math.max(
       0,
-      tabs.findIndex((tab) => tab.value === value)
+      tabs.findIndex((tab) => tab.value === value),
     );
 
     // The field reads the latest tabs and value from the ref on each ← / →,
@@ -951,9 +935,9 @@ const CommandMenuTabs = forwardRef<HTMLDivElement, CommandMenuTabsProps>(
         ref={ref}
         data-slot="command-menu-tabs"
         className={cn(
-          "flex shrink-0 items-center",
-          compact ? "gap-1 px-2 pb-1.5" : "gap-2 px-2.5 pb-2",
-          className
+          'flex shrink-0 items-center',
+          compact ? 'gap-1 px-2 pb-1.5' : 'gap-2 px-2.5 pb-2',
+          className,
         )}
         {...props}
       >
@@ -987,10 +971,10 @@ const CommandMenuTabs = forwardRef<HTMLDivElement, CommandMenuTabsProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
-CommandMenuTabs.displayName = "CommandMenuTabs";
+CommandMenuTabs.displayName = 'CommandMenuTabs';
 
 // ---------------------------------------------------------------------------
 // CommandMenuFilters — a borderless bar under the field for compact controls
@@ -1003,7 +987,7 @@ export type CommandMenuFiltersProps = HTMLAttributes<HTMLDivElement>;
 const CommandMenuFilters = forwardRef<HTMLDivElement, CommandMenuFiltersProps>(
   ({ className, children, ...props }, ref) => {
     const sizeClasses = useSize();
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
     // Inside a tab row the bar hugs its controls; on its own it is a row of
     // the header, with the header's inset and wrapping room.
     const inTabsRow = useContext(TabsRowContext);
@@ -1012,23 +996,23 @@ const CommandMenuFilters = forwardRef<HTMLDivElement, CommandMenuFiltersProps>(
         ref={ref}
         data-slot="command-menu-filters"
         className={cn(
-          "flex shrink-0 items-center gap-1",
+          'flex shrink-0 items-center gap-1',
           // Controls hug their content: a Select trigger drops the field
           // width it keeps in forms.
-          "[&_[role=combobox]]:w-auto [&_[role=combobox]]:min-w-0",
-          !inTabsRow && "flex-wrap",
-          !inTabsRow && (compact ? "px-2 pb-1.5" : "px-2.5 pb-2"),
-          className
+          '[&_[role=combobox]]:w-auto [&_[role=combobox]]:min-w-0',
+          !inTabsRow && 'flex-wrap',
+          !inTabsRow && (compact ? 'px-2 pb-1.5' : 'px-2.5 pb-2'),
+          className,
         )}
         {...props}
       >
         <SizeProvider size="compact">{children}</SizeProvider>
       </div>
     );
-  }
+  },
 );
 
-CommandMenuFilters.displayName = "CommandMenuFilters";
+CommandMenuFilters.displayName = 'CommandMenuFilters';
 
 // ---------------------------------------------------------------------------
 // CommandMenuList — the scrolling rows under a divider, grouped by heading,
@@ -1049,7 +1033,7 @@ const CommandMenuList = forwardRef<HTMLDivElement, CommandMenuListProps>(
     const { sections, rows, listId, listRef, setActiveIndex, listHandlers } = useCommandMenu();
     const fill = useContext(CommandMenuFillContext);
     const sizeClasses = useSize();
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
     const empty = rows.length === 0;
 
     // The pointer leaving the list keeps the highlight where it was: Enter
@@ -1072,10 +1056,10 @@ const CommandMenuList = forwardRef<HTMLDivElement, CommandMenuListProps>(
       const node = listRef.current;
       if (!node) return;
       if (empty) {
-        node.style.minHeight = shownHeightRef.current ? `${shownHeightRef.current}px` : "";
+        node.style.minHeight = shownHeightRef.current ? `${shownHeightRef.current}px` : '';
         return;
       }
-      node.style.minHeight = "";
+      node.style.minHeight = '';
       const viewport = node.closest<HTMLElement>('[data-slot="scroll-area-viewport"]');
       shownHeightRef.current = Math.min(node.offsetHeight, viewport?.clientHeight ?? Infinity);
     }, [empty, rows.length, listRef]);
@@ -1100,7 +1084,7 @@ const CommandMenuList = forwardRef<HTMLDivElement, CommandMenuListProps>(
         <div
           ref={(node) => {
             listRef.current = node;
-            if (typeof ref === "function") ref(node);
+            if (typeof ref === 'function') ref(node);
             else if (ref) ref.current = node;
           }}
           id={listId}
@@ -1119,8 +1103,8 @@ const CommandMenuList = forwardRef<HTMLDivElement, CommandMenuListProps>(
             // The list is the fill's offsetParent, so rows and fill scroll
             // together inside the viewport. Padding collapses when empty, and
             // the message centers in the height the rows left.
-            "relative flex flex-col gap-1 p-1 outline-none data-[empty]:justify-center data-[empty]:p-0",
-            className
+            'relative flex flex-col gap-1 p-1 outline-none data-[empty]:justify-center data-[empty]:p-0',
+            className,
           )}
           {...props}
         >
@@ -1143,9 +1127,9 @@ const CommandMenuList = forwardRef<HTMLDivElement, CommandMenuListProps>(
                     id={headingId}
                     role="presentation"
                     className={cn(
-                      "flex shrink-0 items-center text-muted-foreground",
-                      compact ? "h-6 px-1.5" : "h-7 px-2",
-                      typeClass("caption", compact ? "compact" : "default")
+                      'flex shrink-0 items-center text-muted-foreground',
+                      compact ? 'h-6 px-1.5' : 'h-7 px-2',
+                      typeClass('caption', compact ? 'compact' : 'default'),
                     )}
                   >
                     {section.heading}
@@ -1155,7 +1139,11 @@ const CommandMenuList = forwardRef<HTMLDivElement, CommandMenuListProps>(
                   const index = section.start + i;
                   return (
                     <CommandMenuIndexContext.Provider key={item.value} value={index}>
-                      {renderItem ? renderItem(item, index) : <CommandMenuItem value={item.value} />}
+                      {renderItem ? (
+                        renderItem(item, index)
+                      ) : (
+                        <CommandMenuItem value={item.value} />
+                      )}
                     </CommandMenuIndexContext.Provider>
                   );
                 })}
@@ -1165,10 +1153,10 @@ const CommandMenuList = forwardRef<HTMLDivElement, CommandMenuListProps>(
         </div>
       </ScrollArea>
     );
-  }
+  },
 );
 
-CommandMenuList.displayName = "CommandMenuList";
+CommandMenuList.displayName = 'CommandMenuList';
 
 // ---------------------------------------------------------------------------
 // CommandMenuEmpty — shown in place of the rows when nothing matches.
@@ -1187,18 +1175,14 @@ const CommandMenuEmpty = forwardRef<HTMLDivElement, CommandMenuEmptyProps>(
         role="status"
         aria-live="polite"
         data-slot="command-menu-empty"
-        className={cn(
-          "px-3 py-6 text-center text-muted-foreground",
-          sizeClasses.text,
-          className
-        )}
+        className={cn('px-3 py-6 text-center text-muted-foreground', sizeClasses.text, className)}
         {...props}
       />
     );
-  }
+  },
 );
 
-CommandMenuEmpty.displayName = "CommandMenuEmpty";
+CommandMenuEmpty.displayName = 'CommandMenuEmpty';
 
 // ---------------------------------------------------------------------------
 // CommandMenuShortcut — the caps at a row's trailing edge.
@@ -1213,30 +1197,27 @@ export interface CommandMenuShortcutProps extends HTMLAttributes<HTMLElement> {
 const CommandMenuShortcut = forwardRef<HTMLElement, CommandMenuShortcutProps>(
   ({ keys, className, ...props }, ref) => {
     const mac = useIsMac();
-    const caps = (typeof keys === "string" ? [keys] : keys).flatMap((k) =>
-      formatShortcut(k, mac)
-    );
+    const caps = (typeof keys === 'string' ? [keys] : keys).flatMap((k) => formatShortcut(k, mac));
     return (
       <KeyCaps
         ref={ref}
         keys={caps}
         data-slot="command-menu-shortcut"
-        className={cn("ml-auto align-middle", className)}
+        className={cn('ml-auto align-middle', className)}
         {...props}
       />
     );
-  }
+  },
 );
 
-CommandMenuShortcut.displayName = "CommandMenuShortcut";
+CommandMenuShortcut.displayName = 'CommandMenuShortcut';
 
 // ---------------------------------------------------------------------------
 // CommandMenuItem — one row. Reads its data from the root by `value`; any
 // prop set here overrides it.
 // ---------------------------------------------------------------------------
 
-export interface CommandMenuItemProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "onSelect"> {
+export interface CommandMenuItemProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onSelect'> {
   value: string;
   label?: string;
   description?: string;
@@ -1248,122 +1229,122 @@ export interface CommandMenuItemProps
 
 // Memoized: the list re-renders as the fill travels, and a row whose props
 // did not change (the default row has only `value`) must not follow it.
-const CommandMenuItem = memo(forwardRef<HTMLDivElement, CommandMenuItemProps>(
-  (
-    {
-      value,
-      label,
-      description,
-      icon,
-      shortcut,
-      disabled,
-      onSelect,
-      className,
-      onClick,
-      children,
-      ...props
-    },
-    ref
-  ) => {
-    const listShape = usePopupShape();
-    const { itemsByValue, listId, registerItem, highlight, select } = useCommandMenu();
-    const index = useContext(CommandMenuIndexContext);
-    const internalRef = useRef<HTMLDivElement | null>(null);
-    const sizeClasses = useSize();
-    // One boolean per row: a highlight change re-renders the row it left
-    // and the row it reached, and no other.
-    const isActive = useSyncExternalStore(
-      highlight.subscribe,
-      () => highlight.get() === index,
-      () => false
-    );
+const CommandMenuItem = memo(
+  forwardRef<HTMLDivElement, CommandMenuItemProps>(
+    (
+      {
+        value,
+        label,
+        description,
+        icon,
+        shortcut,
+        disabled,
+        onSelect,
+        className,
+        onClick,
+        children,
+        ...props
+      },
+      ref,
+    ) => {
+      const listShape = usePopupShape();
+      const { itemsByValue, listId, registerItem, highlight, select } = useCommandMenu();
+      const index = useContext(CommandMenuIndexContext);
+      const internalRef = useRef<HTMLDivElement | null>(null);
+      const sizeClasses = useSize();
+      // One boolean per row: a highlight change re-renders the row it left
+      // and the row it reached, and no other.
+      const isActive = useSyncExternalStore(
+        highlight.subscribe,
+        () => highlight.get() === index,
+        () => false,
+      );
 
-    const data = itemsByValue.get(value);
-    const item: CommandMenuItemData = {
-      ...(data ?? { value, label: value }),
-      ...(label !== undefined && { label }),
-      ...(description !== undefined && { description }),
-      ...(icon !== undefined && { icon }),
-      ...(shortcut !== undefined && { shortcut }),
-      ...(disabled !== undefined && { disabled }),
-      ...(onSelect !== undefined && { onSelect }),
-    };
-    const Icon = item.icon;
+      const data = itemsByValue.get(value);
+      const item: CommandMenuItemData = {
+        ...(data ?? { value, label: value }),
+        ...(label !== undefined && { label }),
+        ...(description !== undefined && { description }),
+        ...(icon !== undefined && { icon }),
+        ...(shortcut !== undefined && { shortcut }),
+        ...(disabled !== undefined && { disabled }),
+        ...(onSelect !== undefined && { onSelect }),
+      };
+      const Icon = item.icon;
 
-    useRegisterFluidHoverItem(registerItem, index, internalRef);
+      useRegisterFluidHoverItem(registerItem, index, internalRef);
 
-    return (
-      <div
-        ref={(node) => {
-          internalRef.current = node;
-          if (typeof ref === "function") ref(node);
-          else if (ref) ref.current = node;
-        }}
-        id={`${listId}-${index}`}
-        role="option"
-        aria-selected={isActive}
-        aria-disabled={item.disabled || undefined}
-        data-fluid-hover-index={index}
-        data-value={value}
-        data-slot="command-menu-item"
-        onClick={(e) => {
-          onClick?.(e);
-          if (!e.defaultPrevented) select(item);
-        }}
-        className={cn(
-          // Fixed height so the text-box trim on the label doesn't shrink
-          // the row; shrink-0 because the list is a flex column.
-          "relative z-10 flex shrink-0 items-center cursor-pointer select-none outline-none",
-          sizeClasses.control,
-          sizeClasses.gap,
-          sizeClasses.itemPx,
-          sizeClasses.text,
-          listShape.item,
-          "transition-[color] duration-80",
-          item.destructive
-            ? isActive
-              ? "text-destructive"
-              : "text-destructive/80"
-            : isActive
-              ? "text-foreground"
-              : "text-muted-foreground",
-          item.disabled && "opacity-50 pointer-events-none",
-          className
-        )}
-        {...props}
-      >
-        {Icon && (
-          <Icon
-            size={sizeClasses.icon}
-            strokeWidth={isActive ? 2 : 1.5}
-            className="shrink-0 transition-[color,stroke-width] duration-80"
-          />
-        )}
-        {children ?? (
-          // py-1/-my-1 keeps truncate's overflow:hidden from clipping
-          // ascenders and descenders outside the trimmed box.
-          <span className="flex min-w-0 flex-1 items-baseline gap-2">
-            <span className="truncate [text-box:trim-both_cap_alphabetic] py-1 -my-1">
-              {item.label}
-            </span>
-            {/* The description shares the label's size, muted on both
-                states of the row. */}
-            {item.description && (
-              <span
-                className="min-w-0 truncate [text-box:trim-both_cap_alphabetic] py-1 -my-1 text-muted-foreground"
-              >
-                {item.description}
+      return (
+        <div
+          ref={(node) => {
+            internalRef.current = node;
+            if (typeof ref === 'function') ref(node);
+            else if (ref) ref.current = node;
+          }}
+          id={`${listId}-${index}`}
+          role="option"
+          aria-selected={isActive}
+          aria-disabled={item.disabled || undefined}
+          data-fluid-hover-index={index}
+          data-value={value}
+          data-slot="command-menu-item"
+          onClick={(e) => {
+            onClick?.(e);
+            if (!e.defaultPrevented) select(item);
+          }}
+          className={cn(
+            // Fixed height so the text-box trim on the label doesn't shrink
+            // the row; shrink-0 because the list is a flex column.
+            'relative z-10 flex shrink-0 items-center cursor-pointer select-none outline-none',
+            sizeClasses.control,
+            sizeClasses.gap,
+            sizeClasses.itemPx,
+            sizeClasses.text,
+            listShape.item,
+            'transition-[color] duration-80',
+            item.destructive
+              ? isActive
+                ? 'text-destructive'
+                : 'text-destructive/80'
+              : isActive
+                ? 'text-foreground'
+                : 'text-muted-foreground',
+            item.disabled && 'opacity-50 pointer-events-none',
+            className,
+          )}
+          {...props}
+        >
+          {Icon && (
+            <Icon
+              size={sizeClasses.icon}
+              strokeWidth={isActive ? 2 : 1.5}
+              className="shrink-0 transition-[color,stroke-width] duration-80"
+            />
+          )}
+          {children ?? (
+            // py-1/-my-1 keeps truncate's overflow:hidden from clipping
+            // ascenders and descenders outside the trimmed box.
+            <span className="flex min-w-0 flex-1 items-baseline gap-2">
+              <span className="truncate [text-box:trim-both_cap_alphabetic] py-1 -my-1">
+                {item.label}
               </span>
-            )}
-          </span>
-        )}
-        {item.shortcut && <CommandMenuShortcut keys={item.shortcut} />}
-      </div>
-    );
-  }
-));
+              {/* The description shares the label's size, muted on both
+                states of the row. */}
+              {item.description && (
+                <span className="min-w-0 truncate [text-box:trim-both_cap_alphabetic] py-1 -my-1 text-muted-foreground">
+                  {item.description}
+                </span>
+              )}
+            </span>
+          )}
+          {item.shortcut && <CommandMenuShortcut keys={item.shortcut} />}
+        </div>
+      );
+    },
+  ),
+);
 
-CommandMenuItem.displayName = "CommandMenuItem";
+CommandMenuItem.displayName = 'CommandMenuItem';
 
 // ---------------------------------------------------------------------------
 // CommandMenuFooter — the hint strip under the list: what the keys do here.
@@ -1387,7 +1368,7 @@ const CommandMenuFooter = forwardRef<HTMLDivElement, CommandMenuFooterProps>(
   ({ hints, className, children, ...props }, ref) => {
     const { rows, highlight, tabsMounted } = useCommandMenu();
     const dialog = useContext(CommandMenuDialogContext);
-    const compact = useSize().variant === "compact";
+    const compact = useSize().variant === 'compact';
     // The Enter hint names the highlighted row, so it reads as the thing
     // Enter does ("Open Showcase") rather than a generic "Run". It rides
     // the highlight store like a row does, and sits at the trailing edge so
@@ -1396,19 +1377,19 @@ const CommandMenuFooter = forwardRef<HTMLDivElement, CommandMenuFooterProps>(
     const row = activeIndex === null ? undefined : rows[activeIndex];
     const action = hints ? null : row ? (row.action ?? row.label) : null;
     const resolved: readonly CommandMenuHint[] = hints ?? [
-      { label: "Select", keys: ["up", "down"] },
-      ...(tabsMounted ? [{ label: "Tabs", keys: ["left", "right"] }] : []),
-      ...(dialog ? [{ label: "Close", keys: "esc" }] : []),
+      { label: 'Select', keys: ['up', 'down'] },
+      ...(tabsMounted ? [{ label: 'Tabs', keys: ['left', 'right'] }] : []),
+      ...(dialog ? [{ label: 'Close', keys: 'esc' }] : []),
     ];
     return (
       <div
         ref={ref}
         data-slot="command-menu-footer"
         className={cn(
-          "flex shrink-0 items-center overflow-hidden text-muted-foreground",
-          compact ? "h-8 gap-3 px-3" : "h-10 gap-4 px-4",
-          typeClass("caption", compact ? "compact" : "default"),
-          className
+          'flex shrink-0 items-center overflow-hidden text-muted-foreground',
+          compact ? 'h-8 gap-3 px-3' : 'h-10 gap-4 px-4',
+          typeClass('caption', compact ? 'compact' : 'default'),
+          className,
         )}
         {...props}
       >
@@ -1433,10 +1414,10 @@ const CommandMenuFooter = forwardRef<HTMLDivElement, CommandMenuFooterProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
-CommandMenuFooter.displayName = "CommandMenuFooter";
+CommandMenuFooter.displayName = 'CommandMenuFooter';
 
 // ---------------------------------------------------------------------------
 // CommandMenuDialog — the modal shell, opened by a global shortcut.
@@ -1457,15 +1438,15 @@ const mountedDialogs: {
 
 function comboKey(parsed: ParsedShortcut): string {
   return [
-    parsed.mod && "mod",
-    parsed.meta && "meta",
-    parsed.ctrl && "ctrl",
-    parsed.alt && "alt",
-    parsed.shift && "shift",
+    parsed.mod && 'mod',
+    parsed.meta && 'meta',
+    parsed.ctrl && 'ctrl',
+    parsed.alt && 'alt',
+    parsed.shift && 'shift',
     parsed.key,
   ]
     .filter(Boolean)
-    .join("+");
+    .join('+');
 }
 
 export interface CommandMenuDialogProps {
@@ -1496,10 +1477,10 @@ function CommandMenuDialog({
   open: openProp,
   defaultOpen = false,
   onOpenChange,
-  shortcut = "mod+k",
+  shortcut = 'mod+k',
   shortcutScope,
-  title = "Command menu",
-  description = "Search for a command to run.",
+  title = 'Command menu',
+  description = 'Search for a command to run.',
   modal,
   container,
   className,
@@ -1533,7 +1514,7 @@ function CommandMenuDialog({
   useEffect(() => {
     if (!shortcut) return;
     const parsed = parseShortcut(shortcut);
-    if (parsed.key === "") return;
+    if (parsed.key === '') return;
     const combo = comboKey(parsed);
     const entry = {
       combo,
@@ -1544,7 +1525,7 @@ function CommandMenuDialog({
         // Without a scope it answers everywhere, except inside a keyboard
         // scope (an embedded preview marked data-keyboard-scope) it sits
         // outside of: there the keys belong to what's in the scope.
-        const keyScope = document.activeElement?.closest("[data-keyboard-scope]");
+        const keyScope = document.activeElement?.closest('[data-keyboard-scope]');
         return !keyScope || !!(anchorRef.current && keyScope.contains(anchorRef.current));
       },
     };
@@ -1556,14 +1537,18 @@ function CommandMenuDialog({
       if (!hasModifier(parsed) && isEditable(e.target)) return;
       const peers = mountedDialogs.filter((d) => d.combo === combo);
       const answers =
-        peers.find((d) => d.isOpen()) ?? peers.slice().reverse().find((d) => d.inScope());
+        peers.find((d) => d.isOpen()) ??
+        peers
+          .slice()
+          .reverse()
+          .find((d) => d.inScope());
       if (answers !== entry) return;
       e.preventDefault();
       setOpen(!openRef.current);
     };
-    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener('keydown', onKeyDown);
     return () => {
-      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener('keydown', onKeyDown);
       const i = mountedDialogs.indexOf(entry);
       if (i !== -1) mountedDialogs.splice(i, 1);
     };
@@ -1574,33 +1559,33 @@ function CommandMenuDialog({
   return (
     <>
       <span ref={anchorRef} hidden />
-    <Dialog open={open} onOpenChange={setOpen} modal={modal}>
-      <DialogContent
-        size="lg"
-        container={container}
-        showCloseButton={false}
-        // Opens centered at its cap and keeps that top edge: the top is where
-        // a panel at the cap height, min(440px, 76dvh), sits centered, so
-        // the field stays put while the rows under it filter down. Below
-        // 580px of height the cap is 76dvh and the top lands on 12dvh.
-        position="top"
-        className={cn(
-          "top-[max(12dvh,calc(50dvh-220px))] flex max-h-[min(440px,76dvh)] flex-col overflow-hidden p-0",
-          className
-        )}
-      >
-        <DialogTitle className="sr-only">{title}</DialogTitle>
-        <DialogDescription className="sr-only">{description}</DialogDescription>
-        <CommandMenuDialogContext.Provider value={dialogCtx}>
-          {children}
-        </CommandMenuDialogContext.Provider>
-      </DialogContent>
-    </Dialog>
+      <Dialog open={open} onOpenChange={setOpen} modal={modal}>
+        <DialogContent
+          size="lg"
+          container={container}
+          showCloseButton={false}
+          // Opens centered at its cap and keeps that top edge: the top is where
+          // a panel at the cap height, min(440px, 76dvh), sits centered, so
+          // the field stays put while the rows under it filter down. Below
+          // 580px of height the cap is 76dvh and the top lands on 12dvh.
+          position="top"
+          className={cn(
+            'top-[max(12dvh,calc(50dvh-220px))] flex max-h-[min(440px,76dvh)] flex-col overflow-hidden p-0',
+            className,
+          )}
+        >
+          <DialogTitle className="sr-only">{title}</DialogTitle>
+          <DialogDescription className="sr-only">{description}</DialogDescription>
+          <CommandMenuDialogContext.Provider value={dialogCtx}>
+            {children}
+          </CommandMenuDialogContext.Provider>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
 
-CommandMenuDialog.displayName = "CommandMenuDialog";
+CommandMenuDialog.displayName = 'CommandMenuDialog';
 
 // ---------------------------------------------------------------------------
 // Exports

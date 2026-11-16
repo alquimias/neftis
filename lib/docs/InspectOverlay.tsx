@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useCallback,
@@ -8,13 +8,13 @@ import {
   useState,
   type ReactNode,
   type RefObject,
-} from "react";
-import { motion } from "motion/react";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { spring } from "@/lib/springs";
-import { useSizeVariant } from "@/lib/size-context";
-import { Tooltip } from "@/registry/radix/tooltip";
-import { ACCENT_VAR } from "@/lib/accent";
+} from 'react';
+import { motion } from 'motion/react';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { spring } from '#lib/springs';
+import { useSizeVariant } from '#lib/size-context';
+import { Tooltip } from '#registry/radix/tooltip';
+import { ACCENT_VAR } from '#lib/accent';
 
 // ---------------------------------------------------------------------------
 // Inspect overlay — a design-inspector layer for ComponentPreview. It sits
@@ -35,12 +35,12 @@ import { ACCENT_VAR } from "@/lib/accent";
 // Accent). SVG attributes can't read var(), so the rulers set it as their
 // CSS color and draw with currentColor.
 const ACCENT = ACCENT_VAR;
-const GREEN = "rgba(153, 255, 201, 0.35)"; // #99FFC9, subtle
-const GREEN_LINE = "rgba(83, 214, 145, 0.9)";
+const GREEN = 'rgba(153, 255, 201, 0.35)'; // #99FFC9, subtle
+const GREEN_LINE = 'rgba(83, 214, 145, 0.9)';
 // Near-black green for the strip labels — the mint fill reads as pale mint in
 // light mode but a medium sea-green over dark surfaces, so a dark label keeps
 // contrast in both.
-const CONTENT_FILL = "color-mix(in oklab, var(--fluid-accent, #6B97FF) 20%, transparent)";
+const CONTENT_FILL = 'color-mix(in oklab, var(--fluid-accent, #6B97FF) 20%, transparent)';
 /** The ruler band under the target, as an opacity of the accent. */
 const BAND_OPACITY = 0.16;
 
@@ -107,8 +107,7 @@ interface Box {
 function rgbToHex(rgb: string): string {
   const m = /rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/.exec(rgb);
   if (!m) return rgb;
-  const hex = (n: string) =>
-    Math.round(parseFloat(n)).toString(16).padStart(2, "0");
+  const hex = (n: string) => Math.round(parseFloat(n)).toString(16).padStart(2, '0');
   return `#${hex(m[1])}${hex(m[2])}${hex(m[3])}`;
 }
 
@@ -123,7 +122,7 @@ function boxShorthand(t: number, r: number, b: number, l: number): string {
 /** Whether the element directly wraps text (a title, label, paragraph). */
 function wrapsText(el: Element): boolean {
   return Array.from(el.childNodes).some(
-    (n) => n.nodeType === 3 && (n.textContent ?? "").trim().length > 0
+    (n) => n.nodeType === 3 && (n.textContent ?? '').trim().length > 0,
   );
 }
 
@@ -134,20 +133,33 @@ function wrapsText(el: Element): boolean {
 // inspectable: replaced content (an icon's 16px), named slots, and anything
 // that paints a border, background, or padding (a shortcut cap in a row).
 const CONTROL_SELECTOR = [
-  "button",
-  "a[href]",
-  "input",
-  "select",
-  "textarea",
-  "summary",
+  'button',
+  'a[href]',
+  'input',
+  'select',
+  'textarea',
+  'summary',
   ...[
-    "button", "link", "tab", "option", "menuitem", "menuitemcheckbox",
-    "menuitemradio", "checkbox", "radio", "switch", "combobox", "slider",
-    "searchbox", "textbox", "spinbutton", "treeitem",
+    'button',
+    'link',
+    'tab',
+    'option',
+    'menuitem',
+    'menuitemcheckbox',
+    'menuitemradio',
+    'checkbox',
+    'radio',
+    'switch',
+    'combobox',
+    'slider',
+    'searchbox',
+    'textbox',
+    'spinbutton',
+    'treeitem',
   ].map((role) => `[role="${role}"]`),
-].join(",");
+].join(',');
 
-const REPLACED = new Set(["svg", "img", "video", "canvas", "picture", "iframe"]);
+const REPLACED = new Set(['svg', 'img', 'video', 'canvas', 'picture', 'iframe']);
 
 function isControl(el: Element): boolean {
   return el.matches(CONTROL_SELECTOR);
@@ -156,14 +168,23 @@ function isControl(el: Element): boolean {
 function isDesignedPart(el: Element): boolean {
   if (REPLACED.has(el.tagName.toLowerCase())) return true;
   // Decorative layers (a button's inset background) belong to the control.
-  if (el.getAttribute("aria-hidden") === "true") return false;
-  if (el.hasAttribute("data-slot")) return true;
+  if (el.getAttribute('aria-hidden') === 'true') return false;
+  if (el.hasAttribute('data-slot')) return true;
   const cs = getComputedStyle(el);
   const px = (v: string) => parseFloat(v) || 0;
-  if (px(cs.paddingTop) + px(cs.paddingRight) + px(cs.paddingBottom) + px(cs.paddingLeft) > 0) return true;
-  if (px(cs.borderTopWidth) + px(cs.borderRightWidth) + px(cs.borderBottomWidth) + px(cs.borderLeftWidth) > 0) return true;
-  if (cs.backgroundColor !== "rgba(0, 0, 0, 0)" && cs.backgroundColor !== "transparent") return true;
-  return cs.backgroundImage !== "none";
+  if (px(cs.paddingTop) + px(cs.paddingRight) + px(cs.paddingBottom) + px(cs.paddingLeft) > 0)
+    return true;
+  if (
+    px(cs.borderTopWidth) +
+      px(cs.borderRightWidth) +
+      px(cs.borderBottomWidth) +
+      px(cs.borderLeftWidth) >
+    0
+  )
+    return true;
+  if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent')
+    return true;
+  return cs.backgroundImage !== 'none';
 }
 
 /** The element to measure for a hit: the hit itself, or the control it is an
@@ -259,12 +280,12 @@ export function InspectOverlay({
   const measureElRef = useRef<(el: HTMLElement, part?: HTMLElement) => void>(() => {});
   const targetRoRef = useRef<ResizeObserver | null>(null);
   const getTargetRo = useCallback(() => {
-    if (targetRoRef.current === null && typeof ResizeObserver !== "undefined") {
+    if (targetRoRef.current === null && typeof ResizeObserver !== 'undefined') {
       targetRoRef.current = new ResizeObserver(() =>
         requestAnimationFrame(() => {
           const el = lastElRef.current;
           if (el && el.isConnected) measureElRef.current(el, livePart(el));
-        })
+        }),
       );
     }
     return targetRoRef.current;
@@ -302,9 +323,30 @@ export function InspectOverlay({
 
       const padStrips: Strip[] = [];
       if (pt > 0) padStrips.push({ left, top, width, height: pt, label: String(Math.round(pt)) });
-      if (pb > 0) padStrips.push({ left, top: top + height - pb, width, height: pb, label: String(Math.round(pb)) });
-      if (pl > 0) padStrips.push({ left, top: top + pt, width: pl, height: height - pt - pb, label: String(Math.round(pl)) });
-      if (pr > 0) padStrips.push({ left: left + width - pr, top: top + pt, width: pr, height: height - pt - pb, label: String(Math.round(pr)) });
+      if (pb > 0)
+        padStrips.push({
+          left,
+          top: top + height - pb,
+          width,
+          height: pb,
+          label: String(Math.round(pb)),
+        });
+      if (pl > 0)
+        padStrips.push({
+          left,
+          top: top + pt,
+          width: pl,
+          height: height - pt - pb,
+          label: String(Math.round(pl)),
+        });
+      if (pr > 0)
+        padStrips.push({
+          left: left + width - pr,
+          top: top + pt,
+          width: pr,
+          height: height - pt - pb,
+          label: String(Math.round(pr)),
+        });
 
       // The gap the hovered part sits in: a snapped control may hold only a
       // layout row (a button's icon + label), so the strips come from the
@@ -313,14 +355,17 @@ export function InspectOverlay({
       let gapCs = cs;
       for (let n: HTMLElement | null = part; n && n !== el; n = n.parentElement) {
         const ncs = getComputedStyle(n);
-        if ((ncs.display.includes("flex") || ncs.display.includes("grid")) && n.children.length > 1) {
+        if (
+          (ncs.display.includes('flex') || ncs.display.includes('grid')) &&
+          n.children.length > 1
+        ) {
           gapHost = n;
           gapCs = ncs;
           break;
         }
       }
       const gapStrips: Strip[] = [];
-      const isFlex = gapCs.display.includes("flex") || gapCs.display.includes("grid");
+      const isFlex = gapCs.display.includes('flex') || gapCs.display.includes('grid');
       if (isFlex) {
         const kids = Array.from(gapHost.children).map((k) => k.getBoundingClientRect());
         for (let i = 0; i < kids.length - 1; i++) {
@@ -349,17 +394,17 @@ export function InspectOverlay({
       }
 
       const tag = el.tagName.toLowerCase();
-      const slot = el.getAttribute("data-slot");
+      const slot = el.getAttribute('data-slot');
       // Lead with the semantic part name when there is one; fall back to the
       // raw tag otherwise.
       const anchor = slot ?? el.tagName;
 
-      const flexDir = cs.display.includes("flex")
-        ? ` ${cs.flexDirection.startsWith("column") ? "col" : "row"}`
-        : "";
+      const flexDir = cs.display.includes('flex')
+        ? ` ${cs.flexDirection.startsWith('column') ? 'col' : 'row'}`
+        : '';
       // The tag leads the meta line only when the anchor is a slot name —
       // otherwise the anchor already *is* the tag, so listing it again repeats.
-      const meta = `${slot ? `${tag} · ` : ""}${cs.display}${flexDir} · ${Math.round(width)} × ${Math.round(height)}`;
+      const meta = `${slot ? `${tag} · ` : ''}${cs.display}${flexDir} · ${Math.round(width)} × ${Math.round(height)}`;
 
       const gapVal = Math.max(parseFloat(gapCs.columnGap) || 0, parseFloat(gapCs.rowGap) || 0);
 
@@ -368,33 +413,25 @@ export function InspectOverlay({
       // text — never from a layout container that merely inherits a font.
       const textEl = wrapsText(part) ? part : wrapsText(el) ? el : null;
       const tcs = textEl === el ? cs : textEl ? getComputedStyle(textEl) : null;
-      let font: Target["font"] = null;
+      let font: Target['font'] = null;
       if (tcs) {
         const sizePx = Math.round(parseFloat(tcs.fontSize));
         const lh =
-          tcs.lineHeight === "normal"
-            ? "normal"
-            : `${Math.round(parseFloat(tcs.lineHeight))}px`;
-        const family = tcs.fontFamily
-          .split(",")[0]
-          .replace(/["']/g, "")
-          .trim();
+          tcs.lineHeight === 'normal' ? 'normal' : `${Math.round(parseFloat(tcs.lineHeight))}px`;
+        const family = tcs.fontFamily.split(',')[0].replace(/["']/g, '').trim();
         const tracking =
-          tcs.letterSpacing === "normal" || tcs.letterSpacing === "0px"
-            ? "0"
-            : tcs.letterSpacing;
+          tcs.letterSpacing === 'normal' || tcs.letterSpacing === '0px' ? '0' : tcs.letterSpacing;
         // FF drives weight through variable-font axes, so the CSS font-weight
         // reads a flat 400 — surface the axes (wght/opsz) when present.
         const fvs = tcs.fontVariationSettings;
         let weight = tcs.fontWeight;
-        if (fvs && fvs !== "normal") {
+        if (fvs && fvs !== 'normal') {
           const wght = /wght["'\s]+([\d.]+)/.exec(fvs)?.[1];
           const opsz = /opsz["'\s]+([\d.]+)/.exec(fvs)?.[1];
-          const parts = [
-            wght ? `wght ${wght}` : null,
-            opsz ? `opsz ${opsz}` : null,
-          ].filter(Boolean);
-          if (parts.length) weight = parts.join(" · ");
+          const parts = [wght ? `wght ${wght}` : null, opsz ? `opsz ${opsz}` : null].filter(
+            Boolean,
+          );
+          if (parts.length) weight = parts.join(' · ');
         }
         font = {
           size: `${sizePx}px / ${lh}`,
@@ -438,7 +475,7 @@ export function InspectOverlay({
         font,
       });
     },
-    [frameRef]
+    [frameRef],
   );
 
   const compute = useCallback(
@@ -466,7 +503,7 @@ export function InspectOverlay({
           // checks and stays out of scope.
           const popup = e.closest('[role="menu"],[role="listbox"]');
           if (!popup) return false;
-          const labelId = popup.getAttribute("aria-labelledby");
+          const labelId = popup.getAttribute('aria-labelledby');
           const labelledFromHere =
             !!labelId &&
             !!document.getElementById(labelId) &&
@@ -475,7 +512,7 @@ export function InspectOverlay({
             !!popup.id && !!content.querySelector(`[aria-controls="${CSS.escape(popup.id)}"]`);
           if (!labelledFromHere && !controlledFromHere) return false;
         }
-        if (e.closest("[data-inspect-ui]")) return false;
+        if (e.closest('[data-inspect-ui]')) return false;
         const r = e.getBoundingClientRect();
         return r.width >= 1 && r.height >= 1;
       }) as HTMLElement | undefined;
@@ -488,7 +525,7 @@ export function InspectOverlay({
       }
       measureEl(snapToControl(el, content), el);
     },
-    [contentRef, measureEl]
+    [contentRef, measureEl],
   );
 
   // Last cursor position over the capture region, so measurements can refresh
@@ -502,7 +539,7 @@ export function InspectOverlay({
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => compute(clientX, clientY));
     },
-    [compute]
+    [compute],
   );
 
   // Keep the observer callback pointed at the latest measureEl.
@@ -523,7 +560,7 @@ export function InspectOverlay({
       targetRoRef.current?.disconnect();
       targetRoRef.current = null;
     },
-    []
+    [],
   );
 
   // Re-measure in place when the size step flips: the demo re-lays-out without
@@ -539,7 +576,7 @@ export function InspectOverlay({
         const el = lastElRef.current;
         if (el && el.isConnected) measureEl(el, livePart(el));
         else if (lastPos.current) compute(lastPos.current.x, lastPos.current.y);
-      })
+      }),
     );
     return () => cancelAnimationFrame(id);
   }, [sizeVariant, compute, measureEl, livePart]);
@@ -583,191 +620,289 @@ export function InspectOverlay({
 
   return (
     <>
-    {/* Ruler layer — BELOW the demo content (z-10): an opaque demo masks the
+      {/* Ruler layer — BELOW the demo content (z-10): an opaque demo masks the
         ticks and numbers, and portalled popups cover them too — only the
         crosshair layer below rides above those. Full-bleed previews opt out
         of rulers entirely with `rulers={false}`. */}
-    {rulers && (
-    <motion.div
-      data-inspect-ui
-      className="absolute inset-0 z-10 pointer-events-none overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: spring.moderate.exit }}
-      transition={spring.moderate}
-    >
-      {/* Top ruler — sits in the gutter just below the header. The ticks run up
+      {rulers && (
+        <motion.div
+          data-inspect-ui
+          className="absolute inset-0 z-10 pointer-events-none overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: spring.moderate.exit }}
+          transition={spring.moderate}
+        >
+          {/* Top ruler — sits in the gutter just below the header. The ticks run up
           past the top of the gutter (negative y) so they tuck under the opaque
           header (z-40); the numbers sit below the ticks with ~2px of breathing
           room above them. overflow:visible lets the ticks bleed under. */}
-      <motion.div
-        className="absolute inset-0"
-        initial={{ y: -4 }}
-        animate={{ y: 0 }}
-        exit={{ y: -4, transition: spring.moderate.exit }}
-        transition={spring.moderate}
-      >
-        <svg width={w} height={RULER_TOP} className="absolute left-0" style={{ top: capTop, overflow: "visible", color: ACCENT }}>
-          {target && <rect x={Math.max(target.left, leftStripEnd)} y={0} width={target.width - Math.max(0, leftStripEnd - target.left)} height={RULER_TOP} fill="currentColor" fillOpacity={BAND_OPACITY} />}
-          {xTicks.filter((t) => t.pos >= leftStripEnd).map((t, i) => (
-            <line key={i} x1={t.pos} y1={-6} x2={t.pos} y2={6} stroke="currentColor" strokeWidth={1} opacity={t.inComp ? (t.labeled ? 0.9 : 0.45) : 0.16} />
-          ))}
-          {xTicks.filter((t) => t.labeled && t.pos >= leftStripEnd).map((t, i) => (
-            <text key={`l${i}`} x={t.pos} y={16} fontSize={9} fill="currentColor" fontFamily="monospace" textAnchor="middle">
-              {t.value}
-            </text>
-          ))}
-        </svg>
-      </motion.div>
+          <motion.div
+            className="absolute inset-0"
+            initial={{ y: -4 }}
+            animate={{ y: 0 }}
+            exit={{ y: -4, transition: spring.moderate.exit }}
+            transition={spring.moderate}
+          >
+            <svg
+              width={w}
+              height={RULER_TOP}
+              className="absolute left-0"
+              style={{ top: capTop, overflow: 'visible', color: ACCENT }}
+            >
+              {target && (
+                <rect
+                  x={Math.max(target.left, leftStripEnd)}
+                  y={0}
+                  width={target.width - Math.max(0, leftStripEnd - target.left)}
+                  height={RULER_TOP}
+                  fill="currentColor"
+                  fillOpacity={BAND_OPACITY}
+                />
+              )}
+              {xTicks
+                .filter((t) => t.pos >= leftStripEnd)
+                .map((t, i) => (
+                  <line
+                    key={i}
+                    x1={t.pos}
+                    y1={-6}
+                    x2={t.pos}
+                    y2={6}
+                    stroke="currentColor"
+                    strokeWidth={1}
+                    opacity={t.inComp ? (t.labeled ? 0.9 : 0.45) : 0.16}
+                  />
+                ))}
+              {xTicks
+                .filter((t) => t.labeled && t.pos >= leftStripEnd)
+                .map((t, i) => (
+                  <text
+                    key={`l${i}`}
+                    x={t.pos}
+                    y={16}
+                    fontSize={9}
+                    fill="currentColor"
+                    fontFamily="monospace"
+                    textAnchor="middle"
+                  >
+                    {t.value}
+                  </text>
+                ))}
+            </svg>
+          </motion.div>
 
-      {/* Left ruler — ticks sit on the outer (left) edge; the rotated numbers
+          {/* Left ruler — ticks sit on the outer (left) edge; the rotated numbers
           sit on the inner (right) edge next to the content, mirroring the top
           ruler where the numbers face the content. */}
-      <motion.div
-        className="absolute inset-0"
-        initial={{ x: -4 }}
-        animate={{ x: 0 }}
-        exit={{ x: -4, transition: spring.moderate.exit }}
-        transition={spring.moderate}
-      >
-        <svg width={RULER_LEFT} height={h} className="absolute top-0" style={{ left: capLeft, overflow: "visible", color: ACCENT }}>
-          {target && <rect x={0} y={Math.max(target.top, topStripEnd)} width={RULER_LEFT} height={target.height - Math.max(0, topStripEnd - target.top)} fill="currentColor" fillOpacity={BAND_OPACITY} />}
-          {yTicks.filter((t) => t.pos >= topStripEnd).map((t, i) => (
-            <line key={i} x1={0} y1={t.pos} x2={6} y2={t.pos} stroke="currentColor" strokeWidth={1} opacity={t.inComp ? (t.labeled ? 0.9 : 0.45) : 0.16} />
-          ))}
-          {yTicks.filter((t) => t.labeled && t.pos >= topStripEnd).map((t, i) => (
-            <text
-              key={`l${i}`}
-              x={16}
-              y={t.pos}
-              fontSize={9}
-              fill="currentColor"
-              fontFamily="monospace"
-              textAnchor="middle"
-              dominantBaseline="middle"
-              transform={`rotate(-90 16 ${t.pos})`}
+          <motion.div
+            className="absolute inset-0"
+            initial={{ x: -4 }}
+            animate={{ x: 0 }}
+            exit={{ x: -4, transition: spring.moderate.exit }}
+            transition={spring.moderate}
+          >
+            <svg
+              width={RULER_LEFT}
+              height={h}
+              className="absolute top-0"
+              style={{ left: capLeft, overflow: 'visible', color: ACCENT }}
             >
-              {t.value}
-            </text>
-          ))}
-        </svg>
-      </motion.div>
-    </motion.div>
-    )}
+              {target && (
+                <rect
+                  x={0}
+                  y={Math.max(target.top, topStripEnd)}
+                  width={RULER_LEFT}
+                  height={target.height - Math.max(0, topStripEnd - target.top)}
+                  fill="currentColor"
+                  fillOpacity={BAND_OPACITY}
+                />
+              )}
+              {yTicks
+                .filter((t) => t.pos >= topStripEnd)
+                .map((t, i) => (
+                  <line
+                    key={i}
+                    x1={0}
+                    y1={t.pos}
+                    x2={6}
+                    y2={t.pos}
+                    stroke="currentColor"
+                    strokeWidth={1}
+                    opacity={t.inComp ? (t.labeled ? 0.9 : 0.45) : 0.16}
+                  />
+                ))}
+              {yTicks
+                .filter((t) => t.labeled && t.pos >= topStripEnd)
+                .map((t, i) => (
+                  <text
+                    key={`l${i}`}
+                    x={16}
+                    y={t.pos}
+                    fontSize={9}
+                    fill="currentColor"
+                    fontFamily="monospace"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    transform={`rotate(-90 16 ${t.pos})`}
+                  >
+                    {t.value}
+                  </text>
+                ))}
+            </svg>
+          </motion.div>
+        </motion.div>
+      )}
 
-    {/* Crosshair layer — ABOVE portalled popups (z-[60] vs their z-50): a
+      {/* Crosshair layer — ABOVE portalled popups (z-[60] vs their z-50): a
         dropdown held open through the Inspect toggle gets the hover guides
         and box-model strips drawn over it, not clipped under it. The preview
         header sits higher (z-[70]) so guides still tuck under its opaque
         background, and the info tooltip clears the header at z-[80]. */}
-    <motion.div
-      data-inspect-ui
-      className="absolute inset-0 z-[60] pointer-events-none overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: spring.moderate.exit }}
-      transition={spring.moderate}
-    >
-      {/* Pointer-capturing region — only over the content, so the header
+      <motion.div
+        data-inspect-ui
+        className="absolute inset-0 z-[60] pointer-events-none overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0, transition: spring.moderate.exit }}
+        transition={spring.moderate}
+      >
+        {/* Pointer-capturing region — only over the content, so the header
           toggles stay clickable and the component underneath is frozen. */}
-      {capture && (
-        <div
-          className="absolute pointer-events-auto cursor-crosshair"
-          style={{ left: capture.left, top: capture.top, width: capture.width, height: capture.height }}
-          onMouseMove={onMove}
-          onMouseLeave={clear}
-        />
-      )}
-
-      {/* Box-model overlay for the hovered element. */}
-      {target && (
-        <>
+        {capture && (
           <div
-            className="absolute"
+            className="absolute pointer-events-auto cursor-crosshair"
             style={{
-              left: target.content.left,
-              top: target.content.top,
-              width: target.content.width,
-              height: target.content.height,
-              background: CONTENT_FILL,
+              left: capture.left,
+              top: capture.top,
+              width: capture.width,
+              height: capture.height,
             }}
+            onMouseMove={onMove}
+            onMouseLeave={clear}
           />
-          {target.padStrips.map((s, i) => (
-            <div
-              key={`p${i}`}
-              className="absolute flex items-center justify-center"
-              style={{ left: s.left, top: s.top, width: s.width, height: s.height, background: GREEN }}
-            >
-              <span className="text-[9px] font-mono leading-none text-foreground" style={{ fontVariationSettings: fontWeights.semibold }}>
-                {s.label}
-              </span>
-            </div>
-          ))}
-          {target.gapStrips.map((s, i) => (
-            <div
-              key={`g${i}`}
-              className="absolute flex items-center justify-center"
-              style={{ left: s.left, top: s.top, width: s.width, height: s.height, background: GREEN, outline: `1px dashed ${GREEN_LINE}`, outlineOffset: -1 }}
-            >
-              <span className="text-[9px] font-mono leading-none text-foreground" style={{ fontVariationSettings: fontWeights.semibold }}>
-                {s.label}
-              </span>
-            </div>
-          ))}
-          {/* Crosshair guides at the four box edges */}
-          {[target.left, target.left + target.width].map((x, i) => (
-            <div key={`vx${i}`} className="absolute top-0 bottom-0" style={{ left: x, width: 1, background: ACCENT, opacity: 0.55 }} />
-          ))}
-          {[target.top, target.top + target.height].map((y, i) => (
-            <div key={`hy${i}`} className="absolute left-0 right-0" style={{ top: y, height: 1, background: ACCENT, opacity: 0.55 }} />
-          ))}
-        </>
-      )}
+        )}
 
-      {/* Info tooltip — the FF Tooltip, anchored to the hovered element. */}
-      {target && (
-        <Tooltip
-          forceOpen
-          side="top"
-          sideOffset={8}
-          content={
-            renderTooltip ? (
-              renderTooltip(target.raw)
-            ) : (
-            <div className="font-mono text-[11px] leading-4 normal-case tracking-normal">
-              <div style={{ fontVariationSettings: fontWeights.semibold }}>
-                {target.anchor}
+        {/* Box-model overlay for the hovered element. */}
+        {target && (
+          <>
+            <div
+              className="absolute"
+              style={{
+                left: target.content.left,
+                top: target.content.top,
+                width: target.content.width,
+                height: target.content.height,
+                background: CONTENT_FILL,
+              }}
+            />
+            {target.padStrips.map((s, i) => (
+              <div
+                key={`p${i}`}
+                className="absolute flex items-center justify-center"
+                style={{
+                  left: s.left,
+                  top: s.top,
+                  width: s.width,
+                  height: s.height,
+                  background: GREEN,
+                }}
+              >
+                <span
+                  className="text-[9px] font-mono leading-none text-foreground"
+                  style={{ fontVariationSettings: fontWeights.semibold }}
+                >
+                  {s.label}
+                </span>
               </div>
-              <div>{target.meta}</div>
-              <div>
-                padding {target.padding} · margin {target.margin}
+            ))}
+            {target.gapStrips.map((s, i) => (
+              <div
+                key={`g${i}`}
+                className="absolute flex items-center justify-center"
+                style={{
+                  left: s.left,
+                  top: s.top,
+                  width: s.width,
+                  height: s.height,
+                  background: GREEN,
+                  outline: `1px dashed ${GREEN_LINE}`,
+                  outlineOffset: -1,
+                }}
+              >
+                <span
+                  className="text-[9px] font-mono leading-none text-foreground"
+                  style={{ fontVariationSettings: fontWeights.semibold }}
+                >
+                  {s.label}
+                </span>
               </div>
-              {target.gap && <div>gap {target.gap}</div>}
-              {target.font && (
-                <>
-                  <div>font {target.font.size}</div>
+            ))}
+            {/* Crosshair guides at the four box edges */}
+            {[target.left, target.left + target.width].map((x, i) => (
+              <div
+                key={`vx${i}`}
+                className="absolute top-0 bottom-0"
+                style={{ left: x, width: 1, background: ACCENT, opacity: 0.55 }}
+              />
+            ))}
+            {[target.top, target.top + target.height].map((y, i) => (
+              <div
+                key={`hy${i}`}
+                className="absolute left-0 right-0"
+                style={{ top: y, height: 1, background: ACCENT, opacity: 0.55 }}
+              />
+            ))}
+          </>
+        )}
+
+        {/* Info tooltip — the FF Tooltip, anchored to the hovered element. */}
+        {target && (
+          <Tooltip
+            forceOpen
+            side="top"
+            sideOffset={8}
+            content={
+              renderTooltip ? (
+                renderTooltip(target.raw)
+              ) : (
+                <div className="font-mono text-[11px] leading-4 normal-case tracking-normal">
+                  <div style={{ fontVariationSettings: fontWeights.semibold }}>{target.anchor}</div>
+                  <div>{target.meta}</div>
                   <div>
-                    {target.font.family} · {target.font.weight}
+                    padding {target.padding} · margin {target.margin}
                   </div>
-                  <div>
-                    tracking {target.font.tracking} · {target.font.color}
-                  </div>
-                </>
-              )}
-            </div>
-            )
-          }
-          className="!px-3.5 !py-4 max-w-[240px]"
-          // The portalled tooltip must clear the preview header (z-[70]).
-          contentClassName="z-[80]"
-        >
-          <div
-            className="absolute"
-            style={{ left: target.left, top: target.top, width: Math.max(1, target.width), height: Math.max(1, target.height) }}
-          />
-        </Tooltip>
-      )}
-    </motion.div>
+                  {target.gap && <div>gap {target.gap}</div>}
+                  {target.font && (
+                    <>
+                      <div>font {target.font.size}</div>
+                      <div>
+                        {target.font.family} · {target.font.weight}
+                      </div>
+                      <div>
+                        tracking {target.font.tracking} · {target.font.color}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )
+            }
+            className="!px-3.5 !py-4 max-w-[240px]"
+            // The portalled tooltip must clear the preview header (z-[70]).
+            contentClassName="z-[80]"
+          >
+            <div
+              className="absolute"
+              style={{
+                left: target.left,
+                top: target.top,
+                width: Math.max(1, target.width),
+                height: Math.max(1, target.height),
+              }}
+            />
+          </Tooltip>
+        )}
+      </motion.div>
     </>
   );
 }

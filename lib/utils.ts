@@ -1,1 +1,1 @@
-export { cn } from "@/registry/default/lib/utils";
+export { cn } from '#registry/default/lib/utils';

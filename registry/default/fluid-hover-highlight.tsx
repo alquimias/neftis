@@ -1,15 +1,10 @@
-"use client";
+'use client';
 
-import {
-  motion,
-  AnimatePresence,
-  useReducedMotion,
-  type Transition,
-} from "motion/react";
-import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import { spring } from "@/lib/springs";
-import type { ItemRect, UseFluidHoverReturn } from "@/hooks/use-fluid-hover";
+import { motion, AnimatePresence, useReducedMotion, type Transition } from 'motion/react';
+import type { ReactNode } from 'react';
+import { cn } from '#lib/utils';
+import { spring } from '#lib/springs';
+import type { ItemRect, UseFluidHoverReturn } from '#hooks/use-fluid-hover';
 
 // ---------------------------------------------------------------------------
 // The one hover highlight every fluid hover list renders: an absolutely
@@ -27,7 +22,7 @@ import type { ItemRect, UseFluidHoverReturn } from "@/hooks/use-fluid-hover";
  *  measured rects, whether they are current, and the pointer session. */
 export type FluidHoverSource = Pick<
   UseFluidHoverReturn,
-  "activeIndex" | "itemRects" | "isMeasured" | "session"
+  'activeIndex' | 'itemRects' | 'isMeasured' | 'session'
 >;
 
 interface HighlightFromHook {
@@ -98,23 +93,21 @@ export function toTarget(rect: ItemRect) {
  */
 export function resolveHighlightTransition(
   transition: Transition | false | undefined,
-  reduceMotion: boolean
+  reduceMotion: boolean,
 ): Transition {
-  const positional =
-    transition === false || reduceMotion ? snap : (transition ?? spring.fast);
+  const positional = transition === false || reduceMotion ? snap : (transition ?? spring.fast);
   return { ...positional, opacity: fade };
 }
 
 /** The rect and session a set of props resolves to. Exported for the test. */
-export function resolveHighlightSource(
-  props: FluidHoverHighlightProps
-): { rect: ItemRect | null; session: number } {
+export function resolveHighlightSource(props: FluidHoverHighlightProps): {
+  rect: ItemRect | null;
+  session: number;
+} {
   if (props.hover) {
     const { activeIndex, itemRects, isMeasured, session } = props.hover;
     const rect =
-      !props.hidden && isMeasured && activeIndex !== null
-        ? (itemRects[activeIndex] ?? null)
-        : null;
+      !props.hidden && isMeasured && activeIndex !== null ? (itemRects[activeIndex] ?? null) : null;
     return { rect, session };
   }
   return { rect: props.rect, session: props.session };
@@ -139,10 +132,7 @@ export function FluidHoverHighlight(props: FluidHoverHighlightProps) {
           // re-laying out every frame. Width and height are real layout
           // values, but they only change when the target rect's size does,
           // which in most lists is never.
-          className={cn(
-            "pointer-events-none absolute left-0 top-0 bg-hover",
-            className
-          )}
+          className={cn('pointer-events-none absolute left-0 top-0 bg-hover', className)}
           initial={{ opacity: fadeIn ? 0 : 1, ...toTarget(from ?? rect) }}
           animate={{ opacity: 1, ...toTarget(rect) }}
           exit={{ opacity: 0, transition: spring.fast.exit }}
@@ -150,7 +140,7 @@ export function FluidHoverHighlight(props: FluidHoverHighlightProps) {
           onUpdate={
             onFrame
               ? (latest) => {
-                  const n = (v: unknown, d: number) => (typeof v === "number" ? v : d);
+                  const n = (v: unknown, d: number) => (typeof v === 'number' ? v : d);
                   onFrame({
                     y: n(latest.y, rect.top),
                     height: n(latest.height, rect.height),

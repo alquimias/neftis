@@ -3,13 +3,8 @@
   "name": "icons-untitledui",
   "title": "Untitled UI Icon Set",
   "description": "Untitled UI glyphs for every icon slot the components look up. Pass the map to IconProvider (or FluidProvider's icons prop) and every component draws Untitled UI.",
-  "dependencies": [
-    "@untitledui/icons",
-    "lucide-react"
-  ],
-  "registryDependencies": [
-    "https://www.fluidfunctionalism.com/r/icon-context.json"
-  ],
+  "dependencies": ["@untitledui/icons", "lucide-react"],
+  "registryDependencies": ["https://www.fluidfunctionalism.com/r/icon-context.json"],
   "files": [
     {
       "path": "registry/default/lib/icons-untitledui.tsx",
@@ -18,8 +13,6 @@
     }
   ],
   "docs": "Docs: https://www.fluidfunctionalism.com/docs (Icons). Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "lib"
-  ],
+  "categories": ["lib"],
   "type": "registry:lib"
 }

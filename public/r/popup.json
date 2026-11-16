@@ -3,9 +3,7 @@
   "name": "popup",
   "title": "Popup chrome",
   "description": "Shared popup chrome for the dropdown, select, and combobox popups: side-aware enter/exit motion classes driven by the positioner's resolved data-side, the ScrollArea sizing the list scrolls inside, the navigation-key list, and the clear layer that keeps the page from reacting to the pointer while a popup is open.",
-  "registryDependencies": [
-    "https://www.fluidfunctionalism.com/r/tokens.json"
-  ],
+  "registryDependencies": ["https://www.fluidfunctionalism.com/r/tokens.json"],
   "files": [
     {
       "path": "registry/default/lib/popup.ts",
@@ -14,8 +12,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/motion. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#motion.",
-  "categories": [
-    "lib"
-  ],
+  "categories": ["lib"],
   "type": "registry:lib"
 }

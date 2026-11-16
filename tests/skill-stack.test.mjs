@@ -176,12 +176,12 @@ describe("readStack on a project", () => {
       },
       "tsconfig.json": `{\n  // jsonc, as tsconfig usually is\n  "compilerOptions": { "paths": { "@/*": ["./src/*"], }, },\n}`,
       "src/app/globals.css": `@import "tailwindcss";\n:root { --background: white; --hover: rgb(0 0 0 / 0.04); }`,
-      "src/app/layout.tsx": `import { Inter } from "next/font/google";\nimport { Providers } from "@/components/providers";\nconst inter = Inter({ axes: ["opsz"] });\nexport default function L({ children }) { return <Providers>{children}</Providers>; }`,
+      "src/app/layout.tsx": `import { Inter } from "next/font/google";\nimport { Providers } from "#components/providers";\nconst inter = Inter({ axes: ["opsz"] });\nexport default function L({ children }) { return <Providers>{children}</Providers>; }`,
       "src/components/providers.tsx": `import { MotionConfig } from "motion/react";\nexport function Providers({ children }) {\n  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;\n}`,
-      "src/components/ui/select.tsx": `import { Select } from "@base-ui/react/select";\nimport { spring } from "@/lib/springs";`,
-      "src/components/ui/card.tsx": `import { cn } from "@/lib/utils";`,
-      "src/components/ui/avatar.tsx": `import { cn } from "@/lib/utils";`,
-      "src/components/ui/project-list.tsx": `import { useFluidHover } from "@/hooks/use-fluid-hover";`,
+      "src/components/ui/select.tsx": `import { Select } from "@base-ui/react/select";\nimport { spring } from "#lib/springs";`,
+      "src/components/ui/card.tsx": `import { cn } from "#lib/utils";`,
+      "src/components/ui/avatar.tsx": `import { cn } from "#lib/utils";`,
+      "src/components/ui/project-list.tsx": `import { useFluidHover } from "#hooks/use-fluid-hover";`,
       "src/components/ui/card.stories.tsx": `import { Card } from "./card";`,
       "src/lib/fonts.test.ts": `import { Inter } from "next/font/google";\nInter({ subsets: ["latin"] });`,
       "src/lib/springs.ts": `export const spring = {};`,
@@ -274,7 +274,7 @@ describe("readStack on a project", () => {
       "package.json": { dependencies: { react: "^19.1.0", "@radix-ui/react-dialog": "^1.1.0", "@base-ui/react": "^1.4.1" } },
       "components.json": { aliases: { ui: "@/components/ui" } },
       "tsconfig.json": { compilerOptions: { paths: { "@/*": ["./*"] } } },
-      "components/ui/input-group.tsx": `import { Field } from "@base-ui/react/field";\nimport { fontWeights } from "@/lib/font-weight";`,
+      "components/ui/input-group.tsx": `import { Field } from "@base-ui/react/field";\nimport { fontWeights } from "#lib/font-weight";`,
       "components/app-dialog.tsx": `import * as Dialog from "@radix-ui/react-dialog";`,
     };
     const alone = readStack(project(files));
@@ -285,8 +285,8 @@ describe("readStack on a project", () => {
     const s = readStack(
       project({
         ...files,
-        "components/ui/dialog.tsx": `import * as D from "@radix-ui/react-dialog";\nimport { spring } from "@/lib/springs";`,
-        "app/settings/page.tsx": `import { Menu } from "@base-ui/react/menu";\nimport { useFluidHover } from "@/hooks/use-fluid-hover";`,
+        "components/ui/dialog.tsx": `import * as D from "@radix-ui/react-dialog";\nimport { spring } from "#lib/springs";`,
+        "app/settings/page.tsx": `import { Menu } from "@base-ui/react/menu";\nimport { useFluidHover } from "#hooks/use-fluid-hover";`,
       }),
     );
     expect(s.flavor).toMatchObject({ flavor: "radix", open: false });
@@ -340,8 +340,8 @@ describe("readStack on a project", () => {
   it("lists the parts a block installs one folder down", () => {
     const dir = ready();
     mkdirSync(join(dir, "src/components/sidebar-app"));
-    writeFileSync(join(dir, "src/components/sidebar-app/workspace-header.tsx"), `import { spring } from "@/lib/springs";`);
-    writeFileSync(join(dir, "src/components/sidebar-app/helpers.tsx"), `import { spring } from "@/lib/springs";`);
+    writeFileSync(join(dir, "src/components/sidebar-app/workspace-header.tsx"), `import { spring } from "#lib/springs";`);
+    writeFileSync(join(dir, "src/components/sidebar-app/helpers.tsx"), `import { spring } from "#lib/springs";`);
     const s = readStack(dir);
     expect(s.installed.fluid).toContain("workspace-header");
     expect(s.installed.builtOnFluid).not.toContain("helpers");

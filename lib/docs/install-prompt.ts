@@ -1,13 +1,17 @@
-import { componentEntries, systemList } from "@/lib/docs/components";
-import { installUrl, DUAL_FLAVOR_SLUGS, FLUID_HOVER_SLUGS, type Base } from "@/lib/install-url";
-import { PROMPT_ENTRIES, type PromptEntry } from "@/lib/docs/prompt-entries";
-import { decodePreset, type PresetComponentDef } from "@/lib/preset/components";
-import { PRESET_OUTLINES } from "@/lib/preset/outlines";
-import { SETTING_LABELS, describeSettings } from "@/lib/starter/install";
-import { starterSlug, type StarterSettings } from "@/lib/starter/settings";
-import type { HeadingFont, HoverMode } from "@/lib/docs/site-settings";
-import { googleFontWeights, nearestGoogleFontWeight, type GoogleFont } from "@/lib/docs/google-fonts";
-import { ACCENT_PRESETS, DEFAULT_ACCENT, accentCss } from "@/lib/accent";
+import { componentEntries, systemList } from '#lib/docs/components';
+import { installUrl, DUAL_FLAVOR_SLUGS, FLUID_HOVER_SLUGS, type Base } from '#lib/install-url';
+import { PROMPT_ENTRIES, type PromptEntry } from '#lib/docs/prompt-entries';
+import { decodePreset, type PresetComponentDef } from '#lib/preset/components';
+import { PRESET_OUTLINES } from '#lib/preset/outlines';
+import { SETTING_LABELS, describeSettings } from '#lib/starter/install';
+import { starterSlug, type StarterSettings } from '#lib/starter/settings';
+import type { HeadingFont, HoverMode } from '#lib/docs/site-settings';
+import {
+  googleFontWeights,
+  nearestGoogleFontWeight,
+  type GoogleFont,
+} from '#lib/docs/google-fonts';
+import { ACCENT_PRESETS, DEFAULT_ACCENT, accentCss } from '#lib/accent';
 import {
   SITE,
   OVERWRITE_NOTE,
@@ -16,7 +20,7 @@ import {
   INSTALLED_FILES,
   CHANGELOG_LINE,
   plainDescription,
-} from "@/lib/docs/install-brief";
+} from '#lib/docs/install-brief';
 
 interface BuildInstallPromptOptions {
   /** Doc page slug (matches `componentEntries` / `systemList`). */
@@ -37,12 +41,17 @@ interface BuildInstallPromptOptions {
  *  description, and the docs URL, so the agent can wire the component in
  *  without fetching anything. Per-component usage and props live in
  *  `prompt-entries.ts`; everything else is derived. */
-export function buildInstallPrompt({ slug, installSlug, base, hover = "fluid" }: BuildInstallPromptOptions): string {
+export function buildInstallPrompt({
+  slug,
+  installSlug,
+  base,
+  hover = 'fluid',
+}: BuildInstallPromptOptions): string {
   const registrySlug = installSlug ?? slug;
   const system = systemList.find((c) => c.slug === slug);
   const entry = system ?? componentEntries.find((c) => c.slug === slug);
   const name = entry?.name ?? slug;
-  const description = plainDescription(entry?.description ?? "");
+  const description = plainDescription(entry?.description ?? '');
   const details: PromptEntry | undefined = PROMPT_ENTRIES[slug];
   const dual = DUAL_FLAVOR_SLUGS.has(registrySlug);
 
@@ -52,50 +61,48 @@ export function buildInstallPrompt({ slug, installSlug, base, hover = "fluid" }:
       ? `Add the ${name} system from Fluid Functionalism to my React app.`
       : `Add the ${name} component from Fluid Functionalism to my React app.`,
   );
-  lines.push("");
-  lines.push("Install (shadcn CLI, pulls the shared libs and npm dependencies on its own):");
+  lines.push('');
+  lines.push('Install (shadcn CLI, pulls the shared libs and npm dependencies on its own):');
   lines.push(`npx shadcn@latest add ${installUrl(registrySlug, base, hover)} --overwrite`);
   lines.push(OVERWRITE_NOTE);
 
   if (details?.usage) {
-    lines.push("");
-    lines.push("Usage:");
+    lines.push('');
+    lines.push('Usage:');
     lines.push(details.usage.trim());
   }
 
   if (details?.props?.length) {
-    lines.push("");
-    lines.push("Props:");
+    lines.push('');
+    lines.push('Props:');
     for (const prop of details.props) lines.push(`- ${prop}`);
   }
 
-  lines.push("");
+  lines.push('');
   lines.push(SKILL_LINE);
 
-  lines.push("");
+  lines.push('');
   const about: string[] = [];
-  if (description) about.push(stripTrailingPeriod(description) + ".");
+  if (description) about.push(stripTrailingPeriod(description) + '.');
   if (dual) {
     about.push(
-      base === "base"
-        ? `Base UI flavor. Same API on Radix: ${installUrl(registrySlug, "radix", hover)}.`
-        : `Radix flavor. Same API on Base UI: ${installUrl(registrySlug, "base", hover)}.`,
+      base === 'base'
+        ? `Base UI flavor. Same API on Radix: ${installUrl(registrySlug, 'radix', hover)}.`
+        : `Radix flavor. Same API on Base UI: ${installUrl(registrySlug, 'base', hover)}.`,
     );
   }
   if (details?.flavorNote) about.push(details.flavorNote);
-  if (hover === "standard" && FLUID_HOVER_SLUGS.has(registrySlug)) {
+  if (hover === 'standard' && FLUID_HOVER_SLUGS.has(registrySlug)) {
     about.push(
       `Standard hover: the item under the pointer lights, with no highlight gliding between items. Same API with fluid hover: ${installUrl(registrySlug, base)}.`,
     );
   }
-  about.push(
-    `${PROJECT_NEEDS} ${INSTALLED_FILES}`,
-  );
-  lines.push(about.join(" "));
+  about.push(`${PROJECT_NEEDS} ${INSTALLED_FILES}`);
+  lines.push(about.join(' '));
   lines.push(`Docs: ${SITE}/docs/${slug}`);
   lines.push(CHANGELOG_LINE);
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 interface BuildPresetPromptOptions {
@@ -113,11 +120,16 @@ interface BuildPresetPromptOptions {
  *  generated file and its export instead of a hand-written snippet. The
  *  block already composes the component with the chosen options, so the
  *  agent only has to import and render it. */
-export function buildPresetPrompt({ def, code, base, hover = "fluid" }: BuildPresetPromptOptions): string {
-  const slug = def.docsPath.split("/").pop() ?? "";
+export function buildPresetPrompt({
+  def,
+  code,
+  base,
+  hover = 'fluid',
+}: BuildPresetPromptOptions): string {
+  const slug = def.docsPath.split('/').pop() ?? '';
   const entry = componentEntries.find((c) => c.slug === slug);
   const name = entry?.name ?? def.label;
-  const description = plainDescription(entry?.description ?? "");
+  const description = plainDescription(entry?.description ?? '');
   const details = PROMPT_ENTRIES[slug];
   const dual = DUAL_FLAVOR_SLUGS.has(slug);
 
@@ -129,14 +141,16 @@ export function buildPresetPrompt({ def, code, base, hover = "fluid" }: BuildPre
 
   const lines: string[] = [];
   lines.push(`Add the ${name} I configured on Fluid Functionalism to my React app.`);
-  lines.push("");
-  lines.push("Install (shadcn CLI, one block with the component, its shared libs, and npm dependencies):");
+  lines.push('');
+  lines.push(
+    'Install (shadcn CLI, one block with the component, its shared libs, and npm dependencies):',
+  );
   lines.push(`npx shadcn@latest add ${SITE}/r/${hoverPath(hover)}preset/${code}.json --overwrite`);
   lines.push(OVERWRITE_NOTE);
 
   if (files.length) {
-    lines.push("");
-    lines.push("Usage:");
+    lines.push('');
+    lines.push('Usage:');
     for (const file of files) {
       if (file.helper) {
         // A file the one above imports: nothing to render.
@@ -156,41 +170,39 @@ export function buildPresetPrompt({ def, code, base, hover = "fluid" }: BuildPre
   }
 
   if (details?.props?.length) {
-    lines.push("");
+    lines.push('');
     lines.push(`Props of the underlying ${name}:`);
     for (const prop of details.props) lines.push(`- ${prop}`);
   }
 
-  lines.push("");
+  lines.push('');
   lines.push(SKILL_LINE);
 
-  lines.push("");
+  lines.push('');
   const about: string[] = [];
-  if (description) about.push(stripTrailingPeriod(description) + ".");
-  if (dual) about.push(base === "base" ? "Base UI flavor." : "Radix flavor.");
-  if (hover === "standard") about.push(STANDARD_HOVER_NOTE);
-  about.push(
-    PROJECT_NEEDS,
-  );
-  lines.push(about.join(" "));
+  if (description) about.push(stripTrailingPeriod(description) + '.');
+  if (dual) about.push(base === 'base' ? 'Base UI flavor.' : 'Radix flavor.');
+  if (hover === 'standard') about.push(STANDARD_HOVER_NOTE);
+  about.push(PROJECT_NEEDS);
+  lines.push(about.join(' '));
   lines.push(`Reopen or tweak this configuration: ${SITE}${def.docsPath}?preset=${code}`);
   lines.push(`Docs: ${SITE}/docs/${slug}`);
   lines.push(CHANGELOG_LINE);
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /** `r/standard/` for standard hover: the twin payloads that carry no fluid
  *  hover code. */
 function hoverPath(hover: HoverMode): string {
-  return hover === "standard" ? "standard/" : "";
+  return hover === 'standard' ? 'standard/' : '';
 }
 
 const STANDARD_HOVER_NOTE =
-  "Standard hover: the item under the pointer lights, with no highlight gliding between items.";
+  'Standard hover: the item under the pointer lights, with no highlight gliding between items.';
 
 /** The one command that scaffolds a new app from the starter. */
-export function starterCommand(settings: StarterSettings, hover: HoverMode = "fluid"): string {
+export function starterCommand(settings: StarterSettings, hover: HoverMode = 'fluid'): string {
   return `npx shadcn@latest create -n my-app -t next ${SITE}/r/${hoverPath(hover)}starter/${starterSlug(settings)}.json`;
 }
 
@@ -208,20 +220,20 @@ export interface StarterHeading {
 
 /** The family a heading choice names, or null for Inter (nothing to do). */
 function headingFamily(heading: StarterHeading | undefined): string | null {
-  if (!heading || heading.font === "inter") return null;
-  if (heading.font === "geist-serif") return "Geist Serif";
+  if (!heading || heading.font === 'inter') return null;
+  if (heading.font === 'geist-serif') return 'Geist Serif';
   return heading.custom?.n ?? null;
 }
 
 /** next/font/google's export for a family: spaces become underscores. */
-const nextFontExport = (family: string) => family.replace(/[^A-Za-z0-9]+/g, "_");
+const nextFontExport = (family: string) => family.replace(/[^A-Za-z0-9]+/g, '_');
 
 /** The step that sets the headings' font, as the site renders it. */
 function headingLines(heading: StarterHeading): string[] {
-  const css = "app/globals.css";
-  if (heading.font === "geist-serif") {
+  const css = 'app/globals.css';
+  if (heading.font === 'geist-serif') {
     return [
-      "Either way, set the headings in Geist Serif, as picked on the site (body text and components stay Inter):",
+      'Either way, set the headings in Geist Serif, as picked on the site (body text and components stay Inter):',
       `- Run npm i geist. app/layout.tsx: import { GeistSerifRegular } from "geist/font/serif/regular" and add its .variable class (--font-geist-serif-regular) to <html> next to Inter's.`,
       `- ${css}: h1, h2, h3 { font-family: var(--font-geist-serif-regular), "Times New Roman", serif; font-variation-settings: normal !important; font-weight: 400 !important; font-synthesis-weight: none; }. Geist Serif has one Regular cut so far, so every heading is 400. !important because component titles set Inter's weight inline.`,
       `- Also in ${css}, the display role runs 4px larger for the serif: :root { --fs-display: 32px; --lh-display: 38px; --fs-display-compact: 28px; --lh-display-compact: 34px; } after the type scale.`,
@@ -232,10 +244,12 @@ function headingLines(heading: StarterHeading): string[] {
   const title = heading.weight ?? 550;
   const display = heading.weight ?? 700;
   // Static families load named cuts only: the ones the headings use.
-  const cuts = [...new Set([title, display].map((w) => nearestGoogleFontWeight(font, w)))].sort((a, b) => a - b);
+  const cuts = [...new Set([title, display].map((w) => nearestGoogleFontWeight(font, w)))].sort(
+    (a, b) => a - b,
+  );
   const load = variable
-    ? `{ subsets: ["latin"],${font.a?.opsz ? ` axes: ["opsz"],` : ""} variable: "--font-heading" }`
-    : `{ subsets: ["latin"], weight: [${cuts.map((w) => `"${w}"`).join(", ")}], variable: "--font-heading" }`;
+    ? `{ subsets: ["latin"],${font.a?.opsz ? ` axes: ["opsz"],` : ''} variable: "--font-heading" }`
+    : `{ subsets: ["latin"], weight: [${cuts.map((w) => `"${w}"`).join(', ')}], variable: "--font-heading" }`;
   const weights =
     heading.weight === null
       ? `font-weight: 550 !important; } and h1 { font-weight: 700 !important; }`
@@ -246,7 +260,7 @@ function headingLines(heading: StarterHeading): string[] {
     `- app/layout.tsx: import { ${nextFontExport(font.n)} } from "next/font/google", load it with ${load} and add its .variable class to <html> next to Inter's.`,
     `- ${css}: h1, h2, h3 { font-family: var(--font-heading), sans-serif; font-variation-settings: normal !important; font-synthesis-weight: none; ${weights} (!important because component titles set Inter's weight axis inline.)`,
     heading.weight === null
-      ? `- Headings keep Inter's role weights, 550 and 700 for h1${variable ? "" : `; ${font.n} draws the nearest of its weights (${available.join(", ")})`}.`
+      ? `- Headings keep Inter's role weights, 550 and 700 for h1${variable ? '' : `; ${font.n} draws the nearest of its weights (${available.join(', ')})`}.`
       : `- One weight, ${heading.weight}, for every heading, as picked on the site.`,
   ];
 }
@@ -260,10 +274,10 @@ export function buildStarterPrompt(
   settings: StarterSettings,
   heading?: StarterHeading,
   customAccent: string | null = null,
-  hover: HoverMode = "fluid",
+  hover: HoverMode = 'fluid',
 ): string {
   const slug = starterSlug(settings);
-  const flavor = settings.base === "base" ? "Base UI" : "Radix";
+  const flavor = settings.base === 'base' ? 'Base UI' : 'Radix';
   const family = headingFamily(heading);
   // A custom accent replaces the preset in words; the slug keeps the preset.
   const summary = describeSettings(settings, customAccent);
@@ -273,19 +287,25 @@ export function buildStarterPrompt(
   const setAccent = accent !== accentCss(DEFAULT_ACCENT, null);
   const lines: string[] = [];
   lines.push(
-    `Start a new React app with Fluid Functionalism: every component installed, every system wired, set to ${summary}${family ? `, ${family} headings` : ""}${hover === "standard" ? ", standard hover" : ""}.`,
+    `Start a new React app with Fluid Functionalism: every component installed, every system wired, set to ${summary}${family ? `, ${family} headings` : ''}${hover === 'standard' ? ', standard hover' : ''}.`,
   );
-  lines.push("");
-  lines.push("Run (shadcn CLI, Next.js template, asks nothing):");
+  lines.push('');
+  lines.push('Run (shadcn CLI, Next.js template, asks nothing):');
   lines.push(starterCommand(settings, hover));
-  lines.push("It creates the app in ./my-app; use the project's name instead. Then run npm run dev in it.");
-  lines.push("");
-  lines.push("What it sets up:");
-  lines.push(`- Every component in components/ui (${flavor} flavor), with the libs and hooks they share in lib and hooks.`);
-  lines.push("- app/layout.tsx loads Inter with its opsz axis, so labels change weight without changing width.");
-  if (hover === "standard") {
+  lines.push(
+    "It creates the app in ./my-app; use the project's name instead. Then run npm run dev in it.",
+  );
+  lines.push('');
+  lines.push('What it sets up:');
+  lines.push(
+    `- Every component in components/ui (${flavor} flavor), with the libs and hooks they share in lib and hooks.`,
+  );
+  lines.push(
+    '- app/layout.tsx loads Inter with its opsz axis, so labels change weight without changing width.',
+  );
+  if (hover === 'standard') {
     lines.push(
-      "- Standard hover: hooks/use-fluid-hover.ts lights the item under the pointer, with no highlight gliding between items. Same API as fluid hover, so installing a component from r/ instead of r/standard/ brings the glide back.",
+      '- Standard hover: hooks/use-fluid-hover.ts lights the item under the pointer, with no highlight gliding between items. Same API as fluid hover, so installing a component from r/ instead of r/standard/ brings the glide back.',
     );
   }
   lines.push(
@@ -296,30 +316,32 @@ export function buildStarterPrompt(
       ? `- app/layout.tsx sets the accent on <html> as --fluid-accent (focus rings, the switch track and every accented detail read it). Change its value to "${customAccent}", the color picked on the site.`
       : `- app/layout.tsx sets the accent on <html> as --fluid-accent (${ACCENT_PRESETS[settings.accent].label.toLowerCase()}, ${accent}): focus rings, the switch track and every accented detail read it.`,
   );
-  lines.push("- app/page.tsx: an app shell (sidebar and topbar) around a home screen to replace.");
+  lines.push('- app/page.tsx: an app shell (sidebar and topbar) around a home screen to replace.');
   lines.push(
-    settings.base === "base"
-      ? "- components.json registers @fluid, so a later add is short: npx shadcn@latest add @fluid/base/<name> (drop base/ for components with one flavor)."
-      : "- components.json registers @fluid, so a later add is short: npx shadcn@latest add @fluid/<name>.",
+    settings.base === 'base'
+      ? '- components.json registers @fluid, so a later add is short: npx shadcn@latest add @fluid/base/<name> (drop base/ for components with one flavor).'
+      : '- components.json registers @fluid, so a later add is short: npx shadcn@latest add @fluid/<name>.',
   );
-  lines.push("");
-  lines.push("Already in an app with components.json? Install the same components and settings into it instead:");
+  lines.push('');
+  lines.push(
+    'Already in an app with components.json? Install the same components and settings into it instead:',
+  );
   lines.push(`npx shadcn@latest add ${SITE}/r/${hoverPath(hover)}setup/${slug}.json --overwrite`);
   lines.push(OVERWRITE_NOTE);
   lines.push(
-    `Then wrap the root layout's children in <FluidRoot> from components/fluid-root.tsx (inside the theme provider, if any), load Inter with axes: ["opsz"], and default the theme to ${settings.theme}.${setAccent ? ` For the accent, put style={{ "--fluid-accent": "${accent}" }} on <html>.` : ""}`,
+    `Then wrap the root layout's children in <FluidRoot> from components/fluid-root.tsx (inside the theme provider, if any), load Inter with axes: ["opsz"], and default the theme to ${settings.theme}.${setAccent ? ` For the accent, put style={{ "--fluid-accent": "${accent}" }} on <html>.` : ''}`,
   );
-  lines.push("");
+  lines.push('');
   if (family && heading) {
     lines.push(...headingLines(heading));
-    lines.push("");
+    lines.push('');
   }
   lines.push(SKILL_LINE);
   lines.push(`Docs: ${SITE}/docs`);
   lines.push(CHANGELOG_LINE);
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 function stripTrailingPeriod(s: string): string {
-  return s.replace(/[.\s]+$/, "");
+  return s.replace(/[.\s]+$/, '');
 }

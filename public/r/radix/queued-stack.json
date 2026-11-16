@@ -3,10 +3,7 @@
   "name": "queued-stack",
   "title": "Queued message stack",
   "description": "Sonner-style stack of queued composer messages: collapsed cards fan out on hover (tap on touch), drag to reorder, a gutter arrow counts the overflow, edit/remove per card, and a shared-layout morph into the sent message.",
-  "dependencies": [
-    "motion",
-    "lucide-react"
-  ],
+  "dependencies": ["motion", "lucide-react"],
   "registryDependencies": [
     "https://www.fluidfunctionalism.com/r/springs.json",
     "https://www.fluidfunctionalism.com/r/shape-context.json",
@@ -26,8 +23,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/input-message. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#queued-stack.",
-  "categories": [
-    "blocks"
-  ],
+  "categories": ["blocks"],
   "type": "registry:block"
 }

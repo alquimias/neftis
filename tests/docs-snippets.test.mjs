@@ -75,7 +75,7 @@ describe("emitted payloads embed only installable sources", () => {
         expect(file.content, `${name} → ${file.path}`).not.toContain("@/lib/docs");
         if (flavored) {
           expect(file.content, `${name} → ${file.path}`).not.toContain(
-            'from "@/registry/'
+            'from "#registry/'
           );
         }
       }
@@ -88,7 +88,7 @@ describe("documented imports match where the registry installs each file", () =>
   // import a path that only exists here. fluid-hover-highlight ships as
   // `registry:component` and installs at components/, not components/ui/: the
   // Copy prompt and the skill taught the ui/ path, and an agent following
-  // them verbatim failed `next build` with TS2307. Every `from "@/…"` that
+  // them verbatim failed `next build` with TS2307. Every `from "#…"` that
   // names a registry file must use the path the shadcn CLI writes it to.
   const DEFAULT_DIR = {
     "registry:ui": "components/ui",

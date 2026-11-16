@@ -13,11 +13,11 @@ magnitudes as the installed dropdown next to it. Live, interactive versions:
 Three speeds cover everything. Pick by the size of what moves — the bigger
 the thing, the slower the spring:
 
-| Token | Duration | Bounce | Use for |
-|---|---|---|---|
-| `spring.fast` | 0.08s | 0 | Hover, focus rings, fades, tooltips, selection indicators |
-| `spring.moderate` | 0.16s | 0 | Short travel / small expansion (indicators, switch thumbs) and panels that must land exactly (drawers) |
-| `spring.slow` | 0.24s | 0.12 | Large surfaces: dialogs, side panels, stepped flows |
+| Token             | Duration | Bounce | Use for                                                                                                |
+| ----------------- | -------- | ------ | ------------------------------------------------------------------------------------------------------ |
+| `spring.fast`     | 0.08s    | 0      | Hover, focus rings, fades, tooltips, selection indicators                                              |
+| `spring.moderate` | 0.16s    | 0      | Short travel / small expansion (indicators, switch thumbs) and panels that must land exactly (drawers) |
+| `spring.slow`     | 0.24s    | 0.12   | Large surfaces: dialogs, side panels, stepped flows                                                    |
 
 Never hand-write a `duration` or invent a fourth speed — import the token so
 unrelated parts of the UI move at consistent magnitudes. Springs (not tweens)
@@ -25,7 +25,7 @@ for enters so an interrupted animation reverses from where it is instead of
 finishing first.
 
 **Retrofitting an existing app:** most hand-written values sit within a hair
-of a tier — adopt the token. A value that is *deliberately* outside the tiers
+of a tier — adopt the token. A value that is _deliberately_ outside the tiers
 (a one-off cinematic entrance, a large canvas re-layout) can stay, but hoist
 it into one named export next to the code that owns it, so it can't drift or
 get re-invented with slightly different numbers in the next file — the same
@@ -39,20 +39,20 @@ call, so name the nearest token and let them choose.
 instead of replaying the entrance in reverse. Each spring carries its own exit
 token — never hand-write an exit `{ duration }`:
 
-| Enter | Exit token | Exit value |
-|---|---|---|
-| `spring.fast` | `spring.fast.exit` | `{ duration: 0.06 }` |
+| Enter             | Exit token             | Exit value           |
+| ----------------- | ---------------------- | -------------------- |
+| `spring.fast`     | `spring.fast.exit`     | `{ duration: 0.06 }` |
 | `spring.moderate` | `spring.moderate.exit` | `{ duration: 0.12 }` |
-| `spring.slow` | `spring.slow.exit` | `{ duration: 0.16 }` |
+| `spring.slow`     | `spring.slow.exit`     | `{ duration: 0.16 }` |
 
 ```tsx
-import { spring } from "@/lib/springs";
+import { spring } from '@/lib/springs';
 
 <motion.div
   animate={{ opacity: 1 }}
   exit={{ opacity: 0, transition: spring.fast.exit }}
   transition={spring.fast}
-/>
+/>;
 ```
 
 An animation that flips a target instead of unmounting has no `exit` prop, so
@@ -70,10 +70,10 @@ reduced-motion setting. A plain **CSS transition** on a positional property
 all, so `MotionConfig` never sees it; move it to `x`/`y` motion values to get
 both the compositor and reduced-motion back. If you genuinely must animate a
 layout property, gate the movement on `useReducedMotion()` yourself and keep
-the opacity fade — reduced motion means *fewer and gentler*, not *none*.
+the opacity fade — reduced motion means _fewer and gentler_, not _none_.
 
 **Depicted UI is exempt.** A mockup frame, product screenshot rebuilt in
-code, or demo that *portrays another product's interface* isn't bound by
+code, or demo that _portrays another product's interface_ isn't bound by
 these rules — a per-row `:hover` inside a fake app frame is set dressing,
 not system drift. Judge the app's own chrome, not what it depicts.
 
@@ -90,12 +90,12 @@ and the `FluidHoverHighlight` component, and pulls in `@fluid/tokens` for the
 `@/components/fluid-hover-highlight`.
 
 ```tsx
-import { useFluidHover, useRegisterFluidHoverItem } from "@/hooks/use-fluid-hover";
-import { FluidHoverHighlight } from "@/components/fluid-hover-highlight";
+import { useFluidHover, useRegisterFluidHoverItem } from '@/hooks/use-fluid-hover';
+import { FluidHoverHighlight } from '@/components/fluid-hover-highlight';
 
 function List({ items }) {
   const containerRef = React.useRef<HTMLUListElement>(null);
-  const hover = useFluidHover(containerRef, { axis: "y" });
+  const hover = useFluidHover(containerRef, { axis: 'y' });
   return (
     <ul ref={containerRef} {...hover.handlers} className="relative">
       <FluidHoverHighlight hover={hover} className="rounded-md" />
@@ -109,7 +109,11 @@ function List({ items }) {
 function Row({ index, registerItem, ...item }) {
   const ref = React.useRef<HTMLLIElement>(null);
   useRegisterFluidHoverItem(registerItem, index, ref);
-  return <li ref={ref} className="relative">…</li>;
+  return (
+    <li ref={ref} className="relative">
+      …
+    </li>
+  );
 }
 ```
 
@@ -146,7 +150,7 @@ Reserve the width with an invisible copy at the heaviest weight while the
 visible copy animates `font-variation-settings`:
 
 ```tsx
-import { fontWeights } from "@/lib/font-weight";
+import { fontWeights } from '@/lib/font-weight';
 
 <span className="inline-grid">
   <span
@@ -155,10 +159,14 @@ import { fontWeights } from "@/lib/font-weight";
   >
     {label}
   </span>
-  <span aria-hidden="true" className="col-start-1 row-start-1 invisible" style={{ fontVariationSettings: fontWeights.semibold }}>
+  <span
+    aria-hidden="true"
+    className="col-start-1 row-start-1 invisible"
+    style={{ fontVariationSettings: fontWeights.semibold }}
+  >
     {label}
   </span>
-</span>
+</span>;
 ```
 
 - Weight comes from `fontVariationSettings` + the `fontWeights` tokens —
@@ -181,24 +189,32 @@ are tweens on purpose (a spring settles early and would invert that order,
 and blur is a `filter` string a spring can't drive):
 
 ```tsx
-import { motion } from "motion/react";
-import { spring } from "@/lib/springs";
+import { motion } from 'motion/react';
+import { spring } from '@/lib/springs';
 
-const SHOWN = { opacity: 1, scale: 1, filter: "blur(0px)" };
-const HIDDEN = { opacity: 0, scale: 0.6, filter: "blur(4px)" };
-const enter = { type: "tween", duration: spring.fast.duration, ease: "easeOut" };
-const leave = { type: "tween", ...spring.fast.exit, ease: "easeIn" };
+const SHOWN = { opacity: 1, scale: 1, filter: 'blur(0px)' };
+const HIDDEN = { opacity: 0, scale: 0.6, filter: 'blur(4px)' };
+const enter = { type: 'tween', duration: spring.fast.duration, ease: 'easeOut' };
+const leave = { type: 'tween', ...spring.fast.exit, ease: 'easeIn' };
 
 <span className="grid" style={{ width: size, height: size }}>
-  <motion.span className="col-start-1 row-start-1 flex" initial={false}
-    animate={copied ? HIDDEN : SHOWN} transition={copied ? leave : enter}>
+  <motion.span
+    className="col-start-1 row-start-1 flex"
+    initial={false}
+    animate={copied ? HIDDEN : SHOWN}
+    transition={copied ? leave : enter}
+  >
     <CopyIcon size={size} />
   </motion.span>
-  <motion.span className="col-start-1 row-start-1 flex" initial={false}
-    animate={copied ? SHOWN : HIDDEN} transition={copied ? enter : leave}>
+  <motion.span
+    className="col-start-1 row-start-1 flex"
+    initial={false}
+    animate={copied ? SHOWN : HIDDEN}
+    transition={copied ? enter : leave}
+  >
     <CheckIcon size={size} />
   </motion.span>
-</span>
+</span>;
 ```
 
 Keep the accessible label stable: sighted users see the check, a screen
@@ -221,7 +237,7 @@ reader hears "Copied" from a visually hidden span in an
 ## Never stack two measured-height collapses
 
 A wrapper that animates to a ResizeObserver-measured height must spring only
-when **it** toggles. When the measured height changes because a *child*
+when **it** toggles. When the measured height changes because a _child_
 collapsed, snap (`{ duration: 0 }`) — otherwise the outer wrapper chases a
 moving target every frame, lags its own child, and lands ~100ms late; each
 nesting level multiplies the sludge.
@@ -238,7 +254,7 @@ const snapshot = useRef<Map<string, number> | null>(null);
 // 1. Right before the change: read where things are.
 const capture = () => {
   snapshot.current = new Map(
-    [...list.children].map((el) => [el.dataset.id!, (el as HTMLElement).offsetTop])
+    [...list.children].map((el) => [el.dataset.id!, (el as HTMLElement).offsetTop]),
   );
 };
 
@@ -249,7 +265,7 @@ useLayoutEffect(() => {
   snapshot.current = null;
   for (const el of list.children as HTMLCollectionOf<HTMLElement>) {
     const dy = (before.get(el.dataset.id!) ?? el.offsetTop) - el.offsetTop;
-    if (dy) animate(el, { y: [dy, 0] }, spring.moderate).then(() => (el.style.transform = ""));
+    if (dy) animate(el, { y: [dy, 0] }, spring.moderate).then(() => (el.style.transform = ''));
   }
 });
 ```
@@ -281,12 +297,12 @@ Live version: <https://www.fluidfunctionalism.com/docs/reveal>.
 
 ### Pick by context
 
-| Class | For | On load | On scroll |
-|---|---|---|---|
-| `reveal-landing` | A page read once: a launch, pricing, a case study | 1st child is the hero; its children rise 12px and scale in from 0.94, 0.1s apart | Every later child does the same with the scroll, from its top edge 12px inside the viewport to 120px; every section leaves the same way at the top |
-| `reveal-landing-subtle` | Same, quieter | 8px and 0.98, 0.06s apart | From 8px to 60px |
-| `reveal-product` | The app people come back to | Every child fades in, 0.06s apart, no rise | Nothing |
-| `reveal-product-subtle` | Same, quieter | Fade, 0.04s apart | Nothing |
+| Class                   | For                                               | On load                                                                          | On scroll                                                                                                                                          |
+| ----------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reveal-landing`        | A page read once: a launch, pricing, a case study | 1st child is the hero; its children rise 12px and scale in from 0.94, 0.1s apart | Every later child does the same with the scroll, from its top edge 12px inside the viewport to 120px; every section leaves the same way at the top |
+| `reveal-landing-subtle` | Same, quieter                                     | 8px and 0.98, 0.06s apart                                                        | From 8px to 60px                                                                                                                                   |
+| `reveal-product`        | The app people come back to                       | Every child fades in, 0.06s apart, no rise                                       | Nothing                                                                                                                                            |
+| `reveal-product-subtle` | Same, quieter                                     | Fade, 0.04s apart                                                                | Nothing                                                                                                                                            |
 
 Scroll reveals in an app are noise by the 10th visit: an app screen should
 feel like it was already there.
@@ -354,7 +370,7 @@ foreground) that every loading state uses (Sidebar's menu skeleton,
 DataTable's rows), lighter than the Skeleton's own `bg-accent`.
 
 ```tsx
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton';
 
 <main className="reveal-product">
   <Header />
@@ -362,7 +378,7 @@ import { Skeleton } from "@/components/ui/skeleton";
     <ThreadsSkeleton className="reveal-items" aria-hidden />
     {threads && <Threads className="reveal-items" rows={threads} />}
   </div>
-</main>
+</main>;
 ```
 
 - Build each skeleton the exact size of its real block (same paddings,

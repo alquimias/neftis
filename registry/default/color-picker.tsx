@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createContext,
@@ -15,25 +15,25 @@ import {
   type CSSProperties,
   type HTMLAttributes,
   type ReactNode,
-} from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Popover } from "@base-ui/react/popover";
-import { Menu } from "@base-ui/react/menu";
-import { NumberField } from "@base-ui/react/number-field";
-import { cn } from "@/lib/utils";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { fontWeights } from "@/lib/font-weight";
-import { nestedRadius, useShape, usePopupShape } from "@/lib/shape-context";
-import { SizeProvider, useSize, typeClass, type SizeVariant } from "@/lib/size-context";
-import { useSurface, SurfaceProvider } from "@/lib/surface-context";
-import { surfaceClasses } from "@/lib/surface-classes";
-import { useIcons } from "@/lib/icon-context";
-import { useFluidHover, useRegisterFluidHoverItem } from "@/hooks/use-fluid-hover";
-import { Elevated } from "@/lib/elevated";
-import { PopupShield, popupMotionClass } from "@/lib/popup";
-import { Slider } from "@/registry/radix/slider";
-import { Tooltip, TooltipGroup } from "@/registry/radix/tooltip";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
+} from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Popover } from '@base-ui/react/popover';
+import { Menu } from '@base-ui/react/menu';
+import { NumberField } from '@base-ui/react/number-field';
+import { cn } from '#lib/utils';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { fontWeights } from '#lib/font-weight';
+import { nestedRadius, useShape, usePopupShape } from '#lib/shape-context';
+import { SizeProvider, useSize, typeClass, type SizeVariant } from '#lib/size-context';
+import { useSurface, SurfaceProvider } from '#lib/surface-context';
+import { surfaceClasses } from '#lib/surface-classes';
+import { useIcons } from '#lib/icon-context';
+import { useFluidHover, useRegisterFluidHoverItem } from '#hooks/use-fluid-hover';
+import { Elevated } from '#lib/elevated';
+import { PopupShield, popupMotionClass } from '#lib/popup';
+import { Slider } from '#registry/radix/slider';
+import { Tooltip, TooltipGroup } from '#registry/radix/tooltip';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
 
 // ---------------------------------------------------------------------------
 // ColorPicker holds one color as HSV + alpha and derives every format from
@@ -49,7 +49,7 @@ import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
 // Types
 // ---------------------------------------------------------------------------
 
-type ColorFormat = "hex" | "rgb" | "hsl" | "oklch";
+type ColorFormat = 'hex' | 'rgb' | 'hsl' | 'oklch';
 
 // Allows consumers to portal popups inside a CSS-scaled ancestor so
 // menu/popover layers visually scale with the picker. ColorPickerPopover
@@ -88,8 +88,10 @@ interface ParsedColor {
   oklch: string;
 }
 
-interface ColorPickerProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "onChange" | "defaultValue"> {
+interface ColorPickerProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'onChange' | 'defaultValue'
+> {
   /** Hex (3, 4, 6 or 8 digits), rgb(a), hsl(a) or oklch; named colors are
    *  not parsed here. A later value that doesn't parse is ignored (the panel
    *  keeps its color); an unparseable first value starts at pure red. */
@@ -121,7 +123,7 @@ interface ColorPickerProps
 
 interface ColorPickerPopoverProps extends ColorPickerProps {
   triggerLabel?: string;
-  triggerLabelPosition?: "left" | "right";
+  triggerLabelPosition?: 'left' | 'right';
   /** Shows the color as 6-digit hex next to the tile (alpha left out; the
    *  tile shows it). Default true. */
   triggerShowValue?: boolean;
@@ -142,8 +144,7 @@ interface ColorPickerPopoverProps extends ColorPickerProps {
 /** A swatch for the picker's strip: a CSS color, or one with a name. */
 type ColorSwatchItem = string | { color: string; label?: string };
 
-interface ColorSwatchProps
-  extends Omit<HTMLAttributes<HTMLButtonElement>, "color"> {
+interface ColorSwatchProps extends Omit<HTMLAttributes<HTMLButtonElement>, 'color'> {
   /** Any CSS color; it paints over a checker, so alpha shows. */
   color: string;
   /** Square edge in px. Default 28. */
@@ -171,13 +172,34 @@ function hsvToRgb(h: number, s: number, v: number): { r: number; g: number; b: n
   const c = v * s;
   const hh = (((h % 360) + 360) % 360) / 60;
   const x = c * (1 - Math.abs((hh % 2) - 1));
-  let r = 0, g = 0, b = 0;
-  if (hh < 1) { r = c; g = x; b = 0; }
-  else if (hh < 2) { r = x; g = c; b = 0; }
-  else if (hh < 3) { r = 0; g = c; b = x; }
-  else if (hh < 4) { r = 0; g = x; b = c; }
-  else if (hh < 5) { r = x; g = 0; b = c; }
-  else { r = c; g = 0; b = x; }
+  let r = 0,
+    g = 0,
+    b = 0;
+  if (hh < 1) {
+    r = c;
+    g = x;
+    b = 0;
+  } else if (hh < 2) {
+    r = x;
+    g = c;
+    b = 0;
+  } else if (hh < 3) {
+    r = 0;
+    g = c;
+    b = x;
+  } else if (hh < 4) {
+    r = 0;
+    g = x;
+    b = c;
+  } else if (hh < 5) {
+    r = x;
+    g = 0;
+    b = c;
+  } else {
+    r = c;
+    g = 0;
+    b = x;
+  }
   const m = v - c;
   return { r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255 };
 }
@@ -186,7 +208,9 @@ function hsvToRgb(h: number, s: number, v: number): { r: number; g: number; b: n
 // has no hue to give back. Callers check `s === 0` and substitute a hue of
 // their own (usually the current state hue), which is how H survives S=0 / V=0.
 function rgbToHsv(r: number, g: number, b: number): { h: number; s: number; v: number } {
-  r /= 255; g /= 255; b /= 255;
+  r /= 255;
+  g /= 255;
+  b /= 255;
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   const v = max;
@@ -204,12 +228,15 @@ function rgbToHsv(r: number, g: number, b: number): { h: number; s: number; v: n
 }
 
 function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number } {
-  r /= 255; g /= 255; b /= 255;
+  r /= 255;
+  g /= 255;
+  b /= 255;
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   const l = (max + min) / 2;
   const d = max - min;
-  let h = 0, s = 0;
+  let h = 0,
+    s = 0;
   if (d > 0) {
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
     if (max === r) h = ((g - b) / d) % 6;
@@ -225,13 +252,28 @@ function hslToRgb(h: number, s: number, l: number): { r: number; g: number; b: n
   const c = (1 - Math.abs(2 * l - 1)) * s;
   const hh = (((h % 360) + 360) % 360) / 60;
   const x = c * (1 - Math.abs((hh % 2) - 1));
-  let r = 0, g = 0, b = 0;
-  if (hh < 1) { r = c; g = x; }
-  else if (hh < 2) { r = x; g = c; }
-  else if (hh < 3) { g = c; b = x; }
-  else if (hh < 4) { g = x; b = c; }
-  else if (hh < 5) { r = x; b = c; }
-  else { r = c; b = x; }
+  let r = 0,
+    g = 0,
+    b = 0;
+  if (hh < 1) {
+    r = c;
+    g = x;
+  } else if (hh < 2) {
+    r = x;
+    g = c;
+  } else if (hh < 3) {
+    g = c;
+    b = x;
+  } else if (hh < 4) {
+    g = x;
+    b = c;
+  } else if (hh < 5) {
+    r = x;
+    b = c;
+  } else {
+    r = c;
+    b = x;
+  }
   const m = l - c / 2;
   return { r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255 };
 }
@@ -259,23 +301,23 @@ function linearRgbToOklab(r: number, g: number, b: number): { L: number; a: numb
   const m_ = Math.cbrt(m);
   const s_ = Math.cbrt(s);
   return {
-    L: 0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_,
-    a: 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_,
-    b: 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_,
+    L: 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_,
+    a: 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_,
+    b: 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_,
   };
 }
 
 function oklabToLinearRgb(L: number, a: number, b: number): { r: number; g: number; b: number } {
   const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
   const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
-  const s_ = L - 0.0894841775 * a - 1.2914855480 * b;
+  const s_ = L - 0.0894841775 * a - 1.291485548 * b;
   const l = l_ * l_ * l_;
   const m = m_ * m_ * m_;
   const s = s_ * s_ * s_;
   return {
-    r:  4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    r: 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
     g: -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
-    b: -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
+    b: -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
   };
 }
 
@@ -288,7 +330,7 @@ function rgbToOklch(r: number, g: number, b: number): { L: number; C: number; H:
   const lb = srgbToLinear(b);
   const lab = linearRgbToOklab(lr, lg, lb);
   const C = Math.sqrt(lab.a * lab.a + lab.b * lab.b);
-  let H = Math.atan2(lab.b, lab.a) * 180 / Math.PI;
+  let H = (Math.atan2(lab.b, lab.a) * 180) / Math.PI;
   if (H < 0) H += 360;
   return { L: lab.L, C, H };
 }
@@ -297,8 +339,8 @@ function rgbToOklch(r: number, g: number, b: number): { L: number; C: number; H:
 // past the sRGB edge lands on the nearest displayable channel values, and the
 // field then shows the chroma of that clipped color.
 function oklchToRgb(L: number, C: number, H: number): { r: number; g: number; b: number } {
-  const a = C * Math.cos(H * Math.PI / 180);
-  const b = C * Math.sin(H * Math.PI / 180);
+  const a = C * Math.cos((H * Math.PI) / 180);
+  const b = C * Math.sin((H * Math.PI) / 180);
   const lin = oklabToLinearRgb(L, a, b);
   // Clamp to sRGB silently (option a from plan)
   return {
@@ -309,7 +351,7 @@ function oklchToRgb(L: number, C: number, H: number): { r: number; g: number; b:
 }
 
 function to2hex(n: number): string {
-  return Math.round(clamp255(n)).toString(16).padStart(2, "0");
+  return Math.round(clamp255(n)).toString(16).padStart(2, '0');
 }
 
 // Alpha is appended only below 1, so opaque colors stay 6-digit. This is
@@ -320,8 +362,16 @@ function rgbToHexStr(r: number, g: number, b: number, a: number): string {
 }
 
 function expandShortHex(h: string): string {
-  if (h.length === 3) return h.split("").map((c) => c + c).join("");
-  if (h.length === 4) return h.split("").map((c) => c + c).join("");
+  if (h.length === 3)
+    return h
+      .split('')
+      .map((c) => c + c)
+      .join('');
+  if (h.length === 4)
+    return h
+      .split('')
+      .map((c) => c + c)
+      .join('');
   return h;
 }
 
@@ -358,7 +408,7 @@ function parseHex(input: string): { r: number; g: number; b: number; a: number }
 function parseColor(input: string): { r: number; g: number; b: number; a: number } | null {
   const s = input.trim();
   if (!s) return null;
-  if (s.startsWith("#") || /^[0-9a-fA-F]{3,8}$/.test(s)) {
+  if (s.startsWith('#') || /^[0-9a-fA-F]{3,8}$/.test(s)) {
     return parseHex(s);
   }
   const rgbM = s.match(/^rgba?\(\s*([^)]+)\)$/i);
@@ -370,7 +420,7 @@ function parseColor(input: string): { r: number; g: number; b: number; a: number
     const b = parseFloat(parts[2]);
     let a = 1;
     if (parts[3] !== undefined) {
-      a = parts[3].endsWith("%") ? parseFloat(parts[3]) / 100 : parseFloat(parts[3]);
+      a = parts[3].endsWith('%') ? parseFloat(parts[3]) / 100 : parseFloat(parts[3]);
     }
     if ([r, g, b, a].some(Number.isNaN)) return null;
     return { r: clamp255(r), g: clamp255(g), b: clamp255(b), a: clamp01(a) };
@@ -380,11 +430,11 @@ function parseColor(input: string): { r: number; g: number; b: number; a: number
     const parts = hslM[1].split(/[\s,/]+/).filter(Boolean);
     if (parts.length < 3) return null;
     const h = parseFloat(parts[0]);
-    const sat = parts[1].endsWith("%") ? parseFloat(parts[1]) / 100 : parseFloat(parts[1]);
-    const l = parts[2].endsWith("%") ? parseFloat(parts[2]) / 100 : parseFloat(parts[2]);
+    const sat = parts[1].endsWith('%') ? parseFloat(parts[1]) / 100 : parseFloat(parts[1]);
+    const l = parts[2].endsWith('%') ? parseFloat(parts[2]) / 100 : parseFloat(parts[2]);
     let a = 1;
     if (parts[3] !== undefined) {
-      a = parts[3].endsWith("%") ? parseFloat(parts[3]) / 100 : parseFloat(parts[3]);
+      a = parts[3].endsWith('%') ? parseFloat(parts[3]) / 100 : parseFloat(parts[3]);
     }
     if ([h, sat, l, a].some(Number.isNaN)) return null;
     const rgb = hslToRgb(h, clamp01(sat), clamp01(l));
@@ -394,12 +444,12 @@ function parseColor(input: string): { r: number; g: number; b: number; a: number
   if (oklchM) {
     const parts = oklchM[1].split(/[\s,/]+/).filter(Boolean);
     if (parts.length < 3) return null;
-    const L = parts[0].endsWith("%") ? parseFloat(parts[0]) / 100 : parseFloat(parts[0]);
+    const L = parts[0].endsWith('%') ? parseFloat(parts[0]) / 100 : parseFloat(parts[0]);
     const C = parseFloat(parts[1]);
     const H = parseFloat(parts[2]);
     let a = 1;
     if (parts[3] !== undefined) {
-      a = parts[3].endsWith("%") ? parseFloat(parts[3]) / 100 : parseFloat(parts[3]);
+      a = parts[3].endsWith('%') ? parseFloat(parts[3]) / 100 : parseFloat(parts[3]);
     }
     if ([L, C, H, a].some(Number.isNaN)) return null;
     const rgb = oklchToRgb(clamp01(L), Math.max(0, C), H);
@@ -420,25 +470,29 @@ const subscribeNever = () => () => {};
 /** False on the server and while hydrating, true after: a client-only value
  *  without a hydration mismatch. */
 function useIsClient() {
-  return useSyncExternalStore(subscribeNever, () => true, () => false);
+  return useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false,
+  );
 }
 
 function resolveCssColor(input: string): { r: number; g: number; b: number; a: number } | null {
   const direct = parseColor(input);
   if (direct) return direct;
   const s = input.trim();
-  if (!s || typeof document === "undefined") return null;
+  if (!s || typeof document === 'undefined') return null;
   if (!cssColorCtx) {
-    cssColorCtx = document.createElement("canvas").getContext("2d");
+    cssColorCtx = document.createElement('canvas').getContext('2d');
     if (!cssColorCtx) return null;
   }
   const ctx = cssColorCtx;
   // An invalid color assignment leaves fillStyle untouched, so round-trip from
   // two different starting values to detect rejection.
-  ctx.fillStyle = "#000000";
+  ctx.fillStyle = '#000000';
   ctx.fillStyle = s;
   const first = String(ctx.fillStyle);
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = '#ffffff';
   ctx.fillStyle = s;
   const second = String(ctx.fillStyle);
   if (first !== second) return null;
@@ -454,28 +508,43 @@ function buildParsed(h: number, s: number, v: number, a: number): ParsedColor {
   const hsl = rgbToHsl(r, g, b);
   const oklch = rgbToOklch(r, g, b);
   const hex = rgbToHexStr(r, g, b, a);
-  const rgbStr = a >= 1
-    ? `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`
-    : `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${Number(a.toFixed(3))})`;
-  const hslStr = a >= 1
-    ? `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s * 100)}%, ${Math.round(hsl.l * 100)}%)`
-    : `hsla(${Math.round(hsl.h)}, ${Math.round(hsl.s * 100)}%, ${Math.round(hsl.l * 100)}%, ${Number(a.toFixed(3))})`;
-  const oklchStr = a >= 1
-    ? `oklch(${(oklch.L * 100).toFixed(1)}% ${oklch.C.toFixed(3)} ${oklch.H.toFixed(1)})`
-    : `oklch(${(oklch.L * 100).toFixed(1)}% ${oklch.C.toFixed(3)} ${oklch.H.toFixed(1)} / ${Number(a.toFixed(3))})`;
+  const rgbStr =
+    a >= 1
+      ? `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`
+      : `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${Number(a.toFixed(3))})`;
+  const hslStr =
+    a >= 1
+      ? `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s * 100)}%, ${Math.round(hsl.l * 100)}%)`
+      : `hsla(${Math.round(hsl.h)}, ${Math.round(hsl.s * 100)}%, ${Math.round(hsl.l * 100)}%, ${Number(a.toFixed(3))})`;
+  const oklchStr =
+    a >= 1
+      ? `oklch(${(oklch.L * 100).toFixed(1)}% ${oklch.C.toFixed(3)} ${oklch.H.toFixed(1)})`
+      : `oklch(${(oklch.L * 100).toFixed(1)}% ${oklch.C.toFixed(3)} ${oklch.H.toFixed(1)} / ${Number(a.toFixed(3))})`;
   return {
-    h, s, v, a,
-    r: Math.round(r), g: Math.round(g), b: Math.round(b),
-    hex, rgb: rgbStr, hsl: hslStr, oklch: oklchStr,
+    h,
+    s,
+    v,
+    a,
+    r: Math.round(r),
+    g: Math.round(g),
+    b: Math.round(b),
+    hex,
+    rgb: rgbStr,
+    hsl: hslStr,
+    oklch: oklchStr,
   };
 }
 
 function formatValueByFormat(parsed: ParsedColor, fmt: ColorFormat): string {
   switch (fmt) {
-    case "hex": return parsed.hex;
-    case "rgb": return parsed.rgb;
-    case "hsl": return parsed.hsl;
-    case "oklch": return parsed.oklch;
+    case 'hex':
+      return parsed.hex;
+    case 'rgb':
+      return parsed.rgb;
+    case 'hsl':
+      return parsed.hsl;
+    case 'oklch':
+      return parsed.oklch;
   }
 }
 
@@ -490,8 +559,8 @@ const SQUARE_HEIGHT = 156;
 // inline). --checker-a / --checker-b carry the light and dark values.
 const CHECKER_BG: CSSProperties = {
   backgroundImage:
-    "conic-gradient(var(--checker-a) 0 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0)",
-  backgroundSize: "8px 8px",
+    'conic-gradient(var(--checker-a) 0 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0)',
+  backgroundSize: '8px 8px',
 };
 
 // ---------------------------------------------------------------------------
@@ -525,7 +594,7 @@ function SaturationSquare({ h, s, v, onChange }: SaturationSquareProps) {
   const radius = nestedRadius(shape.containerRadius, 12);
   // Rounded: 12px - 12px = 0, square corners. Pill: 24px - 12px = 12px.
   // The thumb and its hover ghost go square with sharp, round otherwise.
-  const thumbRadius = shape.variant === "sharp" ? "rounded-none" : "rounded-full";
+  const thumbRadius = shape.variant === 'sharp' ? 'rounded-none' : 'rounded-full';
 
   const updateFromPointer = useCallback(
     (clientX: number, clientY: number) => {
@@ -535,7 +604,7 @@ function SaturationSquare({ h, s, v, onChange }: SaturationSquareProps) {
       const y = clamp01((clientY - rect.top) / rect.height);
       onChange(x, 1 - y);
     },
-    [onChange]
+    [onChange],
   );
 
   // The ghost ring's position, tracked apart from the value: it follows every
@@ -554,14 +623,14 @@ function SaturationSquare({ h, s, v, onChange }: SaturationSquareProps) {
   // clamp in updateFromPointer pins the thumb to the border.
   const onPointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
       e.preventDefault();
       setDragging(true);
       hasMoved.current = false;
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
       updateFromPointer(e.clientX, e.clientY);
     },
-    [updateFromPointer]
+    [updateFromPointer],
   );
 
   const onPointerMove = useCallback(
@@ -571,7 +640,7 @@ function SaturationSquare({ h, s, v, onChange }: SaturationSquareProps) {
       hasMoved.current = true;
       updateFromPointer(e.clientX, e.clientY);
     },
-    [dragging, updateFromPointer, updateCursorPos]
+    [dragging, updateFromPointer, updateCursorPos],
   );
 
   const onPointerUp = useCallback(() => {
@@ -582,18 +651,20 @@ function SaturationSquare({ h, s, v, onChange }: SaturationSquareProps) {
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       const step = e.shiftKey ? 0.1 : 0.01;
-      let nextS = s, nextV = v, handled = true;
-      if (e.key === "ArrowLeft") nextS = clamp01(s - step);
-      else if (e.key === "ArrowRight") nextS = clamp01(s + step);
-      else if (e.key === "ArrowUp") nextV = clamp01(v + step);
-      else if (e.key === "ArrowDown") nextV = clamp01(v - step);
+      let nextS = s,
+        nextV = v,
+        handled = true;
+      if (e.key === 'ArrowLeft') nextS = clamp01(s - step);
+      else if (e.key === 'ArrowRight') nextS = clamp01(s + step);
+      else if (e.key === 'ArrowUp') nextV = clamp01(v + step);
+      else if (e.key === 'ArrowDown') nextV = clamp01(v - step);
       else handled = false;
       if (handled) {
         e.preventDefault();
         onChange(nextS, nextV);
       }
     },
-    [onChange, s, v]
+    [onChange, s, v],
   );
 
   const { r, g, b } = hsvToRgb(h, s, v);
@@ -609,7 +680,9 @@ function SaturationSquare({ h, s, v, onChange }: SaturationSquareProps) {
       role="application"
       aria-label="Saturation and brightness"
       tabIndex={0}
-      onFocus={(e) => { if (e.currentTarget.matches(":focus-visible")) setFocused(true); }}
+      onFocus={(e) => {
+        if (e.currentTarget.matches(':focus-visible')) setFocused(true);
+      }}
       onBlur={() => setFocused(false)}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => {
@@ -620,13 +693,11 @@ function SaturationSquare({ h, s, v, onChange }: SaturationSquareProps) {
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onKeyDown={onKeyDown}
-      className={cn(
-        "relative w-full select-none touch-none cursor-none outline-none"
-      )}
+      className={cn('relative w-full select-none touch-none cursor-none outline-none')}
       style={{
         height: SQUARE_HEIGHT,
         borderRadius: radius,
-        boxShadow: focused ? "0 0 0 2px var(--focus-ring, #6B97FF)" : undefined,
+        boxShadow: focused ? '0 0 0 2px var(--focus-ring, #6B97FF)' : undefined,
       }}
     >
       {/* Black rising from the bottom over white → pure hue: exactly the HSV
@@ -642,7 +713,7 @@ function SaturationSquare({ h, s, v, onChange }: SaturationSquareProps) {
           black ring keeps it visible on light and dark regions alike.
           Duration 0 so it never lags the pointer. */}
       <motion.div
-        className={cn("absolute pointer-events-none", thumbRadius)}
+        className={cn('absolute pointer-events-none', thumbRadius)}
         initial={false}
         animate={{
           left: `${s * 100}%`,
@@ -652,9 +723,9 @@ function SaturationSquare({ h, s, v, onChange }: SaturationSquareProps) {
         }}
         transition={{ duration: 0 }}
         style={{
-          transform: "translate(-50%, -50%)",
-          border: "1px solid white",
-          boxShadow: "0 0 0 1px rgba(0,0,0,1)",
+          transform: 'translate(-50%, -50%)',
+          border: '1px solid white',
+          boxShadow: '0 0 0 1px rgba(0,0,0,1)',
           backgroundColor: thumbColor,
         }}
       />
@@ -663,15 +734,15 @@ function SaturationSquare({ h, s, v, onChange }: SaturationSquareProps) {
           Hidden while dragging, when the real thumb is under the pointer. */}
       {hovered && !dragging && cursorPos && (
         <div
-          className={cn("absolute pointer-events-none", thumbRadius)}
+          className={cn('absolute pointer-events-none', thumbRadius)}
           style={{
             left: `${cursorPos.x}%`,
             top: `${cursorPos.y}%`,
             width: 18,
             height: 18,
-            transform: "translate(-50%, -50%)",
-            border: "2px solid rgba(255, 255, 255, 0.55)",
-            boxShadow: "0 0 0 1px rgba(0, 0, 0, 0.2)",
+            transform: 'translate(-50%, -50%)',
+            border: '2px solid rgba(255, 255, 255, 0.55)',
+            boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.2)',
           }}
         />
       )}
@@ -692,7 +763,7 @@ function HueSlider({ h, onChange }: { h: number; onChange: (h: number) => void }
   return (
     <Slider
       value={h}
-      onChange={(v) => onChange(typeof v === "number" ? v : v[0])}
+      onChange={(v) => onChange(typeof v === 'number' ? v : v[0])}
       min={0}
       max={360}
       step={1}
@@ -702,8 +773,8 @@ function HueSlider({ h, onChange }: { h: number; onChange: (h: number) => void }
       thumbBorderColor="rgba(255,255,255,0.9)"
       trackStyle={{
         background:
-          "linear-gradient(to right, hsl(0,100%,50%), hsl(60,100%,50%), hsl(120,100%,50%), hsl(180,100%,50%), hsl(240,100%,50%), hsl(300,100%,50%), hsl(360,100%,50%))",
-        borderColor: "transparent",
+          'linear-gradient(to right, hsl(0,100%,50%), hsl(60,100%,50%), hsl(120,100%,50%), hsl(180,100%,50%), hsl(240,100%,50%), hsl(300,100%,50%), hsl(360,100%,50%))',
+        borderColor: 'transparent',
       }}
       aria-label="Hue"
     />
@@ -737,7 +808,7 @@ function AlphaSlider({
   return (
     <Slider
       value={Math.round(a * 100)}
-      onChange={(v) => onChange((typeof v === "number" ? v : v[0]) / 100)}
+      onChange={(v) => onChange((typeof v === 'number' ? v : v[0]) / 100)}
       min={0}
       max={100}
       step={1}
@@ -747,7 +818,7 @@ function AlphaSlider({
       thumbBorderColor="rgba(255,255,255,0.9)"
       trackStyle={{
         backgroundImage: `linear-gradient(to right, ${transparentColor} 0%, ${solidColor} 98%), conic-gradient(var(--checker-a) 0 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0)`,
-        backgroundSize: "100% 100%, 8px 8px",
+        backgroundSize: '100% 100%, 8px 8px',
         borderWidth: 0,
       }}
       aria-label="Alpha"
@@ -786,10 +857,7 @@ function usePopupExit(open: boolean, setOpen: (open: boolean) => void) {
     if (actionsRef.current) actionsRef.current.close();
     else setRootOpen(false);
   }, [open, rootOpen]);
-  const onOpenChange = (
-    next: boolean,
-    details: { preventUnmountOnClose: () => void }
-  ) => {
+  const onOpenChange = (next: boolean, details: { preventUnmountOnClose: () => void }) => {
     if (!next) {
       details.preventUnmountOnClose();
       setRootOpen(false);
@@ -801,13 +869,13 @@ function usePopupExit(open: boolean, setOpen: (open: boolean) => void) {
 }
 
 const FORMAT_LABELS: Record<ColorFormat, string> = {
-  hex: "HEX",
-  rgb: "RGB",
-  hsl: "HSL",
-  oklch: "OKLCH",
+  hex: 'HEX',
+  rgb: 'RGB',
+  hsl: 'HSL',
+  oklch: 'OKLCH',
 };
 
-const FORMATS = ["hex", "rgb", "hsl", "oklch"] as const;
+const FORMATS = ['hex', 'rgb', 'hsl', 'oklch'] as const;
 
 interface FormatMenuContextValue {
   registerItem: (index: number, element: HTMLElement | null) => void;
@@ -832,7 +900,7 @@ function FormatItem({
   const menuCtx = useContext(FormatMenuContext);
   const shape = useShape();
   const sizeClasses = useSize();
-  const compact = sizeClasses.variant === "compact";
+  const compact = sizeClasses.variant === 'compact';
 
   // data-fluid-hover-index (below) lets the popup's onFocus map a focused
   // row back to its index, so keyboard focus moves the same highlight.
@@ -853,10 +921,10 @@ function FormatItem({
           ref={ref}
           data-fluid-hover-index={index}
           className={cn(
-            "relative z-10 flex items-center cursor-pointer outline-none",
-            compact ? "px-2.5 py-1.5" : "px-3 py-2",
+            'relative z-10 flex items-center cursor-pointer outline-none',
+            compact ? 'px-2.5 py-1.5' : 'px-3 py-2',
             sizeClasses.text,
-            shape.item
+            shape.item,
           )}
         />
       }
@@ -871,13 +939,11 @@ function FormatItem({
         </span>
         <span
           className={cn(
-            "col-start-1 row-start-1 transition-[color,font-variation-settings] duration-80",
-            isActive || checked ? "text-foreground" : "text-muted-foreground"
+            'col-start-1 row-start-1 transition-[color,font-variation-settings] duration-80',
+            isActive || checked ? 'text-foreground' : 'text-muted-foreground',
           )}
           style={{
-            fontVariationSettings: checked
-              ? fontWeights.semibold
-              : fontWeights.normal,
+            fontVariationSettings: checked ? fontWeights.semibold : fontWeights.normal,
           }}
         >
           {label}
@@ -920,17 +986,10 @@ function FormatDropdown({
   const portalContainer = useContext(ColorPickerPortalContainerContext);
   const containerRef = useRef<HTMLDivElement>(null);
   const icons = useIcons();
-  const ChevronDownIcon = icons["chevron-down"];
+  const ChevronDownIcon = icons['chevron-down'];
 
   const hover = useFluidHover(containerRef);
-  const {
-    activeIndex,
-    setActiveIndex,
-    itemRects,
-    handlers,
-    registerItem,
-    remeasure,
-  } = hover;
+  const { activeIndex, setActiveIndex, itemRects, handlers, registerItem, remeasure } = hover;
 
   // Row that holds keyboard focus (:focus-visible only). It drives the focus
   // ring; the highlight follows activeIndex, which hover and focus both set.
@@ -959,7 +1018,7 @@ function FormatDropdown({
   const focusRect = focusedIndex !== null ? itemRects[focusedIndex] : null;
   const menuCtx = useMemo(
     () => ({ registerItem, activeIndex, checkedIndex }),
-    [registerItem, activeIndex, checkedIndex]
+    [registerItem, activeIndex, checkedIndex],
   );
 
   return (
@@ -980,13 +1039,13 @@ function FormatDropdown({
         ref={triggerRef}
         onPointerDown={releaseFocus}
         className={cn(
-          "flex items-center justify-between bg-transparent hover:bg-hover hover:text-foreground transition-colors duration-80 outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] cursor-pointer",
+          'flex items-center justify-between bg-transparent hover:bg-hover hover:text-foreground transition-colors duration-80 outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] cursor-pointer',
           sizeClasses.gap,
           sizeClasses.control,
           sizeClasses.px,
           sizeClasses.text,
-          open ? "bg-active text-foreground" : "text-muted-foreground active:bg-active",
-          shape.input
+          open ? 'bg-active text-foreground' : 'text-muted-foreground active:bg-active',
+          shape.input,
         )}
         style={{ fontVariationSettings: fontWeights.normal }}
       >
@@ -995,8 +1054,8 @@ function FormatDropdown({
           size={14}
           strokeWidth={1.5}
           className={cn(
-            "text-muted-foreground transition-transform duration-150",
-            open && "rotate-180"
+            'text-muted-foreground transition-transform duration-150',
+            open && 'rotate-180',
           )}
         />
       </Menu.Trigger>
@@ -1011,11 +1070,11 @@ function FormatDropdown({
               offset when the menu opens above, as Dropdown's does. */}
           <motion.div
             className={popupMotionClass}
-            initial={{ opacity: 0, y: "var(--popup-enter-y)", scaleY: 0.96 }}
+            initial={{ opacity: 0, y: 'var(--popup-enter-y)', scaleY: 0.96 }}
             animate={
               open
                 ? { opacity: 1, y: 0, scaleY: 1 }
-                : { opacity: 0, y: "var(--popup-enter-y)", scaleY: 0.96 }
+                : { opacity: 0, y: 'var(--popup-enter-y)', scaleY: 0.96 }
             }
             transition={open ? spring.fast : spring.fast.exit}
             // The close held Base UI's unmount (preventUnmountOnClose); release it once
@@ -1033,9 +1092,8 @@ function FormatDropdown({
                     offset={2}
                     shadowLevel={3}
                     ref={(node: HTMLDivElement | null) => {
-                      (
-                        containerRef as React.MutableRefObject<HTMLDivElement | null>
-                      ).current = node;
+                      (containerRef as React.MutableRefObject<HTMLDivElement | null>).current =
+                        node;
                     }}
                   />
                 }
@@ -1067,26 +1125,23 @@ function FormatDropdown({
                     }
                   }
                   const indexAttr = (e.target as HTMLElement)
-                    .closest("[data-fluid-hover-index]")
-                    ?.getAttribute("data-fluid-hover-index");
+                    .closest('[data-fluid-hover-index]')
+                    ?.getAttribute('data-fluid-hover-index');
                   if (indexAttr != null) {
                     const idx = Number(indexAttr);
                     setActiveIndex(idx);
                     setFocusedIndex(
-                      (e.target as HTMLElement).matches(":focus-visible")
-                        ? idx
-                        : null
+                      (e.target as HTMLElement).matches(':focus-visible') ? idx : null,
                     );
                   }
                 }}
                 onBlur={(e) => {
-                  if (containerRef.current?.contains(e.relatedTarget as Node))
-                    return;
+                  if (containerRef.current?.contains(e.relatedTarget as Node)) return;
                   setFocusedIndex(null);
                   setActiveIndex(null);
                 }}
                 className={cn(
-                  `relative flex flex-col min-w-[var(--anchor-width)] ${menuShape.container} p-1 select-none outline-none`
+                  `relative flex flex-col min-w-[var(--anchor-width)] ${menuShape.container} p-1 select-none outline-none`,
                 )}
               >
                 {/* Selected background: its own layer under the hover
@@ -1114,10 +1169,7 @@ function FormatDropdown({
                 </AnimatePresence>
 
                 {/* Hover background */}
-                <FluidHoverHighlight
-                  hover={hover}
-                  className={menuShape.bg}
-                />
+                <FluidHoverHighlight hover={hover} className={menuShape.bg} />
 
                 {/* Focus ring: one 1px border drawn 2px outside the focused
                     row, gliding between rows on spring.fast. */}
@@ -1185,9 +1237,9 @@ interface ColorInputProps {
   width?: string;
   className?: string;
   inputClassName?: string;
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   prefix?: ReactNode;
-  inputMode?: "numeric" | "decimal" | "text";
+  inputMode?: 'numeric' | 'decimal' | 'text';
   nudgeStep?: number;
   nudgeShiftStep?: number;
   hasPercent?: boolean;
@@ -1208,9 +1260,9 @@ const TextColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
       width,
       className,
       inputClassName,
-      align = "left",
+      align = 'left',
       prefix,
-      inputMode = "text",
+      inputMode = 'text',
       nudgeStep,
       nudgeShiftStep,
       hasPercent = false,
@@ -1219,7 +1271,7 @@ const TextColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
       max,
       wrap = false,
     },
-    ref
+    ref,
   ) => {
     // Typing edits a local draft that commits on blur (Enter blurs). While
     // the field has focus, outside value changes leave the draft alone, so a
@@ -1228,7 +1280,7 @@ const TextColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
     const interactingRef = useRef(false);
     const shape = useShape();
     const sizeClasses = useSize();
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
 
     useEffect(() => {
       if (!interactingRef.current) setDraft(value);
@@ -1243,7 +1295,7 @@ const TextColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
       let bounded = n;
       if (wrap && min != null && max != null) {
         const range = max - min;
-        bounded = ((bounded - min) % range + range) % range + min;
+        bounded = ((((bounded - min) % range) + range) % range) + min;
       } else {
         if (min != null) bounded = Math.max(min, bounded);
         if (max != null) bounded = Math.min(max, bounded);
@@ -1258,7 +1310,7 @@ const TextColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
     // declares none, so there the arrows keep moving the caret.
     const nudge = (direction: 1 | -1, shift: boolean) => {
       const baseStep = shift ? (nudgeShiftStep ?? 10) : (nudgeStep ?? 1);
-      const cur = parseFloat(draft.replace("%", ""));
+      const cur = parseFloat(draft.replace('%', ''));
       if (Number.isNaN(cur)) return;
       commitNumber(cur + direction * baseStep);
     };
@@ -1268,18 +1320,18 @@ const TextColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
         className={cn(
           // The inset halves on touch screens, as on the channel fields: an
           // 8-digit hex in 16px digits needs the room.
-          "flex items-center px-2 pointer-coarse:px-1 bg-transparent hover:bg-hover active:bg-active transition-colors duration-80 focus-within:ring-1 focus-within:ring-[color:var(--focus-ring,#6B97FF)] select-none",
+          'flex items-center px-2 pointer-coarse:px-1 bg-transparent hover:bg-hover active:bg-active transition-colors duration-80 focus-within:ring-1 focus-within:ring-[color:var(--focus-ring,#6B97FF)] select-none',
           sizeClasses.control,
           shape.input,
-          className
+          className,
         )}
         style={{ width }}
       >
         {prefix && (
           <span
             className={cn(
-              "text-muted-foreground mr-1 select-none",
-              typeClass("caption", compact ? "compact" : "default")
+              'text-muted-foreground mr-1 select-none',
+              typeClass('caption', compact ? 'compact' : 'default'),
             )}
           >
             {prefix}
@@ -1297,7 +1349,7 @@ const TextColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
           onBlur={() => {
             interactingRef.current = false;
             if (draft !== value) {
-              const numeric = parseFloat(draft.replace("%", ""));
+              const numeric = parseFloat(draft.replace('%', ''));
               if (!Number.isNaN(numeric) && (min != null || max != null)) {
                 commitNumber(numeric);
               } else {
@@ -1306,36 +1358,36 @@ const TextColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
             } else setDraft(value);
           }}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === 'Enter') {
               (e.currentTarget as HTMLInputElement).blur();
-            } else if (e.key === "Escape") {
+            } else if (e.key === 'Escape') {
               setDraft(value);
               (e.currentTarget as HTMLInputElement).blur();
             } else if (
               (nudgeStep != null || nudgeShiftStep != null) &&
-              (e.key === "ArrowUp" || e.key === "ArrowDown")
+              (e.key === 'ArrowUp' || e.key === 'ArrowDown')
             ) {
               e.preventDefault();
-              nudge(e.key === "ArrowUp" ? 1 : -1, e.shiftKey);
+              nudge(e.key === 'ArrowUp' ? 1 : -1, e.shiftKey);
             }
           }}
           inputMode={inputMode}
           aria-label={ariaLabel}
           className={cn(
-            "flex-1 min-w-0 bg-transparent text-foreground outline-none tabular-nums",
+            'flex-1 min-w-0 bg-transparent text-foreground outline-none tabular-nums',
             sizeClasses.field,
-            align === "center" && "text-center",
-            align === "right" && "text-right",
-            inputClassName
+            align === 'center' && 'text-center',
+            align === 'right' && 'text-right',
+            inputClassName,
           )}
           style={{ fontVariationSettings: fontWeights.normal }}
         />
       </div>
     );
-  }
+  },
 );
 
-TextColorInput.displayName = "TextColorInput";
+TextColorInput.displayName = 'TextColorInput';
 
 // Two gestures share one field. Drag sideways on it to scrub (pointer lock,
 // a virtual ↔ cursor, 1px of travel per step); press without dragging to
@@ -1352,9 +1404,9 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
       width,
       className,
       inputClassName,
-      align = "left",
+      align = 'left',
       prefix,
-      inputMode = "numeric",
+      inputMode = 'numeric',
       nudgeStep,
       nudgeShiftStep,
       hasPercent = false,
@@ -1363,11 +1415,11 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
       max,
       wrap = false,
     },
-    ref
+    ref,
   ) => {
     const shape = useShape();
     const sizeClasses = useSize();
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
     const inputRef = useRef<HTMLInputElement | null>(null);
     // true = text mode (caret, typing); false = scrub mode (ew-resize cursor,
     // input transparent to the pointer).
@@ -1379,7 +1431,7 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
 
     // The parent passes display strings ("50%", "0.12"); NumberField wants a
     // number, and formats it back through `format` below.
-    const numeric = parseFloat(String(value).replace("%", ""));
+    const numeric = parseFloat(String(value).replace('%', ''));
     const fieldValue = Number.isNaN(numeric) ? null : numeric;
 
     const format = useMemo(() => {
@@ -1393,8 +1445,8 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
       if (hasPercent) {
         // style "unit" + unit "percent" renders "50%" while keeping the
         // numeric value on the 0..100 scale (unlike style "percent").
-        f.style = "unit";
-        f.unit = "percent";
+        f.style = 'unit';
+        f.unit = 'percent';
       }
       return f;
     }, [decimals, hasPercent]);
@@ -1402,10 +1454,10 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
     const setInputRef = useCallback(
       (node: HTMLInputElement | null) => {
         inputRef.current = node;
-        if (typeof ref === "function") ref(node);
+        if (typeof ref === 'function') ref(node);
         else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
       },
-      [ref]
+      [ref],
     );
 
     // Clamps (or wraps), rounds to the field's precision, and hands the parent
@@ -1418,7 +1470,7 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
           // (361 → 1, -1 → 359; exactly `max` stays put).
           if (bounded < min || bounded > max) {
             const range = max - min;
-            bounded = ((bounded - min) % range + range) % range + min;
+            bounded = ((((bounded - min) % range) + range) % range) + min;
           }
         } else {
           if (min != null) bounded = Math.max(min, bounded);
@@ -1428,7 +1480,7 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
           decimals != null ? bounded.toFixed(decimals) : String(Math.round(bounded));
         onCommit(hasPercent ? `${formatted}%` : formatted);
       },
-      [wrap, min, max, decimals, hasPercent, onCommit]
+      [wrap, min, max, decimals, hasPercent, onCommit],
     );
 
     return (
@@ -1440,11 +1492,7 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
           // Preserve the old commit-on-blur typing semantics: ignore the
           // per-keystroke parses and let the input-blur change land the final
           // value. Keyboard nudges, scrubbing, and wheel commit immediately.
-          if (
-            reason === "input-change" ||
-            reason === "input-paste" ||
-            reason === "input-clear"
-          ) {
+          if (reason === 'input-change' || reason === 'input-paste' || reason === 'input-clear') {
             return;
           }
           commit(next);
@@ -1454,7 +1502,7 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
           // input so the field returns to its rest state (matching the old
           // behavior). For a no-drag press, ScrubArea dispatches a synthetic
           // click right after this, which re-enters edit mode below.
-          if (eventDetails.reason === "scrub") {
+          if (eventDetails.reason === 'scrub') {
             pointerDownRef.current = false;
             inputRef.current?.blur();
           }
@@ -1467,10 +1515,10 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
         largeStep={nudgeShiftStep ?? 10}
         format={format}
         className={cn(
-          "flex items-center bg-transparent hover:bg-hover active:bg-active transition-colors duration-80 focus-within:ring-1 focus-within:ring-[color:var(--focus-ring,#6B97FF)] select-none",
+          'flex items-center bg-transparent hover:bg-hover active:bg-active transition-colors duration-80 focus-within:ring-1 focus-within:ring-[color:var(--focus-ring,#6B97FF)] select-none',
           sizeClasses.control,
           shape.input,
-          className
+          className,
         )}
         style={{ width }}
       >
@@ -1492,8 +1540,8 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
           className={cn(
             // Touch screens get 16px digits, and "100%" is 47px wide at 16px:
             // the inset halves there so it fits a 56px channel cell.
-            "flex flex-1 min-w-0 items-center self-stretch px-2 pointer-coarse:px-1",
-            !editing && "cursor-ew-resize"
+            'flex flex-1 min-w-0 items-center self-stretch px-2 pointer-coarse:px-1',
+            !editing && 'cursor-ew-resize',
           )}
         >
           {/* Stands in for the OS cursor, which pointer lock hides: a black
@@ -1515,8 +1563,8 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
           {prefix && (
             <span
               className={cn(
-                "text-muted-foreground mr-1 select-none",
-                typeClass("caption", compact ? "compact" : "default")
+                'text-muted-foreground mr-1 select-none',
+                typeClass('caption', compact ? 'compact' : 'default'),
               )}
             >
               {prefix}
@@ -1540,16 +1588,16 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
               setEditing(false);
             }}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 e.currentTarget.blur();
-              } else if (e.key === "Escape") {
+              } else if (e.key === 'Escape') {
                 // Revert the draft like the old input: restore the committed
                 // value's text before blurring so the input-blur commit is a
                 // no-op.
                 const input = e.currentTarget;
                 const setter = Object.getOwnPropertyDescriptor(
                   window.HTMLInputElement.prototype,
-                  "value"
+                  'value',
                 )?.set;
                 if (setter && fieldValue != null) {
                   const restored =
@@ -1557,39 +1605,35 @@ const ScrubColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
                       ? fieldValue.toFixed(decimals)
                       : String(Math.round(fieldValue));
                   setter.call(input, hasPercent ? `${restored}%` : restored);
-                  input.dispatchEvent(new Event("input", { bubbles: true }));
+                  input.dispatchEvent(new Event('input', { bubbles: true }));
                 }
                 input.blur();
               }
             }}
             className={cn(
-              "flex-1 min-w-0 bg-transparent text-foreground outline-none tabular-nums",
+              'flex-1 min-w-0 bg-transparent text-foreground outline-none tabular-nums',
               sizeClasses.field,
-              align === "center" && "text-center",
-              align === "right" && "text-right",
-              !editing && "pointer-events-none",
-              inputClassName
+              align === 'center' && 'text-center',
+              align === 'right' && 'text-right',
+              !editing && 'pointer-events-none',
+              inputClassName,
             )}
             style={{ fontVariationSettings: fontWeights.normal }}
           />
         </NumberField.ScrubArea>
       </NumberField.Root>
     );
-  }
+  },
 );
 
-ScrubColorInput.displayName = "ScrubColorInput";
+ScrubColorInput.displayName = 'ScrubColorInput';
 
 const ColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
   ({ scrubbable = false, ...props }, ref) =>
-    scrubbable ? (
-      <ScrubColorInput ref={ref} {...props} />
-    ) : (
-      <TextColorInput ref={ref} {...props} />
-    )
+    scrubbable ? <ScrubColorInput ref={ref} {...props} /> : <TextColorInput ref={ref} {...props} />,
 );
 
-ColorInput.displayName = "ColorInput";
+ColorInput.displayName = 'ColorInput';
 
 // ---------------------------------------------------------------------------
 // EyeDropperButton
@@ -1609,7 +1653,7 @@ function EyeDropperButton({ onPick }: { onPick: (hex: string) => void }) {
   // window.EyeDropper exists only in Chromium-based browsers. The server and
   // the hydrating render both say "unsupported", so there is no hydration
   // mismatch, and the button never appears elsewhere.
-  const supported = useIsClient() && "EyeDropper" in window;
+  const supported = useIsClient() && 'EyeDropper' in window;
 
   if (!supported) return null;
 
@@ -1632,10 +1676,10 @@ function EyeDropperButton({ onPick }: { onPick: (hex: string) => void }) {
       onClick={handleClick}
       aria-label="Pick color from screen"
       className={cn(
-        "flex items-center justify-center text-muted-foreground bg-transparent hover:bg-hover hover:text-foreground active:bg-active transition-colors duration-80 outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] cursor-pointer",
+        'flex items-center justify-center text-muted-foreground bg-transparent hover:bg-hover hover:text-foreground active:bg-active transition-colors duration-80 outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] cursor-pointer',
         sizeClasses.control,
         sizeClasses.px,
-        shape.input
+        shape.input,
       )}
     >
       <PipetteIcon size={sizeClasses.icon} strokeWidth={1.5} />
@@ -1661,19 +1705,16 @@ function ColorTile({ color, size = 24, className, style }: ColorTileProps) {
   const shape = useShape();
   return (
     <span
-      className={cn("inline-block relative shrink-0 overflow-hidden", shape.bg, className)}
+      className={cn('inline-block relative shrink-0 overflow-hidden', shape.bg, className)}
       style={{
         width: size,
         height: size,
         ...CHECKER_BG,
-        boxShadow: "inset 0 0 0 1px rgba(127,127,127,0.25)",
+        boxShadow: 'inset 0 0 0 1px rgba(127,127,127,0.25)',
         ...style,
       }}
     >
-      <span
-        className="absolute inset-0"
-        style={{ backgroundColor: color }}
-      />
+      <span className="absolute inset-0" style={{ backgroundColor: color }} />
     </span>
   );
 }
@@ -1690,19 +1731,19 @@ const ColorSwatch = forwardRef<HTMLButtonElement, ColorSwatchProps>(
     // page background, then a 2px outer ring (accent blue when selected,
     // 40% gray on hover). The gap keeps the ring readable on any swatch color.
     const ring = selected
-      ? "inset 0 0 0 1px rgba(127,127,127,0.25), 0 0 0 2px var(--background), 0 0 0 4px var(--fluid-accent, #6B97FF)"
+      ? 'inset 0 0 0 1px rgba(127,127,127,0.25), 0 0 0 2px var(--background), 0 0 0 4px var(--fluid-accent, #6B97FF)'
       : hovered
-        ? "inset 0 0 0 1px rgba(127,127,127,0.25), 0 0 0 2px var(--background), 0 0 0 4px rgba(127,127,127,0.4)"
-        : "inset 0 0 0 1px rgba(127,127,127,0.25)";
+        ? 'inset 0 0 0 1px rgba(127,127,127,0.25), 0 0 0 2px var(--background), 0 0 0 4px rgba(127,127,127,0.4)'
+        : 'inset 0 0 0 1px rgba(127,127,127,0.25)';
     return (
       <button
         ref={ref}
         type="button"
         aria-label={`Select color ${color}`}
         className={cn(
-          "relative shrink-0 overflow-hidden cursor-pointer outline-none transition-shadow duration-100",
+          'relative shrink-0 overflow-hidden cursor-pointer outline-none transition-shadow duration-100',
           shape.bg,
-          className
+          className,
         )}
         style={{
           width: size,
@@ -1710,20 +1751,23 @@ const ColorSwatch = forwardRef<HTMLButtonElement, ColorSwatchProps>(
           ...CHECKER_BG,
           boxShadow: ring,
         }}
-        onMouseEnter={(e) => { setHovered(true); onMouseEnter?.(e); }}
-        onMouseLeave={(e) => { setHovered(false); onMouseLeave?.(e); }}
+        onMouseEnter={(e) => {
+          setHovered(true);
+          onMouseEnter?.(e);
+        }}
+        onMouseLeave={(e) => {
+          setHovered(false);
+          onMouseLeave?.(e);
+        }}
         {...props}
       >
-        <span
-          className="absolute inset-0"
-          style={{ backgroundColor: color }}
-        />
+        <span className="absolute inset-0" style={{ backgroundColor: color }} />
       </button>
     );
-  }
+  },
 );
 
-ColorSwatch.displayName = "ColorSwatch";
+ColorSwatch.displayName = 'ColorSwatch';
 
 // ---------------------------------------------------------------------------
 // SwatchStrip
@@ -1735,9 +1779,9 @@ ColorSwatch.displayName = "ColorSwatch";
 // a band 2px in, as a Calendar range end fills its cell: a 2px frame round
 // the swatch that no swatch color can swallow, the hover background gliding
 // beneath it.
-const SWATCH_HAIRLINE = "inset 0 0 0 1px rgba(127,127,127,0.25)";
+const SWATCH_HAIRLINE = 'inset 0 0 0 1px rgba(127,127,127,0.25)';
 
-interface SwatchCellProps extends Omit<HTMLAttributes<HTMLButtonElement>, "color" | "onClick"> {
+interface SwatchCellProps extends Omit<HTMLAttributes<HTMLButtonElement>, 'color' | 'onClick'> {
   color: string;
   label?: string;
   index: number;
@@ -1753,17 +1797,20 @@ interface SwatchCellProps extends Omit<HTMLAttributes<HTMLButtonElement>, "color
 // forwardRef and the rest props: a labeled cell is a Tooltip's asChild
 // trigger, which hands it a ref and its pointer and focus handlers.
 const SwatchCell = forwardRef<HTMLButtonElement, SwatchCellProps>(
-  ({ color, label, index, selected, lit, pressed, registerItem, onPick, className, ...props }, forwardedRef) => {
+  (
+    { color, label, index, selected, lit, pressed, registerItem, onPick, className, ...props },
+    forwardedRef,
+  ) => {
     const shape = useShape();
     const ref = useRef<HTMLButtonElement>(null);
     useRegisterFluidHoverItem(registerItem, index, ref);
     const setRef = useCallback(
       (node: HTMLButtonElement | null) => {
         ref.current = node;
-        if (typeof forwardedRef === "function") forwardedRef(node);
+        if (typeof forwardedRef === 'function') forwardedRef(node);
         else if (forwardedRef) forwardedRef.current = node;
       },
-      [forwardedRef]
+      [forwardedRef],
     );
     return (
       <button
@@ -1773,9 +1820,9 @@ const SwatchCell = forwardRef<HTMLButtonElement, SwatchCellProps>(
         aria-label={label ?? `Select color ${color}`}
         aria-pressed={selected}
         className={cn(
-          "relative z-10 shrink-0 cursor-pointer p-1 outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]",
+          'relative z-10 shrink-0 cursor-pointer p-1 outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
           shape.container,
-          className
+          className,
         )}
         onClick={() => onPick(color)}
       >
@@ -1785,25 +1832,25 @@ const SwatchCell = forwardRef<HTMLButtonElement, SwatchCellProps>(
         <span
           aria-hidden
           className={cn(
-            "absolute bg-foreground transition-[opacity,inset,border-radius] duration-80",
-            lit && pressed ? "inset-[3px]" : "inset-0.5",
-            !selected ? "opacity-0" : lit && !pressed ? "opacity-80" : "opacity-100"
+            'absolute bg-foreground transition-[opacity,inset,border-radius] duration-80',
+            lit && pressed ? 'inset-[3px]' : 'inset-0.5',
+            !selected ? 'opacity-0' : lit && !pressed ? 'opacity-80' : 'opacity-100',
           )}
           // Concentric with the cell.
           style={{ borderRadius: nestedRadius(shape.containerRadius, lit && pressed ? 3 : 2) }}
         />
         <span
-          className={cn("relative block size-7 overflow-hidden", shape.bg)}
+          className={cn('relative block size-7 overflow-hidden', shape.bg)}
           style={{ ...CHECKER_BG, boxShadow: SWATCH_HAIRLINE }}
         >
           <span className="absolute inset-0" style={{ backgroundColor: color }} />
         </span>
       </button>
     );
-  }
+  },
 );
 
-SwatchCell.displayName = "SwatchCell";
+SwatchCell.displayName = 'SwatchCell';
 
 function SwatchStrip({
   swatches,
@@ -1816,15 +1863,15 @@ function SwatchStrip({
 }) {
   const shape = useShape();
   const items = useMemo(
-    () => swatches.map((sw) => (typeof sw === "string" ? { color: sw, label: undefined } : sw)),
-    [swatches]
+    () => swatches.map((sw) => (typeof sw === 'string' ? { color: sw, label: undefined } : sw)),
+    [swatches],
   );
 
   // Selection compares normalized lowercase hex (alpha included), so "#FFF",
   // "#ffffff" and "rgb(255, 255, 255)" all mark the same swatch.
   const normalizedCurrent = useMemo(() => {
     const p = parseColor(current);
-    return p ? rgbToHexStr(p.r, p.g, p.b, p.a).toLowerCase() : "";
+    return p ? rgbToHexStr(p.r, p.g, p.b, p.a).toLowerCase() : '';
   }, [current]);
 
   // Named CSS colors ("red", "tomato") need the browser to normalize before
@@ -1847,7 +1894,7 @@ function SwatchStrip({
   // from swatch to swatch, row and column alike, and goes out over the
   // unfilled end of the last row.
   const containerRef = useRef<HTMLDivElement>(null);
-  const hover = useFluidHover(containerRef, { axis: "xy" });
+  const hover = useFluidHover(containerRef, { axis: 'xy' });
   // registerItem is stable; the handlers object is new each render.
   const { registerItem, handlers, activeIndex } = hover;
 
@@ -1858,7 +1905,7 @@ function SwatchStrip({
     const parsed = parseColor(color);
     return parsed
       ? rgbToHexStr(parsed.r, parsed.g, parsed.b, parsed.a).toLowerCase()
-      : resolvedSwatches[color] ?? color.toLowerCase();
+      : (resolvedSwatches[color] ?? color.toLowerCase());
   });
   const selectedIndex = normalized.indexOf(normalizedCurrent);
   // Hovering the selected swatch: its band answers the press itself, so the
@@ -1871,8 +1918,8 @@ function SwatchStrip({
   useEffect(() => {
     if (!pressed) return;
     const release = () => setPressed(false);
-    window.addEventListener("mouseup", release);
-    return () => window.removeEventListener("mouseup", release);
+    window.addEventListener('mouseup', release);
+    return () => window.removeEventListener('mouseup', release);
   }, [pressed]);
 
   return (
@@ -1899,17 +1946,17 @@ function SwatchStrip({
         <FluidHoverHighlight
           hover={hover}
           className={cn(
-            "bg-transparent before:pointer-events-none before:absolute before:inset-[3px] before:bg-[var(--swatch-press)] before:transition-[box-shadow,background-color] before:[transition-duration:180ms,80ms] before:[transition-timing-function:cubic-bezier(0.23,1,0.32,1),ease]",
+            'bg-transparent before:pointer-events-none before:absolute before:inset-[3px] before:bg-[var(--swatch-press)] before:transition-[box-shadow,background-color] before:[transition-duration:180ms,80ms] before:[transition-timing-function:cubic-bezier(0.23,1,0.32,1),ease]',
             shape.container,
             // The band's radius 2px in, less the 1px spread.
             {
-              pill: "before:rounded-full",
-              rounded: "before:rounded-[9px]",
-              sharp: "before:rounded-none",
+              pill: 'before:rounded-full',
+              rounded: 'before:rounded-[9px]',
+              sharp: 'before:rounded-none',
             }[shape.variant],
             pressed && !litSelected
-              ? "[--swatch-press:var(--active)] before:shadow-[0_0_0_0px_var(--swatch-press)] before:[transition-duration:80ms,80ms]"
-              : "[--swatch-press:var(--hover)] before:shadow-[0_0_0_1px_var(--swatch-press)]"
+              ? '[--swatch-press:var(--active)] before:shadow-[0_0_0_0px_var(--swatch-press)] before:[transition-duration:80ms,80ms]'
+              : '[--swatch-press:var(--hover)] before:shadow-[0_0_0_1px_var(--swatch-press)]',
           )}
         />
         {items.map(({ color, label }, i) => {
@@ -1950,10 +1997,10 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
     {
       value,
       // eslint-disable-next-line no-restricted-syntax -- a starting color for the picker, not the accent
-      defaultValue = "#6B97FF",
+      defaultValue = '#6B97FF',
       onValueChange,
       format,
-      defaultFormat = "hex",
+      defaultFormat = 'hex',
       onFormatChange,
       swatches,
       hideEyedropper,
@@ -1963,7 +2010,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
       className,
       ...props
     },
-    ref
+    ref,
   ) => {
     const isControlled = value !== undefined;
     const [internalValue, setInternalValue] = useState(value ?? defaultValue);
@@ -1995,7 +2042,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
     // this panel last emitted. When a controlled parent echoes it straight
     // back, the sync skips it, so re-parsing a rounded string never snaps HSV
     // or drops a held hue.
-    const [lastEmitted, setLastEmitted] = useState("");
+    const [lastEmitted, setLastEmitted] = useState('');
     const [syncedValue, setSyncedValue] = useState(value);
     if (isControlled && value !== syncedValue) {
       setSyncedValue(value);
@@ -2013,10 +2060,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
       }
     }
 
-    const parsed = useMemo(
-      () => buildParsed(hsv.h, hsv.s, hsv.v, hsv.a),
-      [hsv]
-    );
+    const parsed = useMemo(() => buildParsed(hsv.h, hsv.s, hsv.v, hsv.a), [hsv]);
 
     // Write path for the square, rails and numeric channel fields: merge into HSV,
     // format in the current format, record it as emitted, then notify.
@@ -2030,7 +2074,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
         if (!isControlled) setInternalValue(formatted);
         onValueChange?.(formatted, p);
       },
-      [hsv, currentFormat, isControlled, onValueChange]
+      [hsv, currentFormat, isControlled, onValueChange],
     );
 
     // Switching format re-emits the same color as a string in the new format
@@ -2046,7 +2090,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
         if (!isControlled) setInternalValue(formatted);
         onValueChange?.(formatted, parsed);
       },
-      [isFormatControlled, isControlled, onFormatChange, onValueChange, parsed]
+      [isFormatControlled, isControlled, onFormatChange, onValueChange, parsed],
     );
 
     // Whole-color entry point shared by the hex field, swatches and the
@@ -2075,21 +2119,21 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
         if (!isControlled) setInternalValue(formatted);
         onValueChange?.(formatted, next);
       },
-      [hsv.h, currentFormat, isControlled, onValueChange]
+      [hsv.h, currentFormat, isControlled, onValueChange],
     );
 
     const handleSwatchPick = useCallback(
       (sw: string) => {
         handleHexCommit(sw);
       },
-      [handleHexCommit]
+      [handleHexCommit],
     );
 
     const handleEyedrop = useCallback(
       (hex: string) => {
         handleHexCommit(hex);
       },
-      [handleHexCommit]
+      [handleHexCommit],
     );
 
     // The current color at full opacity: the alpha rail's thumb and the
@@ -2111,143 +2155,154 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
     // (React context crosses portals) — to one step of the ladder.
     const root = (
       <SurfaceProvider value={pickerLevel}>
-      {/* p-3 is the 12px inset SaturationSquare subtracts from this
+        {/* p-3 is the 12px inset SaturationSquare subtracts from this
           container's radius; change one and the corners stop nesting. */}
-      <div
-        ref={ref}
-        className={cn("flex flex-col gap-2 p-3", surfaceClasses(pickerLevel, 1), shape.container, className)}
-        style={{ width: PANEL_WIDTH }}
-        {...props}
-      >
-        <SaturationSquare
-          h={hsv.h}
-          s={hsv.s}
-          v={hsv.v}
-          onChange={(s, v) => updateHsv({ s, v })}
-        />
+        <div
+          ref={ref}
+          className={cn(
+            'flex flex-col gap-2 p-3',
+            surfaceClasses(pickerLevel, 1),
+            shape.container,
+            className,
+          )}
+          style={{ width: PANEL_WIDTH }}
+          {...props}
+        >
+          <SaturationSquare
+            h={hsv.h}
+            s={hsv.s}
+            v={hsv.v}
+            onChange={(s, v) => updateHsv({ s, v })}
+          />
 
-        {/* A hue picked on the rail is a new stated hue, so the sticky
+          {/* A hue picked on the rail is a new stated hue, so the sticky
             OKLCH hue is dropped and OKLCH H follows the color again. */}
-        <div className="flex flex-col [&>*]:mb-0 [&>*:not(:first-child)]:-mt-px">
-          <HueSlider h={hsv.h} onChange={(h) => { setOklchHue(null); updateHsv({ h }); }} />
-          <AlphaSlider
-            a={hsv.a}
-            solidColor={solidColorString}
-            solidR={solidR}
-            solidG={solidG}
-            solidB={solidB}
-            onChange={(a) => updateHsv({ a })}
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          <FormatDropdown
-            value={currentFormat}
-            onChange={handleFormatChange}
-            open={formatOpen}
-            defaultOpen={defaultFormatOpen}
-          />
-          {!hideEyedropper && <EyeDropperButton onPick={handleEyedrop} />}
-        </div>
-
-        <ColorInputsRow
-          parsed={parsed}
-          format={currentFormat}
-          oklchHue={oklchHue}
-          // RGB, HSL and OKLCH edits rebuild the color in their own space
-          // from the current rounded RGB, convert back to HSV, and substitute
-          // a held hue whenever the result has no saturation.
-          onChannelChange={(channel, value) => {
-            const p = { ...parsed };
-            switch (channel) {
-              case "hex": handleHexCommit(value as string); return;
-              case "r": case "g": case "b": {
+          <div className="flex flex-col [&>*]:mb-0 [&>*:not(:first-child)]:-mt-px">
+            <HueSlider
+              h={hsv.h}
+              onChange={(h) => {
                 setOklchHue(null);
-                const r = channel === "r" ? Number(value) : p.r;
-                const g = channel === "g" ? Number(value) : p.g;
-                const b = channel === "b" ? Number(value) : p.b;
-                const hsvVal = rgbToHsv(r, g, b);
-                updateHsv({
-                  h: hsvVal.s === 0 ? hsv.h : hsvVal.h,
-                  s: hsvVal.s,
-                  v: hsvVal.v,
-                });
-                return;
-              }
-              case "hSL": case "sSL": case "lSL": {
-                if (channel === "hSL") setOklchHue(null);
-                const hsl = rgbToHsl(p.r, p.g, p.b);
-                const h2 = channel === "hSL" ? Number(value) : hsl.h;
-                const s2 = channel === "sSL" ? Number(value) / 100 : hsl.s;
-                const l2 = channel === "lSL" ? Number(value) / 100 : hsl.l;
-                const rgb = hslToRgb(h2, clamp01(s2), clamp01(l2));
-                const hsvVal = rgbToHsv(rgb.r, rgb.g, rgb.b);
-                // On a gray, a typed HSL hue still becomes the held HSV hue,
-                // so the square and hue rail pick it up. S/L edits read the
-                // hue back from rounded RGB instead, which is 0 on a gray.
-                updateHsv({
-                  h: hsvVal.s === 0 ? h2 : hsvVal.h,
-                  s: hsvVal.s,
-                  v: hsvVal.v,
-                });
-                return;
-              }
-              case "L": case "C": case "H": {
-                const cur = rgbToOklch(p.r, p.g, p.b);
-                // For L/C edits, anchor on the user's last stated H so we
-                // don't drift along with chroma changes.
-                const baseH = oklchHue ?? cur.H;
-                const L = channel === "L" ? Number(value) / 100 : cur.L;
-                const C = channel === "C" ? Number(value) : cur.C;
-                const H = channel === "H" ? Number(value) : baseH;
-                // Any OKLCH edit makes H sticky: chroma can go to 0 and back
-                // and the color returns to the hue the user set.
-                setOklchHue(H);
-                const rgb = oklchToRgb(clamp01(L), Math.max(0, C), H);
-                const hsvVal = rgbToHsv(rgb.r, rgb.g, rgb.b);
-                updateHsv({
-                  h: hsvVal.s === 0 ? hsv.h : hsvVal.h,
-                  s: hsvVal.s,
-                  v: hsvVal.v,
-                });
-                return;
-              }
-              case "alphaPercent": {
-                const a = clamp01(Number(value) / 100);
-                updateHsv({ a });
-                return;
-              }
-            }
-          }}
-        />
+                updateHsv({ h });
+              }}
+            />
+            <AlphaSlider
+              a={hsv.a}
+              solidColor={solidColorString}
+              solidR={solidR}
+              solidG={solidG}
+              solidB={solidB}
+              onChange={(a) => updateHsv({ a })}
+            />
+          </div>
 
-        {swatches && swatches.length > 0 && (
-          <SwatchStrip
-            swatches={swatches}
-            current={parsed.hex}
-            onPick={handleSwatchPick}
+          <div className="grid grid-cols-2 gap-2">
+            <FormatDropdown
+              value={currentFormat}
+              onChange={handleFormatChange}
+              open={formatOpen}
+              defaultOpen={defaultFormatOpen}
+            />
+            {!hideEyedropper && <EyeDropperButton onPick={handleEyedrop} />}
+          </div>
+
+          <ColorInputsRow
+            parsed={parsed}
+            format={currentFormat}
+            oklchHue={oklchHue}
+            // RGB, HSL and OKLCH edits rebuild the color in their own space
+            // from the current rounded RGB, convert back to HSV, and substitute
+            // a held hue whenever the result has no saturation.
+            onChannelChange={(channel, value) => {
+              const p = { ...parsed };
+              switch (channel) {
+                case 'hex':
+                  handleHexCommit(value as string);
+                  return;
+                case 'r':
+                case 'g':
+                case 'b': {
+                  setOklchHue(null);
+                  const r = channel === 'r' ? Number(value) : p.r;
+                  const g = channel === 'g' ? Number(value) : p.g;
+                  const b = channel === 'b' ? Number(value) : p.b;
+                  const hsvVal = rgbToHsv(r, g, b);
+                  updateHsv({
+                    h: hsvVal.s === 0 ? hsv.h : hsvVal.h,
+                    s: hsvVal.s,
+                    v: hsvVal.v,
+                  });
+                  return;
+                }
+                case 'hSL':
+                case 'sSL':
+                case 'lSL': {
+                  if (channel === 'hSL') setOklchHue(null);
+                  const hsl = rgbToHsl(p.r, p.g, p.b);
+                  const h2 = channel === 'hSL' ? Number(value) : hsl.h;
+                  const s2 = channel === 'sSL' ? Number(value) / 100 : hsl.s;
+                  const l2 = channel === 'lSL' ? Number(value) / 100 : hsl.l;
+                  const rgb = hslToRgb(h2, clamp01(s2), clamp01(l2));
+                  const hsvVal = rgbToHsv(rgb.r, rgb.g, rgb.b);
+                  // On a gray, a typed HSL hue still becomes the held HSV hue,
+                  // so the square and hue rail pick it up. S/L edits read the
+                  // hue back from rounded RGB instead, which is 0 on a gray.
+                  updateHsv({
+                    h: hsvVal.s === 0 ? h2 : hsvVal.h,
+                    s: hsvVal.s,
+                    v: hsvVal.v,
+                  });
+                  return;
+                }
+                case 'L':
+                case 'C':
+                case 'H': {
+                  const cur = rgbToOklch(p.r, p.g, p.b);
+                  // For L/C edits, anchor on the user's last stated H so we
+                  // don't drift along with chroma changes.
+                  const baseH = oklchHue ?? cur.H;
+                  const L = channel === 'L' ? Number(value) / 100 : cur.L;
+                  const C = channel === 'C' ? Number(value) : cur.C;
+                  const H = channel === 'H' ? Number(value) : baseH;
+                  // Any OKLCH edit makes H sticky: chroma can go to 0 and back
+                  // and the color returns to the hue the user set.
+                  setOklchHue(H);
+                  const rgb = oklchToRgb(clamp01(L), Math.max(0, C), H);
+                  const hsvVal = rgbToHsv(rgb.r, rgb.g, rgb.b);
+                  updateHsv({
+                    h: hsvVal.s === 0 ? hsv.h : hsvVal.h,
+                    s: hsvVal.s,
+                    v: hsvVal.v,
+                  });
+                  return;
+                }
+                case 'alphaPercent': {
+                  const a = clamp01(Number(value) / 100);
+                  updateHsv({ a });
+                  return;
+                }
+              }
+            }}
           />
-        )}
-      </div>
+
+          {swatches && swatches.length > 0 && (
+            <SwatchStrip swatches={swatches} current={parsed.hex} onPick={handleSwatchPick} />
+          )}
+        </div>
       </SurfaceProvider>
     );
 
     return size ? <SizeProvider size={size}>{root}</SizeProvider> : root;
-  }
+  },
 );
 
-ColorPicker.displayName = "ColorPicker";
+ColorPicker.displayName = 'ColorPicker';
 
 // ---------------------------------------------------------------------------
 // ColorInputsRow — adapts inputs to format
 // ---------------------------------------------------------------------------
 
 type ChannelKey =
-  | "hex"
-  | "r" | "g" | "b"
-  | "hSL" | "sSL" | "lSL"
-  | "L" | "C" | "H"
-  | "alphaPercent";
+  'hex' | 'r' | 'g' | 'b' | 'hSL' | 'sSL' | 'lSL' | 'L' | 'C' | 'H' | 'alphaPercent';
 
 function ColorInputsRow({
   parsed,
@@ -2265,32 +2320,74 @@ function ColorInputsRow({
 
   // HEX is the one plain text field (no scrubbing): the "#" is a fixed
   // prefix, re-added on commit, and 8-digit input carries alpha.
-  if (format === "hex") {
-    const hexNoHash = parsed.hex.replace(/^#/, "").toUpperCase();
+  if (format === 'hex') {
+    const hexNoHash = parsed.hex.replace(/^#/, '').toUpperCase();
     return (
       <div className="grid grid-cols-2 gap-2">
         <ChannelTooltip label="Hex">
           <ColorInput
             value={hexNoHash}
-            onCommit={(next) => onChannelChange("hex", next.startsWith("#") ? next : `#${next}`)}
+            onCommit={(next) => onChannelChange('hex', next.startsWith('#') ? next : `#${next}`)}
             ariaLabel="Hex value"
             prefix="#"
           />
         </ChannelTooltip>
-        <AlphaInput value={alphaPct} onCommit={(n) => onChannelChange("alphaPercent", String(n))} />
+        <AlphaInput value={alphaPct} onCommit={(n) => onChannelChange('alphaPercent', String(n))} />
       </div>
     );
   }
 
-  if (format === "rgb") {
+  if (format === 'rgb') {
     return (
       <div className="grid grid-cols-4 gap-1">
         {/* One bubble names the channels: it glides from field to field. */}
         <TooltipGroup delayDuration={300}>
-          <ChannelTooltip label="Red"><ColorInput value={String(parsed.r)} onCommit={(n) => onChannelChange("r", n)} ariaLabel="Red" align="center" inputMode="numeric" nudgeStep={1} nudgeShiftStep={10} scrubbable min={0} max={255} /></ChannelTooltip>
-          <ChannelTooltip label="Green"><ColorInput value={String(parsed.g)} onCommit={(n) => onChannelChange("g", n)} ariaLabel="Green" align="center" inputMode="numeric" nudgeStep={1} nudgeShiftStep={10} scrubbable min={0} max={255} /></ChannelTooltip>
-          <ChannelTooltip label="Blue"><ColorInput value={String(parsed.b)} onCommit={(n) => onChannelChange("b", n)} ariaLabel="Blue" align="center" inputMode="numeric" nudgeStep={1} nudgeShiftStep={10} scrubbable min={0} max={255} /></ChannelTooltip>
-          <AlphaInput value={alphaPct} onCommit={(n) => onChannelChange("alphaPercent", String(n))} />
+          <ChannelTooltip label="Red">
+            <ColorInput
+              value={String(parsed.r)}
+              onCommit={(n) => onChannelChange('r', n)}
+              ariaLabel="Red"
+              align="center"
+              inputMode="numeric"
+              nudgeStep={1}
+              nudgeShiftStep={10}
+              scrubbable
+              min={0}
+              max={255}
+            />
+          </ChannelTooltip>
+          <ChannelTooltip label="Green">
+            <ColorInput
+              value={String(parsed.g)}
+              onCommit={(n) => onChannelChange('g', n)}
+              ariaLabel="Green"
+              align="center"
+              inputMode="numeric"
+              nudgeStep={1}
+              nudgeShiftStep={10}
+              scrubbable
+              min={0}
+              max={255}
+            />
+          </ChannelTooltip>
+          <ChannelTooltip label="Blue">
+            <ColorInput
+              value={String(parsed.b)}
+              onCommit={(n) => onChannelChange('b', n)}
+              ariaLabel="Blue"
+              align="center"
+              inputMode="numeric"
+              nudgeStep={1}
+              nudgeShiftStep={10}
+              scrubbable
+              min={0}
+              max={255}
+            />
+          </ChannelTooltip>
+          <AlphaInput
+            value={alphaPct}
+            onCommit={(n) => onChannelChange('alphaPercent', String(n))}
+          />
         </TooltipGroup>
       </div>
     );
@@ -2298,15 +2395,58 @@ function ColorInputsRow({
 
   // Hue fields (HSL H here, OKLCH H below) pass `wrap`: hue is an angle, so
   // nudging past 360 continues at 1 instead of sticking at the end.
-  if (format === "hsl") {
+  if (format === 'hsl') {
     const hsl = rgbToHsl(parsed.r, parsed.g, parsed.b);
     return (
       <div className="grid grid-cols-4 gap-1">
         <TooltipGroup delayDuration={300}>
-          <ChannelTooltip label="Hue"><ColorInput value={String(Math.round(hsl.h))} onCommit={(n) => onChannelChange("hSL", n)} ariaLabel="Hue" align="center" inputMode="numeric" nudgeStep={1} nudgeShiftStep={10} scrubbable min={0} max={360} wrap /></ChannelTooltip>
-          <ChannelTooltip label="Saturation"><ColorInput value={String(Math.round(hsl.s * 100))} onCommit={(n) => onChannelChange("sSL", n)} ariaLabel="Saturation" align="center" inputMode="numeric" nudgeStep={1} nudgeShiftStep={10} scrubbable min={0} max={100} /></ChannelTooltip>
-          <ChannelTooltip label="Lightness"><ColorInput value={String(Math.round(hsl.l * 100))} onCommit={(n) => onChannelChange("lSL", n)} ariaLabel="Lightness" align="center" inputMode="numeric" nudgeStep={1} nudgeShiftStep={10} scrubbable min={0} max={100} /></ChannelTooltip>
-          <AlphaInput value={alphaPct} onCommit={(n) => onChannelChange("alphaPercent", String(n))} />
+          <ChannelTooltip label="Hue">
+            <ColorInput
+              value={String(Math.round(hsl.h))}
+              onCommit={(n) => onChannelChange('hSL', n)}
+              ariaLabel="Hue"
+              align="center"
+              inputMode="numeric"
+              nudgeStep={1}
+              nudgeShiftStep={10}
+              scrubbable
+              min={0}
+              max={360}
+              wrap
+            />
+          </ChannelTooltip>
+          <ChannelTooltip label="Saturation">
+            <ColorInput
+              value={String(Math.round(hsl.s * 100))}
+              onCommit={(n) => onChannelChange('sSL', n)}
+              ariaLabel="Saturation"
+              align="center"
+              inputMode="numeric"
+              nudgeStep={1}
+              nudgeShiftStep={10}
+              scrubbable
+              min={0}
+              max={100}
+            />
+          </ChannelTooltip>
+          <ChannelTooltip label="Lightness">
+            <ColorInput
+              value={String(Math.round(hsl.l * 100))}
+              onCommit={(n) => onChannelChange('lSL', n)}
+              ariaLabel="Lightness"
+              align="center"
+              inputMode="numeric"
+              nudgeStep={1}
+              nudgeShiftStep={10}
+              scrubbable
+              min={0}
+              max={100}
+            />
+          </ChannelTooltip>
+          <AlphaInput
+            value={alphaPct}
+            onCommit={(n) => onChannelChange('alphaPercent', String(n))}
+          />
         </TooltipGroup>
       </div>
     );
@@ -2321,10 +2461,51 @@ function ColorInputsRow({
   return (
     <div className="grid grid-cols-4 gap-1">
       <TooltipGroup delayDuration={300}>
-        <ChannelTooltip label="Lightness"><ColorInput value={(oklch.L * 100).toFixed(0)} onCommit={(n) => onChannelChange("L", n)} ariaLabel="Lightness" align="center" inputMode="decimal" nudgeStep={1} nudgeShiftStep={10} scrubbable min={0} max={100} /></ChannelTooltip>
-        <ChannelTooltip label="Chroma"><ColorInput value={oklch.C.toFixed(2)} onCommit={(n) => onChannelChange("C", n)} ariaLabel="Chroma" align="center" inputMode="decimal" nudgeStep={0.01} nudgeShiftStep={0.1} decimals={2} scrubbable min={0} max={0.4} /></ChannelTooltip>
-        <ChannelTooltip label="Hue"><ColorInput value={displayH.toFixed(0)} onCommit={(n) => onChannelChange("H", n)} ariaLabel="Hue" align="center" inputMode="numeric" nudgeStep={1} nudgeShiftStep={10} scrubbable min={0} max={360} wrap /></ChannelTooltip>
-        <AlphaInput value={alphaPct} onCommit={(n) => onChannelChange("alphaPercent", String(n))} />
+        <ChannelTooltip label="Lightness">
+          <ColorInput
+            value={(oklch.L * 100).toFixed(0)}
+            onCommit={(n) => onChannelChange('L', n)}
+            ariaLabel="Lightness"
+            align="center"
+            inputMode="decimal"
+            nudgeStep={1}
+            nudgeShiftStep={10}
+            scrubbable
+            min={0}
+            max={100}
+          />
+        </ChannelTooltip>
+        <ChannelTooltip label="Chroma">
+          <ColorInput
+            value={oklch.C.toFixed(2)}
+            onCommit={(n) => onChannelChange('C', n)}
+            ariaLabel="Chroma"
+            align="center"
+            inputMode="decimal"
+            nudgeStep={0.01}
+            nudgeShiftStep={0.1}
+            decimals={2}
+            scrubbable
+            min={0}
+            max={0.4}
+          />
+        </ChannelTooltip>
+        <ChannelTooltip label="Hue">
+          <ColorInput
+            value={displayH.toFixed(0)}
+            onCommit={(n) => onChannelChange('H', n)}
+            ariaLabel="Hue"
+            align="center"
+            inputMode="numeric"
+            nudgeStep={1}
+            nudgeShiftStep={10}
+            scrubbable
+            min={0}
+            max={360}
+            wrap
+          />
+        </ChannelTooltip>
+        <AlphaInput value={alphaPct} onCommit={(n) => onChannelChange('alphaPercent', String(n))} />
       </TooltipGroup>
     </div>
   );
@@ -2348,7 +2529,7 @@ function AlphaInput({ value, onCommit }: { value: number; onCommit: (n: number) 
       <ColorInput
         value={`${value}%`}
         onCommit={(input) => {
-          const n = parseFloat(input.replace("%", ""));
+          const n = parseFloat(input.replace('%', ''));
           if (Number.isNaN(n)) return;
           onCommit(Math.max(0, Math.min(100, Math.round(n))));
         }}
@@ -2384,7 +2565,7 @@ const ColorPickerPopover = forwardRef<HTMLDivElement, ColorPickerPopoverProps>(
   (
     {
       triggerLabel,
-      triggerLabelPosition = "left",
+      triggerLabelPosition = 'left',
       triggerShowValue = true,
       triggerShowRemove = false,
       onTriggerRemove,
@@ -2395,7 +2576,7 @@ const ColorPickerPopover = forwardRef<HTMLDivElement, ColorPickerPopoverProps>(
       size,
       ...pickerProps
     },
-    ref
+    ref,
   ) => {
     const isOpenControlled = openProp !== undefined;
     const [internalOpen, setInternalOpen] = useState(defaultOpen);
@@ -2407,7 +2588,7 @@ const ColorPickerPopover = forwardRef<HTMLDivElement, ColorPickerPopoverProps>(
     // from context. The portalled panel inherits it from the provider below
     // (React context crosses portals).
     const sizeClasses = useSize(size);
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
     const substrate = useSurface();
     // The floating panel sits two surface levels above where it opens
     // (capped at 8, the top of the ladder), with a level-3 shadow.
@@ -2418,7 +2599,7 @@ const ColorPickerPopover = forwardRef<HTMLDivElement, ColorPickerPopoverProps>(
         if (!isOpenControlled) setInternalOpen(next);
         onOpenChange?.(next);
       },
-      [isOpenControlled, onOpenChange]
+      [isOpenControlled, onOpenChange],
     );
     const {
       actionsRef,
@@ -2432,7 +2613,9 @@ const ColorPickerPopover = forwardRef<HTMLDivElement, ColorPickerPopoverProps>(
     // the re-parse.
     const isControlled = pickerProps.value !== undefined;
     // eslint-disable-next-line no-restricted-syntax -- a starting color for the picker, not the accent
-    const [internalValue, setInternalValue] = useState(pickerProps.value ?? pickerProps.defaultValue ?? "#6B97FF");
+    const [internalValue, setInternalValue] = useState(
+      pickerProps.value ?? pickerProps.defaultValue ?? '#6B97FF',
+    );
     const currentValue = isControlled ? (pickerProps.value as string) : internalValue;
 
     const handleValueChange = useCallback(
@@ -2440,7 +2623,7 @@ const ColorPickerPopover = forwardRef<HTMLDivElement, ColorPickerPopoverProps>(
         if (!isControlled) setInternalValue(v);
         pickerProps.onValueChange?.(v, parsed);
       },
-      [isControlled, pickerProps]
+      [isControlled, pickerProps],
     );
 
     // Release Base UI's deferred unmount once the exit tween has played.
@@ -2458,11 +2641,9 @@ const ColorPickerPopover = forwardRef<HTMLDivElement, ColorPickerPopoverProps>(
     const parsed = useMemo(() => parseColor(currentValue), [currentValue]);
     // The tile keeps alpha (over the checker); the text label drops it and
     // shows 6-digit uppercase hex whatever the selected format.
-    const swatchColor = parsed
-      ? rgbToHexStr(parsed.r, parsed.g, parsed.b, parsed.a)
-      : currentValue;
+    const swatchColor = parsed ? rgbToHexStr(parsed.r, parsed.g, parsed.b, parsed.a) : currentValue;
     const valueLabel = parsed
-      ? rgbToHexStr(parsed.r, parsed.g, parsed.b, 1).replace(/^#/, "").toUpperCase()
+      ? rgbToHexStr(parsed.r, parsed.g, parsed.b, 1).replace(/^#/, '').toUpperCase()
       : currentValue;
 
     // With the remove button the trigger becomes a field of two segments, as
@@ -2470,37 +2651,35 @@ const ColorPickerPopover = forwardRef<HTMLDivElement, ColorPickerPopoverProps>(
     // between the open segment and the X. Segments sit 2px inside the field
     // (plus its 1px border), so their corners nest 3px inside its radius.
     const fieldRef = useRef<HTMLDivElement>(null);
-    const segmentHover = useFluidHover(fieldRef, { axis: "x", gapClick: false });
+    const segmentHover = useFluidHover(fieldRef, { axis: 'x', gapClick: false });
     const { registerItem: registerSegment } = segmentHover;
     const triggerSegmentRef = useCallback(
       (el: HTMLButtonElement | null) => registerSegment(0, el),
-      [registerSegment]
+      [registerSegment],
     );
     const removeSegmentRef = useCallback(
       (el: HTMLButtonElement | null) => registerSegment(1, el),
-      [registerSegment]
+      [registerSegment],
     );
     const innerRadius = {
-      rounded: "rounded-[5px]",
-      pill: "rounded-[17px]",
-      sharp: "rounded-none",
+      rounded: 'rounded-[5px]',
+      pill: 'rounded-[17px]',
+      sharp: 'rounded-none',
     }[shape.variant];
 
     const triggerContent = (
       <>
-        {triggerLabel && triggerLabelPosition === "left" && (
-          <span className={cn("text-muted-foreground px-1 select-none", sizeClasses.text)}>
+        {triggerLabel && triggerLabelPosition === 'left' && (
+          <span className={cn('text-muted-foreground px-1 select-none', sizeClasses.text)}>
             {triggerLabel}
           </span>
         )}
         <ColorTile color={swatchColor} size={compact ? 16 : 20} />
         {triggerShowValue && (
-          <span className={cn("text-foreground tabular-nums", sizeClasses.text)}>
-            {valueLabel}
-          </span>
+          <span className={cn('text-foreground tabular-nums', sizeClasses.text)}>{valueLabel}</span>
         )}
-        {triggerLabel && triggerLabelPosition === "right" && (
-          <span className={cn("text-muted-foreground px-1 select-none", sizeClasses.text)}>
+        {triggerLabel && triggerLabelPosition === 'right' && (
+          <span className={cn('text-muted-foreground px-1 select-none', sizeClasses.text)}>
             {triggerLabel}
           </span>
         )}
@@ -2511,141 +2690,135 @@ const ColorPickerPopover = forwardRef<HTMLDivElement, ColorPickerPopoverProps>(
     // context crosses portals) to one step of the ladder.
     const root = (
       <>
-      {/* A trigger field with a remove button stays live under the panel. */}
-      <PopupShield open={open} anchor={triggerShowRemove ? fieldRef : undefined} />
-      <Popover.Root
-        open={rootOpen}
-        onOpenChange={handleRootOpenChange}
-        actionsRef={actionsRef}
-        // Non-modal: the page keeps scrolling and the Positioner tracks the
-        // anchor, so the panel follows its trigger instead of detaching.
-        modal={false}
-      >
-        <div ref={ref} className="inline-flex">
-          {triggerShowRemove ? (
-            <div
-              ref={fieldRef}
-              data-slot="color-picker-trigger-field"
-              className={cn(
-                "relative inline-flex items-center border border-border bg-transparent p-0.5",
-                sizeClasses.control,
-                shape.input,
-                triggerClassName
-              )}
-              {...segmentHover.handlers}
-            >
-              <FluidHoverHighlight hover={segmentHover} className={cn("z-0", innerRadius)} />
-              <Popover.Trigger
-                ref={triggerSegmentRef}
+        {/* A trigger field with a remove button stays live under the panel. */}
+        <PopupShield open={open} anchor={triggerShowRemove ? fieldRef : undefined} />
+        <Popover.Root
+          open={rootOpen}
+          onOpenChange={handleRootOpenChange}
+          actionsRef={actionsRef}
+          // Non-modal: the page keeps scrolling and the Positioner tracks the
+          // anchor, so the panel follows its trigger instead of detaching.
+          modal={false}
+        >
+          <div ref={ref} className="inline-flex">
+            {triggerShowRemove ? (
+              <div
+                ref={fieldRef}
+                data-slot="color-picker-trigger-field"
                 className={cn(
-                  "relative z-[1] flex h-full items-center outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] cursor-pointer",
+                  'relative inline-flex items-center border border-border bg-transparent p-0.5',
+                  sizeClasses.control,
+                  shape.input,
+                  triggerClassName,
+                )}
+                {...segmentHover.handlers}
+              >
+                <FluidHoverHighlight hover={segmentHover} className={cn('z-0', innerRadius)} />
+                <Popover.Trigger
+                  ref={triggerSegmentRef}
+                  className={cn(
+                    'relative z-[1] flex h-full items-center outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] cursor-pointer',
+                    sizeClasses.gap,
+                    // 2px field padding + this keeps the content where the
+                    // single-segment trigger has it.
+                    compact ? 'px-1' : 'px-1.5',
+                    innerRadius,
+                  )}
+                  style={{ fontVariationSettings: fontWeights.normal }}
+                >
+                  {triggerContent}
+                </Popover.Trigger>
+                <button
+                  ref={removeSegmentRef}
+                  type="button"
+                  aria-label="Remove color"
+                  onClick={() => onTriggerRemove?.()}
+                  className={cn(
+                    'relative z-[1] inline-flex h-full shrink-0 cursor-pointer items-center justify-center text-muted-foreground outline-none hover:text-foreground focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
+                    compact ? 'w-6' : 'w-7',
+                    innerRadius,
+                  )}
+                >
+                  <XIcon size={14} strokeWidth={1.5} />
+                </button>
+              </div>
+            ) : (
+              <Popover.Trigger
+                className={cn(
+                  'flex items-center border border-border bg-transparent hover:bg-hover data-[popup-open]:bg-active transition-colors duration-80 outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] cursor-pointer',
                   sizeClasses.gap,
-                  // 2px field padding + this keeps the content where the
-                  // single-segment trigger has it.
-                  compact ? "px-1" : "px-1.5",
-                  innerRadius
+                  sizeClasses.control,
+                  compact ? 'px-1.5' : 'px-2',
+                  shape.input,
+                  triggerClassName,
                 )}
                 style={{ fontVariationSettings: fontWeights.normal }}
               >
                 {triggerContent}
               </Popover.Trigger>
-              <button
-                ref={removeSegmentRef}
-                type="button"
-                aria-label="Remove color"
-                onClick={() => onTriggerRemove?.()}
-                className={cn(
-                  "relative z-[1] inline-flex h-full shrink-0 cursor-pointer items-center justify-center text-muted-foreground outline-none hover:text-foreground focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]",
-                  compact ? "w-6" : "w-7",
-                  innerRadius
-                )}
+            )}
+            <Popover.Portal>
+              <Popover.Positioner
+                // With the remove button, the panel lines up with the field's
+                // edge rather than the open segment's.
+                anchor={triggerShowRemove ? fieldRef : undefined}
+                side="bottom"
+                align="start"
+                sideOffset={6}
+                className="z-[var(--z-popover,60)] outline-none"
               >
-                <XIcon size={14} strokeWidth={1.5} />
-              </button>
-            </div>
-          ) : (
-            <Popover.Trigger
-              className={cn(
-                "flex items-center border border-border bg-transparent hover:bg-hover data-[popup-open]:bg-active transition-colors duration-80 outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] cursor-pointer",
-                sizeClasses.gap,
-                sizeClasses.control,
-                compact ? "px-1.5" : "px-2",
-                shape.input,
-                triggerClassName
-              )}
-              style={{ fontVariationSettings: fontWeights.normal }}
-            >
-              {triggerContent}
-            </Popover.Trigger>
-          )}
-          <Popover.Portal>
-            <Popover.Positioner
-              // With the remove button, the panel lines up with the field's
-              // edge rather than the open segment's.
-              anchor={triggerShowRemove ? fieldRef : undefined}
-              side="bottom"
-              align="start"
-              sideOffset={6}
-              className="z-[var(--z-popover,60)] outline-none"
-            >
-              <motion.div
-                // The positioner's data-side flips the 4px enter offset when
-                // the panel opens above, as Dropdown's does. The origin stays
-                // on the trigger's corner (align="start"): top-left below,
-                // bottom-left above.
-                className={cn(
-                  popupMotionClass,
-                  "origin-top-left [[data-side=top]_&]:origin-bottom-left"
-                )}
-                initial={{ opacity: 0, y: "var(--popup-enter-y)", scaleY: 0.96 }}
-                animate={
-                  open
-                    ? { opacity: 1, y: 0, scaleY: 1 }
-                    : { opacity: 0, y: "var(--popup-enter-y)", scaleY: 0.96 }
-                }
-                transition={open ? spring.fast : spring.fast.exit}
-                // The close held Base UI's unmount (preventUnmountOnClose); release it
-                // once the exit spring has finished so the close animation
-                // fully plays.
-                onAnimationComplete={() => {
-                  if (!open) actionsRef.current?.unmount();
-                }}
-              >
-                {/* The panel node goes into state, not a ref, so the portal
-                    container context re-renders once the node exists. */}
-                <Popover.Popup
-                  render={<div ref={setPanelEl} />}
-                  className="outline-none"
+                <motion.div
+                  // The positioner's data-side flips the 4px enter offset when
+                  // the panel opens above, as Dropdown's does. The origin stays
+                  // on the trigger's corner (align="start"): top-left below,
+                  // bottom-left above.
+                  className={cn(
+                    popupMotionClass,
+                    'origin-top-left [[data-side=top]_&]:origin-bottom-left',
+                  )}
+                  initial={{ opacity: 0, y: 'var(--popup-enter-y)', scaleY: 0.96 }}
+                  animate={
+                    open
+                      ? { opacity: 1, y: 0, scaleY: 1 }
+                      : { opacity: 0, y: 'var(--popup-enter-y)', scaleY: 0.96 }
+                  }
+                  transition={open ? spring.fast : spring.fast.exit}
+                  // The close held Base UI's unmount (preventUnmountOnClose); release it
+                  // once the exit spring has finished so the close animation
+                  // fully plays.
+                  onAnimationComplete={() => {
+                    if (!open) actionsRef.current?.unmount();
+                  }}
                 >
-                  {/* The format menu portals into this panel, so it lives
+                  {/* The panel node goes into state, not a ref, so the portal
+                    container context re-renders once the node exists. */}
+                  <Popover.Popup render={<div ref={setPanelEl} />} className="outline-none">
+                    {/* The format menu portals into this panel, so it lives
                       inside the popover's DOM and scales with it. */}
-                  <ColorPickerPortalContainer value={panelEl}>
-                    <SurfaceProvider value={level}>
-                      <ColorPicker
-                        {...pickerProps}
-                        value={currentValue}
-                        onValueChange={handleValueChange}
-                        className={cn(
-                          surfaceClasses(level, 3),
-                          pickerProps.className
-                        )}
-                      />
-                    </SurfaceProvider>
-                  </ColorPickerPortalContainer>
-                </Popover.Popup>
-              </motion.div>
-            </Popover.Positioner>
-          </Popover.Portal>
-        </div>
-      </Popover.Root>
+                    <ColorPickerPortalContainer value={panelEl}>
+                      <SurfaceProvider value={level}>
+                        <ColorPicker
+                          {...pickerProps}
+                          value={currentValue}
+                          onValueChange={handleValueChange}
+                          className={cn(surfaceClasses(level, 3), pickerProps.className)}
+                        />
+                      </SurfaceProvider>
+                    </ColorPickerPortalContainer>
+                  </Popover.Popup>
+                </motion.div>
+              </Popover.Positioner>
+            </Popover.Portal>
+          </div>
+        </Popover.Root>
       </>
     );
 
     return size ? <SizeProvider size={size}>{root}</SizeProvider> : root;
-  }
+  },
 );
 
-ColorPickerPopover.displayName = "ColorPickerPopover";
+ColorPickerPopover.displayName = 'ColorPickerPopover';
 
 // ---------------------------------------------------------------------------
 // Exports

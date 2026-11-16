@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import dynamic from "next/dynamic";
-import type { ComponentType } from "react";
-import { usePreviewPlayback } from "@/lib/docs/preview-playback";
+import dynamic from 'next/dynamic';
+import type { ComponentType } from 'react';
+import { usePreviewPlayback } from '#lib/docs/preview-playback';
 
 // ---------------------------------------------------------------------------
 // What a New entry shows under its sentence: the live component, the same
@@ -17,73 +17,76 @@ import { usePreviewPlayback } from "@/lib/docs/preview-playback";
  *  listed here so the page knows which entries get a stage without loading
  *  the previews. tests/changelog.test.ts holds the two lists equal. */
 export const SHOWCASE_PREVIEW_SLUGS = new Set([
-  "accordion",
-  "ask-user-questions",
-  "badge",
-  "banner",
-  "breadcrumb",
-  "button",
-  "calendar",
-  "card",
-  "carousel-dots",
-  "chat-message",
-  "checkbox-group",
-  "color-picker",
-  "combobox",
-  "command-menu",
-  "data-table",
-  "date-picker",
-  "dialog",
-  "dropdown",
-  "input-copy",
-  "input-group",
-  "input-message",
-  "radio-group",
-  "select",
-  "sidebar",
-  "slider",
-  "switch",
-  "table",
-  "tabs",
-  "thinking-indicator",
-  "thinking-steps",
-  "tooltip",
+  'accordion',
+  'ask-user-questions',
+  'badge',
+  'banner',
+  'breadcrumb',
+  'button',
+  'calendar',
+  'card',
+  'carousel-dots',
+  'chat-message',
+  'checkbox-group',
+  'color-picker',
+  'combobox',
+  'command-menu',
+  'data-table',
+  'date-picker',
+  'dialog',
+  'dropdown',
+  'input-copy',
+  'input-group',
+  'input-message',
+  'radio-group',
+  'select',
+  'sidebar',
+  'slider',
+  'switch',
+  'table',
+  'tabs',
+  'thinking-indicator',
+  'thinking-steps',
+  'tooltip',
 ]);
 
 const ShowcasePreview = dynamic(
   () =>
-    import("@/app/components/bento-previews").then(({ previewMap }) => {
+    import('#app/components/bento-previews').then(({ previewMap }) => {
       function ShowcasePreview({ slug }: { slug: string }) {
         const Preview = previewMap[slug];
         return Preview ? <Preview /> : null;
       }
       return ShowcasePreview;
     }),
-  { ssr: false }
+  { ssr: false },
 );
 
 const FluidHoverPreview = dynamic(
   () =>
-    import("@/app/docs/fluid-hover/demos").then(({ PlainVsFluidPreview }) => {
+    import('#app/docs/fluid-hover/demos').then(({ PlainVsFluidPreview }) => {
       function FluidHoverPreview() {
         return <PlainVsFluidPreview paused={!usePreviewPlayback()} />;
       }
       return FluidHoverPreview;
     }),
-  { ssr: false }
+  { ssr: false },
 );
 
-const SizesPreview = dynamic(() => import("@/app/docs/sizes/toolbar-demo").then((m) => m.ToolbarDemo), {
-  ssr: false,
-});
+const SizesPreview = dynamic(
+  () => import('#app/docs/sizes/toolbar-demo').then((m) => m.ToolbarDemo),
+  {
+    ssr: false,
+  },
+);
 
-const SkillPreview = dynamic(() => import("@/app/docs/skill/examples").then((m) => m.TabsExample), {
+const SkillPreview = dynamic(() => import('#app/docs/skill/examples').then((m) => m.TabsExample), {
   ssr: false,
 });
 
 /** System pages have no Showcase tile: their own page's demo stands in. */
 const SYSTEM_PREVIEWS: Record<string, ComponentType> = {
-  "fluid-hover": FluidHoverPreview,
+  'fluid-hover': FluidHoverPreview,
   sizes: SizesPreview,
   skill: SkillPreview,
 };
@@ -101,14 +104,14 @@ export function ChangelogPreview({ slug }: { slug: string }) {
 /** Stage padding by slug, where a preview needs more room than the default
  *  px-6 py-12 leaves (the Showcase grid's overrides, same reasons). */
 export const STAGE_PADDING: Record<string, string> = {
-  sidebar: "px-4 py-8",
-  card: "px-6 py-5",
-  "command-menu": "px-6 py-8",
-  "fluid-hover": "px-6 py-8",
-  sizes: "px-6 py-8",
-  skill: "px-4 py-6",
+  sidebar: 'px-4 py-8',
+  card: 'px-6 py-5',
+  'command-menu': 'px-6 py-8',
+  'fluid-hover': 'px-6 py-8',
+  sizes: 'px-6 py-8',
+  skill: 'px-4 py-6',
 };
 
 /** The previews that animate by themselves, and so read
  *  usePreviewPlayback(): the changelog gives these a Play / Pause button. */
-export const ANIMATED_PREVIEWS = new Set(["carousel-dots", "fluid-hover", "skill"]);
+export const ANIMATED_PREVIEWS = new Set(['carousel-dots', 'fluid-hover', 'skill']);

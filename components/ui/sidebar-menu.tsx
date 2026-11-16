@@ -1,1 +1,1 @@
-export * from "@/registry/default/sidebar-menu";
+export * from '#registry/default/sidebar-menu';

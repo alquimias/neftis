@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createContext,
@@ -10,19 +10,19 @@ import {
   type HTMLAttributes,
   type ReactElement,
   type ReactNode,
-} from "react";
-import type { IconComponent } from "@/lib/icon-context";
-import { motion, AnimatePresence } from "motion/react";
-import { KeyCaps } from "@/lib/key-cap";
-import { cn } from "@/lib/utils";
-import { fontWeights } from "@/lib/font-weight";
-import { usePopupShape } from "@/lib/shape-context";
-import { useSize } from "@/lib/size-context";
+} from 'react';
+import type { IconComponent } from '#lib/icon-context';
+import { motion, AnimatePresence } from 'motion/react';
+import { KeyCaps } from '#lib/key-cap';
+import { cn } from '#lib/utils';
+import { fontWeights } from '#lib/font-weight';
+import { usePopupShape } from '#lib/shape-context';
+import { useSize } from '#lib/size-context';
 import {
   useFluidHoverSelect,
   useRegisterFluidHoverItem,
   type FluidHoverActiveStore,
-} from "@/hooks/use-fluid-hover";
+} from '#hooks/use-fluid-hover';
 
 // ---------------------------------------------------------------------------
 // Dropdown context — the single shared context for every Dropdown build.
@@ -89,7 +89,7 @@ export const DropdownContext = createContext<DropdownContextValue | null>(null);
 
 export function useDropdown() {
   const ctx = useContext(DropdownContext);
-  if (!ctx) throw new Error("useDropdown must be used within a Dropdown");
+  if (!ctx) throw new Error('useDropdown must be used within a Dropdown');
   return ctx;
 }
 
@@ -107,7 +107,7 @@ export function useDropdownMaybe() {
 export function useControllableOpen(
   openProp: boolean | undefined,
   defaultOpen: boolean,
-  onOpenChange?: (open: boolean) => void
+  onOpenChange?: (open: boolean) => void,
 ) {
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const open = openProp !== undefined ? openProp : internalOpen;
@@ -116,7 +116,7 @@ export function useControllableOpen(
       if (openProp === undefined) setInternalOpen(next);
       onOpenChange?.(next);
     },
-    [openProp, onOpenChange]
+    [openProp, onOpenChange],
   );
   return [open, setOpen] as const;
 }
@@ -165,19 +165,13 @@ const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
       onClick,
       ...props
     },
-    ref
+    ref,
   ) => {
     const shape = usePopupShape();
     const internalRef = useRef<HTMLDivElement>(null);
-    const {
-      registerItem,
-      activeStore,
-      checkedIndex,
-      multiple,
-      checkedIndices,
-      renderMenuItem,
-    } = useDropdown();
-    const isCheckbox = !!multiple && typeof checked === "boolean";
+    const { registerItem, activeStore, checkedIndex, multiple, checkedIndices, renderMenuItem } =
+      useDropdown();
+    const isCheckbox = !!multiple && typeof checked === 'boolean';
 
     useRegisterFluidHoverItem(registerItem, index, internalRef);
 
@@ -186,7 +180,7 @@ const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
 
     const mergeRef = (node: HTMLDivElement | null) => {
       (internalRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-      if (typeof ref === "function") ref(node);
+      if (typeof ref === 'function') ref(node);
       else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
     };
 
@@ -203,17 +197,14 @@ const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
       // menu popups are max-height flex columns — without it a long list
       // compresses rows to fit instead of scrolling.
       `relative z-10 flex ${sizeClasses.control} shrink-0 items-center ${sizeClasses.gap} ${shape.item} ${sizeClasses.itemPx} cursor-pointer outline-none`,
-      disabled && "opacity-50 pointer-events-none",
-      className
+      disabled && 'opacity-50 pointer-events-none',
+      className,
     );
 
     const content = (
       <>
         {leading && (
-          <span
-            className="flex shrink-0 items-center"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <span className="flex shrink-0 items-center" onClick={(e) => e.stopPropagation()}>
             {leading}
           </span>
         )}
@@ -226,14 +217,14 @@ const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
               size={sizeClasses.icon}
               strokeWidth={isActive || checked ? 2 : 1.5}
               className={cn(
-                "col-start-1 row-start-1 transition-[color,stroke-width] duration-80",
+                'col-start-1 row-start-1 transition-[color,stroke-width] duration-80',
                 destructive
                   ? isActive
-                    ? "text-destructive"
-                    : "text-destructive/80"
+                    ? 'text-destructive'
+                    : 'text-destructive/80'
                   : isActive || checked
-                    ? "text-foreground"
-                    : "text-muted-foreground"
+                    ? 'text-foreground'
+                    : 'text-muted-foreground',
               )}
             />
           </span>
@@ -244,7 +235,7 @@ const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
             label clips with an ellipsis instead of wrapping into the next
             row. The padding pair extends the clip box past the trim so
             ascenders and descenders aren't shaved. */}
-        <span className={cn("inline-grid min-w-0 flex-1", sizeClasses.text)}>
+        <span className={cn('inline-grid min-w-0 flex-1', sizeClasses.text)}>
           <span
             className="col-start-1 row-start-1 invisible truncate pt-[0.25em] -mt-[0.25em] pb-[0.25em] -mb-[0.25em] [text-box:trim-both_cap_alphabetic]"
             style={{ fontVariationSettings: fontWeights.semibold }}
@@ -254,19 +245,17 @@ const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
           </span>
           <span
             className={cn(
-              "col-start-1 row-start-1 truncate pt-[0.25em] -mt-[0.25em] pb-[0.25em] -mb-[0.25em] transition-[color,font-variation-settings] duration-80 [text-box:trim-both_cap_alphabetic]",
+              'col-start-1 row-start-1 truncate pt-[0.25em] -mt-[0.25em] pb-[0.25em] -mb-[0.25em] transition-[color,font-variation-settings] duration-80 [text-box:trim-both_cap_alphabetic]',
               destructive
                 ? isActive
-                  ? "text-destructive"
-                  : "text-destructive/80"
+                  ? 'text-destructive'
+                  : 'text-destructive/80'
                 : isActive || checked
-                  ? "text-foreground"
-                  : "text-muted-foreground"
+                  ? 'text-foreground'
+                  : 'text-muted-foreground',
             )}
             style={{
-              fontVariationSettings: checked
-                ? fontWeights.semibold
-                : fontWeights.normal,
+              fontVariationSettings: checked ? fontWeights.semibold : fontWeights.normal,
             }}
           >
             {label}
@@ -297,11 +286,11 @@ const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
                 initial={{ pathLength: 0 }}
                 animate={{
                   pathLength: 1,
-                  transition: { duration: 0.08, ease: "easeOut" },
+                  transition: { duration: 0.08, ease: 'easeOut' },
                 }}
                 exit={{
                   pathLength: 0,
-                  transition: { duration: 0.04, ease: "easeIn" },
+                  transition: { duration: 0.04, ease: 'easeIn' },
                 }}
               />
             </motion.svg>
@@ -322,7 +311,7 @@ const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
       // styled div carries the Fluid Functionalism visuals and the
       // fluid-hover registration; MenuItem itself imports no primitive.
       return renderMenuItem({
-        radio: !isCheckbox && typeof checked === "boolean",
+        radio: !isCheckbox && typeof checked === 'boolean',
         checkbox: isCheckbox,
         checked,
         value: index,
@@ -349,23 +338,21 @@ const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
         ref={mergeRef}
         data-fluid-hover-index={index}
         // Disabled items are never the roving tab stop.
-        tabIndex={
-          !disabled && index === (checkedIndex ?? checkedIndices?.[0] ?? 0) ? 0 : -1
-        }
+        tabIndex={!disabled && index === (checkedIndex ?? checkedIndices?.[0] ?? 0) ? 0 : -1}
         role={
           isCheckbox
-            ? "menuitemcheckbox"
-            : typeof checked === "boolean"
-              ? "menuitemradio"
-              : "menuitem"
+            ? 'menuitemcheckbox'
+            : typeof checked === 'boolean'
+              ? 'menuitemradio'
+              : 'menuitem'
         }
-        aria-checked={typeof checked === "boolean" ? checked : undefined}
+        aria-checked={typeof checked === 'boolean' ? checked : undefined}
         aria-disabled={disabled || undefined}
         aria-label={label}
         onClick={handleActivate}
         onKeyDown={(e) => {
           if (disabled) return;
-          if (e.key === " " || e.key === "Enter") {
+          if (e.key === ' ' || e.key === 'Enter') {
             e.preventDefault();
             onSelect?.();
           }
@@ -376,10 +363,10 @@ const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
         {content}
       </div>
     );
-  }
+  },
 );
 
-MenuItem.displayName = "MenuItem";
+MenuItem.displayName = 'MenuItem';
 
 export { MenuItem };
 export default MenuItem;

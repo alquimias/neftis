@@ -1,1 +1,1 @@
-export * from "@/registry/default/table";
+export * from '#registry/default/table';

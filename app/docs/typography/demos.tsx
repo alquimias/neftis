@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import {
   AnimatePresence,
   animate,
@@ -13,22 +13,22 @@ import {
   useTransform,
   type AnimationPlaybackControls,
   type MotionValue,
-} from "motion/react";
-import { cn } from "@/lib/utils";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
-import type { ItemRect } from "@/registry/default/hooks/use-fluid-hover";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { useShape } from "@/registry/default/lib/shape-context";
-import { typeClass, useSizeVariant } from "@/registry/default/lib/size-context";
-import { typeStyles, type TypeScaleRole } from "@/registry/default/lib/type-scale";
-import { ScrollArea } from "@/registry/base/scroll-area";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { FakeCursor } from "@/lib/docs/fake-cursor";
-import { HeadingWeightSelect, headingFontLabel, useHeadingFont } from "@/lib/docs/heading-font";
-import { HEADING_FONTS } from "@/lib/docs/site-settings";
-import { nearestGoogleFontWeight } from "@/lib/docs/google-fonts";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsItem } from "@/components/flavored/tabs";
+} from 'motion/react';
+import { cn } from '#lib/utils';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
+import type { ItemRect } from '#registry/default/hooks/use-fluid-hover';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { useShape } from '#registry/default/lib/shape-context';
+import { typeClass, useSizeVariant } from '#registry/default/lib/size-context';
+import { typeStyles, type TypeScaleRole } from '#registry/default/lib/type-scale';
+import { ScrollArea } from '#registry/base/scroll-area';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { FakeCursor } from '#lib/docs/fake-cursor';
+import { HeadingWeightSelect, headingFontLabel, useHeadingFont } from '#lib/docs/heading-font';
+import { HEADING_FONTS } from '#lib/docs/site-settings';
+import { nearestGoogleFontWeight } from '#lib/docs/google-fonts';
+import { Button } from '#components/ui/button';
+import { Tabs, TabsItem } from '#components/flavored/tabs';
 
 /** One side of a before/after: a framed specimen with its verdict under it,
  *  as on the fluid hover page. */
@@ -46,9 +46,11 @@ function Specimen({
   const shape = useShape();
   return (
     <div className="flex min-w-0 flex-col items-center gap-3">
-      <div className={cn("w-full border border-border/60", shape.container, className)}>{children}</div>
+      <div className={cn('w-full border border-border/60', shape.container, className)}>
+        {children}
+      </div>
       <span className="flex items-center justify-center gap-2 text-center text-site-caption text-muted-foreground">
-        <span aria-hidden="true">{good ? "✅" : "❌"}</span>
+        <span aria-hidden="true">{good ? '✅' : '❌'}</span>
         <span>{caption}</span>
       </span>
     </div>
@@ -65,14 +67,32 @@ const SPEC: Array<{
   role: TypeScaleRole;
   name: string;
   sample: string;
-  weight: "bold" | "semibold" | "normal";
+  weight: 'bold' | 'semibold' | 'normal';
   muted: boolean;
 }> = [
-  { role: "display", name: "Display", sample: "Page titles", weight: "bold", muted: false },
-  { role: "title", name: "Title", sample: "Section titles", weight: "semibold", muted: false },
-  { role: "subtitle", name: "Subtitle", sample: "Sub-headings and card titles", weight: "semibold", muted: false },
-  { role: "body", name: "Body", sample: "Labels, menu items, and paragraphs", weight: "normal", muted: true },
-  { role: "caption", name: "Caption", sample: "Descriptions and meta rows", weight: "normal", muted: true },
+  { role: 'display', name: 'Display', sample: 'Page titles', weight: 'bold', muted: false },
+  { role: 'title', name: 'Title', sample: 'Section titles', weight: 'semibold', muted: false },
+  {
+    role: 'subtitle',
+    name: 'Subtitle',
+    sample: 'Sub-headings and card titles',
+    weight: 'semibold',
+    muted: false,
+  },
+  {
+    role: 'body',
+    name: 'Body',
+    sample: 'Labels, menu items, and paragraphs',
+    weight: 'normal',
+    muted: true,
+  },
+  {
+    role: 'caption',
+    name: 'Caption',
+    sample: 'Descriptions and meta rows',
+    weight: 'normal',
+    muted: true,
+  },
 ];
 
 /** The axes a fontWeights token sets. */
@@ -81,7 +101,7 @@ const axes = (fvs: string) => ({
   opsz: /'opsz' (\d+)/.exec(fvs)?.[1],
 });
 
-const HEADING_ROLES = new Set<TypeScaleRole>(["display", "title", "subtitle"]);
+const HEADING_ROLES = new Set<TypeScaleRole>(['display', 'title', 'subtitle']);
 
 /** What a sample renders at, as the numbers columns show it. */
 interface Measured {
@@ -103,7 +123,7 @@ function measure(el: HTMLElement): Measured {
     size: Math.round(parseFloat(cs.fontSize)),
     leading: Math.round(parseFloat(cs.lineHeight)),
     wght: /"wght" ([\d.]+)/.exec(fvs)?.[1] ?? cs.fontWeight,
-    opsz: /"opsz" ([\d.]+)/.exec(fvs)?.[1] ?? "auto",
+    opsz: /"opsz" ([\d.]+)/.exec(fvs)?.[1] ?? 'auto',
   };
 }
 
@@ -112,7 +132,7 @@ function measure(el: HTMLElement): Measured {
  *  step, so S switches every number. */
 export function TypeScaleSpecimen() {
   const shape = useShape();
-  const step = useSizeVariant() === "compact" ? "compact" : "default";
+  const step = useSizeVariant() === 'compact' ? 'compact' : 'default';
   const { font, custom, weight } = useHeadingFont();
   // The rendered values, read back after every change that can restyle the
   // samples; the tokens stand in until then (server render, first paint).
@@ -124,23 +144,28 @@ export function TypeScaleSpecimen() {
       const m = measure(el);
       // A custom family draws its nearest cut: with no faux bold, a static
       // family asked for 700 shows its heaviest weight, so report that.
-      if (font === "custom" && custom && m.opsz === "auto") {
+      if (font === 'custom' && custom && m.opsz === 'auto') {
         m.wght = String(nearestGoogleFontWeight(custom, Number(m.wght)));
       }
       next[role] = m;
     }
     setMeasured(next);
   }, [step, font, custom, weight]);
-  const cols = "grid grid-cols-[80px_minmax(0,1fr)_64px_72px_56px] items-center gap-x-4 px-5";
-  const num = "font-mono text-site-caption tabular-nums";
+  const cols = 'grid grid-cols-[80px_minmax(0,1fr)_64px_72px_56px] items-center gap-x-4 px-5';
+  const num = 'font-mono text-site-caption tabular-nums';
   return (
     <ScrollArea
       orientation="horizontal"
       viewportClassName="scroll-fade-x"
-      className={cn("w-full border border-border/60", shape.container)}
+      className={cn('w-full border border-border/60', shape.container)}
     >
       <div className="min-w-[560px]">
-        <div className={cn(cols, "border-b border-border/60 py-2.5 text-site-caption text-muted-foreground")}>
+        <div
+          className={cn(
+            cols,
+            'border-b border-border/60 py-2.5 text-site-caption text-muted-foreground',
+          )}
+        >
           <span>Style</span>
           <span>Sample</span>
           <span>Font size</span>
@@ -155,15 +180,25 @@ export function TypeScaleSpecimen() {
             opsz: tokens.opsz,
           };
           return (
-            <div key={role} className={cn(cols, "border-b border-border/40 py-4 last:border-b-0")}>
-              <span className="text-site-body text-foreground" style={{ fontVariationSettings: fontWeights.semibold }}>
+            <div key={role} className={cn(cols, 'border-b border-border/40 py-4 last:border-b-0')}>
+              <span
+                className="text-site-body text-foreground"
+                style={{ fontVariationSettings: fontWeights.semibold }}
+              >
                 {name}
               </span>
               <span
                 // The heading roles follow the heading font (right panel > Heading font, or F).
                 // One class each: tailwind-merge reads font-heading and
                 // font-heading-display as rival font utilities and keeps one.
-                className={cn("min-w-0 truncate", typeClass(role, step), muted ? "text-muted-foreground" : "text-foreground", role === "display" ? "font-heading-display" : HEADING_ROLES.has(role) && "font-heading")}
+                className={cn(
+                  'min-w-0 truncate',
+                  typeClass(role, step),
+                  muted ? 'text-muted-foreground' : 'text-foreground',
+                  role === 'display'
+                    ? 'font-heading-display'
+                    : HEADING_ROLES.has(role) && 'font-heading',
+                )}
                 style={{ fontVariationSettings: fontWeights[weight] }}
                 ref={(el) => {
                   if (el) sampleRefs.current.set(role, el);
@@ -172,9 +207,9 @@ export function TypeScaleSpecimen() {
               >
                 {sample}
               </span>
-              <span className={cn(num, "text-foreground")}>{size}px</span>
-              <span className={cn(num, "text-foreground")}>{leading}px</span>
-              <span className={cn(num, "flex flex-col items-start")}>
+              <span className={cn(num, 'text-foreground')}>{size}px</span>
+              <span className={cn(num, 'text-foreground')}>{leading}px</span>
+              <span className={cn(num, 'flex flex-col items-start')}>
                 <span className="text-foreground">{wght}</span>
                 <span className="text-muted-foreground">opsz {opsz}</span>
               </span>
@@ -191,7 +226,7 @@ export function TypeScaleSpecimen() {
 // ---------------------------------------------------------------------------
 
 // Measured: weight alone widens it 2.4px, the paired weights 0.1px.
-const MENU_LABEL = "Open the settings dialog";
+const MENU_LABEL = 'Open the settings dialog';
 
 /** One menu item that behaves like a sidebar row: a hover background under
  *  the pointer, and a click that sets the active background and turns the
@@ -249,7 +284,12 @@ function WeightItem({
         over: on - off,
         top: l.top - f.top,
         height: l.height,
-        row: { top: row.offsetTop, left: row.offsetLeft, width: row.offsetWidth, height: row.offsetHeight },
+        row: {
+          top: row.offsetTop,
+          left: row.offsetLeft,
+          width: row.offsetWidth,
+          height: row.offsetHeight,
+        },
       });
       onDeltaRef.current(on - off);
     };
@@ -273,8 +313,13 @@ function WeightItem({
         {selected && marks && (
           <motion.div
             aria-hidden
-            className={cn("pointer-events-none absolute bg-active", shape.bg)}
-            style={{ left: marks.row.left, top: marks.row.top, width: marks.row.width, height: marks.row.height }}
+            className={cn('pointer-events-none absolute bg-active', shape.bg)}
+            style={{
+              left: marks.row.left,
+              top: marks.row.top,
+              width: marks.row.width,
+              height: marks.row.height,
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -282,7 +327,11 @@ function WeightItem({
           />
         )}
       </AnimatePresence>
-      <FluidHoverHighlight rect={marks && hovered ? marks.row : null} session={visit} className={shape.bg} />
+      <FluidHoverHighlight
+        rect={marks && hovered ? marks.row : null}
+        session={visit}
+        className={shape.bg}
+      />
       {marks && (
         <span
           aria-hidden
@@ -295,7 +344,12 @@ function WeightItem({
         <span
           aria-hidden
           className="pointer-events-none absolute z-20 bg-[#F2555A]/45"
-          style={{ left: marks.edge, width: marks.over, top: marks.top - 3, height: marks.height + 6 }}
+          style={{
+            left: marks.edge,
+            width: marks.over,
+            top: marks.top - 3,
+            height: marks.height + 6,
+          }}
         />
       )}
       <div
@@ -303,13 +357,16 @@ function WeightItem({
         onMouseEnter={() => setPointerOver(true)}
         onMouseLeave={() => setPointerOver(false)}
         onClick={onToggle}
-        className={cn("relative z-10 flex h-9 cursor-pointer items-center gap-2 px-2", typeClass("body"))}
+        className={cn(
+          'relative z-10 flex h-9 cursor-pointer items-center gap-2 px-2',
+          typeClass('body'),
+        )}
       >
         <span
           ref={labelRef}
           className={cn(
-            "whitespace-nowrap transition-[color,font-variation-settings] duration-80",
-            selected || hovered ? "text-foreground" : "text-muted-foreground"
+            'whitespace-nowrap transition-[color,font-variation-settings] duration-80',
+            selected || hovered ? 'text-foreground' : 'text-muted-foreground',
           )}
           style={{ fontVariationSettings: settings[on] }}
         >
@@ -323,7 +380,7 @@ function WeightItem({
             sizerRefs.current[i] = node;
           }}
           aria-hidden
-          className={cn("invisible absolute left-0 top-0 whitespace-nowrap", typeClass("body"))}
+          className={cn('invisible absolute left-0 top-0 whitespace-nowrap', typeClass('body'))}
           style={{ fontVariationSettings: setting }}
         >
           {MENU_LABEL}
@@ -360,7 +417,7 @@ const Y_KEYS = [OUT_Y, IN_Y, IN_Y, OUT_Y, OUT_Y];
 const selectedAt = (p: number) => p >= CLICK_ON && p < CLICK_OFF;
 
 const wider = (px: number | null) =>
-  px === null ? "" : Math.abs(px) < 0.25 ? ": same width" : `: ${Math.abs(px).toFixed(1)}px wider`;
+  px === null ? '' : Math.abs(px) < 0.25 ? ': same width' : `: ${Math.abs(px).toFixed(1)}px wider`;
 
 export function WeightOpszDemo() {
   const [plain, setPlain] = useState<number | null>(null);
@@ -392,11 +449,15 @@ export function WeightOpszDemo() {
       controlsRef.current.play();
       return;
     }
-    controlsRef.current = animate(progress, [0, 1], { duration: LOOP_S, ease: "linear", repeat: Infinity });
+    controlsRef.current = animate(progress, [0, 1], {
+      duration: LOOP_S,
+      ease: 'linear',
+      repeat: Infinity,
+    });
   }, [scripted, progress]);
   useEffect(() => () => controlsRef.current?.stop(), []);
 
-  useMotionValueEvent(progress, "change", (p) => {
+  useMotionValueEvent(progress, 'change', (p) => {
     if (!scripted) return;
     setSelected(selectedAt(p));
     const cy = y.get();
@@ -513,7 +574,7 @@ function CountRow({
   const over = marks ? marks.widths[count - COUNT_FROM] - rest : 0;
 
   return (
-    <div ref={frameRef} className={cn("relative p-1", numeric)}>
+    <div ref={frameRef} className={cn('relative p-1', numeric)}>
       {marks && (
         <span
           aria-hidden
@@ -525,10 +586,15 @@ function CountRow({
         <span
           aria-hidden
           className="pointer-events-none absolute z-20 bg-[#F2555A]/45"
-          style={{ left: marks.left + rest, width: over, top: marks.top - 3, height: marks.height + 6 }}
+          style={{
+            left: marks.left + rest,
+            width: over,
+            top: marks.top - 3,
+            height: marks.height + 6,
+          }}
         />
       )}
-      <div className={cn("flex h-9 items-center px-2", typeClass("body"))}>
+      <div className={cn('flex h-9 items-center px-2', typeClass('body'))}>
         <span ref={labelRef} className="whitespace-nowrap text-foreground">
           {countLabel(count)}
         </span>
@@ -536,14 +602,14 @@ function CountRow({
       <span
         ref={sizerRef}
         aria-hidden
-        className={cn("invisible absolute left-0 top-0 whitespace-nowrap", typeClass("body"))}
+        className={cn('invisible absolute left-0 top-0 whitespace-nowrap', typeClass('body'))}
       />
     </div>
   );
 }
 
 const drift = (px: number | null) =>
-  px === null ? "" : px < 0.25 ? ": holds still" : `: drifts ${px.toFixed(1)}px`;
+  px === null ? '' : px < 0.25 ? ': holds still' : `: drifts ${px.toFixed(1)}px`;
 
 export function NumbersDemo() {
   const [proportional, setProportional] = useState<number | null>(null);
@@ -593,8 +659,8 @@ export function NumbersDemo() {
 // capitals and 5.3px past the baseline (Inter's two are equal), so 8px of
 // padding reads as 13px. Trimmed, the box stops at the capitals and the
 // baseline, and 8px reads as 8px.
-const TRIM = "[text-box:trim-both_cap_alphabetic]";
-const CHIP_LABEL = "Draft saved";
+const TRIM = '[text-box:trim-both_cap_alphabetic]';
+const CHIP_LABEL = 'Draft saved';
 /** Inter's cap height in ems, from the font's OS/2 table (1490 / 2048). */
 const INTER_CAP_HEIGHT = 1490 / 2048;
 
@@ -629,7 +695,14 @@ function TrimChip({ trimmed, onAbove }: { trimmed: boolean; onAbove: (px: number
       const l = label.getBoundingClientRect();
       const base = baseline.getBoundingClientRect().bottom - c.top;
       const cap = base - parseFloat(getComputedStyle(label).fontSize) * INTER_CAP_HEIGHT;
-      setMarks({ left: l.left - c.left, width: l.width, top: l.top - c.top, bottom: l.bottom - c.top, cap, base });
+      setMarks({
+        left: l.left - c.left,
+        width: l.width,
+        top: l.top - c.top,
+        bottom: l.bottom - c.top,
+        cap,
+        base,
+      });
       onAboveRef.current(cap);
     };
     // Metrics are only right once Inter has loaded.
@@ -645,24 +718,38 @@ function TrimChip({ trimmed, onAbove }: { trimmed: boolean; onAbove: (px: number
   return (
     <div
       ref={chipRef}
-      className={cn("relative inline-flex bg-[var(--tint)] p-2 text-foreground", shape.bg, typeClass("body"))}
+      className={cn(
+        'relative inline-flex bg-[var(--tint)] p-2 text-foreground',
+        shape.bg,
+        typeClass('body'),
+      )}
     >
       {marks && marks.cap - marks.top >= 0.5 && (
         <span
           aria-hidden
           className="pointer-events-none absolute bg-[#F2555A]/45"
-          style={{ left: marks.left, width: marks.width, top: marks.top, height: marks.cap - marks.top }}
+          style={{
+            left: marks.left,
+            width: marks.width,
+            top: marks.top,
+            height: marks.cap - marks.top,
+          }}
         />
       )}
       {marks && marks.bottom - marks.base >= 0.5 && (
         <span
           aria-hidden
           className="pointer-events-none absolute bg-[#F2555A]/45"
-          style={{ left: marks.left, width: marks.width, top: marks.base, height: marks.bottom - marks.base }}
+          style={{
+            left: marks.left,
+            width: marks.width,
+            top: marks.base,
+            height: marks.bottom - marks.base,
+          }}
         />
       )}
       {/* text-box needs a block container: the label is a flex item. */}
-      <span ref={labelRef} className={cn("relative z-10 whitespace-nowrap", trimmed && TRIM)}>
+      <span ref={labelRef} className={cn('relative z-10 whitespace-nowrap', trimmed && TRIM)}>
         <span ref={baselineRef} aria-hidden className="inline-block h-0 w-0 align-baseline" />
         {CHIP_LABEL}
       </span>
@@ -680,7 +767,7 @@ function TrimChip({ trimmed, onAbove }: { trimmed: boolean; onAbove: (px: number
 }
 
 const above = (px: number | null) =>
-  px === null ? "" : `: ${Math.round(px)}px above the capitals`;
+  px === null ? '' : `: ${Math.round(px)}px above the capitals`;
 
 export function TrimDemo() {
   const [plain, setPlain] = useState<number | null>(null);
@@ -690,19 +777,23 @@ export function TrimDemo() {
   return (
     <ComponentPreview hideHeader>
       <div className="grid w-full max-w-xl gap-5 sm:grid-cols-2">
-        <Specimen good={false} className="flex h-16 items-center justify-center" caption={`Untrimmed${above(plain)}`}>
+        <Specimen
+          good={false}
+          className="flex h-16 items-center justify-center"
+          caption={`Untrimmed${above(plain)}`}
+        >
           <TrimChip trimmed={false} onAbove={setPlain} />
         </Specimen>
         <Specimen
           good
           className="flex h-16 items-center justify-center"
-          caption={`Trimmed${trims ? above(trimmed) : ": not in this browser yet"}`}
+          caption={`Trimmed${trims ? above(trimmed) : ': not in this browser yet'}`}
         >
           <TrimChip
             trimmed
             onAbove={(px) => {
               setTrimmed(px);
-              setTrims(CSS.supports("text-box", "trim-both cap alphabetic"));
+              setTrims(CSS.supports('text-box', 'trim-both cap alphabetic'));
             }}
           />
         </Specimen>
@@ -720,14 +811,14 @@ export function TrimDemo() {
 // Wrap leaves the paragraph's last word alone ("cursor."), and pretty
 // brings "your" down to join it, with room either side to spare for font
 // rendering.
-const HEADLINE = "Give every component the same motion";
+const HEADLINE = 'Give every component the same motion';
 const PARAGRAPH =
-  "Hover glides from item to item instead of blinking, so the highlight always sits under your cursor.";
-const SAMPLE = "w-[214px] max-w-full";
+  'Hover glides from item to item instead of blinking, so the highlight always sits under your cursor.';
+const SAMPLE = 'w-[214px] max-w-full';
 
 const heading = (wrap: string) => (
   <p
-    className={cn(typeClass("title"), SAMPLE, "text-foreground", wrap)}
+    className={cn(typeClass('title'), SAMPLE, 'text-foreground', wrap)}
     style={{ fontVariationSettings: fontWeights.semibold }}
   >
     {HEADLINE}
@@ -735,18 +826,34 @@ const heading = (wrap: string) => (
 );
 
 const paragraph = (wrap: string) => (
-  <p className={cn(typeClass("body"), SAMPLE, "text-muted-foreground", wrap)}>{PARAGRAPH}</p>
+  <p className={cn(typeClass('body'), SAMPLE, 'text-muted-foreground', wrap)}>{PARAGRAPH}</p>
 );
 
 export function BalanceDemo() {
   return (
     <ComponentPreview hideHeader>
       <div className="grid w-full max-w-xl gap-5 sm:grid-cols-2">
-        <Specimen good={false} className="px-4 py-5" caption={<><code>wrap</code> leaves a short last line</>}>
-          {heading("[text-wrap:wrap]")}
+        <Specimen
+          good={false}
+          className="px-4 py-5"
+          caption={
+            <>
+              <code>wrap</code> leaves a short last line
+            </>
+          }
+        >
+          {heading('[text-wrap:wrap]')}
         </Specimen>
-        <Specimen good className="px-4 py-5" caption={<><code>balance</code> evens the lines</>}>
-          {heading("[text-wrap:balance]")}
+        <Specimen
+          good
+          className="px-4 py-5"
+          caption={
+            <>
+              <code>balance</code> evens the lines
+            </>
+          }
+        >
+          {heading('[text-wrap:balance]')}
         </Specimen>
       </div>
     </ComponentPreview>
@@ -757,11 +864,27 @@ export function PrettyDemo() {
   return (
     <ComponentPreview hideHeader>
       <div className="grid w-full max-w-xl gap-5 sm:grid-cols-2">
-        <Specimen good={false} className="px-4 py-5" caption={<><code>wrap</code> leaves one word alone</>}>
-          {paragraph("[text-wrap:wrap]")}
+        <Specimen
+          good={false}
+          className="px-4 py-5"
+          caption={
+            <>
+              <code>wrap</code> leaves one word alone
+            </>
+          }
+        >
+          {paragraph('[text-wrap:wrap]')}
         </Specimen>
-        <Specimen good className="px-4 py-5" caption={<><code>pretty</code> brings a word down to join it</>}>
-          {paragraph("[text-wrap:pretty]")}
+        <Specimen
+          good
+          className="px-4 py-5"
+          caption={
+            <>
+              <code>pretty</code> brings a word down to join it
+            </>
+          }
+        >
+          {paragraph('[text-wrap:pretty]')}
         </Specimen>
       </div>
     </ComponentPreview>
@@ -782,14 +905,14 @@ function keepInPlace(el: HTMLElement | null, change: () => void) {
     const moved = el.getBoundingClientRect().top - top;
     if (moved !== 0) window.scrollBy(0, moved);
   };
-  root.style.overflowAnchor = "none";
+  root.style.overflowAnchor = 'none';
   change();
   settle();
   // Skipped if the visitor scrolled meanwhile: the page is theirs again.
   const scrollY = window.scrollY;
   void document.fonts.ready.then(() => {
     if (window.scrollY === scrollY) settle();
-    requestAnimationFrame(() => root.style.removeProperty("overflow-anchor"));
+    requestAnimationFrame(() => root.style.removeProperty('overflow-anchor'));
   });
 }
 
@@ -822,10 +945,16 @@ export function HeadingFontDemo() {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <h3 className="text-site-display text-foreground" style={{ fontVariationSettings: fontWeights.bold }}>
+          <h3
+            className="text-site-display text-foreground"
+            style={{ fontVariationSettings: fontWeights.bold }}
+          >
             Getting started
           </h3>
-          <h3 className="text-site-title text-foreground" style={{ fontVariationSettings: fontWeights.semibold }}>
+          <h3
+            className="text-site-title text-foreground"
+            style={{ fontVariationSettings: fontWeights.semibold }}
+          >
             Install the components you need
           </h3>
           <p className="text-site-body text-muted-foreground">

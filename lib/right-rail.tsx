@@ -1,11 +1,6 @@
-"use client";
+'use client';
 
-import {
-  createContext,
-  useContext,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useState, type ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------
 // A slot in the desktop right rail (below "Make them yours") that any page can
@@ -28,9 +23,7 @@ const RightRailContext = createContext<RightRailValue>({
 export function RightRailProvider({ children }: { children: ReactNode }) {
   const [node, setNode] = useState<HTMLElement | null>(null);
   return (
-    <RightRailContext.Provider value={{ node, setNode }}>
-      {children}
-    </RightRailContext.Provider>
+    <RightRailContext.Provider value={{ node, setNode }}>{children}</RightRailContext.Provider>
   );
 }
 

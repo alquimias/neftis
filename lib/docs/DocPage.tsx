@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { type ReactNode } from "react";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { useSizeVariant } from "@/lib/size-context";
-import { CopyPromptButton } from "@/lib/docs/copy-prompt-button";
-import { buildInstallPrompt } from "@/lib/docs/install-prompt";
-import { Button } from "@/registry/radix/button";
-import { useIcon } from "@/lib/icon-context";
-import { docOrder, systemList } from "@/lib/docs/components";
-import { Tooltip, TooltipGroup } from "@/registry/radix/tooltip";
-import { useBase, DUAL_FLAVOR_SLUGS } from "@/lib/base-context";
-import { useHoverMode } from "@/lib/docs/hover-mode";
+import Link from 'next/link';
+import { type ReactNode } from 'react';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { useSizeVariant } from '#lib/size-context';
+import { CopyPromptButton } from '#lib/docs/copy-prompt-button';
+import { buildInstallPrompt } from '#lib/docs/install-prompt';
+import { Button } from '#registry/radix/button';
+import { useIcon } from '#lib/icon-context';
+import { docOrder, systemList } from '#lib/docs/components';
+import { Tooltip, TooltipGroup } from '#registry/radix/tooltip';
+import { useBase, DUAL_FLAVOR_SLUGS } from '#lib/base-context';
+import { useHoverMode } from '#lib/docs/hover-mode';
 
 interface DocPageProps {
   title: string;
@@ -54,23 +54,24 @@ export function DocPage({
   const system = systemList.find((s) => s.slug === slug);
   const installSlug = installSlugProp ?? system?.installSlug;
   const installNote = installNoteProp ?? system?.installNote;
-  const ArrowRight = useIcon("arrow-right");
+  const ArrowRight = useIcon('arrow-right');
   const { base } = useBase();
   const hover = useHoverMode();
   // Square buttons have no provider-following value, so the prev/next arrows
   // derive their step explicitly (see /docs/sizes).
-  const iconSize =
-    useSizeVariant() === "compact" ? ("icon-compact" as const) : ("icon" as const);
+  const iconSize = useSizeVariant() === 'compact' ? ('icon-compact' as const) : ('icon' as const);
 
   const currentIndex = slug ? docOrder.findIndex((c) => c.slug === slug) : -1;
   // The first doc page steps back to the Changelog, which sits between the
   // Introduction and the systems in the sidebar.
-  const prev = currentIndex > 0
-    ? { href: `/docs/${docOrder[currentIndex - 1].slug}`, name: docOrder[currentIndex - 1].name }
-    : currentIndex === 0
-      ? { href: "/changelog", name: "Changelog" }
-      : null;
-  const next = currentIndex >= 0 && currentIndex < docOrder.length - 1 ? docOrder[currentIndex + 1] : null;
+  const prev =
+    currentIndex > 0
+      ? { href: `/docs/${docOrder[currentIndex - 1].slug}`, name: docOrder[currentIndex - 1].name }
+      : currentIndex === 0
+        ? { href: '/changelog', name: 'Changelog' }
+        : null;
+  const next =
+    currentIndex >= 0 && currentIndex < docOrder.length - 1 ? docOrder[currentIndex + 1] : null;
 
   return (
     <div className="flex flex-col gap-8 px-6">
@@ -102,7 +103,12 @@ export function DocPage({
                     </Button>
                   </Tooltip>
                 ) : (
-                  <Button variant="ghost" size={iconSize} disabled aria-label="No previous component">
+                  <Button
+                    variant="ghost"
+                    size={iconSize}
+                    disabled
+                    aria-label="No previous component"
+                  >
                     <ArrowRight className="rotate-180" />
                   </Button>
                 )}
@@ -143,11 +149,11 @@ export function DocPage({
               <p className="text-site-body text-muted-foreground">{installNote}</p>
             ) : DUAL_FLAVOR_SLUGS.has(installSlug ?? slug) ? (
               <p className="text-site-body text-muted-foreground">
-                {base === "base"
-                  ? "Base UI flavor. Switch in the right panel."
-                  : "Radix flavor. Switch in the right panel."}
+                {base === 'base'
+                  ? 'Base UI flavor. Switch in the right panel.'
+                  : 'Radix flavor. Switch in the right panel.'}
               </p>
-            ) : base === "base" ? (
+            ) : base === 'base' ? (
               // User has Base UI selected globally, but this component has no
               // Base flavour. Surface that so the toggle doesn't feel inert.
               <p className="text-site-body text-muted-foreground">
@@ -178,10 +184,18 @@ interface DocSectionProps {
 }
 
 /** A section's heading, for content that places it itself. */
-export function DocSectionTitle({ children, className }: { children: ReactNode; className?: string }) {
+export function DocSectionTitle({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
     <h2
-      className={"text-site-title text-foreground leading-none" + (className ? ` ${className}` : "")}
+      className={
+        'text-site-title text-foreground leading-none' + (className ? ` ${className}` : '')
+      }
       style={{ fontVariationSettings: fontWeights.semibold }}
     >
       {children}

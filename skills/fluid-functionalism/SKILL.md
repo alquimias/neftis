@@ -151,6 +151,7 @@ since they installed it:
    registry on the `+`. A `REWRITES` line means the CLI rewrites more than
    that (JavaScript output, a Tailwind prefix): compare those by hand. It
    writes nothing and needs network access to fluidfunctionalism.com.
+
 3. **Read the changelog:** <https://www.fluidfunctionalism.com/changelog.md>,
    newest month first. Every entry names its install URL; every Breaking
    entry carries migration steps and a before/after diff.
@@ -195,9 +196,9 @@ The stack read tells you which of these are already done. Skip those.
    ThemeProvider:
 
    ```tsx
-   import { MotionConfig } from "motion/react";
+   import { MotionConfig } from 'motion/react';
 
-   <MotionConfig reducedMotion="user">{/* providers + app */}</MotionConfig>
+   <MotionConfig reducedMotion="user">{/* providers + app */}</MotionConfig>;
    ```
 
    This makes every Motion component honour the OS
@@ -254,7 +255,7 @@ install it directly as a composed block:
 ## Composing with the system
 
 Installed components already follow every rule. The rules matter when you
-write UI *around* them — a custom list, a bespoke card grid, an animated icon
+write UI _around_ them — a custom list, a bespoke card grid, an animated icon
 of your own. The recipes and code snippets live in
 [references/custom-motion.md](references/custom-motion.md); the shape of the
 system:

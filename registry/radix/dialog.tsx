@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createContext,
@@ -9,18 +9,18 @@ import {
   type ComponentPropsWithoutRef,
   type HTMLAttributes,
   type ReactElement,
-} from "react";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { fontWeights } from "@/lib/font-weight";
-import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
-import { useIcons } from "@/lib/icon-context";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { useShape } from "@/lib/shape-context";
-import { useSize, useSizeVariant, typeClass } from "@/lib/size-context";
-import { SurfaceProvider, useSurface } from "@/lib/surface-context";
-import { surfaceClasses } from "@/lib/surface-classes";
-import { Button } from "@/components/ui/button";
+} from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { fontWeights } from '#lib/font-weight';
+import { motion } from 'motion/react';
+import { cn } from '#lib/utils';
+import { useIcons } from '#lib/icon-context';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { useShape } from '#lib/shape-context';
+import { useSize, useSizeVariant, typeClass } from '#lib/size-context';
+import { SurfaceProvider, useSurface } from '#lib/surface-context';
+import { surfaceClasses } from '#lib/surface-classes';
+import { Button } from '#components/ui/button';
 
 const DIALOG_OFFSET = 4;
 
@@ -57,8 +57,10 @@ function Dialog({
 // Trigger and Close compose either way — `render={<Button/>}` (the
 // library's composition API, shared with DropdownTrigger) or Radix-style
 // `asChild` with a single child element — so one snippet works everywhere.
-interface DialogSlotProps
-  extends Omit<ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger>, "asChild"> {
+interface DialogSlotProps extends Omit<
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger>,
+  'asChild'
+> {
   /** Element to render as the control, e.g. a Button. */
   render?: ReactElement;
   /** Compose onto the single child element instead. */
@@ -75,9 +77,9 @@ const DialogTrigger = forwardRef<HTMLButtonElement, DialogSlotProps>(
       <DialogPrimitive.Trigger ref={ref} asChild={asChild} {...props}>
         {children}
       </DialogPrimitive.Trigger>
-    )
+    ),
 );
-DialogTrigger.displayName = "DialogTrigger";
+DialogTrigger.displayName = 'DialogTrigger';
 
 const DialogClose = forwardRef<HTMLButtonElement, DialogSlotProps>(
   ({ render, asChild, children, ...props }, ref) =>
@@ -89,17 +91,16 @@ const DialogClose = forwardRef<HTMLButtonElement, DialogSlotProps>(
       <DialogPrimitive.Close ref={ref} asChild={asChild} {...props}>
         {children}
       </DialogPrimitive.Close>
-    )
+    ),
 );
-DialogClose.displayName = "DialogClose";
+DialogClose.displayName = 'DialogClose';
 
-interface DialogContentProps
-  extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
+interface DialogContentProps extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
   /** Width: sm 400, lg 540, xl 880 (each one notch narrower in compact
    *  regions). `xl` is the canvas for composed layouts — a sidebar beside
    *  a panel — which usually pair it with `className="p-0"` and a fixed
    *  height. */
-  size?: "sm" | "lg" | "xl";
+  size?: 'sm' | 'lg' | 'xl';
   /** Portal target. When set, the overlay and panel render inside this element
    *  (positioned `absolute`) instead of covering the viewport (`fixed`). Pair
    *  with a `position: relative; overflow: hidden` container — and usually
@@ -113,11 +114,22 @@ interface DialogContentProps
   /** Where the panel sits: centered, or anchored 12dvh from the top so a
    *  panel whose height follows its content (a command menu) keeps its top
    *  edge still. @default "center" */
-  position?: "center" | "top";
+  position?: 'center' | 'top';
 }
 
 const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
-  ({ className, children, size = "sm", container, showCloseButton = true, position = "center", ...props }, ref) => {
+  (
+    {
+      className,
+      children,
+      size = 'sm',
+      container,
+      showCloseButton = true,
+      position = 'center',
+      ...props
+    },
+    ref,
+  ) => {
     const icons = useIcons();
     const XIcon = icons.x;
     const open = useContext(DialogOpenContext);
@@ -126,7 +138,7 @@ const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
     const dialogLevel = Math.min(substrate + DIALOG_OFFSET, 8);
     // The size ladder narrows the dialog one notch in compact regions —
     // width only, the padding stays put (see /docs/sizes).
-    const compact = useSize().variant === "compact";
+    const compact = useSize().variant === 'compact';
     const [mounted, setMounted] = useState(false);
 
     // Set during the render that opens it, so the portal mounts in the same
@@ -155,8 +167,8 @@ const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
         <DialogPrimitive.Overlay asChild forceMount>
           <motion.div
             className={cn(
-              container ? "absolute" : "fixed",
-              "inset-0 z-[var(--z-overlay,40)] bg-black/40 dark:bg-black/80"
+              container ? 'absolute' : 'fixed',
+              'inset-0 z-[var(--z-overlay,40)] bg-black/40 dark:bg-black/80',
             )}
             initial={{ opacity: 0 }}
             animate={{ opacity: open ? 1 : 0 }}
@@ -166,23 +178,23 @@ const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
         <DialogPrimitive.Content ref={ref} asChild forceMount {...props}>
           <motion.div
             className={cn(
-              container ? "absolute" : "fixed",
-              "left-1/2 z-[var(--z-modal,50)] w-[calc(100%-2rem)]",
-              position === "top" ? "top-[12dvh]" : "top-1/2",
+              container ? 'absolute' : 'fixed',
+              'left-1/2 z-[var(--z-modal,50)] w-[calc(100%-2rem)]',
+              position === 'top' ? 'top-[12dvh]' : 'top-1/2',
               surfaceClasses(dialogLevel),
-              "p-6 focus:outline-none",
-              size === "sm" && (compact ? "max-w-[360px]" : "max-w-[400px]"),
-              size === "lg" && (compact ? "max-w-[480px]" : "max-w-[540px]"),
-              size === "xl" && (compact ? "max-w-[800px]" : "max-w-[880px]"),
+              'p-6 focus:outline-none',
+              size === 'sm' && (compact ? 'max-w-[360px]' : 'max-w-[400px]'),
+              size === 'lg' && (compact ? 'max-w-[480px]' : 'max-w-[540px]'),
+              size === 'xl' && (compact ? 'max-w-[800px]' : 'max-w-[880px]'),
               shape.container,
-              className
+              className,
             )}
-            initial={{ opacity: 0, scale: 0.97, x: "-50%", y: position === "top" ? 0 : "-50%" }}
+            initial={{ opacity: 0, scale: 0.97, x: '-50%', y: position === 'top' ? 0 : '-50%' }}
             animate={{
               opacity: open ? 1 : 0,
               scale: open ? 1 : 0.97,
-              x: "-50%",
-              y: position === "top" ? 0 : "-50%",
+              x: '-50%',
+              y: position === 'top' ? 0 : '-50%',
             }}
             transition={open ? spring.slow : spring.slow.exit}
             onAnimationComplete={handleExitComplete}
@@ -191,11 +203,7 @@ const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
               {children}
               {showCloseButton && (
                 <DialogPrimitive.Close asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    className="absolute right-3 top-3"
-                  >
+                  <Button variant="ghost" size="icon-sm" className="absolute right-3 top-3">
                     <XIcon />
                     <span className="sr-only">Close</span>
                   </Button>
@@ -206,26 +214,16 @@ const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     );
-  }
+  },
 );
-DialogContent.displayName = "DialogContent";
+DialogContent.displayName = 'DialogContent';
 
 function DialogHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn("flex flex-col gap-1.5 mb-4", className)}
-      {...props}
-    />
-  );
+  return <div className={cn('flex flex-col gap-1.5 mb-4', className)} {...props} />;
 }
 
 function DialogFooter({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn("flex justify-end gap-2 mt-6", className)}
-      {...props}
-    />
-  );
+  return <div className={cn('flex justify-end gap-2 mt-6', className)} {...props} />;
 }
 
 const DialogTitle = forwardRef<
@@ -233,40 +231,40 @@ const DialogTitle = forwardRef<
   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => {
   // The title role of the type scale — see /docs/sizes.
-  const compact = useSizeVariant() === "compact";
+  const compact = useSizeVariant() === 'compact';
   return (
     <DialogPrimitive.Title
       ref={ref}
       className={cn(
-        typeClass("title", compact ? "compact" : "default"),
-        "text-foreground",
-        className
+        typeClass('title', compact ? 'compact' : 'default'),
+        'text-foreground',
+        className,
       )}
       style={{ fontVariationSettings: fontWeights.semibold }}
       {...props}
     />
   );
 });
-DialogTitle.displayName = "DialogTitle";
+DialogTitle.displayName = 'DialogTitle';
 
 const DialogDescription = forwardRef<
   HTMLParagraphElement,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => {
-  const compact = useSizeVariant() === "compact";
+  const compact = useSizeVariant() === 'compact';
   return (
     <DialogPrimitive.Description
       ref={ref}
       className={cn(
-        typeClass("body", compact ? "compact" : "default"),
-        "text-muted-foreground",
-        className
+        typeClass('body', compact ? 'compact' : 'default'),
+        'text-muted-foreground',
+        className,
       )}
       {...props}
     />
   );
 });
-DialogDescription.displayName = "DialogDescription";
+DialogDescription.displayName = 'DialogDescription';
 
 export {
   Dialog,

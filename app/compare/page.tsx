@@ -1,37 +1,37 @@
-"use client";
+'use client';
 
-import { inKeyboardScope } from "@/lib/keyboard-scope";
-import { Suspense, useState, useEffect, useRef, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { componentList } from "@/lib/docs/components";
-import { useReleaseMarks } from "@/lib/changelog/marks";
-import { previewMap } from "@/app/components/bento-previews";
-import { shadcnPreviewMap } from "@/app/components/shadcn-previews";
-import { compareFluidPreviewMap } from "@/app/components/compare-fluid-previews";
-import { BentoCard } from "@/app/components/bento-card";
-import { Button } from "@/registry/radix/button";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { useIcon } from "@/lib/icon-context";
-import { Tooltip, TooltipGroup } from "@/registry/radix/tooltip";
-import "./shadcn-theme.css";
+import { inKeyboardScope } from '#lib/keyboard-scope';
+import { Suspense, useState, useEffect, useRef, useCallback } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { componentList } from '#lib/docs/components';
+import { useReleaseMarks } from '#lib/changelog/marks';
+import { previewMap } from '#app/components/bento-previews';
+import { shadcnPreviewMap } from '#app/components/shadcn-previews';
+import { compareFluidPreviewMap } from '#app/components/compare-fluid-previews';
+import { BentoCard } from '#app/components/bento-card';
+import { Button } from '#registry/radix/button';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { useIcon } from '#lib/icon-context';
+import { Tooltip, TooltipGroup } from '#registry/radix/tooltip';
+import './shadcn-theme.css';
 
 // Mirrors the slide order on /demo. Components without a shadcn equivalent
 // (or without a Fluid Functionalism preview) are skipped at runtime.
 const SLIDE_ORDER = [
-  "dropdown",
-  "checkbox-group",
-  "accordion",
-  "radio-group",
-  "slider",
-  "color-picker",
-  "input-group",
-  "switch",
-  "table",
-  "tabs",
-  "thinking-indicator",
-  "thinking-steps",
-  "input-copy",
+  'dropdown',
+  'checkbox-group',
+  'accordion',
+  'radio-group',
+  'slider',
+  'color-picker',
+  'input-group',
+  'switch',
+  'table',
+  'tabs',
+  'thinking-indicator',
+  'thinking-steps',
+  'input-copy',
 ];
 
 function ShadcnPreview({ slug }: { slug: string }) {
@@ -63,16 +63,14 @@ function ComparePageInner() {
 
   const componentMap = new Map(componentList.map((c) => [c.slug, c]));
 
-  const slides = SLIDE_ORDER
-    .map((slug) => {
-      const c = componentMap.get(slug);
-      if (!c) return null;
-      if (!previewMap[slug] || !shadcnPreviewMap[slug]) return null;
-      return { slug, name: c.name, isNew: isNew(slug) };
-    })
-    .filter((s): s is NonNullable<typeof s> => s != null);
+  const slides = SLIDE_ORDER.map((slug) => {
+    const c = componentMap.get(slug);
+    if (!c) return null;
+    if (!previewMap[slug] || !shadcnPreviewMap[slug]) return null;
+    return { slug, name: c.name, isNew: isNew(slug) };
+  }).filter((s): s is NonNullable<typeof s> => s != null);
 
-  const paramSlug = searchParams.get("c");
+  const paramSlug = searchParams.get('c');
   const paramIndex = slides.findIndex((s) => s.slug === paramSlug);
   const [currentIndex, setCurrentIndex] = useState(paramIndex >= 0 ? paramIndex : 0);
 
@@ -89,7 +87,7 @@ function ComparePageInner() {
       const slug = slides[index].slug;
       router.replace(`/compare?c=${slug}`, { scroll: false });
     },
-    [slides, router]
+    [slides, router],
   );
 
   const goToRef = useRef(goTo);
@@ -106,39 +104,40 @@ function ComparePageInner() {
       if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
 
       const tag = (e.target as HTMLElement).tagName;
-      const role = (e.target as HTMLElement).getAttribute("role");
+      const role = (e.target as HTMLElement).getAttribute('role');
       if (
-        tag === "INPUT" ||
-        tag === "TEXTAREA" ||
-        tag === "SELECT" ||
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
         (e.target as HTMLElement).isContentEditable ||
-        role === "slider" ||
-        role === "tablist" ||
-        role === "radiogroup" ||
-        role === "listbox" ||
-        role === "menu"
-      ) return;
+        role === 'slider' ||
+        role === 'tablist' ||
+        role === 'radiogroup' ||
+        role === 'listbox' ||
+        role === 'menu'
+      )
+        return;
 
       const closest = (e.target as HTMLElement).closest(
-        "[role=slider],[role=tablist],[role=radiogroup],[role=listbox],[role=menu],[role=menubar]"
+        '[role=slider],[role=tablist],[role=radiogroup],[role=listbox],[role=menu],[role=menubar]',
       );
       if (closest) return;
 
-      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault();
         goToRef.current(currentIndexRef.current + 1);
-      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault();
         goToRef.current(currentIndexRef.current - 1);
       }
     }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const current = slides[currentIndex];
-  const ArrowRight = useIcon("arrow-right");
+  const ArrowRight = useIcon('arrow-right');
   const prevSlide = currentIndex > 0 ? slides[currentIndex - 1] : null;
   const nextSlide = currentIndex < slides.length - 1 ? slides[currentIndex + 1] : null;
 
@@ -158,16 +157,23 @@ function ComparePageInner() {
             </p>
             <div className="flex items-center gap-2 mt-2">
               <Link href="/docs">
-                <Button variant="primary" size="sm">Learn more</Button>
+                <Button variant="primary" size="sm">
+                  Learn more
+                </Button>
               </Link>
               <Link href="/demo">
-                <Button variant="tertiary" size="sm">See demo</Button>
+                <Button variant="tertiary" size="sm">
+                  See demo
+                </Button>
               </Link>
             </div>
           </div>
           <div className="flex items-center gap-1 shrink-0">
             <TooltipGroup>
-              <Tooltip content={prevSlide ? prevSlide.name : "No previous"} shortcut={prevSlide ? "←" : undefined}>
+              <Tooltip
+                content={prevSlide ? prevSlide.name : 'No previous'}
+                shortcut={prevSlide ? '←' : undefined}
+              >
                 <Button
                   variant="ghost"
                   size="icon"
@@ -178,7 +184,10 @@ function ComparePageInner() {
                   <ArrowRight className="rotate-180" />
                 </Button>
               </Tooltip>
-              <Tooltip content={nextSlide ? nextSlide.name : "No next"} shortcut={nextSlide ? "→" : undefined}>
+              <Tooltip
+                content={nextSlide ? nextSlide.name : 'No next'}
+                shortcut={nextSlide ? '→' : undefined}
+              >
                 <Button
                   variant="ghost"
                   size="icon"
@@ -229,7 +238,7 @@ function ComparePageInner() {
             className="h-1.5 rounded-full transition-all duration-150"
             style={{
               width: i === currentIndex ? 24 : 6,
-              backgroundColor: "color-mix(in oklab, var(--foreground), transparent 60%)",
+              backgroundColor: 'color-mix(in oklab, var(--foreground), transparent 60%)',
             }}
             aria-label={`Go to ${s.name}`}
           />

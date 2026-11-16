@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { inKeyboardScope } from "@/lib/keyboard-scope";
+import { inKeyboardScope } from '#lib/keyboard-scope';
 import {
   createContext,
   useContext,
@@ -9,29 +9,24 @@ import {
   useLayoutEffect,
   useRef,
   type ReactNode,
-} from "react";
-import { createPortal, flushSync } from "react-dom";
-import { PreviewExpandContext } from "@/lib/docs/preview-expand";
-import { InPlaygroundMenuContext, PlaygroundMenu } from "@/app/components/playground-menu";
-import { Shuffle } from "lucide-react";
-import { animate } from "motion/react";
-import { spring } from "@/registry/default/lib/springs";
-import { cn } from "@/lib/utils";
-import { KeyCap } from "@/lib/key-cap";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { RailHairline, useRightRailNode } from "@/lib/right-rail";
-import { Tooltip } from "@/registry/radix/tooltip";
-import { showShortcutToast } from "@/lib/docs/settings-toast";
-import { useShape } from "@/lib/shape-context";
-import { useIcon } from "@/lib/icon-context";
-import { useFluidHover } from "@/hooks/use-fluid-hover";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/flavored/select";
+} from 'react';
+import { createPortal, flushSync } from 'react-dom';
+import { PreviewExpandContext } from '#lib/docs/preview-expand';
+import { InPlaygroundMenuContext, PlaygroundMenu } from '#app/components/playground-menu';
+import { Shuffle } from 'lucide-react';
+import { animate } from 'motion/react';
+import { spring } from '#registry/default/lib/springs';
+import { cn } from '#lib/utils';
+import { KeyCap } from '#lib/key-cap';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { RailHairline, useRightRailNode } from '#lib/right-rail';
+import { Tooltip } from '#registry/radix/tooltip';
+import { showShortcutToast } from '#lib/docs/settings-toast';
+import { useShape } from '#lib/shape-context';
+import { useIcon } from '#lib/icon-context';
+import { useFluidHover } from '#hooks/use-fluid-hover';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
+import { Select, SelectTrigger, SelectContent, SelectItem } from '#components/flavored/select';
 
 // ---------------------------------------------------------------------------
 // Shared scaffolding for doc-page playgrounds (Card, Button, …): the control
@@ -44,7 +39,7 @@ import {
 // play-row: one stop of the panel's fluid hover (see PlaygroundPanel).
 // Its height is the Switch's own by the Size setting: 36px at default, and
 // at least the compact select row's 28px (the compact switch alone is 24px).
-export const PLAY_SWITCH = "play-row w-full min-h-7 flex-row-reverse justify-between px-2";
+export const PLAY_SWITCH = 'play-row w-full min-h-7 flex-row-reverse justify-between px-2';
 
 export function PlayField({
   label,
@@ -58,8 +53,8 @@ export function PlayField({
   return (
     <div
       className={cn(
-        "flex items-center justify-between pl-2",
-        disabled && "opacity-40 pointer-events-none"
+        'flex items-center justify-between pl-2',
+        disabled && 'opacity-40 pointer-events-none',
       )}
     >
       <span className="text-site-body text-muted-foreground">{label}</span>
@@ -141,7 +136,7 @@ const SEARCH_FROM = 8;
  *  how many controls there are and how many are showing. */
 function filterControls(list: HTMLElement, query: string) {
   const q = query.trim().toLowerCase();
-  let section = "";
+  let section = '';
   let title: HTMLElement | null = null;
   let titleUsed = false;
   let divider: HTMLElement | null = null;
@@ -153,28 +148,28 @@ function filterControls(list: HTMLElement, query: string) {
     if (title) title.hidden = !titleUsed;
   };
   for (const el of Array.from(list.children) as HTMLElement[]) {
-    if (el.hasAttribute("data-play-divider")) {
+    if (el.hasAttribute('data-play-divider')) {
       closeTitle();
       title = null;
-      section = "";
+      section = '';
       el.hidden = true;
       divider = el;
       continue;
     }
-    if (el.hasAttribute("data-play-section")) {
+    if (el.hasAttribute('data-play-section')) {
       closeTitle();
       title = el;
       titleUsed = false;
-      section = (el.textContent ?? "").toLowerCase();
+      section = (el.textContent ?? '').toLowerCase();
       continue;
     }
-    if (!el.matches(".play-row") && !el.querySelector(".play-row")) {
+    if (!el.matches('.play-row') && !el.querySelector('.play-row')) {
       extras.push({ el, divider });
       divider = null;
       continue;
     }
     total++;
-    const match = !q || section.includes(q) || (el.textContent ?? "").toLowerCase().includes(q);
+    const match = !q || section.includes(q) || (el.textContent ?? '').toLowerCase().includes(q);
     el.hidden = !match;
     if (!match) continue;
     shown++;
@@ -199,7 +194,7 @@ const InlinePlaygroundContext = createContext(false);
 
 /** The muted controls card: title row with a shuffle button, fields below. */
 export function PlaygroundPanel({
-  title = "Playground variant",
+  title = 'Playground variant',
   onShuffle,
   children,
 }: {
@@ -226,15 +221,25 @@ export function PlaygroundPanel({
       // the search it opens is the preview's own controls, so it works
       // with focus on the component too (a table row), short of a field,
       // which keeps the character.
-      const slash = e.key === "/";
+      const slash = e.key === '/';
       if (inKeyboardScope(e.target) && !slash) return;
-      if (e.key !== "x" && e.key !== "X" && !slash) return;
+      if (e.key !== 'x' && e.key !== 'X' && !slash) return;
       // A key the preview already used (X selects a focused table row).
       if (e.defaultPrevented) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const target = e.target instanceof HTMLElement ? e.target : null;
-      if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable) return;
-      if (target?.closest('[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]')) return;
+      if (
+        target?.tagName === 'INPUT' ||
+        target?.tagName === 'TEXTAREA' ||
+        target?.isContentEditable
+      )
+        return;
+      if (
+        target?.closest(
+          '[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]',
+        )
+      )
+        return;
       if (slash) {
         // "/" puts the cursor in the options' search, where there is one
         // on show (the rail's; the pen menu opens on the same key).
@@ -247,7 +252,7 @@ export function PlaygroundPanel({
       }
       e.preventDefault();
       shuffleRef.current();
-      showShortcutToast("X", "Playground shuffled");
+      showShortcutToast('X', 'Playground shuffled');
       // The key chip presses like the settings' chips: down, held 80ms,
       // then back on the fast spring.
       const key = keyRef.current;
@@ -257,19 +262,19 @@ export function PlaygroundPanel({
       release = setTimeout(() => animate(key, { scale: 1 }, spring.fast), 80);
     };
     let release: ReturnType<typeof setTimeout> | undefined;
-    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener('keydown', onKeyDown);
       clearTimeout(release);
     };
   }, []);
 
   // The search: filters the controls below by their labels.
   const searchRef = useRef<HTMLInputElement>(null);
-  const SearchIcon = useIcon("search");
-  const ClearIcon = useIcon("x");
+  const SearchIcon = useIcon('search');
+  const ClearIcon = useIcon('x');
   const rowsRef = useRef<HTMLDivElement>(null);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [counts, setCounts] = useState({ total: 0, shown: 0 });
   // After every render: a setting can add or drop a control (a row that
   // only exists while another is on), and it has to take the filter too.
@@ -285,7 +290,7 @@ export function PlaygroundPanel({
   // over the menu; not in the rail, which is part of the page.
   useEffect(() => {
     if (!inMenu || !searchable) return;
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (window.matchMedia('(pointer: coarse)').matches) return;
     searchRef.current?.focus({ preventScroll: true });
   }, [inMenu, searchable]);
 
@@ -296,7 +301,7 @@ export function PlaygroundPanel({
   const listRef = useRef<HTMLDivElement>(null);
   const hover = useFluidHover(listRef, {
     // A disabled field fades its row and stops pointer events on it.
-    isItemDisabled: (el) => !!el.closest(".pointer-events-none"),
+    isItemDisabled: (el) => !!el.closest('.pointer-events-none'),
   });
   // registerItem is stable; the handlers object is new each render.
   const { registerItem, handlers } = hover;
@@ -305,7 +310,7 @@ export function PlaygroundPanel({
     const list = listRef.current;
     if (!list) return;
     const sync = () => {
-      const rows = [...list.querySelectorAll<HTMLElement>(".play-row")];
+      const rows = [...list.querySelectorAll<HTMLElement>('.play-row')];
       const prev = registered.current;
       if (rows.length === prev.length && rows.every((el, i) => el === prev[i])) return;
       prev.forEach((_, i) => registerItem(i, null));
@@ -328,7 +333,7 @@ export function PlaygroundPanel({
     // group above, and -mx-2 hangs the rows' 8px inset outside the column, so
     // the labels, chevrons and hairline line up with the preview's edges.
     // In the pen menu, the menu's own 8px padding is the whole frame.
-    <div className={cn("w-full", inline ? "-mx-2 w-auto" : !inMenu && "pt-8")}>
+    <div className={cn('w-full', inline ? '-mx-2 w-auto' : !inMenu && 'pt-8')}>
       <div className="flex h-8 items-center justify-between pl-2">
         <h2 className="text-site-caption text-foreground">{title}</h2>
         {/* The X key chip, then the icon: px-1.5 + mr-0.5 end the icon 8px
@@ -342,16 +347,12 @@ export function PlaygroundPanel({
             aria-keyshortcuts="X"
             // Rounds with the Radius setting, like the select triggers beside it.
             className={cn(
-              "mr-0.5 flex h-7 items-center gap-1.5 px-1.5 text-muted-foreground hover:text-foreground hover:bg-hover transition-colors duration-80 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]",
-              shape.input
+              'mr-0.5 flex h-7 items-center gap-1.5 px-1.5 text-muted-foreground hover:text-foreground hover:bg-hover transition-colors duration-80 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
+              shape.input,
             )}
           >
             {/* The settings' key chip; hidden on touch, where there is no X. */}
-            <KeyCap
-              ref={keyRef}
-              aria-hidden
-              className="pointer-coarse:hidden"
-            >
+            <KeyCap ref={keyRef} aria-hidden className="pointer-coarse:hidden">
               X
             </KeyCap>
             <Shuffle size={16} strokeWidth={1.5} />
@@ -363,7 +364,12 @@ export function PlaygroundPanel({
         // A row of the list's own height and inset, the icon over the
         // labels' left edge and the clear button under the chevrons.
         <div className="flex h-8 items-center gap-2 pl-2 pr-0.5 text-muted-foreground focus-within:text-foreground">
-          <SearchIcon size={16} strokeWidth={1.5} aria-hidden className="shrink-0 transition-colors duration-80" />
+          <SearchIcon
+            size={16}
+            strokeWidth={1.5}
+            aria-hidden
+            className="shrink-0 transition-colors duration-80"
+          />
           <input
             ref={searchRef}
             data-play-search=""
@@ -378,11 +384,11 @@ export function PlaygroundPanel({
             onKeyDown={(e) => {
               // Esc empties the field first; a second one closes the menu
               // (or collapses the preview) as before.
-              if (e.key !== "Escape" || !query) return;
+              if (e.key !== 'Escape' || !query) return;
               e.preventDefault();
               e.stopPropagation();
               e.nativeEvent.stopImmediatePropagation();
-              setQuery("");
+              setQuery('');
             }}
             placeholder="Search"
             aria-label="Search the playground's options"
@@ -400,13 +406,13 @@ export function PlaygroundPanel({
             <button
               type="button"
               onClick={() => {
-                setQuery("");
+                setQuery('');
                 searchRef.current?.focus();
               }}
               aria-label="Clear the search"
               className={cn(
-                "flex size-7 shrink-0 cursor-pointer items-center justify-center text-muted-foreground outline-none transition-colors duration-80 hover:bg-hover hover:text-foreground focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]",
-                shape.input
+                'flex size-7 shrink-0 cursor-pointer items-center justify-center text-muted-foreground outline-none transition-colors duration-80 hover:bg-hover hover:text-foreground focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
+                shape.input,
               )}
             >
               <ClearIcon size={16} strokeWidth={1.5} />
@@ -441,11 +447,11 @@ export function PlaygroundPanel({
 function useIsXl() {
   const [isXl, setIsXl] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1280px)");
+    const mq = window.matchMedia('(min-width: 1280px)');
     const sync = () => setIsXl(mq.matches);
     sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
   }, []);
   return isXl;
 }
@@ -457,7 +463,7 @@ export function PlaygroundLayout({
   preview,
   controls,
   expandable = false,
-  label = "Playground controls",
+  label = 'Playground controls',
   onExpandedChange,
 }: {
   preview: ReactNode;
@@ -489,10 +495,9 @@ export function PlaygroundLayout({
   useEffect(() => {
     const el = playgroundRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setPlaygroundInView(entry.isIntersecting),
-      { rootMargin: "0px 0px -20% 0px" }
-    );
+    const io = new IntersectionObserver(([entry]) => setPlaygroundInView(entry.isIntersecting), {
+      rootMargin: '0px 0px -20% 0px',
+    });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -525,28 +530,34 @@ export function PlaygroundLayout({
   // sticky columns ride its edges and nothing inside re-lays out. Released
   // once the layer lands (see globals.css, [data-preview-moving]).
   const demo = () =>
-    frameRef.current?.querySelector<HTMLElement>("[data-preview-stage]")?.firstElementChild as HTMLElement | null;
+    frameRef.current?.querySelector<HTMLElement>('[data-preview-stage]')
+      ?.firstElementChild as HTMLElement | null;
   const demoTable = () => {
-    const table = demo()?.querySelector<HTMLTableElement>("[data-slot=scroll-area-viewport] table");
-    const viewport = table?.closest<HTMLElement>("[data-slot=scroll-area-viewport]");
+    const table = demo()?.querySelector<HTMLTableElement>('[data-slot=scroll-area-viewport] table');
+    const viewport = table?.closest<HTMLElement>('[data-slot=scroll-area-viewport]');
     return table && viewport ? { table, viewport } : null;
   };
   const holdTable = (width: number) => {
     const el = demo();
     if (!el) return;
-    el.style.setProperty("--preview-table-w", `${width}px`);
-    el.setAttribute("data-preview-moving", "");
+    el.style.setProperty('--preview-table-w', `${width}px`);
+    el.setAttribute('data-preview-moving', '');
   };
   const releaseTable = () => {
     const el = demo();
     if (!el) return;
-    el.style.removeProperty("--preview-table-w");
-    el.removeAttribute("data-preview-moving");
+    el.style.removeProperty('--preview-table-w');
+    el.removeAttribute('data-preview-moving');
   };
 
   const target = () => {
     const m = 24;
-    return { top: m, left: m, width: window.innerWidth - 2 * m, height: window.innerHeight - 2 * m };
+    return {
+      top: m,
+      left: m,
+      width: window.innerWidth - 2 * m,
+      height: window.innerHeight - 2 * m,
+    };
   };
 
   // The latest callbacks, for listeners and spring callbacks set up in an
@@ -569,7 +580,10 @@ export function PlaygroundLayout({
     const held = demoTable();
     const to = target();
     tableToWidth.current = held
-      ? Math.max(parseFloat(getComputedStyle(held.table).minWidth) || 0, held.viewport.clientWidth + (to.width - fromRect.current.width))
+      ? Math.max(
+          parseFloat(getComputedStyle(held.table).minWidth) || 0,
+          held.viewport.clientWidth + (to.width - fromRect.current.width),
+        )
       : null;
     setPlaceholderHeight(fromRect.current.height);
     setBackdrop(true);
@@ -592,11 +606,11 @@ export function PlaygroundLayout({
     // (Swapping first snapped 20 rows down to 10 in the large box.)
     // On the collapse's own tween, so the scroll lands with the box (a
     // browser smooth scroll can outlast it).
-    el.querySelectorAll<HTMLElement>("[data-slot=scroll-area-viewport]").forEach((viewport) => {
+    el.querySelectorAll<HTMLElement>('[data-slot=scroll-area-viewport]').forEach((viewport) => {
       if (!viewport.scrollTop) return;
       animate(viewport.scrollTop, 0, {
-        type: "tween",
-        ease: "easeOut",
+        type: 'tween',
+        ease: 'easeOut',
         ...spring.slow.exit,
         onUpdate: (top) => {
           viewport.scrollTop = top;
@@ -621,11 +635,11 @@ export function PlaygroundLayout({
         setPlaceholderHeight(null);
       });
       releaseTable();
-      el.removeAttribute("style");
+      el.removeAttribute('style');
       // Motion commits a finished tween's last values to the inline style
       // after its promise resolves; clear once more after that lands.
       requestAnimationFrame(() => {
-        if (!settleCollapseRef.current && !animating.current) el.removeAttribute("style");
+        if (!settleCollapseRef.current && !animating.current) el.removeAttribute('style');
       });
     };
     // A dismissal is the tier's exit: a tween with no bounce, so the box
@@ -633,7 +647,7 @@ export function PlaygroundLayout({
     const motionCtrl = animate(
       el,
       { top: home.top, left: home.left, width: home.width, height: home.height },
-      { type: "tween", ease: "easeOut", ...spring.slow.exit }
+      { type: 'tween', ease: 'easeOut', ...spring.slow.exit },
     );
     motionCtrl.then(settle);
     // The spring aims at the placeholder's box as it was; a resize moves
@@ -692,19 +706,19 @@ export function PlaygroundLayout({
       });
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape" || e.defaultPrevented) return;
-      if (document.querySelector("[role=menu], [role=listbox], [role=dialog]")) return;
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      if (document.querySelector('[role=menu], [role=listbox], [role=dialog]')) return;
       closeRef.current();
     };
     const root = document.documentElement;
     const overflow = root.style.overflow;
-    root.style.overflow = "hidden";
-    window.addEventListener("resize", onResize);
-    window.addEventListener("keydown", onKey);
+    root.style.overflow = 'hidden';
+    window.addEventListener('resize', onResize);
+    window.addEventListener('keydown', onKey);
     return () => {
       root.style.overflow = overflow;
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("keydown", onKey);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('keydown', onKey);
     };
   }, [expanded]);
 
@@ -714,13 +728,20 @@ export function PlaygroundLayout({
         toggle: expanded ? close : open,
         // Gone once a collapse starts: the rail's controls are back then, and
         // the same switches shouldn't exist twice.
-        menu: collapsing ? null : <PlaygroundMenu label={label} large>{controls}</PlaygroundMenu>,
+        menu: collapsing ? null : (
+          <PlaygroundMenu label={label} large>
+            {controls}
+          </PlaygroundMenu>
+        ),
       }
     : null;
 
   const framed = expandable ? (
     <PreviewExpandContext.Provider value={expandValue}>
-      <div ref={placeholderRef} style={placeholderHeight ? { height: placeholderHeight } : undefined}>
+      <div
+        ref={placeholderRef}
+        style={placeholderHeight ? { height: placeholderHeight } : undefined}
+      >
         <div
           ref={frameRef}
           className={cn(
@@ -728,8 +749,7 @@ export function PlaygroundLayout({
             // an expanded preview is still the page, so a dialog's or the
             // command menu's dimmed backdrop covers it like the rest. (At
             // the modal step it sat over those backdrops, undimmed.)
-            expanded &&
-              "fixed z-[calc(var(--z-sticky,30)+3)] bg-background"
+            expanded && 'fixed z-[calc(var(--z-sticky,30)+3)] bg-background',
           )}
         >
           {preview}
@@ -740,9 +760,9 @@ export function PlaygroundLayout({
           <div
             aria-hidden
             className="pointer-events-none fixed inset-0 z-[calc(var(--z-sticky,30)+2)] bg-background transition-opacity duration-[160ms]"
-            style={{ opacity: backdrop ? 1 : 0, visibility: expanded ? "visible" : "hidden" }}
+            style={{ opacity: backdrop ? 1 : 0, visibility: expanded ? 'visible' : 'hidden' }}
           />,
-          document.body
+          document.body,
         )}
     </PreviewExpandContext.Provider>
   ) : (
@@ -752,19 +772,22 @@ export function PlaygroundLayout({
   return (
     <div ref={playgroundRef}>
       {framed}
-      {mounted && inRail && (!expanded || collapsing) && (
+      {mounted &&
+        inRail &&
+        (!expanded || collapsing) &&
         // Kept mounted so it can cross-fade (the same fade the side panels use)
         // as the playground scrolls in and out of view, rather than snapping.
         createPortal(
           <div className="inview-fade-block" data-shown={playgroundInView}>
             {controls}
           </div>,
-          railNode
-        )
-      )}
+          railNode,
+        )}
       {mounted && !inRail && (
         <div className="mt-3">
-          <InlinePlaygroundContext.Provider value={true}>{controls}</InlinePlaygroundContext.Provider>
+          <InlinePlaygroundContext.Provider value={true}>
+            {controls}
+          </InlinePlaygroundContext.Provider>
         </div>
       )}
     </div>

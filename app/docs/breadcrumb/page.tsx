@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Fragment, useRef, useState, type MouseEvent } from "react";
-import Link from "next/link";
-import { Home, Folder, Globe, Palette, FileText } from "lucide-react";
+import { Fragment, useRef, useState, type MouseEvent } from 'react';
+import Link from 'next/link';
+import { Home, Folder, Globe, Palette, FileText } from 'lucide-react';
 import {
   Breadcrumb,
   BreadcrumbButton,
@@ -12,23 +12,19 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   useBreadcrumbCollapse,
-} from "@/registry/default/breadcrumb";
-import {
-  DropdownMenu,
-  DropdownTrigger,
-  DropdownContent,
-} from "@/components/flavored/dropdown";
-import { MenuItem } from "@/registry/default/menu-item";
+} from '#registry/default/breadcrumb';
+import { DropdownMenu, DropdownTrigger, DropdownContent } from '#components/flavored/dropdown';
+import { MenuItem } from '#registry/default/menu-item';
 import {
   BREADCRUMB_MENU_CLASS,
   BreadcrumbPlayground,
   EllipsisMenu,
-} from "@/lib/docs/playgrounds/breadcrumb";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { apiReference } from "@/lib/docs/api/breadcrumb";
+} from '#lib/docs/playgrounds/breadcrumb';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { apiReference } from '#lib/docs/api/breadcrumb';
 
 const basicCode = `import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
@@ -294,24 +290,27 @@ const linkCode = `import Link from "next/link";
   <Link href="/docs">Docs</Link>
 </BreadcrumbLink>`;
 
-
 // The demos are links, but a click must not navigate or jump the page to
 // the top (href="#"), so every live crumb swallows it.
 const stay = (e: MouseEvent<HTMLAnchorElement>) => e.preventDefault();
 
-const SECTIONS = ["Components", "Systems", "Blocks"];
-const HIDDEN = ["Documentation", "Building blocks", "Navigation"];
-const TRAIL = ["Home", "Documentation", "Building blocks", "Navigation", "Components"];
+const SECTIONS = ['Components', 'Systems', 'Blocks'];
+const HIDDEN = ['Documentation', 'Building blocks', 'Navigation'];
+const TRAIL = ['Home', 'Documentation', 'Building blocks', 'Navigation', 'Components'];
 
 function SimpleTrail() {
   return (
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#" onClick={stay}>Home</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={stay}>
+            Home
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#" onClick={stay}>Docs</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={stay}>
+            Docs
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
           <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
@@ -327,17 +326,15 @@ function DropdownDemo() {
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#" onClick={stay}>Home</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={stay}>
+            Home
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
           <DropdownMenu>
             <DropdownTrigger
               openOnHover
-              render={
-                <BreadcrumbButton>
-                  {SECTIONS[section]}
-                </BreadcrumbButton>
-              }
+              render={<BreadcrumbButton>{SECTIONS[section]}</BreadcrumbButton>}
             />
             <DropdownContent checkedIndex={section} className={BREADCRUMB_MENU_CLASS}>
               {SECTIONS.map((label, i) => (
@@ -368,7 +365,9 @@ function ClickDemo() {
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#" onClick={stay}>Home</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={stay}>
+            Home
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
           <EllipsisMenu hidden={HIDDEN} openOnHover={false} />
@@ -402,13 +401,17 @@ function CollapsedDemo({ openOnHover = true }: { openOnHover?: boolean }) {
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#" onClick={stay}>Home</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={stay}>
+            Home
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
           <EllipsisMenu hidden={HIDDEN} openOnHover={openOnHover} />
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#" onClick={stay}>Components</BreadcrumbLink>
+          <BreadcrumbLink href="#" onClick={stay}>
+            Components
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
           <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
@@ -418,7 +421,7 @@ function CollapsedDemo({ openOnHover = true }: { openOnHover?: boolean }) {
   );
 }
 
-const OVERFLOW_STEPS = ["Home", "Projects", "Website", "Design", "Drafts"];
+const OVERFLOW_STEPS = ['Home', 'Projects', 'Website', 'Design', 'Drafts'];
 
 function OverflowDemo() {
   const [width, setWidth] = useState(340);
@@ -433,25 +436,27 @@ function OverflowDemo() {
         style={{ width }}
         className="relative max-w-full rounded-lg border border-dashed border-border px-2 py-1"
       >
-          <Breadcrumb>
-            <BreadcrumbList ref={listRef}>
-              {shown.map((label, i) => (
-                <Fragment key={label}>
+        <Breadcrumb>
+          <BreadcrumbList ref={listRef}>
+            {shown.map((label, i) => (
+              <Fragment key={label}>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="#" onClick={stay}>
+                    {label}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                {i === 0 && hidden > 0 && (
                   <BreadcrumbItem>
-                    <BreadcrumbLink href="#" onClick={stay}>{label}</BreadcrumbLink>
+                    <EllipsisMenu hidden={OVERFLOW_STEPS.slice(1, hidden + 1)} />
                   </BreadcrumbItem>
-                  {i === 0 && hidden > 0 && (
-                    <BreadcrumbItem>
-                      <EllipsisMenu hidden={OVERFLOW_STEPS.slice(1, hidden + 1)} />
-                    </BreadcrumbItem>
-                  )}
-                </Fragment>
-              ))}
-              <BreadcrumbItem>
-                <BreadcrumbPage>Roadmap.md</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+                )}
+              </Fragment>
+            ))}
+            <BreadcrumbItem>
+              <BreadcrumbPage>Roadmap.md</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <div
           role="separator"
           aria-orientation="vertical"
@@ -461,8 +466,8 @@ function OverflowDemo() {
           aria-valuenow={width}
           tabIndex={0}
           onKeyDown={(e) => {
-            if (e.key === "ArrowLeft") setWidth((w) => Math.max(200, w - 20));
-            if (e.key === "ArrowRight") setWidth((w) => Math.min(560, w + 20));
+            if (e.key === 'ArrowLeft') setWidth((w) => Math.max(200, w - 20));
+            if (e.key === 'ArrowRight') setWidth((w) => Math.min(560, w + 20));
           }}
           onPointerDown={(e) => {
             e.currentTarget.setPointerCapture(e.pointerId);
@@ -503,7 +508,9 @@ function ExpandDemo() {
                 </BreadcrumbItem>
               )}
               <BreadcrumbItem>
-                <BreadcrumbLink href="#" onClick={stay}>{label}</BreadcrumbLink>
+                <BreadcrumbLink href="#" onClick={stay}>
+                  {label}
+                </BreadcrumbLink>
               </BreadcrumbItem>
             </Fragment>
           ))}
@@ -596,7 +603,9 @@ export default function BreadcrumbDoc() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="#" onClick={stay}>Home</BreadcrumbLink>
+                <BreadcrumbLink href="#" onClick={stay}>
+                  Home
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <BreadcrumbLink href="#" onClick={stay}>
@@ -646,10 +655,14 @@ export default function BreadcrumbDoc() {
           <Breadcrumb separator="/">
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="#" onClick={stay}>Home</BreadcrumbLink>
+                <BreadcrumbLink href="#" onClick={stay}>
+                  Home
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem>
-                <BreadcrumbLink href="#" onClick={stay}>Docs</BreadcrumbLink>
+                <BreadcrumbLink href="#" onClick={stay}>
+                  Docs
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
@@ -664,7 +677,9 @@ export default function BreadcrumbDoc() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink render={<Link href="/docs/button" />} onClick={stay}>Button</BreadcrumbLink>
+                <BreadcrumbLink render={<Link href="/docs/button" />} onClick={stay}>
+                  Button
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild onClick={stay}>
@@ -678,7 +693,6 @@ export default function BreadcrumbDoc() {
           </Breadcrumb>
         </ComponentPreview>
       </DocSection>
-
 
       <DocSection title="API Reference">
         <PropsTable groups={apiReference} />

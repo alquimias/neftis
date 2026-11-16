@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { inKeyboardScope } from "@/lib/keyboard-scope";
+import { inKeyboardScope } from '#lib/keyboard-scope';
 import {
   createContext,
   useContext,
@@ -9,12 +9,12 @@ import {
   useEffect,
   useMemo,
   type ReactNode,
-} from "react";
+} from 'react';
 
-import { IconProvider } from "@/lib/icon-context";
-import { iconMap, iconLibraryOrder, type IconLibrary } from "@/lib/docs/icon-map";
+import { IconProvider } from '#lib/icon-context';
+import { iconMap, iconLibraryOrder, type IconLibrary } from '#lib/docs/icon-map';
 
-export { iconLibraryOrder, iconLibraryLabels, type IconLibrary } from "@/lib/docs/icon-map";
+export { iconLibraryOrder, iconLibraryLabels, type IconLibrary } from '#lib/docs/icon-map';
 
 interface IconPlaygroundContextValue {
   iconLibrary: IconLibrary;
@@ -29,7 +29,7 @@ const IconPlaygroundContext = createContext<IconPlaygroundContextValue | null>(n
  */
 function useIconLibrary() {
   const ctx = useContext(IconPlaygroundContext);
-  if (!ctx) throw new Error("useIconLibrary must be used within an IconPlaygroundProvider");
+  if (!ctx) throw new Error('useIconLibrary must be used within an IconPlaygroundProvider');
   return ctx;
 }
 
@@ -41,7 +41,7 @@ function useIconLibrary() {
  */
 function IconPlaygroundProvider({
   children,
-  defaultLibrary = "lucide",
+  defaultLibrary = 'lucide',
 }: {
   children: ReactNode;
   defaultLibrary?: IconLibrary;
@@ -57,24 +57,22 @@ function IconPlaygroundProvider({
     const onKeyDown = (e: KeyboardEvent) => {
       // Keys typed in a preview belong to the component in it.
       if (inKeyboardScope(e.target)) return;
-      if (e.key !== "i" && e.key !== "I") return;
+      if (e.key !== 'i' && e.key !== 'I') return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || (e.target as HTMLElement)?.isContentEditable) return;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable)
+        return;
       e.preventDefault();
       setIconLibraryState((prev) => {
         const idx = iconLibraryOrder.indexOf(prev);
         return iconLibraryOrder[(idx + 1) % iconLibraryOrder.length];
       });
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, []);
 
-  const value = useMemo(
-    () => ({ iconLibrary, setIconLibrary }),
-    [iconLibrary, setIconLibrary]
-  );
+  const value = useMemo(() => ({ iconLibrary, setIconLibrary }), [iconLibrary, setIconLibrary]);
 
   return (
     <IconPlaygroundContext.Provider value={value}>

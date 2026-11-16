@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Fragment, useContext, useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { slideVariants, useSlideDirection } from "@/lib/docs/slide-direction";
-import { useCardArt } from "@/lib/docs/playgrounds/card";
-import { accentHexOf, accentSwatches, useAccent } from "@/lib/docs/accent";
-import { CarouselDots } from "@/registry/default/carousel-dots";
-import Image from "next/image";
-import { useIcon, useIcons } from "@/lib/icon-context";
-import { fontWeights } from "@/lib/font-weight";
-import { useNarrowFrame } from "@/lib/use-narrow-frame";
-import { SizeProvider } from "@/lib/size-context";
-import { ChatMessage } from "@/registry/default/chat-message";
+import { Fragment, useContext, useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { slideVariants, useSlideDirection } from '#lib/docs/slide-direction';
+import { useCardArt } from '#lib/docs/playgrounds/card';
+import { accentHexOf, accentSwatches, useAccent } from '#lib/docs/accent';
+import { CarouselDots } from '#registry/default/carousel-dots';
+import Image from 'next/image';
+import { useIcon, useIcons } from '#lib/icon-context';
+import { fontWeights } from '#lib/font-weight';
+import { useNarrowFrame } from '#lib/use-narrow-frame';
+import { SizeProvider } from '#lib/size-context';
+import { ChatMessage } from '#registry/default/chat-message';
 import {
   ACCORDION_ITEMS,
   BADGE_ITEMS,
@@ -32,15 +32,15 @@ import {
   TABLE_COLUMNS,
   TABLE_ROWS,
   TOOLTIP_COPY,
-} from "@/app/components/demo-data";
+} from '#app/components/demo-data';
 
 import {
   AccordionGroup,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/registry/radix/accordion";
-import { Badge } from "@/registry/default/badge";
+} from '#registry/radix/accordion';
+import { Badge } from '#registry/default/badge';
 import {
   Breadcrumb,
   BreadcrumbButton,
@@ -49,8 +49,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   useBreadcrumbCollapse,
-} from "@/registry/default/breadcrumb";
-import { BREADCRUMB_MENU_CLASS, EllipsisMenu } from "@/lib/docs/playgrounds/breadcrumb";
+} from '#registry/default/breadcrumb';
+import { BREADCRUMB_MENU_CLASS, EllipsisMenu } from '#lib/docs/playgrounds/breadcrumb';
 import {
   useDataTable,
   DataTable,
@@ -60,34 +60,28 @@ import {
   DataTablePagination,
   selectColumn,
   type ColumnDef,
-} from "@/registry/default/data-table";
+} from '#registry/default/data-table';
 import {
   buildRows,
   formatDay,
   PRIMITIVE_COLOR,
   type ComponentRow,
-} from "@/lib/docs/playgrounds/data-table";
+} from '#lib/docs/playgrounds/data-table';
 import {
   DropdownMenu as FlavoredDropdownMenu,
   DropdownTrigger as FlavoredDropdownTrigger,
   DropdownContent as FlavoredDropdownContent,
-} from "@/components/flavored/dropdown";
+} from '#components/flavored/dropdown';
 import {
   Banner,
   BannerTitle,
   BannerDescription,
   BannerActions,
   BannerAction,
-} from "@/registry/default/banner";
-import { Button } from "@/registry/radix/button";
-import {
-  Card,
-  CardGroup,
-  CardHeader,
-  CardTitle,
-  CardMedia,
-} from "@/registry/default/card";
-import { InputMessage } from "@/registry/default/input-message";
+} from '#registry/default/banner';
+import { Button } from '#registry/radix/button';
+import { Card, CardGroup, CardHeader, CardTitle, CardMedia } from '#registry/default/card';
+import { InputMessage } from '#registry/default/input-message';
 import {
   SidebarProvider,
   Sidebar,
@@ -102,12 +96,9 @@ import {
   SidebarFooter,
   SidebarInput,
   SidebarInset,
-} from "@/components/flavored/sidebar";
-import {
-  CheckboxGroup,
-  CheckboxItem,
-} from "@/registry/radix/checkbox-group";
-import { ColorPicker, ColorPickerPortalContainer } from "@/registry/default/color-picker";
+} from '#components/flavored/sidebar';
+import { CheckboxGroup, CheckboxItem } from '#registry/radix/checkbox-group';
+import { ColorPicker, ColorPickerPortalContainer } from '#registry/default/color-picker';
 import {
   Dialog,
   DialogTrigger,
@@ -117,18 +108,13 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from "@/registry/radix/dialog";
-import { Dropdown } from "@/components/flavored/dropdown";
-import { MenuItem } from "@/registry/default/menu-item";
-import { InputCopy } from "@/registry/default/input-copy";
-import { InputGroup, InputField } from "@/registry/default/input-group";
-import { RadioGroup, RadioItem } from "@/registry/radix/radio-group";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/flavored/select";
+} from '#registry/radix/dialog';
+import { Dropdown } from '#components/flavored/dropdown';
+import { MenuItem } from '#registry/default/menu-item';
+import { InputCopy } from '#registry/default/input-copy';
+import { InputGroup, InputField } from '#registry/default/input-group';
+import { RadioGroup, RadioItem } from '#registry/radix/radio-group';
+import { Select, SelectTrigger, SelectContent, SelectItem } from '#components/flavored/select';
 import {
   Combobox,
   ComboboxChips,
@@ -137,33 +123,33 @@ import {
   ComboboxItem,
   ComboboxEmpty,
   type ComboboxItemData,
-} from "@/components/flavored/combobox";
+} from '#components/flavored/combobox';
 import {
   COMBOBOX_COMPONENTS,
   COMBOBOX_COPY,
   COMBOBOX_DEFAULT_VALUES,
-} from "@/lib/preset/combobox-options";
+} from '#lib/preset/combobox-options';
 import {
   CommandMenu,
   CommandMenuInput,
   CommandMenuList,
   CommandMenuEmpty,
-} from "@/registry/default/command-menu";
+} from '#registry/default/command-menu';
 import {
   COMMAND_MENU_COPY,
   COMMAND_MENU_SUGGESTIONS,
   useCommandMenuItems,
-} from "@/lib/docs/command-menu-items";
-import { Elevated } from "@/lib/elevated";
-import { Calendar, type DateRange } from "@/components/ui/calendar";
-import { DatePicker } from "@/components/ui/date-picker";
-import { BentoTileContext } from "@/app/components/bento-card";
-import { usePreviewPlayback } from "@/lib/docs/preview-playback";
-import { cn } from "@/lib/utils";
-import { KeyCaps } from "@/lib/key-cap";
-import { useShape } from "@/lib/shape-context";
-import { Slider } from "@/registry/radix/slider";
-import { Switch } from "@/registry/radix/switch";
+} from '#lib/docs/command-menu-items';
+import { Elevated } from '#lib/elevated';
+import { Calendar, type DateRange } from '#components/ui/calendar';
+import { DatePicker } from '#components/ui/date-picker';
+import { BentoTileContext } from '#app/components/bento-card';
+import { usePreviewPlayback } from '#lib/docs/preview-playback';
+import { cn } from '#lib/utils';
+import { KeyCaps } from '#lib/key-cap';
+import { useShape } from '#lib/shape-context';
+import { Slider } from '#registry/radix/slider';
+import { Switch } from '#registry/radix/switch';
 import {
   Table,
   TableHeader,
@@ -171,12 +157,9 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@/registry/default/table";
-import {
-  Tabs,
-  TabsItem,
-} from "@/components/flavored/tabs";
-import { ThinkingIndicator } from "@/registry/default/thinking-indicator";
+} from '#registry/default/table';
+import { Tabs, TabsItem } from '#components/flavored/tabs';
+import { ThinkingIndicator } from '#registry/default/thinking-indicator';
 import {
   ThinkingSteps,
   ThinkingStepsHeader,
@@ -185,22 +168,19 @@ import {
   ThinkingStepDetails,
   ThinkingStepSources,
   ThinkingStepSource,
-} from "@/components/flavored/thinking-steps";
-import { Tooltip, TooltipGroup } from "@/registry/radix/tooltip";
-import {
-  AskUserQuestions,
-  type AskUserQuestion,
-} from "@/registry/default/ask-user-questions";
-import { demoToday } from "@/lib/demo-today";
+} from '#components/flavored/thinking-steps';
+import { Tooltip, TooltipGroup } from '#registry/radix/tooltip';
+import { AskUserQuestions, type AskUserQuestion } from '#registry/default/ask-user-questions';
+import { demoToday } from '#lib/demo-today';
 
 function InputMessagePreview() {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   return (
     <div className="w-full max-w-[440px]">
       <InputMessage
         value={value}
         onValueChange={setValue}
-        onSend={() => setValue("")}
+        onSend={() => setValue('')}
         placeholderSuggestion="Why is every other input box so stiff?"
       />
     </div>
@@ -210,7 +190,7 @@ function InputMessagePreview() {
 function CardPreview() {
   // The Card page's logo art, in the visitor's accent.
   const { thumb } = useCardArt();
-  const items = ["Fluid motion", "Accessible", "Yours to theme", "Fluid hover"];
+  const items = ['Fluid motion', 'Accessible', 'Yours to theme', 'Fluid hover'];
   // A medium tile: 4 compact inline rows (avatar and title) under one fluid
   // hover, divided by hairlines. The descriptions stay on the docs page:
   // with them the 4 rows outgrow the tile's stage.
@@ -253,7 +233,7 @@ function AccordionPreview() {
   );
 }
 
-const CAROUSEL_SLIDES = ["Inbox", "Drafts", "Sent", "Archive"];
+const CAROUSEL_SLIDES = ['Inbox', 'Drafts', 'Sent', 'Archive'];
 
 /** A small carousel on the dots' built-in autoplay: the current pill fills,
  *  then the next slide comes in from the right. A dot picked by hand slides
@@ -351,7 +331,9 @@ function DialogPreview() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm">{DIALOG_COPY.trigger}</Button>
+        <Button variant="secondary" size="sm">
+          {DIALOG_COPY.trigger}
+        </Button>
       </DialogTrigger>
       <DialogContent size="sm">
         <DialogHeader>
@@ -369,8 +351,8 @@ function DialogPreview() {
   );
 }
 
-const BREADCRUMB_STEPS = ["Home", "Projects", "Website", "Design"];
-const BREADCRUMB_SECTIONS = ["Drafts", "Published", "Archive"];
+const BREADCRUMB_STEPS = ['Home', 'Projects', 'Website', 'Design'];
+const BREADCRUMB_SECTIONS = ['Drafts', 'Published', 'Archive'];
 
 /** The trail fits its tile: middle steps fold behind the ellipsis as the
  *  tile narrows, and the last step opens a menu on hover. */
@@ -386,7 +368,9 @@ function BreadcrumbPreview() {
           {shown.map((label, i) => (
             <Fragment key={label}>
               <BreadcrumbItem>
-                <BreadcrumbLink href="#" onClick={stay}>{label}</BreadcrumbLink>
+                <BreadcrumbLink href="#" onClick={stay}>
+                  {label}
+                </BreadcrumbLink>
               </BreadcrumbItem>
               {i === 0 && hidden > 0 && (
                 <BreadcrumbItem>
@@ -401,10 +385,7 @@ function BreadcrumbPreview() {
                 openOnHover
                 render={<BreadcrumbButton>{BREADCRUMB_SECTIONS[section]}</BreadcrumbButton>}
               />
-              <FlavoredDropdownContent
-                checkedIndex={section}
-                className={BREADCRUMB_MENU_CLASS}
-              >
+              <FlavoredDropdownContent checkedIndex={section} className={BREADCRUMB_MENU_CLASS}>
                 {BREADCRUMB_SECTIONS.map((label, i) => (
                   <MenuItem
                     key={label}
@@ -468,7 +449,7 @@ function InputGroupPreview() {
             label={field.label}
             placeholder={field.placeholder}
             icon={icons[field.icon]}
-            value={values[field.key] ?? ""}
+            value={values[field.key] ?? ''}
             onChange={(v) => setValues((prev) => ({ ...prev, [field.key]: v }))}
           />
         ))}
@@ -555,8 +536,8 @@ function ComboboxPreview() {
           <ComboboxEmpty>{COMBOBOX_COPY.empty}</ComboboxEmpty>
           <ComboboxList>
             {(item) => {
-              const v = typeof item === "string" ? item : item.value;
-              const label = typeof item === "string" ? item : item.label;
+              const v = typeof item === 'string' ? item : item.value;
+              const label = typeof item === 'string' ? item : item.label;
               return (
                 <ComboboxItem key={v} value={v}>
                   {label}
@@ -597,7 +578,7 @@ function SliderPreview() {
 
 function SwitchPreview() {
   const [on, setOn] = useState<Set<string>>(
-    () => new Set(SWITCH_ITEMS.filter((item) => item.initial).map((item) => item.id))
+    () => new Set(SWITCH_ITEMS.filter((item) => item.initial).map((item) => item.id)),
   );
   return (
     <div className="flex flex-col gap-3">
@@ -631,7 +612,10 @@ function CommandMenuPreview() {
     <Elevated
       offset={2}
       shadowLevel={3}
-      className={cn("flex max-h-[440px] w-full max-w-[520px] flex-col overflow-hidden", shape.container)}
+      className={cn(
+        'flex max-h-[440px] w-full max-w-[520px] flex-col overflow-hidden',
+        shape.container,
+      )}
     >
       <CommandMenu items={items} suggestions={COMMAND_MENU_SUGGESTIONS}>
         <CommandMenuInput placeholder={COMMAND_MENU_COPY.placeholder} />
@@ -676,13 +660,13 @@ function TablePreview() {
 const DATA_TABLE_COLUMNS: ColumnDef<ComponentRow>[] = [
   selectColumn<ComponentRow>(),
   {
-    accessorKey: "name",
+    accessorKey: 'name',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Component" />,
-    meta: { label: "Component" },
+    meta: { label: 'Component' },
     enableHiding: false,
   },
   {
-    accessorKey: "primitives",
+    accessorKey: 'primitives',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Primitives" />,
     cell: ({ row }) => (
       <span className="flex h-[1lh] items-center">
@@ -691,18 +675,18 @@ const DATA_TABLE_COLUMNS: ColumnDef<ComponentRow>[] = [
         </Badge>
       </span>
     ),
-    meta: { label: "Primitives" },
+    meta: { label: 'Primitives' },
   },
   {
-    accessorKey: "props",
+    accessorKey: 'props',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Props" />,
-    meta: { label: "Props", className: "tabular-nums" },
+    meta: { label: 'Props', className: 'tabular-nums' },
   },
   {
-    accessorKey: "added",
+    accessorKey: 'added',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Added" />,
     cell: ({ row }) => formatDay(row.original.added),
-    meta: { label: "Added", className: "tabular-nums whitespace-nowrap w-full" },
+    meta: { label: 'Added', className: 'tabular-nums whitespace-nowrap w-full' },
   },
 ];
 
@@ -713,7 +697,7 @@ function DataTablePreview() {
     columns: DATA_TABLE_COLUMNS,
     pageSize: 8,
     getRowId: (row) => row.slug,
-    initialState: { sorting: [{ id: "added", desc: true }] },
+    initialState: { sorting: [{ id: 'added', desc: true }] },
   });
   return (
     <div className="flex w-full max-w-[640px] flex-col gap-3">
@@ -726,7 +710,7 @@ function DataTablePreview() {
       <DataTable
         table={table}
         reorderColumns
-        empty={{ title: "No components match", description: "Try a name like Dialog or Tabs." }}
+        empty={{ title: 'No components match', description: 'Try a name like Dialog or Tabs.' }}
       />
       <DataTablePagination table={table} pageSizes={[8, 16, 32]} />
     </div>
@@ -734,18 +718,24 @@ function DataTablePreview() {
 }
 
 function TabsPreview() {
-  const Home = useIcon("home");
-  const MessageCircle = useIcon("message-circle");
-  const Inbox = useIcon("inbox");
+  const Home = useIcon('home');
+  const MessageCircle = useIcon('message-circle');
+  const Inbox = useIcon('inbox');
   const [tab, setTab] = useState(0);
   const items = [
-    { icon: Home, label: "Home" },
-    { icon: MessageCircle, label: "Chat" },
-    { icon: Inbox, label: "Inbox" },
+    { icon: Home, label: 'Home' },
+    { icon: MessageCircle, label: 'Chat' },
+    { icon: Inbox, label: 'Inbox' },
   ];
   return (
     <div className="w-fit mx-auto">
-      <Tabs idPrefix="bento-tabs" selectedIndex={tab} onSelect={setTab} activeLabel aria-label="Navigation">
+      <Tabs
+        idPrefix="bento-tabs"
+        selectedIndex={tab}
+        onSelect={setTab}
+        activeLabel
+        aria-label="Navigation"
+      >
         {items.map((item, i) => (
           <TabsItem key={item.label} index={i} icon={item.icon} label={item.label} />
         ))}
@@ -767,7 +757,9 @@ function BannerPreview() {
     <div className="w-full max-w-[440px]">
       <Banner status="info" dismissible open={open} onDismiss={() => setOpen(false)}>
         <BannerTitle>The registry has new components</BannerTitle>
-        <BannerDescription>Run the install command again to pull the latest versions.</BannerDescription>
+        <BannerDescription>
+          Run the install command again to pull the latest versions.
+        </BannerDescription>
         <BannerActions>
           <BannerAction variant="primary">Copy command</BannerAction>
           <BannerAction variant="ghost">Later</BannerAction>
@@ -786,90 +778,90 @@ function ThinkingIndicatorPreview() {
 // the docs link to.
 const askUserExampleQuestions: AskUserQuestion[] = [
   {
-    id: "role",
-    title: "How do you plan to use Fluid Functionalism?",
+    id: 'role',
+    title: 'How do you plan to use Fluid Functionalism?',
     options: [
-      { id: "design", title: "Designer", description: "Prototyping flows and pages" },
-      { id: "eng", title: "Engineer", description: "Shipping production UI" },
-      { id: "pm", title: "PM", description: "Aligning the team on patterns" },
-      { id: "founder", title: "Founder", description: "Bootstrapping a product" },
+      { id: 'design', title: 'Designer', description: 'Prototyping flows and pages' },
+      { id: 'eng', title: 'Engineer', description: 'Shipping production UI' },
+      { id: 'pm', title: 'PM', description: 'Aligning the team on patterns' },
+      { id: 'founder', title: 'Founder', description: 'Bootstrapping a product' },
     ],
   },
   {
-    id: "shape",
-    title: "Which shape language fits your brand?",
+    id: 'shape',
+    title: 'Which shape language fits your brand?',
     options: [
-      { id: "rounded", title: "Rounded", description: "Soft, familiar corners" },
-      { id: "pill", title: "Pill", description: "Fully rounded, friendly" },
-      { id: "sharp", title: "Sharp", description: "Square corners, precise" },
+      { id: 'rounded', title: 'Rounded', description: 'Soft, familiar corners' },
+      { id: 'pill', title: 'Pill', description: 'Fully rounded, friendly' },
+      { id: 'sharp', title: 'Sharp', description: 'Square corners, precise' },
     ],
   },
   {
-    id: "components",
-    title: "Which components are you reaching for first?",
+    id: 'components',
+    title: 'Which components are you reaching for first?',
     multiSelect: true,
     options: [
-      { id: "input", title: "InputMessage", description: "Chat-style composer with attachments" },
-      { id: "thinking", title: "ThinkingSteps", description: "Streamed reasoning steps" },
-      { id: "ask", title: "AskUserQuestions", description: "Stepped question flows" },
-      { id: "tabs", title: "Tabs", description: "Quiet segmented tabs" },
-      { id: "nav", title: "NavMenu", description: "Sidebar navigation" },
+      { id: 'input', title: 'InputMessage', description: 'Chat-style composer with attachments' },
+      { id: 'thinking', title: 'ThinkingSteps', description: 'Streamed reasoning steps' },
+      { id: 'ask', title: 'AskUserQuestions', description: 'Stepped question flows' },
+      { id: 'tabs', title: 'Tabs', description: 'Quiet segmented tabs' },
+      { id: 'nav', title: 'NavMenu', description: 'Sidebar navigation' },
     ],
-    nextLabel: "Continue",
+    nextLabel: 'Continue',
   },
   {
-    id: "drew",
-    title: "What drew you to Fluid Functionalism?",
+    id: 'drew',
+    title: 'What drew you to Fluid Functionalism?',
     options: [
-      { id: "motion", title: "Motion", description: "Springs that feel alive" },
-      { id: "craft", title: "Craft", description: "Pixel-level polish" },
-      { id: "tokens", title: "Tokens", description: "Shape and elevation systems" },
+      { id: 'motion', title: 'Motion', description: 'Springs that feel alive' },
+      { id: 'craft', title: 'Craft', description: 'Pixel-level polish' },
+      { id: 'tokens', title: 'Tokens', description: 'Shape and elevation systems' },
     ],
     allowOther: true,
-    otherPlaceholder: "Something else?",
+    otherPlaceholder: 'Something else?',
   },
   {
-    id: "frameworks",
-    title: "Where will you ship these components?",
+    id: 'frameworks',
+    title: 'Where will you ship these components?',
     multiSelect: true,
     options: [
-      { id: "next", title: "Next.js", description: "App Router projects" },
-      { id: "remix", title: "Remix", description: "Full-stack apps" },
-      { id: "vite", title: "Vite + React", description: "SPAs and dashboards" },
-      { id: "astro", title: "Astro", description: "Content-first sites" },
+      { id: 'next', title: 'Next.js', description: 'App Router projects' },
+      { id: 'remix', title: 'Remix', description: 'Full-stack apps' },
+      { id: 'vite', title: 'Vite + React', description: 'SPAs and dashboards' },
+      { id: 'astro', title: 'Astro', description: 'Content-first sites' },
     ],
   },
   {
-    id: "themes",
-    title: "Which theme mode do you support?",
+    id: 'themes',
+    title: 'Which theme mode do you support?',
     options: [
-      { id: "light", title: "Light only" },
-      { id: "dark", title: "Dark only" },
-      { id: "system", title: "System-aware" },
-      { id: "toggle", title: "User toggle" },
+      { id: 'light', title: 'Light only' },
+      { id: 'dark', title: 'Dark only' },
+      { id: 'system', title: 'System-aware' },
+      { id: 'toggle', title: 'User toggle' },
     ],
   },
   {
-    id: "missing",
+    id: 'missing',
     title: "What's missing from the registry today?",
     multiSelect: true,
     options: [
-      { id: "data", title: "Data table", description: "Sortable, filterable rows" },
-      { id: "calendar", title: "Calendar", description: "Date picker and range" },
-      { id: "command", title: "Command menu", description: "Fast keyboard launcher" },
+      { id: 'data', title: 'Data table', description: 'Sortable, filterable rows' },
+      { id: 'calendar', title: 'Calendar', description: 'Date picker and range' },
+      { id: 'command', title: 'Command menu', description: 'Fast keyboard launcher' },
     ],
     allowOther: true,
-    otherPlaceholder: "Tell us what to build next…",
-    nextLabel: "Send feedback",
+    otherPlaceholder: 'Tell us what to build next…',
+    nextLabel: 'Send feedback',
   },
   {
-    id: "recommend",
-    title: "Would you recommend Fluid Functionalism to a teammate?",
+    id: 'recommend',
+    title: 'Would you recommend Fluid Functionalism to a teammate?',
     skippable: false,
     options: [
-      { id: "yes", title: "Yes", description: "Already have" },
-      { id: "soon", title: "Soon", description: "Once it covers more ground" },
-      { id: "unsure", title: "Not sure yet", description: "Still evaluating" },
+      { id: 'yes', title: 'Yes', description: 'Already have' },
+      { id: 'soon', title: 'Soon', description: 'Once it covers more ground' },
+      { id: 'unsure', title: 'Not sure yet', description: 'Still evaluating' },
     ],
   },
 ];
@@ -903,10 +895,10 @@ function ThinkingStepsPreview() {
             <ThinkingStepDetails
               summary="Explored 4 pages"
               details={[
-                "Read about.html",
-                "Read projects.html",
-                "Read resume.pdf",
-                "Read contact.html",
+                'Read about.html',
+                'Read projects.html',
+                'Read resume.pdf',
+                'Read contact.html',
               ]}
             />
           </ThinkingStep>
@@ -916,8 +908,13 @@ function ThinkingStepsPreview() {
               <ThinkingStepSource>behance.net</ThinkingStepSource>
             </ThinkingStepSources>
           </ThinkingStep>
-          <ThinkingStep status="active" icon="brain" label="Analyzing results"
-            description="Compiling findings into a summary." isLast />
+          <ThinkingStep
+            status="active"
+            icon="brain"
+            label="Analyzing results"
+            description="Compiling findings into a summary."
+            isLast
+          />
         </ThinkingStepsContent>
       </ThinkingSteps>
     </div>
@@ -928,7 +925,9 @@ function TooltipPreview() {
   return (
     <div className="relative z-10">
       <Tooltip content={TOOLTIP_COPY.content}>
-        <Button variant="secondary" size="sm">{TOOLTIP_COPY.trigger}</Button>
+        <Button variant="secondary" size="sm">
+          {TOOLTIP_COPY.trigger}
+        </Button>
       </Tooltip>
     </div>
   );
@@ -976,7 +975,7 @@ function ChatMessagePreview() {
 
 function SidebarPreview() {
   const icons = useIcons();
-  const SearchIcon = useIcon("search");
+  const SearchIcon = useIcon('search');
   // One card, two ways to spend its width: beside the main region on a
   // desktop, and rail-only on a phone, where 12rem of rail would leave the
   // main region an 83px sliver that shows nothing.
@@ -984,7 +983,12 @@ function SidebarPreview() {
   // The app frame rounds with the Radius setting, like the site's cards.
   const shape = useShape();
   return (
-    <div className={cn("flex h-[460px] w-full max-w-[620px] overflow-hidden border border-border bg-background", shape.container)}>
+    <div
+      className={cn(
+        'flex h-[460px] w-full max-w-[620px] overflow-hidden border border-border bg-background',
+        shape.container,
+      )}
+    >
       {/* A whole app shell in miniature — workspace row, a thread list with
           the status-dot treatment, a user row, and the main region beside it.
           collapsible="none" keeps it static: it never becomes the
@@ -993,7 +997,7 @@ function SidebarPreview() {
         className="h-full min-h-0"
         persist={false}
         shortcut={null}
-        width={narrow ? "100%" : "14rem"}
+        width={narrow ? '100%' : '14rem'}
       >
         <Sidebar collapsible="none" variant="inset" className="h-full">
           <SidebarHeader>
@@ -1060,17 +1064,19 @@ function SidebarPreview() {
               <SidebarMenu size="compact">
                 {/* Skips index 1: it shares a prefix with index 0 and the two
                     truncate to the same string in a 12rem rail. */}
-                {[SIDEBAR_THREADS[0], SIDEBAR_THREADS[2], SIDEBAR_THREADS[3], SIDEBAR_THREADS[4]].map((thread) => (
+                {[
+                  SIDEBAR_THREADS[0],
+                  SIDEBAR_THREADS[2],
+                  SIDEBAR_THREADS[3],
+                  SIDEBAR_THREADS[4],
+                ].map((thread) => (
                   <SidebarMenuItem key={thread.label}>
-                    <SidebarMenuButton status={thread.status}>
-                      {thread.label}
-                    </SidebarMenuButton>
+                    <SidebarMenuButton status={thread.status}>{thread.label}</SidebarMenuButton>
                     {thread.badge && <SidebarMenuBadge>{thread.badge}</SidebarMenuBadge>}
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
             </SidebarGroup>
-
           </SidebarContent>
 
           <SidebarFooter>
@@ -1100,34 +1106,34 @@ function SidebarPreview() {
 
 export const previewMap: Record<string, React.FC> = {
   banner: BannerPreview,
-  "input-message": InputMessagePreview,
-  "chat-message": ChatMessagePreview,
+  'input-message': InputMessagePreview,
+  'chat-message': ChatMessagePreview,
   sidebar: SidebarPreview,
   card: CardPreview,
   accordion: AccordionPreview,
-  "ask-user-questions": AskUserQuestionsPreview,
+  'ask-user-questions': AskUserQuestionsPreview,
   badge: BadgePreview,
   breadcrumb: BreadcrumbPreview,
-  "carousel-dots": CarouselDotsPreview,
+  'carousel-dots': CarouselDotsPreview,
   button: ButtonPreview,
   calendar: CalendarPreview,
-  "checkbox-group": CheckboxPreview,
-  "color-picker": ColorPickerPreview,
+  'checkbox-group': CheckboxPreview,
+  'color-picker': ColorPickerPreview,
   combobox: ComboboxPreview,
-  "command-menu": CommandMenuPreview,
-  "date-picker": DatePickerPreview,
+  'command-menu': CommandMenuPreview,
+  'date-picker': DatePickerPreview,
   dialog: DialogPreview,
   dropdown: DropdownPreview,
-  "input-copy": InputCopyPreview,
-  "input-group": InputGroupPreview,
-  "radio-group": RadioGroupPreview,
+  'input-copy': InputCopyPreview,
+  'input-group': InputGroupPreview,
+  'radio-group': RadioGroupPreview,
   select: SelectPreview,
   slider: SliderPreview,
   switch: SwitchPreview,
   table: TablePreview,
-  "data-table": DataTablePreview,
-  "tabs": TabsPreview,
-  "thinking-indicator": ThinkingIndicatorPreview,
-  "thinking-steps": ThinkingStepsPreview,
+  'data-table': DataTablePreview,
+  tabs: TabsPreview,
+  'thinking-indicator': ThinkingIndicatorPreview,
+  'thinking-steps': ThinkingStepsPreview,
   tooltip: TooltipPreview,
 };

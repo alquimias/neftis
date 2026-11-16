@@ -229,7 +229,7 @@ describe("command menu preset install generator", () => {
       const p = { ...DEFAULT_COMMAND_MENU_PRESET, ...randomPreset(rand) };
       for (const file of generateCommandMenuPresetFiles(p)) {
         expect(file.content).not.toContain("@/lib/docs");
-        expect(file.content).not.toContain('from "@/registry/');
+        expect(file.content).not.toContain('from "#registry/');
       }
     }
   });

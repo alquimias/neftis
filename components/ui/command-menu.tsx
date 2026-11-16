@@ -1,1 +1,1 @@
-export * from "@/registry/default/command-menu";
+export * from '#registry/default/command-menu';

@@ -61,7 +61,7 @@ describe("preset route dependency resolution", () => {
     ]) {
       for (const file of generateSidebarPresetFiles({ ...DEFAULT_PRESET, ...partial })) {
         expect(file.content).not.toContain("@/lib/docs");
-        expect(file.content).not.toContain('from "@/registry/');
+        expect(file.content).not.toContain('from "#registry/');
       }
     }
   });

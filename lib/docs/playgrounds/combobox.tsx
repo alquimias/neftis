@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Combobox,
   ComboboxInput,
@@ -10,9 +10,9 @@ import {
   ComboboxItem,
   ComboboxEmpty,
   type ComboboxItemData,
-} from "@/components/flavored/combobox";
-import { Switch } from "@/registry/radix/switch";
-import { useIcon } from "@/lib/icon-context";
+} from '#components/flavored/combobox';
+import { Switch } from '#registry/radix/switch';
+import { useIcon } from '#lib/icon-context';
 import {
   PLAY_SWITCH,
   PlayField,
@@ -20,7 +20,7 @@ import {
   PlaySection,
   PlayDivider,
   PlaygroundPanel,
-} from "@/lib/docs/playground";
+} from '#lib/docs/playground';
 import {
   COMBOBOX_PRESET_DEF,
   COMBOBOX_DEFAULT_CODE,
@@ -32,13 +32,9 @@ import {
   COMBOBOX_DEFAULT_VALUES,
   deriveCombobox,
   comboboxItemFromQuery,
-} from "@/lib/preset/combobox-options";
-import {
-  usePresetGlobals,
-  usePresetUrlSync,
-  GetCodeDialog,
-} from "@/lib/docs/preset-ui";
-import type { PlaygroundProps } from "./types";
+} from '#lib/preset/combobox-options';
+import { usePresetGlobals, usePresetUrlSync, GetCodeDialog } from '#lib/docs/preset-ui';
+import type { PlaygroundProps } from './types';
 
 // ── Combobox playground ──────────────────────────────────
 // A live sandbox: the controls drive a real Combobox — single or multiple,
@@ -55,12 +51,14 @@ function buildPlaygroundCode(o: {
   creatable: boolean;
   hideSelected: boolean;
 }) {
-  const Field = o.multiple ? "ComboboxChips" : "ComboboxInput";
+  const Field = o.multiple ? 'ComboboxChips' : 'ComboboxInput';
   const root = [
-    o.creatable ? "items={items}" : "items={components}",
-    ...(o.multiple ? ["multiple", "value={values}", "onValueChange={setValues}"] : ["value={value}", "onValueChange={setValue}"]),
-    ...(o.hideSelected ? ["hideSelected"] : []),
-    ...(o.disabled ? ["disabled"] : []),
+    o.creatable ? 'items={items}' : 'items={components}',
+    ...(o.multiple
+      ? ['multiple', 'value={values}', 'onValueChange={setValues}']
+      : ['value={value}', 'onValueChange={setValue}']),
+    ...(o.hideSelected ? ['hideSelected'] : []),
+    ...(o.disabled ? ['disabled'] : []),
   ];
   // The typed label becomes the item; returning it selects it.
   const create = o.creatable
@@ -71,27 +69,27 @@ function buildPlaygroundCode(o: {
     return item;
   }}
 `
-    : "";
+    : '';
   const empty = o.hideSelected
     ? `<ComboboxEmpty allSelected="${COMBOBOX_COPY.allSelected}">${COMBOBOX_COPY.empty}</ComboboxEmpty>`
     : `<ComboboxEmpty>${COMBOBOX_COPY.empty}</ComboboxEmpty>`;
   const field = [
     `placeholder="${o.multiple ? COMBOBOX_COPY.placeholderMultiple : COMBOBOX_COPY.placeholder}"`,
-    ...(o.variant !== "bordered" ? [`variant="${o.variant}"`] : []),
-    ...(o.icon ? ["icon={Search}"] : []),
-    ...(o.clearable ? ["clearable"] : []),
+    ...(o.variant !== 'bordered' ? [`variant="${o.variant}"`] : []),
+    ...(o.icon ? ['icon={Search}'] : []),
+    ...(o.clearable ? ['clearable'] : []),
     ...(o.error ? [`error="${COMBOBOX_COPY.error}"`] : []),
   ];
   const state = [
-    ...(o.creatable ? ["const [items, setItems] = useState(components);"] : []),
+    ...(o.creatable ? ['const [items, setItems] = useState(components);'] : []),
     o.multiple
       ? `const [values, setValues] = useState<string[]>(${JSON.stringify(COMBOBOX_DEFAULT_VALUES)});`
       : 'const [value, setValue] = useState("");',
-  ].join("\n");
+  ].join('\n');
   return `${state}
 
-<Combobox ${root.join(" ")}${create}>
-  <${Field} ${field.join(" ")} />
+<Combobox ${root.join(' ')}${create}>
+  <${Field} ${field.join(' ')} />
   <ComboboxContent>
     ${empty}
     <ComboboxList>
@@ -102,10 +100,10 @@ function buildPlaygroundCode(o: {
 }
 
 export function ComboboxPlayground({ children }: PlaygroundProps) {
-  const SearchIcon = useIcon("search");
+  const SearchIcon = useIcon('search');
 
   const [multiple, setMultiple] = useState(true);
-  const [variant, setVariant] = useState<ComboboxFieldVariant>("bordered");
+  const [variant, setVariant] = useState<ComboboxFieldVariant>('bordered');
   const [icon, setIcon] = useState(false);
   const [clearable, setClearable] = useState(false);
   const [error, setError] = useState(false);
@@ -113,13 +111,22 @@ export function ComboboxPlayground({ children }: PlaygroundProps) {
   const [creatable, setCreatable] = useState(false);
   const [hideSelected, setHideSelected] = useState(false);
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const [values, setValues] = useState<string[]>(COMBOBOX_DEFAULT_VALUES);
   // Widened from the tuple: the root's generic wants one element type. State,
   // so a created row can join the list.
   const [items, setItems] = useState<readonly ComboboxItemData[]>(COMBOBOX_COMPONENTS);
 
-  const d = deriveCombobox({ multiple, variant, icon, clearable, error, disabled, creatable, hideSelected });
+  const d = deriveCombobox({
+    multiple,
+    variant,
+    icon,
+    clearable,
+    error,
+    disabled,
+    creatable,
+    hideSelected,
+  });
   const code = buildPlaygroundCode({
     multiple,
     variant,
@@ -160,17 +167,16 @@ export function ComboboxPlayground({ children }: PlaygroundProps) {
   });
 
   const randomize = () => {
-    const pick = <T,>(arr: readonly T[]) =>
-      arr[Math.floor(Math.random() * arr.length)];
+    const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
     setMultiple(Math.random() > 0.6);
-    setVariant(pick(["bordered", "borderless"] as const));
+    setVariant(pick(['bordered', 'borderless'] as const));
     setIcon(Math.random() > 0.5);
     setClearable(Math.random() > 0.6);
     setError(Math.random() > 0.85);
     setDisabled(Math.random() > 0.9);
     setCreatable(Math.random() > 0.6);
     setHideSelected(Math.random() > 0.6);
-    setValue("");
+    setValue('');
     setValues([]);
   };
 
@@ -193,13 +199,13 @@ export function ComboboxPlayground({ children }: PlaygroundProps) {
     icon: icon ? SearchIcon : undefined,
     clearable,
     error: error ? COMBOBOX_COPY.error : undefined,
-    className: "w-[280px] max-w-full",
+    className: 'w-[280px] max-w-full',
   };
   const rows = (
     <ComboboxList>
       {(item) => {
-        const v = typeof item === "string" ? item : item.value;
-        const label = typeof item === "string" ? item : item.label;
+        const v = typeof item === 'string' ? item : item.value;
+        const label = typeof item === 'string' ? item : item.label;
         return (
           <ComboboxItem key={v} value={v}>
             {label}
@@ -275,8 +281,8 @@ export function ComboboxPlayground({ children }: PlaygroundProps) {
             value={variant}
             onChange={(v) => setVariant(v as ComboboxFieldVariant)}
             options={[
-              { value: "bordered", label: "Bordered" },
-              { value: "borderless", label: "Borderless" },
+              { value: 'bordered', label: 'Bordered' },
+              { value: 'borderless', label: 'Borderless' },
             ]}
           />
         </PlayField>
@@ -318,11 +324,7 @@ export function ComboboxPlayground({ children }: PlaygroundProps) {
     // Top-anchored in a box tall enough for the open list (field + 6px
     // offset + 300px popup cap), so the field sits high and the rows have
     // room to drop below instead of flipping above a centered field.
-    demoPreview: (
-      <div className="flex h-[350px] w-full items-start justify-center">
-        {preview}
-      </div>
-    ),
+    demoPreview: <div className="flex h-[350px] w-full items-start justify-center">{preview}</div>,
     controls,
     code,
   });

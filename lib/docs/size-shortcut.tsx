@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { inKeyboardScope } from "@/lib/keyboard-scope";
-import { useEffect } from "react";
+import { inKeyboardScope } from '#lib/keyboard-scope';
+import { useEffect } from 'react';
 
-import { useSizeContext } from "@/lib/size-context";
+import { useSizeContext } from '#lib/size-context';
 
 /**
  * Docs-site-only global shortcut: S toggles the size variant. Mount once
@@ -17,12 +17,12 @@ export function SizeShortcut() {
     const onKeyDown = (e: KeyboardEvent) => {
       // Keys typed in a preview belong to the component in it.
       if (inKeyboardScope(e.target)) return;
-      if (e.key !== "s" && e.key !== "S") return;
+      if (e.key !== 's' && e.key !== 'S') return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const target = e.target as HTMLElement | null;
       if (
-        target?.tagName === "INPUT" ||
-        target?.tagName === "TEXTAREA" ||
+        target?.tagName === 'INPUT' ||
+        target?.tagName === 'TEXTAREA' ||
         target?.isContentEditable
       )
         return;
@@ -30,15 +30,15 @@ export function SizeShortcut() {
       // …) — select/menu/dialog content owns the key while it has focus.
       if (
         target?.closest(
-          '[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]'
+          '[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]',
         )
       )
         return;
       e.preventDefault();
-      setSize(size === "default" ? "compact" : "default");
+      setSize(size === 'default' ? 'compact' : 'default');
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [size, setSize]);
 
   return null;

@@ -1,1 +1,1 @@
-export * from "@/registry/default/sidebar-core";
+export * from '#registry/default/sidebar-core';

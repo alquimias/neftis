@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   cloneElement,
@@ -14,11 +14,11 @@ import {
   type MouseEvent,
   type ReactElement,
   type ReactNode,
-} from "react";
-import { createPortal } from "react-dom";
-import { DropdownContent, DropdownMenu, DropdownTrigger } from "@/components/ui/dropdown";
-import { cn } from "@/lib/utils";
-import type { SizeVariant } from "@/lib/size-context";
+} from 'react';
+import { createPortal } from 'react-dom';
+import { DropdownContent, DropdownMenu, DropdownTrigger } from '#components/ui/dropdown';
+import { cn } from '#lib/utils';
+import type { SizeVariant } from '#lib/size-context';
 
 // ContextMenu is the Dropdown opened where you right-click. A zero-size
 // trigger is placed at the pointer and the menu opens from it, so the
@@ -67,7 +67,7 @@ function ContextMenu({ children, onOpenChange, disabled = false, size }: Context
     requestAnimationFrame(() => {
       const active = document.activeElement;
       if (!back?.isConnected) return;
-      if (!active || active === document.body || active.hasAttribute("data-context-menu-anchor"))
+      if (!active || active === document.body || active.hasAttribute('data-context-menu-anchor'))
         back.focus({ preventScroll: true });
     });
   };
@@ -77,8 +77,7 @@ function ContextMenu({ children, onOpenChange, disabled = false, size }: Context
     open: (at, from, id) => {
       if (disabled) return;
       const active = document.activeElement;
-      returnTo.current =
-        active instanceof HTMLElement && active !== document.body ? active : from;
+      returnTo.current = active instanceof HTMLElement && active !== document.body ? active : from;
       setPoint(at);
       setTriggerId(id);
       change(true);
@@ -105,7 +104,7 @@ function ContextMenu({ children, onOpenChange, disabled = false, size }: Context
                 />
               }
             />,
-            document.body
+            document.body,
           )}
         {/* The Dropdown shields the page while it is open, so what was
             right-clicked stays the one thing marked. */}
@@ -115,7 +114,7 @@ function ContextMenu({ children, onOpenChange, disabled = false, size }: Context
 }
 
 /** Text fields keep the browser's menu (paste, spelling). */
-const EDITABLE = "input, textarea, select, [contenteditable]:not([contenteditable=false])";
+const EDITABLE = 'input, textarea, select, [contenteditable]:not([contenteditable=false])';
 
 interface ContextMenuTriggerProps extends HTMLAttributes<HTMLElement> {
   /** The element that opens the menu, in place of the default div. Its own
@@ -140,11 +139,11 @@ function ContextMenuTrigger({
   ...props
 }: ContextMenuTriggerProps) {
   const ctx = useContext(ContextMenuContext);
-  if (!ctx) throw new Error("ContextMenuTrigger must be inside <ContextMenu>");
+  if (!ctx) throw new Error('ContextMenuTrigger must be inside <ContextMenu>');
   const id = useId();
   // Set while this area's menu is open, to style what was right-clicked
   // (the pointer has left it for the menu, so :hover no longer holds).
-  const openProps: { "data-open"?: "" } = ctx.openId === id ? { "data-open": "" } : {};
+  const openProps: { 'data-open'?: '' } = ctx.openId === id ? { 'data-open': '' } : {};
 
   const opens = (target: EventTarget, defaultPrevented: boolean) =>
     !disabled &&
@@ -167,7 +166,7 @@ function ContextMenuTrigger({
   const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
     own?.onKeyDown?.(e);
     onKeyDown?.(e);
-    const menuKey = e.key === "ContextMenu" || (e.shiftKey && e.key === "F10");
+    const menuKey = e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10');
     if (!menuKey || !opens(e.target, e.defaultPrevented)) return;
     e.preventDefault();
     const rect = (e.target as Element).getBoundingClientRect();
@@ -197,7 +196,7 @@ function ContextMenuTrigger({
   );
 }
 
-type ContextMenuContentProps = Omit<ComponentProps<typeof DropdownContent>, "side" | "align">;
+type ContextMenuContentProps = Omit<ComponentProps<typeof DropdownContent>, 'side' | 'align'>;
 
 /** The menu: DropdownContent, opening down and to the right of the
  *  pointer (flipping at the window's edges). */

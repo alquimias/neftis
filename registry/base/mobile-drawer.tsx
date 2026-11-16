@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useEffect,
@@ -7,13 +7,13 @@ import {
   useState,
   type ReactNode,
   type RefObject,
-} from "react";
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
-import { motion } from "motion/react";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { omit } from "@/lib/omit";
-import { useSurface, SurfaceProvider } from "@/lib/surface-context";
-import { surfaceClasses } from "@/lib/surface-classes";
+} from 'react';
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
+import { motion } from 'motion/react';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { omit } from '#lib/omit';
+import { useSurface, SurfaceProvider } from '#lib/surface-context';
+import { surfaceClasses } from '#lib/surface-classes';
 
 // Built on Base UI Dialog rather than Base UI Drawer: Drawer's
 // swipe-to-dismiss writes inline `transform` + `--drawer-swipe-movement-*`
@@ -35,12 +35,12 @@ interface MobileDrawerProps {
 // be forwarded from Base UI's render-prop payload onto a motion.div.
 type MotionSafeDivProps = Omit<
   React.HTMLAttributes<HTMLDivElement>,
-  | "onDrag"
-  | "onDragStart"
-  | "onDragEnd"
-  | "onAnimationStart"
-  | "onAnimationEnd"
-  | "onAnimationIteration"
+  | 'onDrag'
+  | 'onDragStart'
+  | 'onDragEnd'
+  | 'onAnimationStart'
+  | 'onAnimationEnd'
+  | 'onAnimationIteration'
 >;
 
 // Base UI unmounts a closing popup once the animations it can detect on the
@@ -60,10 +60,7 @@ function usePopupExit(open: boolean, setOpen: (open: boolean) => void) {
     if (actionsRef.current) actionsRef.current.close();
     else setRootOpen(false);
   }, [open, rootOpen]);
-  const onOpenChange = (
-    next: boolean,
-    details: { preventUnmountOnClose: () => void }
-  ) => {
+  const onOpenChange = (next: boolean, details: { preventUnmountOnClose: () => void }) => {
     if (!next) {
       details.preventUnmountOnClose();
       setRootOpen(false);
@@ -74,12 +71,7 @@ function usePopupExit(open: boolean, setOpen: (open: boolean) => void) {
   return { actionsRef, rootOpen: open || rootOpen, onOpenChange };
 }
 
-export function MobileDrawer({
-  open,
-  onClose,
-  children,
-  triggerRef,
-}: MobileDrawerProps) {
+export function MobileDrawer({ open, onClose, children, triggerRef }: MobileDrawerProps) {
   const substrate = useSurface();
   const level = Math.min(substrate + 2, 8);
 
@@ -97,19 +89,12 @@ export function MobileDrawer({
   // duration plus a safety buffer.
   useEffect(() => {
     if (open) return;
-    const id = setTimeout(
-      () => actionsRef.current?.unmount(),
-      exitFallbackMs(spring.moderate)
-    );
+    const id = setTimeout(() => actionsRef.current?.unmount(), exitFallbackMs(spring.moderate));
     return () => clearTimeout(id);
   }, [open, actionsRef]);
 
   return (
-    <DialogPrimitive.Root
-      open={rootOpen}
-      onOpenChange={onOpenChange}
-      actionsRef={actionsRef}
-    >
+    <DialogPrimitive.Root open={rootOpen} onOpenChange={onOpenChange} actionsRef={actionsRef}>
       <DialogPrimitive.Portal>
         {/* Overlay — same scrim as the library's dialogs: an always-on
             bg-black/40 base that stays visible for system-dark users (the
@@ -117,10 +102,7 @@ export function MobileDrawer({
             to /80 in explicit dark mode. */}
         <DialogPrimitive.Backdrop
           render={(backdropProps) => {
-            const rest = omit(
-              backdropProps as React.HTMLAttributes<HTMLDivElement>,
-              ["style"]
-            );
+            const rest = omit(backdropProps as React.HTMLAttributes<HTMLDivElement>, ['style']);
             return (
               <motion.div
                 {...(rest as MotionSafeDivProps)}
@@ -138,17 +120,15 @@ export function MobileDrawer({
           aria-label="Navigation"
           finalFocus={triggerRef}
           render={(popupProps) => {
-            const {
-              style: baseStyle,
-              ...rest
-            } = popupProps as React.HTMLAttributes<HTMLDivElement>;
+            const { style: baseStyle, ...rest } =
+              popupProps as React.HTMLAttributes<HTMLDivElement>;
             return (
               <motion.div
                 {...(rest as MotionSafeDivProps)}
                 className={`fixed top-0 left-0 bottom-0 w-64 ${surfaceClasses(level, 3)} z-[var(--z-modal,50)] overflow-y-auto p-4`}
                 style={baseStyle as React.CSSProperties | undefined}
-                initial={{ x: "-100%" }}
-                animate={{ x: open ? 0 : "-100%" }}
+                initial={{ x: '-100%' }}
+                animate={{ x: open ? 0 : '-100%' }}
                 // spring.moderate: critically damped, so the panel decelerates
                 // into x: 0 without overshooting (a bounce briefly exposed the
                 // page background through the gap on the left edge).

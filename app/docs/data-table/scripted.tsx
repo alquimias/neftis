@@ -1,8 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState, type FocusEvent, type RefObject, type SyntheticEvent } from "react";
-import { createPortal } from "react-dom";
-import { FakeCursor, type Cursor } from "@/app/docs/skill/hero-shared";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FocusEvent,
+  type RefObject,
+  type SyntheticEvent,
+} from 'react';
+import { createPortal } from 'react-dom';
+import { FakeCursor, type Cursor } from '#app/docs/skill/hero-shared';
 
 // The scripted cursor for this page's demos, as the skill page plays its
 // examples: usePlayback / useLoop / useScriptCursor from hero-shared, drawn
@@ -42,10 +49,10 @@ export function CursorLayer({
     const observer = new ResizeObserver(place);
     observer.observe(document.body);
     observer.observe(root);
-    window.addEventListener("resize", place);
+    window.addEventListener('resize', place);
     return () => {
       observer.disconnect();
-      window.removeEventListener("resize", place);
+      window.removeEventListener('resize', place);
     };
   }, [rootRef]);
   if (!at) return null;
@@ -57,9 +64,15 @@ export function CursorLayer({
     >
       {/* A real pointer's size: these demos are components at full size,
           not the skill page's small frames. */}
-      <FakeCursor x={cursor.x} y={cursor.y} scale={cursor.scale} opacity={cursor.opacity} size={24} />
+      <FakeCursor
+        x={cursor.x}
+        y={cursor.y}
+        scale={cursor.scale}
+        opacity={cursor.opacity}
+        size={24}
+      />
     </div>,
-    document.body
+    document.body,
   );
 }
 
@@ -71,7 +84,7 @@ export function dragSteps(
   from: string,
   to: string,
   offset: { x?: number; y?: number },
-  holdMs: number
+  holdMs: number,
 ) {
   return [
     { ms: GLIDE + 450, run: () => cursor.goto(from) },
@@ -111,10 +124,9 @@ export function useScriptRows<T>(real: T[], same: (a: T[], b: T[]) => boolean) {
  *  on the page itself), marks its own focus so playback doesn't read it as
  *  a visitor's keyboard (`bind`, in place of usePlayback's), and hands
  *  focus back to the page when it is done (`giveBack`). */
-export function useScriptFocus<B extends { onFocus: (e: FocusEvent) => void; onPointerDown: (e: SyntheticEvent) => void }>(
-  rootRef: RefObject<HTMLElement | null>,
-  bind: B
-) {
+export function useScriptFocus<
+  B extends { onFocus: (e: FocusEvent) => void; onPointerDown: (e: SyntheticEvent) => void },
+>(rootRef: RefObject<HTMLElement | null>, bind: B) {
   const scripting = useRef(false);
   // The keyboard is the visitor's. A key pressed while the script holds
   // focus would land in the script's field or menu (Space to scroll the
@@ -134,9 +146,9 @@ export function useScriptFocus<B extends { onFocus: (e: FocusEvent) => void; onP
       clearTimeout(timer);
       timer = setTimeout(() => setPaused(false), KEY_QUIET_MS);
     };
-    window.addEventListener("keydown", onKey, true);
+    window.addEventListener('keydown', onKey, true);
     return () => {
-      window.removeEventListener("keydown", onKey, true);
+      window.removeEventListener('keydown', onKey, true);
       clearTimeout(timer);
     };
   }, []);
@@ -160,7 +172,8 @@ export function useScriptFocus<B extends { onFocus: (e: FocusEvent) => void; onP
       const active = document.activeElement;
       // Focus a mouse click left on something in this demo is nobody's:
       // the pointer has gone (or the script wouldn't be playing).
-      const stale = !!active && !!rootRef.current?.contains(active) && !active.matches(":focus-visible");
+      const stale =
+        !!active && !!rootRef.current?.contains(active) && !active.matches(':focus-visible');
       if (active && active !== document.body && !stale) return false;
       scripting.current = true;
       return true;
@@ -169,7 +182,11 @@ export function useScriptFocus<B extends { onFocus: (e: FocusEvent) => void; onP
       if (!scripting.current) return;
       const active = document.activeElement;
       // Only what the script focused: inside the demo, or a menu it opened.
-      if (active instanceof HTMLElement && (rootRef.current?.contains(active) || active.closest("[role=menu]"))) active.blur();
+      if (
+        active instanceof HTMLElement &&
+        (rootRef.current?.contains(active) || active.closest('[role=menu]'))
+      )
+        active.blur();
       scripting.current = false;
     },
   };
@@ -178,9 +195,12 @@ export function useScriptFocus<B extends { onFocus: (e: FocusEvent) => void; onP
 /** Sets a field's text as typing does: through the native setter, then
  *  the input event React listens for. */
 export function setFieldValue(field: HTMLInputElement | HTMLTextAreaElement, value: string) {
-  const proto = field instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
-  Object.getOwnPropertyDescriptor(proto, "value")?.set?.call(field, value);
-  field.dispatchEvent(new Event("input", { bubbles: true }));
+  const proto =
+    field instanceof HTMLTextAreaElement
+      ? HTMLTextAreaElement.prototype
+      : HTMLInputElement.prototype;
+  Object.getOwnPropertyDescriptor(proto, 'value')?.set?.call(field, value);
+  field.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
 /** The steps that retype a field from `from` to `to`, a key at a time:
@@ -191,7 +211,7 @@ export function retypeSteps(
   field: () => HTMLInputElement | HTMLTextAreaElement | null | undefined,
   from: string,
   to: string,
-  holdMs: number
+  holdMs: number,
 ): Step[] {
   let shared = 0;
   while (shared < from.length && shared < to.length && from[shared] === to[shared]) shared++;
@@ -230,12 +250,12 @@ export function useHoldHeight(ref: RefObject<HTMLElement | null>) {
       if (window.innerWidth === width) return;
       width = window.innerWidth;
       tallest = 0;
-      box.style.minHeight = "";
+      box.style.minHeight = '';
     };
-    window.addEventListener("resize", onResize);
+    window.addEventListener('resize', onResize);
     return () => {
       observer.disconnect();
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener('resize', onResize);
     };
   }, [ref]);
 }

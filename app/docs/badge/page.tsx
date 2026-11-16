@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Badge, badgeColors, type BadgeColor } from "@/registry/default/badge";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { badgeProps } from "@/lib/docs/api/badge";
+import { Badge, badgeColors, type BadgeColor } from '#registry/default/badge';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { badgeProps } from '#lib/docs/api/badge';
 
 const solidCode = `import { Badge } from "./components";
 
@@ -64,11 +64,21 @@ export default function BadgeDoc() {
       <DocSection title="Dot">
         <ComponentPreview code={dotCode}>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="dot" color="violet">Fiction</Badge>
-            <Badge variant="dot" color="amber">Science</Badge>
-            <Badge variant="dot" color="green">Philosophy</Badge>
-            <Badge variant="dot" color="blue">History</Badge>
-            <Badge variant="dot" color="rose">Poetry</Badge>
+            <Badge variant="dot" color="violet">
+              Fiction
+            </Badge>
+            <Badge variant="dot" color="amber">
+              Science
+            </Badge>
+            <Badge variant="dot" color="green">
+              Philosophy
+            </Badge>
+            <Badge variant="dot" color="blue">
+              History
+            </Badge>
+            <Badge variant="dot" color="rose">
+              Poetry
+            </Badge>
           </div>
         </ComponentPreview>
       </DocSection>
@@ -76,10 +86,18 @@ export default function BadgeDoc() {
       <DocSection title="Ghost">
         <ComponentPreview code={ghostCode}>
           <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
-            <Badge variant="ghost" color="green">Success</Badge>
-            <Badge variant="ghost" color="blue">Processing</Badge>
-            <Badge variant="ghost" color="gray">Pending</Badge>
-            <Badge variant="ghost" color="red">Failed</Badge>
+            <Badge variant="ghost" color="green">
+              Success
+            </Badge>
+            <Badge variant="ghost" color="blue">
+              Processing
+            </Badge>
+            <Badge variant="ghost" color="gray">
+              Pending
+            </Badge>
+            <Badge variant="ghost" color="red">
+              Failed
+            </Badge>
           </div>
         </ComponentPreview>
       </DocSection>

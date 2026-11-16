@@ -1,1 +1,1 @@
-export * from "@/registry/default/card";
+export * from '#registry/default/card';

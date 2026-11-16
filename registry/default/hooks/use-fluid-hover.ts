@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useRef,
@@ -11,7 +11,7 @@ import {
   type Dispatch,
   type RefObject,
   type SetStateAction,
-} from "react";
+} from 'react';
 
 export interface ItemRect {
   top: number;
@@ -28,7 +28,7 @@ export interface UseFluidHoverOptions {
    *   "xy" — 2-D grids: closest card across both rows AND columns,
    *          measured by Euclidean distance to each item's center
    */
-  axis?: "x" | "y" | "xy";
+  axis?: 'x' | 'y' | 'xy';
   /**
    * Makes an item invisible to hit-testing without unregistering it — for
    * rows that stay mounted while clipped away (a collapsed sub-tree).
@@ -137,7 +137,7 @@ export interface UseFluidHoverReturn {
 }
 
 export interface PickNearestInput {
-  axis: "x" | "y" | "xy";
+  axis: 'x' | 'y' | 'xy';
   /** The pointer, in viewport coordinates. */
   point: { x: number; y: number };
   /** Item rects in the container's layout space (sparse: unregistered slots
@@ -184,17 +184,12 @@ export function pickNearest({
     if (!r) continue;
     if (isDisabled?.(index)) continue;
 
-    if (axis === "xy") {
+    if (axis === 'xy') {
       const left = containerRect.left + (border.x + r.left - scroll.x) * scaleX;
       const top = containerRect.top + (border.y + r.top - scroll.y) * scaleY;
       const width = r.width * scaleX;
       const height = r.height * scaleY;
-      if (
-        point.x >= left &&
-        point.x <= left + width &&
-        point.y >= top &&
-        point.y <= top + height
-      ) {
+      if (point.x >= left && point.x <= left + width && point.y >= top && point.y <= top + height) {
         containingIndex = index;
       }
       const distance = Math.hypot(point.x - (left + width / 2), point.y - (top + height / 2));
@@ -205,7 +200,7 @@ export function pickNearest({
       continue;
     }
 
-    const horizontal = axis === "x";
+    const horizontal = axis === 'x';
     const mousePos = horizontal ? point.x : point.y;
     const scale = horizontal ? scaleX : scaleY;
     const itemStart =
@@ -245,9 +240,9 @@ export function isOwnEvent(e: { currentTarget?: EventTarget | null; target?: Eve
 }
 
 /** Set on the highlighted item (boolean attribute). */
-export const ACTIVE_ATTR = "data-fluid-hover-active";
+export const ACTIVE_ATTR = 'data-fluid-hover-active';
 /** Set on the container: the highlighted index, or absent. */
-export const ACTIVE_INDEX_ATTR = "data-fluid-hover-active-index";
+export const ACTIVE_INDEX_ATTR = 'data-fluid-hover-active-index';
 
 const ACTIVATOR_SELECTOR =
   "a[href], button, [role='menuitem'], [role='menuitemradio'], [role='menuitemcheckbox'], [role='option'], [role='radio'], [role='checkbox'], [role='tab'], [role='link'], [role='button']";
@@ -259,14 +254,13 @@ const ACTIVATOR_SELECTOR =
  * is what a real click on the row would have reached.
  */
 function resolveActivator(element: HTMLElement): HTMLElement {
-  if (element.matches(ACTIVATOR_SELECTOR) || element.hasAttribute("tabindex")) {
+  if (element.matches(ACTIVATOR_SELECTOR) || element.hasAttribute('tabindex')) {
     return element;
   }
   return element.querySelector<HTMLElement>(ACTIVATOR_SELECTOR) ?? element;
 }
 
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 /**
  * How many frames the coalesced remeasure retries while the registered items
@@ -278,11 +272,17 @@ const measurementAttempts = 3;
 
 export function useFluidHover<T extends HTMLElement>(
   containerRef: RefObject<T | null>,
-  options: UseFluidHoverOptions = {}
+  options: UseFluidHoverOptions = {},
 ): UseFluidHoverReturn {
-  const { axis = "y", isItemDisabled, gapClick = true, nearest = false, followScroll = false } = options;
+  const {
+    axis = 'y',
+    isItemDisabled,
+    gapClick = true,
+    nearest = false,
+    followScroll = false,
+  } = options;
   const gapClickMaxDistance =
-    typeof gapClick === "object" ? (gapClick.maxDistance ?? Infinity) : Infinity;
+    typeof gapClick === 'object' ? (gapClick.maxDistance ?? Infinity) : Infinity;
   const itemsRef = useRef(new Map<number, HTMLElement>());
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   // Mirrored for handlers that read it outside a render (the gap click, a
@@ -300,7 +300,7 @@ export function useFluidHover<T extends HTMLElement>(
       },
       get: () => activeIndexRef.current,
     }),
-    []
+    [],
   );
   useIsoLayoutEffect(() => {
     activeIndexRef.current = activeIndex;
@@ -322,7 +322,7 @@ export function useFluidHover<T extends HTMLElement>(
     if (activeIndex === null) container?.removeAttribute(ACTIVE_INDEX_ATTR);
     else container?.setAttribute(ACTIVE_INDEX_ATTR, String(activeIndex));
     const active = activeIndex === null ? undefined : items.get(activeIndex);
-    active?.setAttribute(ACTIVE_ATTR, "");
+    active?.setAttribute(ACTIVE_ATTR, '');
     return () => {
       active?.removeAttribute(ACTIVE_ATTR);
       // A row that re-registered under this index while it was highlighted
@@ -360,9 +360,7 @@ export function useFluidHover<T extends HTMLElement>(
       // incomplete. A boxless element is the only case: `position: fixed`
       // items also have no offsetParent but do have a size.
       const hasLayoutBox =
-        element.offsetParent !== null ||
-        element.offsetWidth > 0 ||
-        element.offsetHeight > 0;
+        element.offsetParent !== null || element.offsetWidth > 0 || element.offsetHeight > 0;
       if (!hasLayoutBox) {
         everyItemHasLayout = false;
         return;
@@ -442,7 +440,7 @@ export function useFluidHover<T extends HTMLElement>(
       };
       attempt(attempts);
     },
-    [runMeasurement]
+    [runMeasurement],
   );
 
   const remeasure = useCallback(() => {
@@ -460,10 +458,8 @@ export function useFluidHover<T extends HTMLElement>(
   // ref points at a different element than the one being observed.
   const itemRoRef = useRef<ResizeObserver | null>(null);
   const getItemRo = useCallback(() => {
-    if (itemRoRef.current === null && typeof ResizeObserver !== "undefined") {
-      itemRoRef.current = new ResizeObserver(() =>
-        scheduleMeasurement(measurementAttempts)
-      );
+    if (itemRoRef.current === null && typeof ResizeObserver !== 'undefined') {
+      itemRoRef.current = new ResizeObserver(() => scheduleMeasurement(measurementAttempts));
     }
     return itemRoRef.current;
   }, [scheduleMeasurement]);
@@ -473,7 +469,7 @@ export function useFluidHover<T extends HTMLElement>(
       if (element) {
         itemsRef.current.set(index, element);
         getItemRo()?.observe(element);
-        if (index === activeIndexRef.current) element.setAttribute(ACTIVE_ATTR, "");
+        if (index === activeIndexRef.current) element.setAttribute(ACTIVE_ATTR, '');
       } else {
         const previous = itemsRef.current.get(index);
         if (previous) itemRoRef.current?.unobserve(previous);
@@ -487,7 +483,7 @@ export function useFluidHover<T extends HTMLElement>(
         // only moved index hands the highlight to the row now under it.
         if (index === activeIndexRef.current) {
           setActiveIndex((current) =>
-            current === index && !itemsRef.current.has(index) ? null : current
+            current === index && !itemsRef.current.has(index) ? null : current,
           );
         }
       }
@@ -497,7 +493,7 @@ export function useFluidHover<T extends HTMLElement>(
       // container's children swap.
       remeasure();
     },
-    [remeasure, getItemRo]
+    [remeasure, getItemRo],
   );
 
   // The item at a point: the one under it, or with `nearest` the closest.
@@ -533,7 +529,7 @@ export function useFluidHover<T extends HTMLElement>(
       }
       return next;
     },
-    [axis, isItemDisabled, nearest]
+    [axis, isItemDisabled, nearest],
   );
 
   // Where the pointer last moved inside the container, while the highlight
@@ -569,7 +565,7 @@ export function useFluidHover<T extends HTMLElement>(
         setActiveIndex(next);
       });
     },
-    [containerRef, itemAt]
+    [containerRef, itemAt],
   );
 
   // Hover is what sits under the pointer, moved or not: when the items
@@ -606,12 +602,12 @@ export function useFluidHover<T extends HTMLElement>(
     const onScroll = () => {
       // A touch screen has no pointer at rest: the last tap's point would
       // drag the highlight across whatever scrolls under it.
-      if (!pointRef.current || frame !== null || window.matchMedia("(hover: none)").matches) return;
+      if (!pointRef.current || frame !== null || window.matchMedia('(hover: none)').matches) return;
       frame = requestAnimationFrame(follow);
     };
-    window.addEventListener("scroll", onScroll, { capture: true, passive: true });
+    window.addEventListener('scroll', onScroll, { capture: true, passive: true });
     return () => {
-      window.removeEventListener("scroll", onScroll, { capture: true });
+      window.removeEventListener('scroll', onScroll, { capture: true });
       if (frame !== null) cancelAnimationFrame(frame);
     };
   }, [containerRef, itemAt, followScroll]);
@@ -632,10 +628,13 @@ export function useFluidHover<T extends HTMLElement>(
   // Set from outside (the keyboard, focus), the highlight is no longer the
   // pointer's: a scroll that follows (the focused row brought into view)
   // must not hand it back to the item under a pointer at rest.
-  const setActiveIndexFromOutside = useCallback<Dispatch<SetStateAction<number | null>>>((value) => {
-    pointRef.current = null;
-    setActiveIndex(value);
-  }, []);
+  const setActiveIndexFromOutside = useCallback<Dispatch<SetStateAction<number | null>>>(
+    (value) => {
+      pointRef.current = null;
+      setActiveIndex(value);
+    },
+    [],
+  );
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -656,7 +655,7 @@ export function useFluidHover<T extends HTMLElement>(
       // A control that sits between the rows (a search field at the top of
       // a menu, a footer button) keeps its own click too.
       const control = (target as Element).closest?.(
-        "input, textarea, select, button, a, summary, [contenteditable], [role='textbox'], [role='searchbox'], [role='button']"
+        "input, textarea, select, button, a, summary, [contenteditable], [role='textbox'], [role='searchbox'], [role='button']",
       );
       if (control) return;
       // Without nearest nothing is lit between items. The highlight updates a
@@ -677,7 +676,7 @@ export function useFluidHover<T extends HTMLElement>(
       // wrapping it, if any) run exactly as if the pointer had been inside.
       resolveActivator(element).click();
     },
-    [isItemDisabled, gapClick, gapClickMaxDistance, nearest]
+    [isItemDisabled, gapClick, gapClickMaxDistance, nearest],
   );
 
   // Remeasure when the container resizes — a reflow moves items even though
@@ -687,7 +686,7 @@ export function useFluidHover<T extends HTMLElement>(
   // stay usable, and hiding overlays on every reflow would flicker them.
   useEffect(() => {
     const container = containerRef.current;
-    if (!container || typeof ResizeObserver === "undefined") return;
+    if (!container || typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(() => scheduleMeasurement(measurementAttempts));
     ro.observe(container);
     return () => ro.disconnect();
@@ -739,12 +738,12 @@ const subscribeNever = () => () => {};
  */
 export function useFluidHoverSelect<T>(
   store: FluidHoverActiveStore | null | undefined,
-  select: (activeIndex: number | null) => T
+  select: (activeIndex: number | null) => T,
 ): T {
   return useSyncExternalStore(
     store?.subscribe ?? subscribeNever,
     () => select(store ? store.get() : null),
-    () => select(null)
+    () => select(null),
   );
 }
 
@@ -758,7 +757,7 @@ export function useFluidHoverSelect<T>(
 export function useRegisterFluidHoverItem(
   registerItem: ((index: number, element: HTMLElement | null) => void) | undefined,
   index: number | undefined,
-  ref: RefObject<HTMLElement | null>
+  ref: RefObject<HTMLElement | null>,
 ) {
   // Before paint, so a list that measures in its own layout effect (a Table
   // snapping its fills as rows open) already sees every item at its new

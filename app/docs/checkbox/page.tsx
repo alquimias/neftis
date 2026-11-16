@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Checkbox } from "@/components/flavored/checkbox";
+import { Checkbox } from '#components/flavored/checkbox';
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldError,
   FieldLabel,
-} from "@/registry/default/field";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { checkboxProps } from "@/lib/docs/api/checkbox";
+} from '#registry/default/field';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { checkboxProps } from '#lib/docs/api/checkbox';
 
 const basicCode = `import { Checkbox, Field, FieldLabel } from "./components";
 

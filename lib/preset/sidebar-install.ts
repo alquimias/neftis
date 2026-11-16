@@ -8,7 +8,7 @@
 // and cross-checks it against the snippet generator's load-bearing classes.
 // ---------------------------------------------------------------------------
 
-import { SIDEBAR_ITEMS, SIDEBAR_THREADS } from "@/app/components/demo-data";
+import { SIDEBAR_ITEMS, SIDEBAR_THREADS } from '#app/components/demo-data';
 import {
   type SidebarPreset,
   ROW_ACTION_SET,
@@ -18,50 +18,50 @@ import {
   L2_ROWS,
   SECTION_LABELS,
   SEARCH_SHORTCUT,
-} from "./sidebar-options";
+} from './sidebar-options';
 
 export interface PresetFile {
   path: string;
-  type: "registry:component" | "registry:page";
+  type: 'registry:component' | 'registry:page';
   target: string;
   content: string;
 }
 
-const DIR = "components/sidebar-preset";
+const DIR = 'components/sidebar-preset';
 
 /** Icon-context keys the generated files may reference — kept to keys that
  *  exist in the shipped icon-context (guarded by tests). */
 export const PRESET_ICON_KEYS = [
-  "play",
-  "home",
-  "inbox",
-  "calendar",
-  "bell",
-  "star",
-  "plus",
-  "pencil",
-  "users",
-  "settings",
-  "moon",
-  "folder",
-  "more-vertical",
-  "sliders-horizontal",
-  "chevron-right",
-  "user",
-  "arrow-left",
-  "panel-left",
-  "link",
-  "x",
+  'play',
+  'home',
+  'inbox',
+  'calendar',
+  'bell',
+  'star',
+  'plus',
+  'pencil',
+  'users',
+  'settings',
+  'moon',
+  'folder',
+  'more-vertical',
+  'sliders-horizontal',
+  'chevron-right',
+  'user',
+  'arrow-left',
+  'panel-left',
+  'link',
+  'x',
 ] as const;
 
 function navDataFile(p: SidebarPreset): string {
   const l: string[] = [];
   l.push(`// Seed navigation data for the generated sidebar — replace with your own.`);
-  if (p.l1Primary === "menu") {
-    l.push(`import { type IconName } from "@/lib/icon-context";`);
+  if (p.l1Primary === 'menu') {
+    l.push(`import { type IconName } from "#lib/icon-context";`);
     l.push(``);
   }
-  if (p.l1Primary === "threads") {
+  if (p.l1Primary === 'threads') {
     l.push(`export interface NavItem {`);
     l.push(`  label: string;`);
     l.push(`  /** Semantic status: drives the leading dot and screen-reader text. */`);
@@ -86,13 +86,13 @@ function navDataFile(p: SidebarPreset): string {
   l.push(`  items: NavItem[];`);
   l.push(`}`);
   l.push(``);
-  const children = p.l1Children && p.l1Primary === "menu";
+  const children = p.l1Children && p.l1Primary === 'menu';
   const childLit = `[${L2_ROWS.map(
     (c) =>
-      `{ label: ${JSON.stringify(c.label)}, icon: "folder"${"badge" in c && c.badge ? `, badge: ${JSON.stringify(c.badge)}` : ""} }`
-  ).join(", ")}]`;
+      `{ label: ${JSON.stringify(c.label)}, icon: "folder"${'badge' in c && c.badge ? `, badge: ${JSON.stringify(c.badge)}` : ''} }`,
+  ).join(', ')}]`;
   const item = (label: string, extra: string) =>
-    `    { label: ${JSON.stringify(label)}${extra}${children ? `, children: ${childLit}` : ""} },`;
+    `    { label: ${JSON.stringify(label)}${extra}${children ? `, children: ${childLit}` : ''} },`;
   l.push(`export const NAV_SECTIONS: NavSection[] = [`);
   for (const [si, section] of SECTION_LABELS[p.l1Primary].entries()) {
     l.push(`  {`);
@@ -100,11 +100,11 @@ function navDataFile(p: SidebarPreset): string {
     l.push(`    items: [`);
     // The playground's own rows (app/components/demo-data), split the
     // way it splits them: three in the first section, the rest in the next.
-    const part = <T,>(rows: readonly T[]) => rows.slice(si === 0 ? 0 : 3, si === 0 ? 3 : 5);
-    if (p.l1Primary === "threads") {
+    const part = <T>(rows: readonly T[]) => rows.slice(si === 0 ? 0 : 3, si === 0 ? 3 : 5);
+    if (p.l1Primary === 'threads') {
       for (const t of part(SIDEBAR_THREADS)) {
         l.push(
-          `    { label: ${JSON.stringify(t.label)}, status: ${JSON.stringify(t.status)}${p.l1Badges && t.badge ? `, badge: ${JSON.stringify(t.badge)}` : ""} },`
+          `    { label: ${JSON.stringify(t.label)}, status: ${JSON.stringify(t.status)}${p.l1Badges && t.badge ? `, badge: ${JSON.stringify(t.badge)}` : ''} },`,
         );
       }
     } else {
@@ -112,8 +112,8 @@ function navDataFile(p: SidebarPreset): string {
         l.push(
           item(
             row.label,
-            `, icon: ${JSON.stringify(row.icon)}${p.l1Badges && row.badge ? `, badge: ${JSON.stringify(row.badge)}` : ""}${row.active ? `, active: true` : ""}`
-          )
+            `, icon: ${JSON.stringify(row.icon)}${p.l1Badges && row.badge ? `, badge: ${JSON.stringify(row.badge)}` : ''}${row.active ? `, active: true` : ''}`,
+          ),
         );
       }
     }
@@ -121,23 +121,19 @@ function navDataFile(p: SidebarPreset): string {
     l.push(`  },`);
   }
   l.push(`];`);
-  return l.join("\n") + "\n";
+  return l.join('\n') + '\n';
 }
 
 /** The action cluster / lone action for a row, install-grade. */
 function rowActionLines(count: number, indent: string, guard?: string): string[] {
   if (count === 0) return [];
   const actions = ROW_ACTION_SET.slice(-count);
-  const one = (
-    a: (typeof ROW_ACTION_SET)[number],
-    showOnHover: boolean,
-    ind: string
-  ): string[] =>
-    "menu" in a && a.menu
+  const one = (a: (typeof ROW_ACTION_SET)[number], showOnHover: boolean, ind: string): string[] =>
+    'menu' in a && a.menu
       ? [
           `${ind}<DropdownMenu>`,
           `${ind}  <DropdownTrigger render={`,
-          `${ind}    <SidebarMenuAction${showOnHover ? " showOnHover" : ""} aria-label="More options">`,
+          `${ind}    <SidebarMenuAction${showOnHover ? ' showOnHover' : ''} aria-label="More options">`,
           `${ind}      <MoreVerticalIcon />`,
           `${ind}    </SidebarMenuAction>`,
           `${ind}  } />`,
@@ -150,8 +146,8 @@ function rowActionLines(count: number, indent: string, guard?: string): string[]
         ]
       : [
           `${ind}<Tooltip content="${a.label}" side="top">`,
-          `${ind}  <SidebarMenuAction${showOnHover ? " showOnHover" : ""} aria-label="${a.label}">`,
-          `${ind}    <${a.icon === "plus" ? "PlusIcon" : "PencilIcon"} />`,
+          `${ind}  <SidebarMenuAction${showOnHover ? ' showOnHover' : ''} aria-label="${a.label}">`,
+          `${ind}    <${a.icon === 'plus' ? 'PlusIcon' : 'PencilIcon'} />`,
           `${ind}  </SidebarMenuAction>`,
           `${ind}</Tooltip>`,
         ];
@@ -168,112 +164,126 @@ function rowActionLines(count: number, indent: string, guard?: string): string[]
 }
 
 function appSidebarFile(p: SidebarPreset): string {
-  const loading = p.state === "loading";
-  const nests = p.l1Primary === "menu" && p.l1Children && !loading;
+  const loading = p.state === 'loading';
+  const nests = p.l1Primary === 'menu' && p.l1Children && !loading;
   const menuRows = !loading;
   const anyRowActions = !loading && (p.l1Actions > 0 || (nests && p.l2Actions > 0));
-  const hasCallout = p.footerCallout !== "none";
-  const hasFooter = p.footerPrimary === "dropdown" || p.footerActions > 0 || hasCallout;
-  const headerHorizontal = p.headerStack === "horizontal";
+  const hasCallout = p.footerCallout !== 'none';
+  const hasFooter = p.footerPrimary === 'dropdown' || p.footerActions > 0 || hasCallout;
+  const headerHorizontal = p.headerStack === 'horizontal';
 
   const sidebarParts = [
-    "Sidebar",
-    "SidebarHeader",
-    "SidebarContent",
-    ...(hasFooter ? ["SidebarFooter"] : []),
-    "SidebarGroup",
-    "SidebarGroupLabel",
-    ...(p.sectionActions > 0 ? ["SidebarGroupActions", "SidebarGroupAction"] : []),
-    "SidebarMenu",
-    "SidebarMenuItem",
-    ...(menuRows || (headerHorizontal ? false : p.headerActions > 0) ? ["SidebarMenuButton"] : []),
-    ...(!loading && (p.l1Badges || (nests && p.l2Badges)) ? ["SidebarMenuBadge"] : []),
-    ...(anyRowActions ? ["SidebarMenuAction"] : []),
+    'Sidebar',
+    'SidebarHeader',
+    'SidebarContent',
+    ...(hasFooter ? ['SidebarFooter'] : []),
+    'SidebarGroup',
+    'SidebarGroupLabel',
+    ...(p.sectionActions > 0 ? ['SidebarGroupActions', 'SidebarGroupAction'] : []),
+    'SidebarMenu',
+    'SidebarMenuItem',
+    ...(menuRows || (headerHorizontal ? false : p.headerActions > 0) ? ['SidebarMenuButton'] : []),
+    ...(!loading && (p.l1Badges || (nests && p.l2Badges)) ? ['SidebarMenuBadge'] : []),
+    ...(anyRowActions ? ['SidebarMenuAction'] : []),
     ...(anyRowActions && Math.max(p.l1Actions, nests ? p.l2Actions : 0) > 1
-      ? ["SidebarMenuActions"]
+      ? ['SidebarMenuActions']
       : []),
-    ...(nests ? ["SidebarMenuSub", "SidebarMenuSubItem", "SidebarMenuSubButton"] : []),
-    ...(loading ? ["SidebarMenuSkeleton"] : []),
+    ...(nests ? ['SidebarMenuSub', 'SidebarMenuSubItem', 'SidebarMenuSubButton'] : []),
+    ...(loading ? ['SidebarMenuSkeleton'] : []),
   ];
   // Dedup while keeping order.
   const parts = [...new Set(sidebarParts)];
 
   const needsDropdown =
-    p.headerPrimary === "dropdown" ||
-    p.footerPrimary === "dropdown" ||
-    anyRowActions; // overflow menu
+    p.headerPrimary === 'dropdown' || p.footerPrimary === 'dropdown' || anyRowActions; // overflow menu
   const needsTooltip =
-    anyRowActions || p.sectionActions > 0 || headerHorizontal || (p.footerStack === "horizontal" && p.footerActions > 0);
+    anyRowActions ||
+    p.sectionActions > 0 ||
+    headerHorizontal ||
+    (p.footerStack === 'horizontal' && p.footerActions > 0);
 
   const l: string[] = [];
   l.push(`"use client";`);
   l.push(``);
   l.push(`import { useState } from "react";`);
   l.push(`import {`);
-  l.push(`  ${parts.join(",\n  ")},`);
+  l.push(`  ${parts.join(',\n  ')},`);
   l.push(`  type SidebarProps,`);
-  l.push(`} from "@/components/ui/sidebar";`);
+  l.push(`} from "#components/ui/sidebar";`);
   const needsTooltipGroup =
-    (headerHorizontal && p.headerActions > 0) || (p.footerStack === "horizontal" && p.footerActions > 1);
+    (headerHorizontal && p.headerActions > 0) ||
+    (p.footerStack === 'horizontal' && p.footerActions > 1);
   if (needsTooltip)
-    l.push(`import { Tooltip${needsTooltipGroup ? ", TooltipGroup" : ""} } from "@/components/ui/tooltip";`);
+    l.push(
+      `import { Tooltip${needsTooltipGroup ? ', TooltipGroup' : ''} } from "#components/ui/tooltip";`,
+    );
   // The icon buttons of a one-row header or footer.
-  if (headerHorizontal || (p.footerStack === "horizontal" && p.footerActions > 0))
-    l.push(`import { Button } from "@/components/ui/button";`);
-  if (!headerHorizontal && p.headerActions > 0) l.push(`import { KeyCaps } from "@/lib/key-cap";`);
+  if (headerHorizontal || (p.footerStack === 'horizontal' && p.footerActions > 0))
+    l.push(`import { Button } from "#components/ui/button";`);
+  if (!headerHorizontal && p.headerActions > 0) l.push(`import { KeyCaps } from "#lib/key-cap";`);
   if (needsDropdown) {
     l.push(
-      `import { DropdownMenu, DropdownTrigger, DropdownContent } from "@/components/ui/dropdown";`
+      `import { DropdownMenu, DropdownTrigger, DropdownContent } from "#components/ui/dropdown";`,
     );
-    l.push(`import { MenuItem } from "@/components/ui/menu-item";`);
+    l.push(`import { MenuItem } from "#components/ui/menu-item";`);
   }
   if (nests) {
     l.push(`import { type CSSProperties } from "react";`);
     l.push(`import { motion } from "motion/react";`);
-    l.push(`import { spring } from "@/lib/springs";`);
+    l.push(`import { spring } from "#lib/springs";`);
   }
-  l.push(`import { useIcons } from "@/lib/icon-context";`);
-  if (p.headerPrimary !== "none") {
+  l.push(`import { useIcons } from "#lib/icon-context";`);
+  if (p.headerPrimary !== 'none') {
     l.push(
-      `import { SidebarWorkspaceHeader, WorkspaceTile } from "@/components/sidebar-app/workspace-header";`
+      `import { SidebarWorkspaceHeader, WorkspaceTile } from "#components/sidebar-app/workspace-header";`,
     );
   }
-  if (p.footerPrimary === "dropdown") {
-    l.push(`import { SidebarUserFooter } from "@/components/sidebar-app/user-footer";`);
+  if (p.footerPrimary === 'dropdown') {
+    l.push(`import { SidebarUserFooter } from "#components/sidebar-app/user-footer";`);
   }
   if (!headerHorizontal) {
-    l.push(`import { SidebarSearchField } from "@/components/sidebar-app/search-field";`);
+    l.push(`import { SidebarSearchField } from "#components/sidebar-app/search-field";`);
   }
   if (hasCallout) {
     l.push(
-      `import { Card, ${p.footerCallout === "banner" ? "CardImage" : "CardMedia"}, CardHeader, CardTitle, CardDescription${p.footerCallout === "inline" ? ", CardGroup" : ""} } from "@/components/ui/card";`
+      `import { Card, ${p.footerCallout === 'banner' ? 'CardImage' : 'CardMedia'}, CardHeader, CardTitle, CardDescription${p.footerCallout === 'inline' ? ', CardGroup' : ''} } from "#components/ui/card";`,
     );
-    l.push(`import { surfaceClasses, surfaceHoverClasses } from "@/lib/surface-classes";`);
-    l.push(`import { useSurface } from "@/lib/surface-context";`);
-    if (p.footerCalloutStacked) l.push(`import { AnimatePresence, motion as m } from "motion/react";`);
-    if (p.footerCalloutStacked && !nests) l.push(`import { spring } from "@/lib/springs";`);
+    l.push(`import { surfaceClasses, surfaceHoverClasses } from "#lib/surface-classes";`);
+    l.push(`import { useSurface } from "#lib/surface-context";`);
+    if (p.footerCalloutStacked)
+      l.push(`import { AnimatePresence, motion as m } from "motion/react";`);
+    if (p.footerCalloutStacked && !nests) l.push(`import { spring } from "#lib/springs";`);
   }
-  l.push(`import { NAV_SECTIONS } from "@/components/sidebar-preset/nav-data";`);
+  l.push(`import { NAV_SECTIONS } from "#components/sidebar-preset/nav-data";`);
   l.push(``);
 
   if (hasCallout) {
-    l.push(`const CALLOUTS: { id: number; icon: "panel-left" | "star" | "play"; title: string; desc: string }[] = [`);
-    l.push(`  { id: 1, icon: "panel-left", title: "Aurora 2 is here", desc: "Longer context, faster agents" },`);
+    l.push(
+      `const CALLOUTS: { id: number; icon: "panel-left" | "star" | "play"; title: string; desc: string }[] = [`,
+    );
+    l.push(
+      `  { id: 1, icon: "panel-left", title: "Aurora 2 is here", desc: "Longer context, faster agents" },`,
+    );
     if (p.footerCalloutStacked) {
-      l.push(`  { id: 2, icon: "star", title: "New workspace roles", desc: "Owner, editor, viewer" },`);
+      l.push(
+        `  { id: 2, icon: "star", title: "New workspace roles", desc: "Owner, editor, viewer" },`,
+      );
       l.push(`  { id: 3, icon: "play", title: "Dark mode shipped", desc: "Follows your system" },`);
     }
     l.push(`];`);
-    if (p.footerCalloutStacked && p.footerCallout === "inline") {
+    if (p.footerCalloutStacked && p.footerCallout === 'inline') {
       l.push(`// The pile reads as one family with depth: each card's tile is a step`);
       l.push(`// of the same tint, the front one the strongest.`);
-      l.push(`const CALLOUT_TILE_TINTS = ["bg-[#6B97FF]/25", "bg-[#6B97FF]/[0.08]", "bg-[#6B97FF]/15"];`);
+      l.push(
+        `const CALLOUT_TILE_TINTS = ["bg-[#6B97FF]/25", "bg-[#6B97FF]/[0.08]", "bg-[#6B97FF]/15"];`,
+      );
     }
     l.push(``);
   }
 
   l.push(`export function AppSidebar(props: Omit<SidebarProps, "children">) {`);
-  if (menuRows) l.push(`  const [active, setActive] = useState("${p.l1Primary === "threads" ? "" : "Home"}");`);
+  if (menuRows)
+    l.push(`  const [active, setActive] = useState("${p.l1Primary === 'threads' ? '' : 'Home'}");`);
   if (nests) {
     l.push(`  // Nested rows start open; keys are row labels.`);
     l.push(`  const [closedRows, setClosedRows] = useState<Record<string, boolean>>({});`);
@@ -303,29 +313,30 @@ function appSidebarFile(p: SidebarPreset): string {
   if (nests) l.push(`  const ChevronRightIcon = icons["chevron-right"];`);
   if (headerHorizontal && p.headerActions > 1) l.push(`  const UsersIcon = icons.users;`);
   if (!headerHorizontal && p.headerActions > 1) l.push(`  const UsersIcon = icons.users;`);
-  if (p.footerPrimary === "dropdown") {
+  if (p.footerPrimary === 'dropdown') {
     l.push(`  const UserIcon = icons.user;`);
     l.push(`  const SettingsIcon = icons.settings;`);
     l.push(`  const ArrowLeftIcon = icons["arrow-left"];`);
   }
   if (p.footerActions > 0) l.push(`  const FooterSettingsIcon = icons.settings;`);
   if (p.footerActions > 1) l.push(`  const MoonIcon = icons.moon;`);
-  if (hasCallout && p.footerCallout === "inline" && !p.footerCalloutStacked) l.push(`  const CalloutIcon = icons["panel-left"];`);
+  if (hasCallout && p.footerCallout === 'inline' && !p.footerCalloutStacked)
+    l.push(`  const CalloutIcon = icons["panel-left"];`);
   if (headerHorizontal) l.push(`  const SearchIcon = icons.search;`);
   l.push(``);
   l.push(`  return (`);
-  l.push(`    <Sidebar${p.design !== "sidebar" ? ` variant="${p.design}"` : ""} {...props}>`);
+  l.push(`    <Sidebar${p.design !== 'sidebar' ? ` variant="${p.design}"` : ''} {...props}>`);
 
   // ── Header ──
   l.push(`      <SidebarHeader>`);
   const brand = (indent: string) =>
-    p.headerPrimary === "none"
+    p.headerPrimary === 'none'
       ? []
       : [
           `${indent}<SidebarWorkspaceHeader`,
           `${indent}  name="Acme Inc"`,
           `${indent}  tile={<WorkspaceTile>A</WorkspaceTile>}`,
-          ...(p.headerPrimary === "dropdown"
+          ...(p.headerPrimary === 'dropdown'
             ? [
                 `${indent}  checkedIndex={0}`,
                 `${indent}  menu={`,
@@ -343,7 +354,7 @@ function appSidebarFile(p: SidebarPreset): string {
     l.push(`        {/* horizontal: search + actions share the brand line as 24px`);
     l.push(`            buttons, inset pr-1.5 onto the section actions' axis */}`);
     l.push(`        <div className="flex items-center gap-1 pr-1.5">`);
-    if (p.headerPrimary === "none") {
+    if (p.headerPrimary === 'none') {
       l.push(`          <div className="min-w-0 flex-1" />`);
     } else {
       l.push(`          <div className="min-w-0 flex-1">`);
@@ -356,16 +367,20 @@ function appSidebarFile(p: SidebarPreset): string {
     l.push(`${hi}<Tooltip content="Search" shortcut="${SEARCH_SHORTCUT}" side="bottom">`);
     // The library's own ghost Button, as in the playground: its press
     // and hover are the component's.
-    l.push(`${hi}  <Button variant="ghost" size="icon-compact" aria-label="Search" className="size-6 shrink-0">`);
+    l.push(
+      `${hi}  <Button variant="ghost" size="icon-compact" aria-label="Search" className="size-6 shrink-0">`,
+    );
     l.push(`${hi}    <SearchIcon />`);
     l.push(`${hi}  </Button>`);
     l.push(`${hi}</Tooltip>`);
     for (const a of HEADER_ACTION_SET.slice(0, p.headerActions)) {
-      const Icon = a.icon === "plus" ? "PlusIcon" : "UsersIcon";
+      const Icon = a.icon === 'plus' ? 'PlusIcon' : 'UsersIcon';
       l.push(`${hi}<Tooltip content="${a.label}" shortcut="${a.shortcut}" side="bottom">`);
       // The library's own ghost Button, as in the playground: its press
       // and hover are the component's.
-      l.push(`${hi}  <Button variant="ghost" size="icon-compact" aria-label="${a.label}" className="size-6 shrink-0">`);
+      l.push(
+        `${hi}  <Button variant="ghost" size="icon-compact" aria-label="${a.label}" className="size-6 shrink-0">`,
+      );
       l.push(`${hi}    <${Icon} />`);
       l.push(`${hi}  </Button>`);
       l.push(`${hi}</Tooltip>`);
@@ -380,13 +395,17 @@ function appSidebarFile(p: SidebarPreset): string {
     if (p.headerActions > 0) {
       l.push(`          <SidebarMenu aria-label="Actions">`);
       for (const a of HEADER_ACTION_SET.slice(0, p.headerActions)) {
-        const Icon = a.icon === "plus" ? "PlusIcon" : "UsersIcon";
+        const Icon = a.icon === 'plus' ? 'PlusIcon' : 'UsersIcon';
         l.push(`            <SidebarMenuItem>`);
         l.push(`              <SidebarMenuButton icon={${Icon}}>`);
         l.push(`                ${a.label}`);
         l.push(`                {/* shortcut chip, revealed on row hover */}`);
-        l.push(`                <span className="ml-auto inline-flex opacity-0 transition-opacity duration-80`);
-        l.push(`                  group-hover/menu-item:opacity-100 group-focus-within/menu-item:opacity-100">`);
+        l.push(
+          `                <span className="ml-auto inline-flex opacity-0 transition-opacity duration-80`,
+        );
+        l.push(
+          `                  group-hover/menu-item:opacity-100 group-focus-within/menu-item:opacity-100">`,
+        );
         l.push(`                  <KeyCaps keys="${a.shortcut}" />`);
         l.push(`                </span>`);
         l.push(`              </SidebarMenuButton>`);
@@ -401,13 +420,15 @@ function appSidebarFile(p: SidebarPreset): string {
   // ── Content ──
   l.push(``);
   l.push(`      <SidebarContent>`);
-  l.push(`        {NAV_SECTIONS${loading ? ".slice(0, 1)" : ""}.map((section) => (`);
-  l.push(`          <SidebarGroup key={section.label}${p.sectionsCollapsible ? " collapsible" : ""}>`);
+  l.push(`        {NAV_SECTIONS${loading ? '.slice(0, 1)' : ''}.map((section) => (`);
+  l.push(
+    `          <SidebarGroup key={section.label}${p.sectionsCollapsible ? ' collapsible' : ''}>`,
+  );
   l.push(`            <SidebarGroupLabel>{section.label}</SidebarGroupLabel>`);
   if (p.sectionActions > 0) {
     l.push(`            <SidebarGroupActions>`);
     for (const [i, a] of GROUP_ACTION_SET.slice(0, p.sectionActions).entries()) {
-      const Icon = i === 0 ? "PlusIcon" : i === 1 ? "SlidersIcon" : "SectionMoreIcon";
+      const Icon = i === 0 ? 'PlusIcon' : i === 1 ? 'SlidersIcon' : 'SectionMoreIcon';
       l.push(`              <Tooltip content="${a.label}" side="top">`);
       l.push(`                <SidebarGroupAction aria-label="${a.label}">`);
       l.push(`                  <${Icon} />`);
@@ -425,7 +446,7 @@ function appSidebarFile(p: SidebarPreset): string {
   } else {
     l.push(`              {section.items.map((item) => (`);
     l.push(`                <SidebarMenuItem key={item.label}>`);
-    if (p.l1Primary === "threads") {
+    if (p.l1Primary === 'threads') {
       l.push(`                  {/* status drives the dot and the screen-reader "unread" text */}`);
       l.push(`                  <SidebarMenuButton`);
       l.push(`                    status={item.status}`);
@@ -441,23 +462,35 @@ function appSidebarFile(p: SidebarPreset): string {
       l.push(`                    icon={icons[item.icon]}`);
       l.push(`                    isActive={item.label === active}`);
       l.push(`                    className={item.children ? "group/parent-row" : undefined}`);
-      l.push(`                    aria-expanded={item.children ? !closedRows[item.label] : undefined}`);
-      l.push(`                    style={item.children ? ({ "--row-gutter": "var(--row-gutter-hover)" } as CSSProperties) : undefined}`);
+      l.push(
+        `                    aria-expanded={item.children ? !closedRows[item.label] : undefined}`,
+      );
+      l.push(
+        `                    style={item.children ? ({ "--row-gutter": "var(--row-gutter-hover)" } as CSSProperties) : undefined}`,
+      );
       l.push(`                    onClick={() =>`);
       l.push(`                      item.children`);
-      l.push(`                        ? setClosedRows((r) => ({ ...r, [item.label]: !r[item.label] }))`);
+      l.push(
+        `                        ? setClosedRows((r) => ({ ...r, [item.label]: !r[item.label] }))`,
+      );
       l.push(`                        : setActive(item.label)`);
       l.push(`                    }`);
       l.push(`                  >`);
       l.push(`                    {item.label}`);
       l.push(`                    {item.children && (`);
-      l.push(`                      <span className="ml-auto -mr-0.5 flex size-6 shrink-0 items-center justify-center">`);
+      l.push(
+        `                      <span className="ml-auto -mr-0.5 flex size-6 shrink-0 items-center justify-center">`,
+      );
       l.push(`                        <motion.span className="inline-flex"`);
       l.push(`                          animate={{ rotate: closedRows[item.label] ? 0 : 90 }}`);
       l.push(`                          transition={spring.fast}>`);
       l.push(`                          <ChevronRightIcon size={16} strokeWidth={1.5}`);
-      l.push(`                            className={\`text-muted-foreground transition-opacity duration-80 \${!closedRows[item.label]`);
-      l.push(`                              ? "opacity-0 group-hover/parent-row:opacity-100 group-focus-within/parent-row:opacity-100"`);
+      l.push(
+        `                            className={\`text-muted-foreground transition-opacity duration-80 \${!closedRows[item.label]`,
+      );
+      l.push(
+        `                              ? "opacity-0 group-hover/parent-row:opacity-100 group-focus-within/parent-row:opacity-100"`,
+      );
       l.push(`                              : "opacity-100"}\`} />`);
       l.push(`                        </motion.span>`);
       l.push(`                      </span>`);
@@ -480,8 +513,8 @@ function appSidebarFile(p: SidebarPreset): string {
       ...rowActionLines(
         p.l1Actions,
         `                  `,
-        nests && p.l1Actions > 0 ? `!item.children` : undefined
-      )
+        nests && p.l1Actions > 0 ? `!item.children` : undefined,
+      ),
     );
     if (nests) {
       l.push(`                  {item.children && (`);
@@ -491,12 +524,14 @@ function appSidebarFile(p: SidebarPreset): string {
       l.push(
         p.l2Icon
           ? `                          <SidebarMenuSubButton icon={icons[child.icon]} href="#">`
-          : `                          <SidebarMenuSubButton href="#">`
+          : `                          <SidebarMenuSubButton href="#">`,
       );
       l.push(`                            {child.label}`);
       l.push(`                          </SidebarMenuSubButton>`);
       if (p.l2Badges) {
-        l.push(`                          {child.badge && <SidebarMenuBadge>{child.badge}</SidebarMenuBadge>}`);
+        l.push(
+          `                          {child.badge && <SidebarMenuBadge>{child.badge}</SidebarMenuBadge>}`,
+        );
       }
       l.push(...rowActionLines(p.l2Actions, `                          `));
       l.push(`                        </SidebarMenuSubItem>`);
@@ -516,11 +551,11 @@ function appSidebarFile(p: SidebarPreset): string {
   if (hasFooter) {
     l.push(``);
     const calloutOnly =
-      hasCallout && p.footerPrimary === "none" && p.footerActions === 0 && p.design === "inset";
+      hasCallout && p.footerPrimary === 'none' && p.footerActions === 0 && p.design === 'inset';
     l.push(
       calloutOnly
         ? `      {/* nothing under the card — it sits flush on the edge */}\n      <SidebarFooter className="pb-0">`
-        : `      <SidebarFooter>`
+        : `      <SidebarFooter>`,
     );
     if (hasCallout) l.push(...calloutLines(p));
     const userRow = (horizontal: boolean, indent: string) => [
@@ -541,19 +576,21 @@ function appSidebarFile(p: SidebarPreset): string {
       `${indent}  }`,
       `${indent}/>`,
     ];
-    if (p.footerStack === "horizontal") {
-      if (p.footerPrimary === "dropdown" || p.footerActions > 0) {
+    if (p.footerStack === 'horizontal') {
+      if (p.footerPrimary === 'dropdown' || p.footerActions > 0) {
         l.push(`        <div className="flex items-center gap-1 pr-1.5">`);
-        if (p.footerPrimary === "dropdown") l.push(...userRow(true, `          `));
+        if (p.footerPrimary === 'dropdown') l.push(...userRow(true, `          `));
         const footerGrouped = p.footerActions > 1;
         const fi = footerGrouped ? `            ` : `          `;
         if (footerGrouped) l.push(`          <TooltipGroup>`);
         for (const a of FOOTER_ACTION_SET.slice(0, p.footerActions)) {
-          const Icon = a.icon === "settings" ? "FooterSettingsIcon" : "MoonIcon";
+          const Icon = a.icon === 'settings' ? 'FooterSettingsIcon' : 'MoonIcon';
           l.push(`${fi}<Tooltip content="${a.label}" side="top">`);
           // The library's own ghost Button, as in the playground: its press
           // and hover are the component's.
-          l.push(`${fi}  <Button variant="ghost" size="icon-compact" aria-label="${a.label}" className="size-6 shrink-0">`);
+          l.push(
+            `${fi}  <Button variant="ghost" size="icon-compact" aria-label="${a.label}" className="size-6 shrink-0">`,
+          );
           l.push(`${fi}    <${Icon} />`);
           l.push(`${fi}  </Button>`);
           l.push(`${fi}</Tooltip>`);
@@ -566,14 +603,14 @@ function appSidebarFile(p: SidebarPreset): string {
         l.push(`        {/* vertical: actions stack above the user row */}`);
         l.push(`        <SidebarMenu aria-label="Footer actions">`);
         for (const a of FOOTER_ACTION_SET.slice(0, p.footerActions)) {
-          const Icon = a.icon === "settings" ? "FooterSettingsIcon" : "MoonIcon";
+          const Icon = a.icon === 'settings' ? 'FooterSettingsIcon' : 'MoonIcon';
           l.push(`          <SidebarMenuItem>`);
           l.push(`            <SidebarMenuButton icon={${Icon}}>${a.label}</SidebarMenuButton>`);
           l.push(`          </SidebarMenuItem>`);
         }
         l.push(`        </SidebarMenu>`);
       }
-      if (p.footerPrimary === "dropdown") l.push(...userRow(false, `        `));
+      if (p.footerPrimary === 'dropdown') l.push(...userRow(false, `        `));
     }
     l.push(`      </SidebarFooter>`);
   }
@@ -581,36 +618,40 @@ function appSidebarFile(p: SidebarPreset): string {
   l.push(`    </Sidebar>`);
   l.push(`  );`);
   l.push(`}`);
-  return l.join("\n") + "\n";
+  return l.join('\n') + '\n';
 }
 
 /** Footer callout(s) — the Card resting one surface step above the rail. */
 function calloutLines(p: SidebarPreset): string[] {
-  const inline = p.footerCallout === "inline";
+  const inline = p.footerCallout === 'inline';
   const l: string[] = [];
   const cardClass = (ind: string, stacked = false) => [
     `${ind}  // Where the callout leads: the whole card is the link.`,
     `${ind}  href="#"`,
-    stacked ? `${ind}  label={\`\${c.title}: \${c.desc}\`}` : `${ind}  label="Aurora 2 is here: longer context, faster agents"`,
+    stacked
+      ? `${ind}  label={\`\${c.title}: \${c.desc}\`}`
+      : `${ind}  label="Aurora 2 is here: longer context, faster agents"`,
     // The icon row drops the card's 60px floor and tightens its inset:
     // there is one line of text beside the icon, nothing to give room to.
     `${ind}  className={\`rounded-xl overflow-hidden transition-[background-color,box-shadow]`,
     `${ind}    duration-80 \${surfaceClasses(level, 2)} \${surfaceHoverClasses(level + 1, 3)}`,
     // A card in the pile drops the floor either way: the pile's height is
     // the front card's.
-    `${ind}    shadow-[var(--shadow-2-inset)] hover:shadow-[var(--shadow-3-inset)]${stacked ? " min-h-0" : ""}${inline ? (stacked ? " pl-2.5" : " min-h-0 pl-2.5") : ""}\`}`,
+    `${ind}    shadow-[var(--shadow-2-inset)] hover:shadow-[var(--shadow-3-inset)]${stacked ? ' min-h-0' : ''}${inline ? (stacked ? ' pl-2.5' : ' min-h-0 pl-2.5') : ''}\`}`,
   ];
   const media = (ind: string, stacked = false) =>
-    p.footerCallout === "banner"
+    p.footerCallout === 'banner'
       ? `${ind}  {/* swap for your artwork */}\n${ind}  <CardImage src="/banner.png" className="aspect-[2/1] max-h-28" />`
       : stacked
         ? // Full color on the glyph; the tinted tile carries the step.
           `${ind}  <CardMedia icon={icons[c.icon]} size={18} className={\`\${CALLOUT_TILE_TINTS[CALLOUTS.findIndex((x) => x.id === c.id)] ?? CALLOUT_TILE_TINTS[2]} [&_svg]:text-[#6B97FF]\`} />`
         : `${ind}  <CardMedia icon={CalloutIcon} size={18} />`;
   const header = (ind: string, dynamic: boolean) => [
-    inline ? `${ind}  <CardHeader className="gap-[2px] py-3">` : `${ind}  <CardHeader className="gap-0 pt-3">`,
-    `${ind}    <CardTitle className="truncate">${dynamic ? "{c.title}" : "Aurora 2 is here"}</CardTitle>`,
-    `${ind}    <CardDescription className="truncate text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)]">${dynamic ? "{c.desc}" : "Longer context, faster agents"}</CardDescription>`,
+    inline
+      ? `${ind}  <CardHeader className="gap-[2px] py-3">`
+      : `${ind}  <CardHeader className="gap-0 pt-3">`,
+    `${ind}    <CardTitle className="truncate">${dynamic ? '{c.title}' : 'Aurora 2 is here'}</CardTitle>`,
+    `${ind}    <CardDescription className="truncate text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)]">${dynamic ? '{c.desc}' : 'Longer context, faster agents'}</CardDescription>`,
     `${ind}  </CardHeader>`,
   ];
   if (!p.footerCalloutStacked) {
@@ -630,16 +671,20 @@ function calloutLines(p: SidebarPreset): string[] {
     return l;
   }
   l.push(`        {/* sonner-style pile: cards peek 12px apiece behind the front one,`);
-  l.push(`            scaling 0.05 a step, two peeks max${inline ? "; hover fans it out" : ""} */}`);
+  l.push(
+    `            scaling 0.05 a step, two peeks max${inline ? '; hover fans it out' : ''} */}`,
+  );
   l.push(`        <m.div className="relative"`);
   l.push(
     inline
       ? `          animate={{ height: expanded ? expandedH : collapsedH }}`
-      : `          animate={{ height: collapsedH }}`
+      : `          animate={{ height: collapsedH }}`,
   );
   l.push(`          transition={{ ...spring.moderate, bounce: 0 }}`);
   if (inline) {
-    l.push(`          onMouseEnter={() => setExpanded(true)} onMouseLeave={() => setExpanded(false)}`);
+    l.push(
+      `          onMouseEnter={() => setExpanded(true)} onMouseLeave={() => setExpanded(false)}`,
+    );
   }
   l.push(`        >`);
   l.push(`          <AnimatePresence initial={false}>`);
@@ -650,11 +695,13 @@ function calloutLines(p: SidebarPreset): string[] {
   l.push(
     inline
       ? `                animate={expanded\n                  ? { y: -i * (cardH + 4), scale: 1, opacity: 1 }\n                  : { y: -Math.min(i, 2) * 12, scale: 1 - Math.min(i, 2) * 0.05,\n                      opacity: i <= 2 ? 1 : 0 }}`
-      : `                animate={{ y: -Math.min(i, 2) * 12, scale: 1 - Math.min(i, 2) * 0.05,\n                  opacity: i <= 2 ? 1 : 0 }}`
+      : `                animate={{ y: -Math.min(i, 2) * 12, scale: 1 - Math.min(i, 2) * 0.05,\n                  opacity: i <= 2 ? 1 : 0 }}`,
   );
   l.push(`                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.12 } }}`);
   l.push(`                transition={spring.moderate}`);
-  l.push(`                ref={i === 0 ? (el) => { if (el) setCardH(el.offsetHeight); } : undefined}`);
+  l.push(
+    `                ref={i === 0 ? (el) => { if (el) setCardH(el.offsetHeight); } : undefined}`,
+  );
   l.push(`              >`);
   if (inline) l.push(`                <CardGroup orientation="inline" fluidHover={false}>`);
   const ind = inline ? `                ` : `              `;
@@ -675,15 +722,15 @@ function calloutLines(p: SidebarPreset): string[] {
 function pageFile(p: SidebarPreset): string {
   const l: string[] = [];
   const providers: [string, string][] = [];
-  if (p.shape !== "rounded") providers.push(["ShapeProvider", ` defaultShape="${p.shape}"`]);
-  if (p.size === "compact") providers.push(["SizeProvider", ` size="compact"`]);
+  if (p.shape !== 'rounded') providers.push(['ShapeProvider', ` defaultShape="${p.shape}"`]);
+  if (p.size === 'compact') providers.push(['SizeProvider', ` size="compact"`]);
   l.push(`"use client";`);
   l.push(``);
-  l.push(`import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";`);
-  l.push(`import { AppSidebar } from "@/components/sidebar-preset/app-sidebar";`);
-  l.push(`import { SidebarInsetTopbar } from "@/components/sidebar-app/inset-topbar";`);
-  if (p.shape !== "rounded") l.push(`import { ShapeProvider } from "@/lib/shape-context";`);
-  if (p.size === "compact") l.push(`import { SizeProvider } from "@/lib/size-context";`);
+  l.push(`import { SidebarProvider, SidebarInset } from "#components/ui/sidebar";`);
+  l.push(`import { AppSidebar } from "#components/sidebar-preset/app-sidebar";`);
+  l.push(`import { SidebarInsetTopbar } from "#components/sidebar-app/inset-topbar";`);
+  if (p.shape !== 'rounded') l.push(`import { ShapeProvider } from "#lib/shape-context";`);
+  if (p.size === 'compact') l.push(`import { SizeProvider } from "#lib/size-context";`);
   l.push(``);
   l.push(`// Generated from a fluidfunctionalism.com playground preset.`);
   l.push(`// State persists to the "sidebar_state" cookie — read it in a server`);
@@ -698,7 +745,7 @@ function pageFile(p: SidebarPreset): string {
     ind += `  `;
   }
   l.push(
-    `${ind}<SidebarProvider${p.collapsedBehavior !== "none" ? ` peek="${p.collapsedBehavior}"` : ""}${p.state === "closed" ? ` defaultOpen={false}` : ""}>`
+    `${ind}<SidebarProvider${p.collapsedBehavior !== 'none' ? ` peek="${p.collapsedBehavior}"` : ''}${p.state === 'closed' ? ` defaultOpen={false}` : ''}>`,
   );
   l.push(`${ind}  <AppSidebar />`);
   l.push(`${ind}  <SidebarInset>`);
@@ -712,27 +759,27 @@ function pageFile(p: SidebarPreset): string {
   }
   l.push(`  );`);
   l.push(`}`);
-  return l.join("\n") + "\n";
+  return l.join('\n') + '\n';
 }
 
 export function generateSidebarPresetFiles(p: SidebarPreset): PresetFile[] {
   return [
     {
       path: `${DIR}/nav-data.ts`,
-      type: "registry:component",
+      type: 'registry:component',
       target: `${DIR}/nav-data.ts`,
       content: navDataFile(p),
     },
     {
       path: `${DIR}/app-sidebar.tsx`,
-      type: "registry:component",
+      type: 'registry:component',
       target: `${DIR}/app-sidebar.tsx`,
       content: appSidebarFile(p),
     },
     {
-      path: "app/sidebar/page.tsx",
-      type: "registry:page",
-      target: "app/sidebar/page.tsx",
+      path: 'app/sidebar/page.tsx',
+      type: 'registry:page',
+      target: 'app/sidebar/page.tsx',
       content: pageFile(p),
     },
   ];
@@ -741,35 +788,44 @@ export function generateSidebarPresetFiles(p: SidebarPreset): PresetFile[] {
 /** Registry dependencies the generated files need, as plain names — the
  *  route flavors them with the same helpers postbuild uses. */
 export function presetRegistryDeps(p: SidebarPreset): string[] {
-  const deps = new Set<string>(["utils", "icon-context", "size-context", "sidebar", "tooltip", "key-cap", "sidebar-inset-topbar"]);
-  if (p.headerPrimary !== "none") deps.add("sidebar-workspace-header");
-  if (p.footerPrimary === "dropdown") deps.add("sidebar-user-footer");
-  if (p.headerStack === "vertical") deps.add("sidebar-search-field");
+  const deps = new Set<string>([
+    'utils',
+    'icon-context',
+    'size-context',
+    'sidebar',
+    'tooltip',
+    'key-cap',
+    'sidebar-inset-topbar',
+  ]);
+  if (p.headerPrimary !== 'none') deps.add('sidebar-workspace-header');
+  if (p.footerPrimary === 'dropdown') deps.add('sidebar-user-footer');
+  if (p.headerStack === 'vertical') deps.add('sidebar-search-field');
   if (
-    p.headerPrimary === "dropdown" ||
-    p.footerPrimary === "dropdown" ||
+    p.headerPrimary === 'dropdown' ||
+    p.footerPrimary === 'dropdown' ||
     p.l1Actions > 0 ||
-    (p.l1Primary === "menu" && p.l1Children && p.l2Actions > 0)
+    (p.l1Primary === 'menu' && p.l1Children && p.l2Actions > 0)
   ) {
-    deps.add("dropdown");
+    deps.add('dropdown');
   }
-  if (p.footerCallout !== "none") {
-    deps.add("card");
-    deps.add("surface-classes");
-    deps.add("surface-context");
-    deps.add("springs");
+  if (p.footerCallout !== 'none') {
+    deps.add('card');
+    deps.add('surface-classes');
+    deps.add('surface-context');
+    deps.add('springs');
   }
-  if (p.l1Primary === "menu" && p.l1Children) deps.add("springs");
-  if (p.headerStack === "horizontal" || (p.footerStack === "horizontal" && p.footerActions > 0)) deps.add("button");
-  if (p.shape !== "rounded") deps.add("shape-context");
+  if (p.l1Primary === 'menu' && p.l1Children) deps.add('springs');
+  if (p.headerStack === 'horizontal' || (p.footerStack === 'horizontal' && p.footerActions > 0))
+    deps.add('button');
+  if (p.shape !== 'rounded') deps.add('shape-context');
   return [...deps];
 }
 
 /** npm dependencies beyond what registryDependencies pull transitively. */
 export function presetNpmDeps(p: SidebarPreset): string[] {
-  const deps = new Set<string>(["lucide-react"]);
-  if ((p.l1Primary === "menu" && p.l1Children) || p.footerCalloutStacked) {
-    deps.add("motion");
+  const deps = new Set<string>(['lucide-react']);
+  if ((p.l1Primary === 'menu' && p.l1Children) || p.footerCalloutStacked) {
+    deps.add('motion');
   }
   return [...deps];
 }

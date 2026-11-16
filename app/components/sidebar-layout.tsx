@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { inKeyboardScope } from "@/lib/keyboard-scope";
-import { useEffect, useRef, type ReactNode } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { spring } from "@/registry/default/lib/springs";
+import { inKeyboardScope } from '#lib/keyboard-scope';
+import { useEffect, useRef, type ReactNode } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { spring } from '#registry/default/lib/springs';
 import {
   SidebarProvider,
   SidebarTrigger,
   SidebarInset,
   useSidebar,
-} from "@/components/flavored/sidebar";
-import { SiteSidebar } from "@/app/components/sidebar";
-import { SiteCommandMenu, SiteCommandMenuProvider } from "@/app/components/site-command-menu";
-import { RightPanel } from "@/app/components/right-panel";
-import { RightRailProvider } from "@/lib/right-rail";
-import { ReleaseMarksProvider, type ReleaseMarks } from "@/lib/changelog/marks";
-import { showShortcutToast } from "@/lib/docs/settings-toast";
-import { systemNavList, componentList } from "@/lib/docs/components";
+} from '#components/flavored/sidebar';
+import { SiteSidebar } from '#app/components/sidebar';
+import { SiteCommandMenu, SiteCommandMenuProvider } from '#app/components/site-command-menu';
+import { RightPanel } from '#app/components/right-panel';
+import { RightRailProvider } from '#lib/right-rail';
+import { ReleaseMarksProvider, type ReleaseMarks } from '#lib/changelog/marks';
+import { showShortcutToast } from '#lib/docs/settings-toast';
+import { systemNavList, componentList } from '#lib/docs/components';
 
 const pageOrder = [
-  "/",
-  "/docs",
-  "/changelog",
+  '/',
+  '/docs',
+  '/changelog',
   ...systemNavList.map((s) => `/docs/${s.slug}`),
   ...componentList.map((c) => `/docs/${c.slug}`),
 ];
@@ -38,19 +38,19 @@ function SidebarShortcutToast() {
     const onKeyDown = (e: KeyboardEvent) => {
       // Keys typed in a preview belong to the component in it.
       if (inKeyboardScope(e.target)) return;
-      if (e.key !== "[") return;
+      if (e.key !== '[') return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const target = e.target instanceof HTMLElement ? e.target : null;
       if (
-        target?.tagName === "INPUT" ||
-        target?.tagName === "TEXTAREA" ||
+        target?.tagName === 'INPUT' ||
+        target?.tagName === 'TEXTAREA' ||
         target?.isContentEditable
       )
         return;
       pendingAtRef.current = e.timeStamp;
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, []);
   const prevOpenRef = useRef<boolean | null>(null);
   useEffect(() => {
@@ -60,7 +60,7 @@ function SidebarShortcutToast() {
     const at = pendingAtRef.current;
     if (at === null || performance.now() - at > 300) return;
     pendingAtRef.current = null;
-    showShortcutToast("[", open ? "Sidebar expanded" : "Sidebar collapsed");
+    showShortcutToast('[', open ? 'Sidebar expanded' : 'Sidebar collapsed');
   }, [open]);
   return null;
 }
@@ -117,16 +117,20 @@ interface SidebarLayoutProps {
   marks?: ReleaseMarks;
 }
 
-export function SidebarLayout({ children, defaultOpen = true, marks = NO_MARKS }: SidebarLayoutProps) {
+export function SidebarLayout({
+  children,
+  defaultOpen = true,
+  marks = NO_MARKS,
+}: SidebarLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const isFullscreen =
-    pathname === "/demo" ||
-    pathname === "/compare" ||
-    pathname === "/stars" ||
-    pathname === "/og" ||
-    pathname.startsWith("/og/") ||
-    pathname.startsWith("/concepts");
+    pathname === '/demo' ||
+    pathname === '/compare' ||
+    pathname === '/stars' ||
+    pathname === '/og' ||
+    pathname.startsWith('/og/') ||
+    pathname.startsWith('/concepts');
 
   // Arrow key navigation between pages — ref-based so held keys keep advancing
   // (closures over `pathname` would re-bind per nav and lose key-repeat events).
@@ -139,36 +143,37 @@ export function SidebarLayout({ children, defaultOpen = true, marks = NO_MARKS }
     function handleKeyDown(e: KeyboardEvent) {
       // Keys typed in a preview belong to the component in it.
       if (inKeyboardScope(e.target)) return;
-      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
       if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
       // A component already used this key (a DataTable resize handle).
       if (e.defaultPrevented) return;
 
       const tag = (e.target as HTMLElement).tagName;
-      const role = (e.target as HTMLElement).getAttribute("role");
+      const role = (e.target as HTMLElement).getAttribute('role');
       if (
-        tag === "INPUT" ||
-        tag === "TEXTAREA" ||
-        tag === "SELECT" ||
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
         (e.target as HTMLElement).isContentEditable ||
-        role === "slider" ||
-        role === "separator" ||
-        role === "tablist" ||
-        role === "radiogroup" ||
-        role === "listbox" ||
-        role === "menu"
-      ) return;
+        role === 'slider' ||
+        role === 'separator' ||
+        role === 'tablist' ||
+        role === 'radiogroup' ||
+        role === 'listbox' ||
+        role === 'menu'
+      )
+        return;
 
       // Also skip if focus is inside a component that uses arrow keys
       const closest = (e.target as HTMLElement).closest(
-        "[role=slider],[role=tablist],[role=radiogroup],[role=listbox],[role=menu],[role=menubar]"
+        '[role=slider],[role=tablist],[role=radiogroup],[role=listbox],[role=menu],[role=menubar]',
       );
       if (closest) return;
 
       const currentIndex = expectedIndexRef.current;
       if (currentIndex === -1) return;
 
-      const nextIndex = e.key === "ArrowLeft" ? currentIndex - 1 : currentIndex + 1;
+      const nextIndex = e.key === 'ArrowLeft' ? currentIndex - 1 : currentIndex + 1;
       if (nextIndex < 0 || nextIndex >= pageOrder.length) return;
 
       e.preventDefault();
@@ -176,62 +181,62 @@ export function SidebarLayout({ children, defaultOpen = true, marks = NO_MARKS }
       router.push(pageOrder[nextIndex]);
     }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [router]);
 
   if (isFullscreen) {
     return (
       <ReleaseMarksProvider marks={marks}>
-      <SiteCommandMenuProvider>
-        <SiteCommandMenu />
-        <main className="min-h-screen">
-          {children}
-        </main>
-      </SiteCommandMenuProvider>
+        <SiteCommandMenuProvider>
+          <SiteCommandMenu />
+          <main className="min-h-screen">{children}</main>
+        </SiteCommandMenuProvider>
       </ReleaseMarksProvider>
     );
   }
 
   return (
     <ReleaseMarksProvider marks={marks}>
-    <SiteCommandMenuProvider>
-    {/* ⌘K anywhere: every page and setting in one field. */}
-    <SiteCommandMenu />
-    <RightRailProvider>
-      {/* The Sidebar component, dogfooded: the provider owns the desktop
+      <SiteCommandMenuProvider>
+        {/* ⌘K anywhere: every page and setting in one field. */}
+        <SiteCommandMenu />
+        <RightRailProvider>
+          {/* The Sidebar component, dogfooded: the provider owns the desktop
           collapse (⌘B + cookie persistence via app/layout.tsx) and the
           mobile sheet. The site switches rail ↔ sheet at xl, so the
           breakpoint is 1280 instead of the component's 768 default. */}
-      <SidebarProvider defaultOpen={defaultOpen} mobileBreakpoint={1280} className="min-h-screen">
-        <SiteSidebar />
-        <CloseSheetOnNavigate />
+          <SidebarProvider
+            defaultOpen={defaultOpen}
+            mobileBreakpoint={1280}
+            className="min-h-screen"
+          >
+            <SiteSidebar />
+            <CloseSheetOnNavigate />
 
-        {/* Mobile trigger for the sheet; desktop collapse uses [ or the rail.
+            {/* Mobile trigger for the sheet; desktop collapse uses [ or the rail.
             It floats over the page, so a blurred page-colored ground keeps
             the icon legible over headings scrolling under it. */}
-        <SidebarTrigger
-          className="xl:hidden fixed top-4 left-4 z-[calc(var(--z-sticky,30)+1)] bg-background/70 backdrop-blur-md"
-          aria-label="Open navigation"
-        />
-        <DesktopReopenTrigger />
-        <SidebarShortcutToast />
+            <SidebarTrigger
+              className="xl:hidden fixed top-4 left-4 z-[calc(var(--z-sticky,30)+1)] bg-background/70 backdrop-blur-md"
+              aria-label="Open navigation"
+            />
+            <DesktopReopenTrigger />
+            <SidebarShortcutToast />
 
-        {/* Main content */}
-        <SidebarInset className="min-w-0">
-          {children}
-        </SidebarInset>
+            {/* Main content */}
+            <SidebarInset className="min-w-0">{children}</SidebarInset>
 
-        {/* Desktop right panel. The 404 page hides it with a style tag of
+            {/* Desktop right panel. The 404 page hides it with a style tag of
             its own (app/not-found.tsx), not a `:has()` on this wrapper:
             that one made the browser restyle the whole page whenever
             anything mounted inside it (every menu, tooltip and popover). */}
-        <div data-site-right-panel className="contents">
-          <RightPanel />
-        </div>
-      </SidebarProvider>
-    </RightRailProvider>
-    </SiteCommandMenuProvider>
+            <div data-site-right-panel className="contents">
+              <RightPanel />
+            </div>
+          </SidebarProvider>
+        </RightRailProvider>
+      </SiteCommandMenuProvider>
     </ReleaseMarksProvider>
   );
 }

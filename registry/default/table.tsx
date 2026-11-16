@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useCallback,
@@ -16,24 +16,24 @@ import {
   type HTMLAttributes,
   type TdHTMLAttributes,
   type ThHTMLAttributes,
-} from "react";
-import { createPortal } from "react-dom";
-import { cn } from "@/lib/utils";
-import { fontWeights } from "@/lib/font-weight";
-import { SizeProvider, useSize, type SizeVariant } from "@/lib/size-context";
+} from 'react';
+import { createPortal } from 'react-dom';
+import { cn } from '#lib/utils';
+import { fontWeights } from '#lib/font-weight';
+import { SizeProvider, useSize, type SizeVariant } from '#lib/size-context';
 import {
   useFluidHover,
   useFluidHoverSelect,
   useRegisterFluidHoverItem,
   type FluidHoverActiveStore,
-} from "@/hooks/use-fluid-hover";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
-import { useShape } from "@/lib/shape-context";
+} from '#hooks/use-fluid-hover';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
+import { useShape } from '#lib/shape-context';
 import {
   SelectionBackgrounds,
   useMergeSplitBlocks,
   useSelectionRuns,
-} from "@/hooks/use-merge-split";
+} from '#hooks/use-merge-split';
 
 // ---------------------------------------------------------------------------
 // Table is a plain HTML table with one fluid hover highlight drawn behind all
@@ -98,10 +98,25 @@ interface TableProps extends HTMLAttributes<HTMLTableElement> {
 const NO_SELECTION: readonly number[] = [];
 
 /** Dispatched (bubbling) from a row to move the table's highlight onto it. */
-const TABLE_HIGHLIGHT_EVENT = "fluid-table-highlight";
+const TABLE_HIGHLIGHT_EVENT = 'fluid-table-highlight';
 
 const Table = forwardRef<HTMLTableElement, TableProps>(
-  ({ children, size, selectedIndices = NO_SELECTION, snapKey, hideHeadHighlight = false, heldHeadIndex = null, hoverMarker, onHighlightFrame, selectionMirrors, className, ...props }, ref) => {
+  (
+    {
+      children,
+      size,
+      selectedIndices = NO_SELECTION,
+      snapKey,
+      hideHeadHighlight = false,
+      heldHeadIndex = null,
+      hoverMarker,
+      onHighlightFrame,
+      selectionMirrors,
+      className,
+      ...props
+    },
+    ref,
+  ) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const sizeClasses = useSize(size);
 
@@ -111,15 +126,9 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
     // Header cells that act (sort, move) share a second scope: one fill
     // glides along the header row the way the row highlight runs down the
     // body. Only the cell under the pointer lights.
-    const headHover = useFluidHover(containerRef, { axis: "x" });
+    const headHover = useFluidHover(containerRef, { axis: 'x' });
     const registerHead = headHover.registerItem;
-    const {
-      activeStore,
-      handlers,
-      registerItem,
-      itemRects,
-      setActiveIndex,
-    } = hover;
+    const { activeStore, handlers, registerItem, itemRects, setActiveIndex } = hover;
 
     // The same merged, merge/split-animated selection CheckboxGroup draws.
     const shape = useShape();
@@ -173,8 +182,8 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
       if (!container) return;
       const claim = (e: Event) => {
         const index = (e.target as HTMLElement | null)
-          ?.closest?.("[data-fluid-hover-index]")
-          ?.getAttribute("data-fluid-hover-index");
+          ?.closest?.('[data-fluid-hover-index]')
+          ?.getAttribute('data-fluid-hover-index');
         if (index == null) return;
         keyboardOwns.current = true;
         setActiveIndex(Number(index));
@@ -188,10 +197,10 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
     // focused one; a single press, and the pointer, still glide.
     const [repeating, setRepeating] = useState(false);
 
-    const selectedKey = selectedIndices.join(",");
+    const selectedKey = selectedIndices.join(',');
     const selected = useMemo(
-      () => new Set(selectedKey ? selectedKey.split(",").map(Number) : []),
-      [selectedKey]
+      () => new Set(selectedKey ? selectedKey.split(',').map(Number) : []),
+      [selectedKey],
     );
 
     // A selection change switches its rows' rules in the same frame as
@@ -203,12 +212,12 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
     useInsertionEffect(() => {
       const container = containerRef.current;
       if (!container) return;
-      container.setAttribute("data-snap-rules", "");
+      container.setAttribute('data-snap-rules', '');
       // Two frames: the next frame's callbacks run before that frame's
       // styles are computed, so a mark removed there may never have been
       // seen (nothing between here and then need read layout).
       let frame = requestAnimationFrame(() => {
-        frame = requestAnimationFrame(() => container.removeAttribute("data-snap-rules"));
+        frame = requestAnimationFrame(() => container.removeAttribute('data-snap-rules'));
       });
       return () => cancelAnimationFrame(frame);
     }, [selectedKey]);
@@ -235,7 +244,7 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
     }, [children]);
     useEffect(() => {
       const container = containerRef.current;
-      if (!container || typeof ResizeObserver === "undefined") return;
+      if (!container || typeof ResizeObserver === 'undefined') return;
       const drop = () => {
         ruleEdges.current = null;
       };
@@ -243,7 +252,9 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
       sizes.observe(container);
       // Rows coming and going (not what the fill carries beside the table).
       const rows = new MutationObserver(drop);
-      container.querySelectorAll("thead, tbody").forEach((part) => rows.observe(part, { childList: true }));
+      container
+        .querySelectorAll('thead, tbody')
+        .forEach((part) => rows.observe(part, { childList: true }));
       return () => {
         sizes.disconnect();
         rows.disconnect();
@@ -255,7 +266,7 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
       if (!ruleEdges.current) {
         let top: number | null = null;
         ruleEdges.current = Array.from(
-          container.querySelectorAll<HTMLTableRowElement>("thead > tr, tbody > tr")
+          container.querySelectorAll<HTMLTableRowElement>('thead > tr, tbody > tr'),
         ).map((tr) => ({
           tr,
           bottom:
@@ -270,7 +281,7 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
         // Written only when it changes: the attribute restyles the row's cells.
         if (ruleState.current.get(tr) === on) continue;
         ruleState.current.set(tr, on);
-        tr.toggleAttribute("data-under-highlight", on);
+        tr.toggleAttribute('data-under-highlight', on);
       }
     }, []);
 
@@ -287,13 +298,15 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
         hideCoveredRules(box);
         frameRef.current?.(box);
       },
-      [hideCoveredRules]
+      [hideCoveredRules],
     );
 
     // The cell holding an open popup keeps the fill; else the hovered one.
     const shownHead = heldHeadIndex ?? headHover.activeIndex;
     const headCell =
-      !hideHeadHighlight && headHover.isMeasured && shownHead !== null ? headHover.itemRects[shownHead] : undefined;
+      !hideHeadHighlight && headHover.isMeasured && shownHead !== null
+        ? headHover.itemRects[shownHead]
+        : undefined;
     const headRect = headCell ? { ...headCell, height: headCell.height - 1 } : null;
     // A header cell in the gliding scope held down, while the pointer is
     // still on it: its fill shows pressed. Slid onto a neighbor before
@@ -304,17 +317,17 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
     useEffect(() => {
       if (pressedHead === null) return;
       const release = () => setPressedHead(null);
-      window.addEventListener("pointerup", release);
-      window.addEventListener("pointercancel", release);
+      window.addEventListener('pointerup', release);
+      window.addEventListener('pointercancel', release);
       return () => {
-        window.removeEventListener("pointerup", release);
-        window.removeEventListener("pointercancel", release);
+        window.removeEventListener('pointerup', release);
+        window.removeEventListener('pointercancel', release);
       };
     }, [pressedHead]);
 
     const contextValue = useMemo(
       () => ({ registerItem, activeStore, selected, registerHead }),
-      [registerItem, activeStore, selected, registerHead]
+      [registerItem, activeStore, selected, registerHead],
     );
 
     const table = (
@@ -338,20 +351,22 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
           }}
           onPointerDown={(e) => {
             if (e.button !== 0) return;
-            const th = (e.target as HTMLElement).closest("th[data-head-hover]");
+            const th = (e.target as HTMLElement).closest('th[data-head-hover]');
             if (th && containerRef.current?.contains(th)) setHeadPressed(true);
           }}
           onClick={handlers.onClick}
           onKeyDown={(e) => {
-            if (e.repeat && !repeating && e.key.startsWith("Arrow")) setRepeating(true);
+            if (e.repeat && !repeating && e.key.startsWith('Arrow')) setRepeating(true);
           }}
           onKeyUp={() => repeating && setRepeating(false)}
           // Keyboard focus moves the highlight too: a row holding focus (or
           // a control in it) looks hovered, so the fill is its focus mark.
           onFocus={(e) => {
             const target = e.target as HTMLElement;
-            if (!target.matches(":focus-visible")) return;
-            const index = target.closest("[data-fluid-hover-index]")?.getAttribute("data-fluid-hover-index");
+            if (!target.matches(':focus-visible')) return;
+            const index = target
+              .closest('[data-fluid-hover-index]')
+              ?.getAttribute('data-fluid-hover-index');
             if (index == null) return;
             keyboardOwns.current = true;
             setActiveIndex(Number(index));
@@ -360,18 +375,22 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
             const container = containerRef.current;
             if (!container || container.contains(e.relatedTarget as Node)) return;
             // The pointer keeps the highlight it's over.
-            if (!container.matches(":hover")) setActiveIndex(null);
+            if (!container.matches(':hover')) setActiveIndex(null);
             setRepeating(false);
           }}
         >
           {/* Selected backgrounds, merged per contiguous run */}
           {/* Keyed by the snap, so a block that leaves in a snap goes at
               once instead of fading from where the rows no longer are. */}
-          <SelectionBackgrounds key={String(snap.key ?? "")} blocks={blocks} />
+          <SelectionBackgrounds key={String(snap.key ?? '')} blocks={blocks} />
           {selectionMirrors?.map(
             (el, i) =>
               el &&
-              createPortal(<SelectionBackgrounds key={String(snap.key ?? "")} blocks={blocks} />, el, `mirror-${i}`)
+              createPortal(
+                <SelectionBackgrounds key={String(snap.key ?? '')} blocks={blocks} />,
+                el,
+                `mirror-${i}`,
+              ),
           )}
 
           {/* Hover background, rounded by the shape setting like the
@@ -385,7 +404,7 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
             hover={snap.on ? { ...hover, isMeasured: true } : hover}
             // Named, so a table can tell the rows' fill from the header's
             // (DataTable hides this one while a cell's text is edited).
-            className={cn(shape.bg, "table-row-highlight")}
+            className={cn(shape.bg, 'table-row-highlight')}
             transition={repeating || snap.on ? false : undefined}
             onFrame={onHighlightBox}
           >
@@ -397,7 +416,11 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
           <FluidHoverHighlight
             rect={headRect}
             session={headHover.session}
-            className={cn(shape.bg, "transition-[background-color] duration-80", (headPressed || heldHeadIndex !== null) && "bg-active")}
+            className={cn(
+              shape.bg,
+              'transition-[background-color] duration-80',
+              (headPressed || heldHeadIndex !== null) && 'bg-active',
+            )}
           />
 
           <table
@@ -408,10 +431,12 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
               // Separate borders, each cell drawing its own divider, so a
               // sticky cell paints over the dividers scrolling under it
               // (collapsed borders paint over every cell).
-              "w-full border-separate border-spacing-0",
-              sizeClasses.variant === "compact" ? "[--table-cell-py:5px]" : "[--table-cell-py:--spacing(2)]",
+              'w-full border-separate border-spacing-0',
+              sizeClasses.variant === 'compact'
+                ? '[--table-cell-py:5px]'
+                : '[--table-cell-py:--spacing(2)]',
               sizeClasses.text,
-              className
+              className,
             )}
             {...props}
           >
@@ -423,32 +448,26 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
 
     // A size prop pins every cell to one ladder step (cells read the context).
     return size ? <SizeProvider size={size}>{table}</SizeProvider> : table;
-  }
+  },
 );
 
-Table.displayName = "Table";
+Table.displayName = 'Table';
 
 // ── TableHeader ──────────────────────────────────────────
 
-const TableHeader = forwardRef<
-  HTMLTableSectionElement,
-  HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn("", className)} {...props} />
-));
+const TableHeader = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(
+  ({ className, ...props }, ref) => <thead ref={ref} className={cn('', className)} {...props} />,
+);
 
-TableHeader.displayName = "TableHeader";
+TableHeader.displayName = 'TableHeader';
 
 // ── TableBody ────────────────────────────────────────────
 
-const TableBody = forwardRef<
-  HTMLTableSectionElement,
-  HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <tbody ref={ref} className={cn("", className)} {...props} />
-));
+const TableBody = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(
+  ({ className, ...props }, ref) => <tbody ref={ref} className={cn('', className)} {...props} />,
+);
 
-TableBody.displayName = "TableBody";
+TableBody.displayName = 'TableBody';
 
 // ── TableRow ─────────────────────────────────────────────
 
@@ -486,36 +505,34 @@ const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
       <tr
         ref={(node) => {
           (internalRef as React.MutableRefObject<HTMLTableRowElement | null>).current = node;
-          if (typeof ref === "function") ref(node);
+          if (typeof ref === 'function') ref(node);
           else if (ref) (ref as React.MutableRefObject<HTMLTableRowElement | null>).current = node;
         }}
         data-fluid-hover-index={index}
         // Borders fade over 80ms instead of popping as the highlight moves.
         // `is-active` lets every cell read the lit state through the row.
         className={cn(
-          "group/row relative z-10 *:border-b *:transition-[border-color] *:duration-80",
-          "group-data-snap-rules/table:*:duration-0",
+          'group/row relative z-10 *:border-b *:transition-[border-color] *:duration-80',
+          'group-data-snap-rules/table:*:duration-0',
           hideBorder
-            ? "*:border-transparent"
-            : "*:border-accent/40 data-[under-highlight]:*:border-transparent data-[under-highlight]:*:duration-0",
-          lit && "is-active",
-          className
+            ? '*:border-transparent'
+            : '*:border-accent/40 data-[under-highlight]:*:border-transparent data-[under-highlight]:*:duration-0',
+          lit && 'is-active',
+          className,
         )}
         // Weight goes through the variable font's axis with the same values
         // every component uses: semibold header, normal body.
         style={{
           ...style,
-          fontVariationSettings: isBodyRow
-            ? fontWeights.normal
-            : fontWeights.semibold,
+          fontVariationSettings: isBodyRow ? fontWeights.normal : fontWeights.semibold,
         }}
         {...props}
       />
     );
-  }
+  },
 );
 
-TableRow.displayName = "TableRow";
+TableRow.displayName = 'TableRow';
 
 // ── TableHead ────────────────────────────────────────────
 
@@ -525,61 +542,62 @@ interface TableHeadProps extends ThHTMLAttributes<HTMLTableCellElement> {
   hoverIndex?: number;
 }
 
-const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(({ hoverIndex, className, ...props }, ref) => {
-  const sizeClasses = useSize();
-  const ctx = useContext(TableContext);
-  const internalRef = useRef<HTMLTableCellElement>(null);
-  useRegisterFluidHoverItem(ctx?.registerHead, hoverIndex, internalRef);
-  return (
-    <th
-      ref={(node) => {
-        internalRef.current = node;
-        if (typeof ref === "function") ref(node);
-        else if (ref) ref.current = node;
-      }}
-      data-head-hover={hoverIndex !== undefined || undefined}
-      className={cn(
-        "text-left text-foreground",
-        // py + line box lands the row on the ladder (36px / 28px).
-        "py-(--table-cell-py)",
-        sizeClasses.variant === "compact" ? "px-2.5" : "px-3",
-        className
-      )}
-      {...props}
-    />
-  );
-});
+const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
+  ({ hoverIndex, className, ...props }, ref) => {
+    const sizeClasses = useSize();
+    const ctx = useContext(TableContext);
+    const internalRef = useRef<HTMLTableCellElement>(null);
+    useRegisterFluidHoverItem(ctx?.registerHead, hoverIndex, internalRef);
+    return (
+      <th
+        ref={(node) => {
+          internalRef.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
+        data-head-hover={hoverIndex !== undefined || undefined}
+        className={cn(
+          'text-left text-foreground',
+          // py + line box lands the row on the ladder (36px / 28px).
+          'py-(--table-cell-py)',
+          sizeClasses.variant === 'compact' ? 'px-2.5' : 'px-3',
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
 
-TableHead.displayName = "TableHead";
+TableHead.displayName = 'TableHead';
 
 // ── TableCell ────────────────────────────────────────────
 
-const TableCell = forwardRef<
-  HTMLTableCellElement,
-  TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => {
-  const sizeClasses = useSize();
-  return (
-    <td
-      ref={ref}
-      // Muted at rest, foreground on the lit row, on the same 80ms as the
-      // border fade. Same padding as TableHead so every row shares a height.
-      className={cn(
-        "text-muted-foreground transition-colors duration-80 group-[.is-active]/row:text-foreground",
-        "py-(--table-cell-py)",
-        sizeClasses.variant === "compact" ? "px-2.5" : "px-3",
-        className
-      )}
-      {...props}
-    />
-  );
-});
+const TableCell = forwardRef<HTMLTableCellElement, TdHTMLAttributes<HTMLTableCellElement>>(
+  ({ className, ...props }, ref) => {
+    const sizeClasses = useSize();
+    return (
+      <td
+        ref={ref}
+        // Muted at rest, foreground on the lit row, on the same 80ms as the
+        // border fade. Same padding as TableHead so every row shares a height.
+        className={cn(
+          'text-muted-foreground transition-colors duration-80 group-[.is-active]/row:text-foreground',
+          'py-(--table-cell-py)',
+          sizeClasses.variant === 'compact' ? 'px-2.5' : 'px-3',
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
 
-TableCell.displayName = "TableCell";
+TableCell.displayName = 'TableCell';
 
 // ── TableEmpty ───────────────────────────────────────────
 
-interface TableEmptyProps extends Omit<HTMLAttributes<HTMLTableRowElement>, "title"> {
+interface TableEmptyProps extends Omit<HTMLAttributes<HTMLTableRowElement>, 'title'> {
   /** How many columns the message spans: the table's column count. */
   columns: number;
   /** One short line saying what belongs here. */
@@ -608,7 +626,7 @@ const TableEmpty = forwardRef<HTMLTableRowElement, TableEmptyProps>(
             // as the scroll box (--table-view-w, which DataTable sets), so the
             // message centers on what's in view, not on a table wider than it.
             className="sticky left-0 flex w-(--table-view-w,100%) min-h-[calc(var(--table-empty-rows)*(1lh+2*var(--table-cell-py)+1px))] flex-col items-center justify-center gap-1 px-3 py-4 text-center"
-            style={{ "--table-empty-rows": rows } as CSSProperties}
+            style={{ '--table-empty-rows': rows } as CSSProperties}
           >
             {title && (
               <span
@@ -625,11 +643,20 @@ const TableEmpty = forwardRef<HTMLTableRowElement, TableEmptyProps>(
         </td>
       </tr>
     );
-  }
+  },
 );
 
-TableEmpty.displayName = "TableEmpty";
+TableEmpty.displayName = 'TableEmpty';
 
 // ── Exports ──────────────────────────────────────────────
 
-export { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableEmpty, TABLE_HIGHLIGHT_EVENT };
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableEmpty,
+  TABLE_HIGHLIGHT_EVENT,
+};

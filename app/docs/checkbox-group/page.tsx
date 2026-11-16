@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { CheckboxGroup, CheckboxItem } from "@/registry/radix/checkbox-group";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { groupProps, itemProps } from "@/lib/docs/api/checkbox-group";
+import { useState } from 'react';
+import { CheckboxGroup, CheckboxItem } from '#registry/radix/checkbox-group';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { groupProps, itemProps } from '#lib/docs/api/checkbox-group';
 
 const basicCode = `import { CheckboxGroup, CheckboxItem } from "./components";
 import { useState } from "react";
@@ -33,7 +33,7 @@ const [checked, setChecked] = useState<Set<number>>(new Set([0]));
 </CheckboxGroup>`;
 
 export default function CheckboxGroupDoc() {
-  const items = ["Apples", "Bananas", "Cherries", "Dates"];
+  const items = ['Apples', 'Bananas', 'Cherries', 'Dates'];
   const [checked, setChecked] = useState<Set<number>>(new Set([0]));
 
   return (

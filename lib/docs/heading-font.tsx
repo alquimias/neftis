@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { inKeyboardScope } from "@/lib/keyboard-scope";
+import { inKeyboardScope } from '#lib/keyboard-scope';
 import {
   createContext,
   useCallback,
@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
   type ReactNode,
-} from "react";
+} from 'react';
 
 import {
   HEADING_FONTS,
@@ -18,7 +18,7 @@ import {
   customWeightCookie,
   headingFontCookie,
   type HeadingFont,
-} from "@/lib/docs/site-settings";
+} from '#lib/docs/site-settings';
 import {
   WEIGHT_NAMES,
   customHeadingVars,
@@ -26,19 +26,19 @@ import {
   googleFontWeights,
   nearestGoogleFontWeight,
   type GoogleFont,
-} from "@/lib/docs/google-fonts";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/flavored/select";
-import { GoogleFontPicker } from "@/lib/docs/google-font-picker";
-import { showShortcutToast } from "@/lib/docs/settings-toast";
+} from '#lib/docs/google-fonts';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '#components/flavored/select';
+import { GoogleFontPicker } from '#lib/docs/google-font-picker';
+import { showShortcutToast } from '#lib/docs/settings-toast';
 
 /** The built-in choices. "custom" reads as the picked family's name. */
 const BUILT_IN_LABELS = {
-  inter: "Inter",
-  "geist-serif": "Geist Serif",
+  inter: 'Inter',
+  'geist-serif': 'Geist Serif',
 } as const satisfies Partial<Record<HeadingFont, string>>;
 
 export function headingFontLabel(font: HeadingFont, custom: GoogleFont | null): string {
-  return font === "custom" ? (custom?.n ?? "Custom") : BUILT_IN_LABELS[font];
+  return font === 'custom' ? (custom?.n ?? 'Custom') : BUILT_IN_LABELS[font];
 }
 
 interface HeadingFontContextValue {
@@ -60,8 +60,9 @@ interface HeadingFontContextValue {
 /** Puts a custom family's name and weight on <html>, replacing the last. */
 function applyCustomVars(font: GoogleFont, weight: number | null) {
   const root = document.documentElement.style;
-  root.removeProperty("--font-custom-weight");
-  for (const [name, value] of Object.entries(customHeadingVars(font, weight))) root.setProperty(name, value);
+  root.removeProperty('--font-custom-weight');
+  for (const [name, value] of Object.entries(customHeadingVars(font, weight)))
+    root.setProperty(name, value);
 }
 
 const HeadingFontContext = createContext<HeadingFontContextValue | null>(null);
@@ -98,10 +99,10 @@ export function HeadingFontProvider({
 
   const setFont = useCallback(
     (next: HeadingFont) => {
-      if (next === "custom" && !custom) setPicking(true);
+      if (next === 'custom' && !custom) setPicking(true);
       else apply(next);
     },
-    [apply, custom]
+    [apply, custom],
   );
 
   // A new family keeps the picked weight when it has it, else the nearest
@@ -114,9 +115,9 @@ export function HeadingFontProvider({
       applyCustomVars(family, nextWeight);
       document.cookie = customFontCookie(family.n);
       document.cookie = customWeightCookie(nextWeight);
-      apply("custom");
+      apply('custom');
     },
-    [apply, weight]
+    [apply, weight],
   );
 
   const setWeight = useCallback(
@@ -125,36 +126,41 @@ export function HeadingFontProvider({
       if (custom) applyCustomVars(custom, next);
       document.cookie = customWeightCookie(next);
     },
-    [custom]
+    [custom],
   );
 
   const value = useMemo<HeadingFontContextValue>(
     () => ({
       font,
       custom,
-      fonts: custom ? HEADING_FONTS : HEADING_FONTS.filter((f) => f !== "custom"),
+      fonts: custom ? HEADING_FONTS : HEADING_FONTS.filter((f) => f !== 'custom'),
       setFont,
       browse: () => setPicking(true),
       weight,
       setWeight,
     }),
-    [font, custom, setFont, weight, setWeight]
+    [font, custom, setFont, weight, setWeight],
   );
 
   return (
     <HeadingFontContext.Provider value={value}>
       {/* Rendered in place, not hoisted with `precedence`: a hoisted
           stylesheet suspends the commit until it loads. */}
-      {font === "custom" && custom && <link rel="stylesheet" href={googleFontHref(custom)} />}
+      {font === 'custom' && custom && <link rel="stylesheet" href={googleFontHref(custom)} />}
       {children}
-      <GoogleFontPicker open={picking} onOpenChange={setPicking} current={custom?.n ?? null} onPick={pick} />
+      <GoogleFontPicker
+        open={picking}
+        onOpenChange={setPicking}
+        current={custom?.n ?? null}
+        onPick={pick}
+      />
     </HeadingFontContext.Provider>
   );
 }
 
 export function useHeadingFont(): HeadingFontContextValue {
   const ctx = useContext(HeadingFontContext);
-  if (!ctx) throw new Error("useHeadingFont must be used inside HeadingFontProvider");
+  if (!ctx) throw new Error('useHeadingFont must be used inside HeadingFontProvider');
   return ctx;
 }
 
@@ -177,26 +183,36 @@ export function HeadingFontShortcut() {
     const onKeyDown = (e: KeyboardEvent) => {
       // Keys typed in a preview belong to the component in it.
       if (inKeyboardScope(e.target)) return;
-      if (e.key !== "f" && e.key !== "F") return;
+      if (e.key !== 'f' && e.key !== 'F') return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const target = e.target instanceof HTMLElement ? e.target : null;
-      if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable) return;
-      if (target?.closest('[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]')) return;
+      if (
+        target?.tagName === 'INPUT' ||
+        target?.tagName === 'TEXTAREA' ||
+        target?.isContentEditable
+      )
+        return;
+      if (
+        target?.closest(
+          '[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]',
+        )
+      )
+        return;
       e.preventDefault();
       const next = fonts[(fonts.indexOf(fontRef.current) + 1) % fonts.length];
       fontRef.current = next;
       setFont(next);
-      showShortcutToast("F", `Heading font set to ${headingFontLabel(next, custom)}`);
+      showShortcutToast('F', `Heading font set to ${headingFontLabel(next, custom)}`);
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [fonts, custom, setFont]);
 
   return null;
 }
 
 /** "Auto" in the weight select: the role weights. */
-const AUTO_WEIGHT = "auto";
+const AUTO_WEIGHT = 'auto';
 
 /**
  * Docs-site-only: the custom family's heading weight, Auto (the role
@@ -205,21 +221,25 @@ const AUTO_WEIGHT = "auto";
  */
 export function HeadingWeightSelect({ triggerClassName }: { triggerClassName?: string }) {
   const { font, custom, weight, setWeight } = useHeadingFont();
-  if (font !== "custom" || !custom) return null;
+  if (font !== 'custom' || !custom) return null;
   const weights = googleFontWeights(custom);
   return (
     <Select
       value={weight === null ? AUTO_WEIGHT : String(weight)}
       onValueChange={(v) => setWeight(v === AUTO_WEIGHT ? null : Number(v))}
     >
-      <SelectTrigger variant="borderless" className={triggerClassName} aria-label="Heading weight" />
+      <SelectTrigger
+        variant="borderless"
+        className={triggerClassName}
+        aria-label="Heading weight"
+      />
       <SelectContent>
         <SelectItem value={AUTO_WEIGHT} index={0}>
           Auto
         </SelectItem>
         {weights.map((w, i) => (
           <SelectItem key={w} value={String(w)} index={i + 1}>
-            {`${WEIGHT_NAMES[w] ?? "Weight"} ${w}`}
+            {`${WEIGHT_NAMES[w] ?? 'Weight'} ${w}`}
           </SelectItem>
         ))}
       </SelectContent>

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { inKeyboardScope } from "@/lib/keyboard-scope";
+import { inKeyboardScope } from '#lib/keyboard-scope';
 import {
   createContext,
   useCallback,
@@ -10,13 +10,13 @@ import {
   useRef,
   useState,
   type ReactNode,
-} from "react";
-import { hoverModeCookie, HOVER_MODES, type HoverMode } from "@/lib/docs/site-settings";
-import { showShortcutToast } from "@/lib/docs/settings-toast";
+} from 'react';
+import { hoverModeCookie, HOVER_MODES, type HoverMode } from '#lib/docs/site-settings';
+import { showShortcutToast } from '#lib/docs/settings-toast';
 
 export const HOVER_MODE_LABELS: Record<HoverMode, string> = {
-  fluid: "Fluid",
-  standard: "Standard",
+  fluid: 'Fluid',
+  standard: 'Standard',
 };
 
 interface HoverModeContextValue {
@@ -61,12 +61,12 @@ export function HoverModeOverride({ mode, children }: { mode: HoverMode; childre
 /** The hover in effect here. Fluid outside the provider (tests, the OG
  *  stage), which is what an install from `r/` gets. */
 export function useHoverMode(): HoverMode {
-  return useContext(HoverModeContext)?.mode ?? "fluid";
+  return useContext(HoverModeContext)?.mode ?? 'fluid';
 }
 
 export function useHoverModeSetting(): HoverModeContextValue {
   const ctx = useContext(HoverModeContext);
-  if (!ctx) throw new Error("useHoverModeSetting must be used inside HoverModeProvider");
+  if (!ctx) throw new Error('useHoverModeSetting must be used inside HoverModeProvider');
   return ctx;
 }
 
@@ -86,19 +86,29 @@ export function HoverModeShortcut() {
     const onKeyDown = (e: KeyboardEvent) => {
       // Keys typed in a preview belong to the component in it.
       if (inKeyboardScope(e.target)) return;
-      if (e.key !== "h" && e.key !== "H") return;
+      if (e.key !== 'h' && e.key !== 'H') return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const target = e.target instanceof HTMLElement ? e.target : null;
-      if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable) return;
-      if (target?.closest('[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]')) return;
+      if (
+        target?.tagName === 'INPUT' ||
+        target?.tagName === 'TEXTAREA' ||
+        target?.isContentEditable
+      )
+        return;
+      if (
+        target?.closest(
+          '[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]',
+        )
+      )
+        return;
       e.preventDefault();
       const next = HOVER_MODES[(HOVER_MODES.indexOf(modeRef.current) + 1) % HOVER_MODES.length];
       modeRef.current = next;
       setMode(next);
-      showShortcutToast("H", `Hover set to ${HOVER_MODE_LABELS[next]}`);
+      showShortcutToast('H', `Hover set to ${HOVER_MODE_LABELS[next]}`);
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [setMode]);
 
   return null;

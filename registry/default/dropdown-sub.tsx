@@ -1,17 +1,11 @@
-"use client";
+'use client';
 
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  type RefObject,
-} from "react";
-import { cn } from "@/lib/utils";
-import { useIcons } from "@/lib/icon-context";
-import { useSize } from "@/lib/size-context";
-import type { UseFluidHoverReturn } from "@/hooks/use-fluid-hover";
-import type { MenuItemProps } from "@/components/ui/menu-item";
+import { useCallback, useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
+import { cn } from '#lib/utils';
+import { useIcons } from '#lib/icon-context';
+import { useSize } from '#lib/size-context';
+import type { UseFluidHoverReturn } from '#hooks/use-fluid-hover';
+import type { MenuItemProps } from '#components/ui/menu-item';
 
 // ---------------------------------------------------------------------------
 // Submenus inside a dropdown popup: the primitive-free half.
@@ -35,15 +29,11 @@ export const SUBMENU_SIDE_OFFSET = 6;
  *  lines up with the trigger row. */
 export const SUBMENU_ALIGN_OFFSET = -4;
 
-export type DropdownSubTriggerProps = Omit<
-  MenuItemProps,
-  "checked" | "onSelect" | "closeOnClick"
->;
+export type DropdownSubTriggerProps = Omit<MenuItemProps, 'checked' | 'onSelect' | 'closeOnClick'>;
 
-const ROW_SELECTOR = "[data-fluid-hover-index]";
+const ROW_SELECTOR = '[data-fluid-hover-index]';
 
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 /**
  * The parent popup's side of its submenus. Use `onMouseEnter`,
@@ -53,8 +43,8 @@ const useIsoLayoutEffect =
  */
 export function useSubmenuHost(
   containerRef: RefObject<HTMLElement | null>,
-  hover: Pick<UseFluidHoverReturn, "setActiveIndex" | "handlers">,
-  open: boolean
+  hover: Pick<UseFluidHoverReturn, 'setActiveIndex' | 'handlers'>,
+  open: boolean,
 ) {
   // The hook's handlers object is new every render, but the functions in it
   // are stable: depend on those, so the callbacks below stay stable too and
@@ -84,9 +74,9 @@ export function useSubmenuHost(
     const onMove = (e: PointerEvent) => {
       pointerRef.current = { x: e.clientX, y: e.clientY };
     };
-    document.addEventListener("pointermove", onMove, { capture: true, passive: true });
+    document.addEventListener('pointermove', onMove, { capture: true, passive: true });
     stopListeningRef.current = () => {
-      document.removeEventListener("pointermove", onMove, { capture: true });
+      document.removeEventListener('pointermove', onMove, { capture: true });
       stopListeningRef.current = null;
     };
   }, []);
@@ -114,7 +104,7 @@ export function useSubmenuHost(
       if (!container) return;
       const focused = (document.activeElement as HTMLElement | null)?.closest?.(ROW_SELECTOR);
       if (focused && container.contains(focused)) {
-        setActiveIndex(Number(focused.getAttribute("data-fluid-hover-index")));
+        setActiveIndex(Number(focused.getAttribute('data-fluid-hover-index')));
         return;
       }
       const p = pointerRef.current;
@@ -125,7 +115,7 @@ export function useSubmenuHost(
         setActiveIndex(null);
       }
     },
-    [containerRef, setActiveIndex, hoverMove, listen]
+    [containerRef, setActiveIndex, hoverMove, listen],
   );
 
   const holding = useCallback(() => openIndexRef.current !== null, []);
@@ -146,7 +136,7 @@ export function useSubmenuHost(
       if (openIndexRef.current !== null) return;
       hoverMove(e);
     },
-    [hoverMove]
+    [hoverMove],
   );
 
   const onMouseLeave = useCallback(() => {
@@ -161,7 +151,7 @@ export function useSubmenuHost(
 export function useReportSubmenu(
   onSubmenuOpenChange: ((index: number, open: boolean) => void) | undefined,
   index: number,
-  open: boolean
+  open: boolean,
 ) {
   useEffect(() => {
     if (!open || !onSubmenuOpenChange) return;
@@ -174,7 +164,7 @@ export function useReportSubmenu(
  *  like the leading icon. */
 export function SubmenuChevron({ lit }: { lit: boolean }) {
   const icons = useIcons();
-  const ChevronRight = icons["chevron-right"];
+  const ChevronRight = icons['chevron-right'];
   const sizeClasses = useSize();
   return (
     <span aria-hidden="true" className="inline-grid shrink-0 rtl:-scale-x-100">
@@ -182,8 +172,8 @@ export function SubmenuChevron({ lit }: { lit: boolean }) {
         size={sizeClasses.icon}
         strokeWidth={lit ? 2 : 1.5}
         className={cn(
-          "transition-[color,stroke-width] duration-80",
-          lit ? "text-foreground" : "text-muted-foreground"
+          'transition-[color,stroke-width] duration-80',
+          lit ? 'text-foreground' : 'text-muted-foreground',
         )}
       />
     </span>

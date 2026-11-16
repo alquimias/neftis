@@ -5,4 +5,4 @@ export {
   SURFACE_HOVER_SHADOW,
   surfaceClasses,
   surfaceHoverClasses,
-} from "@/registry/default/lib/surface-classes";
+} from '#registry/default/lib/surface-classes';

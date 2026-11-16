@@ -1,6 +1,6 @@
 // The API reference of /docs/tooltip: its PropsTables and the API section
 // of /docs/tooltip.md both read these, so the two cannot drift.
-import type { ApiTable, PropDef } from "@/lib/docs/api/types";
+import type { ApiTable, PropDef } from '#lib/docs/api/types';
 
 // ---------------------------------------------------------------------------
 // Props table
@@ -8,83 +8,89 @@ import type { ApiTable, PropDef } from "@/lib/docs/api/types";
 
 export const tooltipProps: PropDef[] = [
   {
-    name: "content",
-    type: "ReactNode",
-    description: "The content displayed inside the tooltip.",
+    name: 'content',
+    type: 'ReactNode',
+    description: 'The content displayed inside the tooltip.',
   },
   {
-    name: "children",
-    type: "ReactElement",
-    description: "The trigger element. Must accept a ref.",
+    name: 'children',
+    type: 'ReactElement',
+    description: 'The trigger element. Must accept a ref.',
   },
   {
-    name: "shortcut",
-    type: "string | string[]",
-    description: "A keystroke shown after the label, one key cap per key. The tooltip keeps the height of one without it. A key with a space in its name goes in an array: [\"Page Up\"].",
+    name: 'shortcut',
+    type: 'string | string[]',
+    description:
+      'A keystroke shown after the label, one key cap per key. The tooltip keeps the height of one without it. A key with a space in its name goes in an array: ["Page Up"].',
   },
   {
-    name: "side",
+    name: 'side',
     type: '"top" | "right" | "bottom" | "left"',
     default: '"top"',
-    description: "Preferred side of the trigger to render the tooltip.",
+    description: 'Preferred side of the trigger to render the tooltip.',
   },
   {
-    name: "sideOffset",
-    type: "number",
-    default: "8",
-    description: "Distance in pixels between the tooltip and the trigger.",
+    name: 'sideOffset',
+    type: 'number',
+    default: '8',
+    description: 'Distance in pixels between the tooltip and the trigger.',
   },
   {
-    name: "delayDuration",
-    type: "number",
-    default: "200",
-    description: "Milliseconds to wait before showing the tooltip on hover.",
+    name: 'delayDuration',
+    type: 'number',
+    default: '200',
+    description: 'Milliseconds to wait before showing the tooltip on hover.',
   },
   {
-    name: "followCursor",
+    name: 'followCursor',
     type: '"x" | "y"',
-    description: "Track the cursor along one axis while hovering the trigger; the other axis stays anchored by side. Used by the Sidebar rail.",
+    description:
+      'Track the cursor along one axis while hovering the trigger; the other axis stays anchored by side. Used by the Sidebar rail.',
   },
   {
-    name: "hoverable",
-    type: "boolean",
-    default: "true",
-    description: "Whether the pointer can move onto the bubble and keep it open. Pass false where the bubble covers something else to reach, as over the next row of a list: the pointer passes through and the tooltip closes with its trigger.",
+    name: 'hoverable',
+    type: 'boolean',
+    default: 'true',
+    description:
+      'Whether the pointer can move onto the bubble and keep it open. Pass false where the bubble covers something else to reach, as over the next row of a list: the pointer passes through and the tooltip closes with its trigger.',
   },
   {
-    name: "className",
-    type: "string",
-    description: "Additional classes applied to the tooltip content container.",
+    name: 'className',
+    type: 'string',
+    description: 'Additional classes applied to the tooltip content container.',
   },
   {
-    name: "contentClassName",
-    type: "string",
-    description: "Classes for the portalled content element — pass a z-index utility here to lift the whole tooltip above other fixed layers (defaults to the --z-tooltip step, 70). The docs inspector uses it to clear the preview header.",
+    name: 'contentClassName',
+    type: 'string',
+    description:
+      'Classes for the portalled content element — pass a z-index utility here to lift the whole tooltip above other fixed layers (defaults to the --z-tooltip step, 70). The docs inspector uses it to clear the preview header.',
   },
 ];
 
 export const tooltipGroupProps: PropDef[] = [
   {
-    name: "children",
-    type: "ReactNode",
-    description: "The row of triggers, each in its own Tooltip, all on the same side. They share one bubble.",
+    name: 'children',
+    type: 'ReactNode',
+    description:
+      'The row of triggers, each in its own Tooltip, all on the same side. They share one bubble.',
   },
   {
-    name: "delayDuration",
-    type: "number",
-    default: "200",
-    description: "Milliseconds to wait before the first tooltip of the group opens.",
+    name: 'delayDuration',
+    type: 'number',
+    default: '200',
+    description: 'Milliseconds to wait before the first tooltip of the group opens.',
   },
   {
-    name: "skipDelayDuration",
-    type: "number",
-    default: "300",
-    description: "After a tooltip closes, the others in the group open without the delay for this many milliseconds.",
+    name: 'skipDelayDuration',
+    type: 'number',
+    default: '300',
+    description:
+      'After a tooltip closes, the others in the group open without the delay for this many milliseconds.',
   },
 ];
 
 /** The page's tables in page order, titled as on the page. */
 export const apiReference: ApiTable[] = [
-  { title: "Tooltip", props: tooltipProps },
-  { title: "TooltipGroup", props: tooltipGroupProps },
+  { title: 'Tooltip', props: tooltipProps },
+  { title: 'TooltipGroup', props: tooltipGroupProps },
 ];

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef, type KeyboardEvent } from "react";
-import { POPUP_NAV_KEYS } from "@/lib/popup";
+import { useCallback, useEffect, useRef, type KeyboardEvent } from 'react';
+import { POPUP_NAV_KEYS } from '#lib/popup';
 
 /**
  * Gates a popup's keyboard focus ring on keyboard use.
@@ -25,8 +25,7 @@ export function useKeyboardNavGate(open: boolean) {
     // element, so this reads the same whether the trigger still has focus
     // or the primitive has already moved it into the popup.
     const active = document.activeElement;
-    keyboardNavRef.current =
-      active instanceof HTMLElement && active.matches(":focus-visible");
+    keyboardNavRef.current = active instanceof HTMLElement && active.matches(':focus-visible');
   }, [open]);
 
   const trackKeyboardNav = useCallback((e: KeyboardEvent) => {

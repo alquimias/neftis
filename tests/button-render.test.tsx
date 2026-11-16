@@ -6,55 +6,87 @@
  * project, so components that pass a link to Button (BannerAction's `href`)
  * must come out the same either way, in both flavors.
  */
-import { describe, expect, it } from "vitest";
-import { render } from "@testing-library/react";
-import { Button as RadixButton } from "@/registry/radix/button";
-import { Button as BaseButton } from "@/registry/base/button";
+import { describe, expect, it } from 'vitest';
+import { render } from '@testing-library/react';
+import { Button as RadixButton } from '#registry/radix/button';
+import { Button as BaseButton } from '#registry/base/button';
+import { Button as ErpButton } from '../erp/components/ui/button';
 
 const flavors = [
-  ["radix", RadixButton],
-  ["base", BaseButton],
+  ['radix', RadixButton],
+  ['base', BaseButton],
 ] as const;
 
-describe.each(flavors)("%s Button", (_name, Button) => {
-  it("renders a plain link with asChild", () => {
+describe('erp Button', () => {
+  it('keeps the fill inside the link when asChild wraps a link', () => {
+    const { container } = render(
+      <ErpButton asChild>
+        <a href="/sgsst/politica">Ver política SST</a>
+      </ErpButton>,
+    );
+    const link = container.querySelector('a');
+    expect(link?.getAttribute('href')).toBe('/sgsst/politica');
+    expect(link?.textContent).toContain('Ver política SST');
+    expect(link?.querySelector("[aria-hidden='true']")).not.toBeNull();
+    expect(container.querySelector('button')).toBeNull();
+  });
+});
+
+describe.each(flavors)('%s Button', (_name, Button) => {
+  it('renders a plain link with asChild', () => {
     const { container } = render(
       <Button asChild>
         <a href="/docs">Read the docs</a>
-      </Button>
+      </Button>,
     );
-    const link = container.querySelector("a");
-    expect(link?.getAttribute("href")).toBe("/docs");
-    expect(link?.textContent).toContain("Read the docs");
-    expect(container.querySelector("button")).toBeNull();
+    const link = container.querySelector('a');
+    expect(link?.getAttribute('href')).toBe('/docs');
+    expect(link?.textContent).toContain('Read the docs');
+    expect(container.querySelector('button')).toBeNull();
+    expect(link?.querySelector("[aria-hidden='true']")).not.toBeNull();
   });
 
-  it("renders the same plain link with render and nativeButton", () => {
+  it('keeps the fill inside the link when asChild receives a fragment', () => {
+    const { container } = render(
+      <Button asChild>
+        <>
+          <a href="/docs">Read the docs</a>
+        </>
+      </Button>,
+    );
+    const link = container.querySelector('a');
+    expect(link?.getAttribute('href')).toBe('/docs');
+    expect(link?.textContent).toContain('Read the docs');
+    expect(link?.querySelector("[aria-hidden='true']")).not.toBeNull();
+    expect(container.querySelector('button')).toBeNull();
+  });
+
+  it('renders the same plain link with render and nativeButton', () => {
     const { container } = render(
       <Button render={<a href="/docs" />} nativeButton={false}>
         Read the docs
-      </Button>
+      </Button>,
     );
-    const link = container.querySelector("a");
-    expect(link?.getAttribute("href")).toBe("/docs");
-    expect(link?.textContent).toContain("Read the docs");
-    expect(container.querySelector("button")).toBeNull();
+    const link = container.querySelector('a');
+    expect(link?.getAttribute('href')).toBe('/docs');
+    expect(link?.textContent).toContain('Read the docs');
+    expect(container.querySelector('button')).toBeNull();
     // No Base UI button semantics bolted onto the link, and the parity prop
     // never reaches the DOM.
-    expect(link?.getAttribute("role")).toBeNull();
-    expect(link?.hasAttribute("nativebutton")).toBe(false);
-    expect(link?.hasAttribute("nativeButton")).toBe(false);
+    expect(link?.getAttribute('role')).toBeNull();
+    expect(link?.hasAttribute('nativebutton')).toBe(false);
+    expect(link?.hasAttribute('nativeButton')).toBe(false);
   });
 
   it("keeps the render element's own children when Button has none", () => {
     const { container } = render(<Button render={<a href="/docs">Read the docs</a>} />);
-    const link = container.querySelector("a");
-    expect(link?.getAttribute("href")).toBe("/docs");
-    expect(link?.textContent).toContain("Read the docs");
+    const link = container.querySelector('a');
+    expect(link?.getAttribute('href')).toBe('/docs');
+    expect(link?.textContent).toContain('Read the docs');
   });
 
-  it("still renders a native button by default", () => {
+  it('still renders a native button by default', () => {
     const { container } = render(<Button>Save</Button>);
-    expect(container.querySelector("button")?.textContent).toContain("Save");
+    expect(container.querySelector('button')?.textContent).toContain('Save');
   });
 });

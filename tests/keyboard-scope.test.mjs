@@ -187,7 +187,7 @@ describe("site keyboard shortcuts stand aside inside previews", () => {
           ? `${l.rel}:${l.line} "${l.event}" listener (${l.key}) never calls inKeyboardScope. ` +
             `Start the handler with:\n  // Keys typed in a preview belong to the component in it.\n` +
             `  if (inKeyboardScope(e.target)) return;\n` +
-            `(import from "@/lib/keyboard-scope"), or add "${l.key}" to EXEMPT in tests/keyboard-scope.test.mjs with a reason.`
+            `(import from "#lib/keyboard-scope"), or add "${l.key}" to EXEMPT in tests/keyboard-scope.test.mjs with a reason.`
           : `${l.rel}:${l.line} "${l.event}" listener (${l.key}): could not find the handler's function in the file. ` +
             `Pass an inline function or a same-file function/const so the guard can be checked.`
       );

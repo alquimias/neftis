@@ -241,7 +241,7 @@ describe("dropdown preset install generator", () => {
       const p = { ...DEFAULT_DROPDOWN_PRESET, ...randomPreset(rand) };
       for (const file of generateDropdownPresetFiles(p)) {
         expect(file.content).not.toContain("@/lib/docs");
-        expect(file.content).not.toContain('from "@/registry/');
+        expect(file.content).not.toContain('from "#registry/');
       }
     }
   });

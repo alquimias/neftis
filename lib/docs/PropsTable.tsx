@@ -1,9 +1,9 @@
-import { Fragment } from "react";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { ScrollArea } from "@/registry/base/scroll-area";
-import type { ApiTable, PropDef } from "@/lib/docs/api/types";
-import { ApiReferenceTable } from "@/lib/docs/ApiReferenceTable";
-import { Description } from "@/lib/docs/api/description";
+import { Fragment } from 'react';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { ScrollArea } from '#registry/base/scroll-area';
+import type { ApiTable, PropDef } from '#lib/docs/api/types';
+import { ApiReferenceTable } from '#lib/docs/ApiReferenceTable';
+import { Description } from '#lib/docs/api/description';
 
 export type { PropDef };
 
@@ -30,9 +30,9 @@ function PropRow({ prop, showDefault }: { prop: PropDef; showDefault: boolean })
           cell, since a table cell ignores its own max-width; w-max keeps
           the column from squeezing a short name onto several lines. */}
       <td className="px-3 py-2 text-foreground font-mono text-site-caption">
-        <div className={/\s/.test(prop.name) ? "w-max max-w-40" : "whitespace-nowrap"}>
+        <div className={/\s/.test(prop.name) ? 'w-max max-w-40' : 'whitespace-nowrap'}>
           {/* A signature may break after its "(". */}
-          {prop.name.split("(").map((part, i) => (
+          {prop.name.split('(').map((part, i) => (
             <Fragment key={i}>
               {i > 0 && (
                 <>
@@ -51,7 +51,7 @@ function PropRow({ prop, showDefault }: { prop: PropDef; showDefault: boolean })
       </td>
       {showDefault && (
         <td className="px-3 py-2 text-muted-foreground font-mono text-site-caption [overflow-wrap:anywhere]">
-          {prop.default ?? "—"}
+          {prop.default ?? '—'}
         </td>
       )}
       <td className="px-3 py-2 text-muted-foreground">
@@ -65,7 +65,8 @@ export function PropsTable(all: PropsTableProps) {
   const { props, groups } = all;
   // A reference long enough to fold its groups (ApiTable `collapsed`) is
   // the library's own DataTable, each group a row with its props under it.
-  if (groups?.some((group) => group.collapsed !== undefined)) return <ApiReferenceTable groups={groups} title={all.title} />;
+  if (groups?.some((group) => group.collapsed !== undefined))
+    return <ApiReferenceTable groups={groups} title={all.title} />;
   return <PlainPropsTable {...(groups ? { groups } : { props })} />;
 }
 
@@ -79,11 +80,7 @@ function PlainPropsTable({ props, groups }: PropsTableProps) {
   const columns = showDefault ? 4 : 3;
 
   return (
-    <ScrollArea
-      orientation="horizontal"
-      viewportClassName="scroll-fade-x"
-      className="w-full"
-    >
+    <ScrollArea orientation="horizontal" viewportClassName="scroll-fade-x" className="w-full">
       <table className="w-full min-w-[520px] text-site-body border-collapse [&_th:first-child]:pl-0 [&_td:first-child]:pl-0">
         <thead>
           <tr className="border-b border-border">

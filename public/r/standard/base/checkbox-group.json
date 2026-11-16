@@ -3,10 +3,7 @@
   "name": "checkbox-group",
   "title": "Checkbox Group (Base UI)",
   "description": "Animated checkbox group with fluid hover, contiguous selection merging, and spring-animated check marks. Base UI flavor.",
-  "dependencies": [
-    "motion",
-    "@base-ui/react@^1.9.0"
-  ],
+  "dependencies": ["motion", "@base-ui/react@^1.9.0"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -27,8 +24,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/checkbox-group. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#checkbox-group.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

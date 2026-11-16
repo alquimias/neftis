@@ -23,9 +23,9 @@ export const TEXT_PROPS = {
   x: TEXT.x,
   y: TEXT.y,
   fontSize: TEXT.fontSize,
-  fontFamily: "Inter, sans-serif",
+  fontFamily: 'Inter, sans-serif',
   fontWeight: 700,
-  textAnchor: "middle" as const,
+  textAnchor: 'middle' as const,
 };
 
 export const TEXT_STYLE = { fontVariationSettings: "'wght' 700" };

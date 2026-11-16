@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
-import { useThemeContext } from "@/registry/default/lib/theme-context";
-import { useShapeContext } from "@/lib/shape-context";
-import { useSizeContext } from "@/lib/size-context";
-import { useIconLibrary } from "@/lib/docs/icon-playground";
-import { useBase } from "@/lib/base-context";
-import { settingCookie, type SiteSettings } from "@/lib/docs/site-settings";
-import { useAccent } from "@/lib/docs/accent";
+import { useThemeContext } from '#registry/default/lib/theme-context';
+import { useShapeContext } from '#lib/shape-context';
+import { useSizeContext } from '#lib/size-context';
+import { useIconLibrary } from '#lib/docs/icon-playground';
+import { useBase } from '#lib/base-context';
+import { settingCookie, type SiteSettings } from '#lib/docs/site-settings';
+import { useAccent } from '#lib/docs/accent';
 
 /** Where the primitive choice lived before the settings moved to cookies. */
-const LEGACY_BASE_KEY = "ff:base";
+const LEGACY_BASE_KEY = 'ff:base';
 
 /**
  * Docs-site-only: writes each "Make them yours" setting to its cookie when it
@@ -48,8 +48,8 @@ export function SettingsPersistence() {
       const legacy = localStorage.getItem(LEGACY_BASE_KEY);
       if (legacy === null) return;
       localStorage.removeItem(LEGACY_BASE_KEY);
-      const hasCookie = document.cookie.split("; ").some((c) => c.startsWith("ff_base="));
-      if (!hasCookie && (legacy === "radix" || legacy === "base")) setBase(legacy);
+      const hasCookie = document.cookie.split('; ').some((c) => c.startsWith('ff_base='));
+      if (!hasCookie && (legacy === 'radix' || legacy === 'base')) setBase(legacy);
     } catch {
       // localStorage may be unavailable (private mode); nothing to move.
     }

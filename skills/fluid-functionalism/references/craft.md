@@ -64,6 +64,7 @@ Systems first — their craft applies across every component below.
 # Systems
 
 <a id="motion"></a>
+
 ## Motion (springs)
 
 - Three spring tiers only: `fast` 0.08s bounce 0, `moderate` 0.16s bounce 0, `slow` 0.24s bounce 0.12. Rule: the bigger the thing that moves, the slower the spring — never hand-write a duration, always reach for a tier.
@@ -84,6 +85,7 @@ Systems first — their craft applies across every component below.
 - A surface of the page that grows to fill the window (an expanded preview) is still the page: it sits above the sticky chrome and below every overlay's backdrop, so a dialog or the command menu dims it like the rest.
 
 <a id="fluid-hover"></a>
+
 ## Fluid Hover (use-fluid-hover)
 
 - By default only the item the pointer is inside lights: empty space (a gap, the container padding, past the last row) puts the highlight out, and the next item lit fades it in fresh instead of sliding over. Where the highlight is hover only (a table's rows), pass `followScroll: true`: when the items scroll under a pointer at rest, the highlight goes to the item now under it (as the browser's own `:hover` does) and glides there, so on screen it stays at the pointer. Leave it off where the highlight is also where focus is (menus, selects, list boxes): moving the fill without the focus lights an item that Enter doesn't pick. A highlight set from the keyboard or focus is not the pointer's: a scroll leaves it alone until the pointer moves. Never on touch screens, which have no pointer at rest. Whatever an item shows under the pointer (a row's checkbox, its drag handle) keys off the item's highlight (`is-active`), not `:hover`: the browser updates `:hover` only when the pointer moves again, so after a scroll it sits on the item that scrolled away. `nearest: true` swaps in one pure function: an item the pointer is inside always wins; otherwise the item whose center is nearest does, so a cursor in a gap still lands. Ties keep the first item. Axes, for `nearest`: `y` for lists, `x` for strips, `xy` for grids (Euclidean distance to centers).
@@ -101,6 +103,7 @@ Systems first — their craft applies across every component below.
 - Items register in a layout effect (`useRegisterFluidHoverItem`), so a parent that measures in its own layout effect (a Table snapping its fills as rows move) already sees every item at its new index: a child's layout effect runs before its parent's.
 
 <a id="surfaces"></a>
+
 ## Surfaces (elevated)
 
 - Eight surface levels, each paired 1:1 with a shadow recipe. Light mode has only two color steps (#FAFAFA floor, #FCFCFC sunken) and flattens to #FFFFFF from surface-3 up — shadow alone carries elevation; dark mode is an additive white-opacity ladder #171717 → #484848 in even steps.
@@ -113,6 +116,7 @@ Systems first — their craft applies across every component below.
 - Closely nested rounded surfaces use concentric corners: inner radius = max(0, outer radius - inset - border), where inset is the interior spacing (usually parent padding) and border is the parent's border width. The fixed shape pair (`container` 12/24px → `bg` 8/20px) is for a 4px total inset (sharp stays 1px at both levels); any other padding uses `nestedRadius()` instead of reusing those classes. Past 24px, with asymmetric gaps, or when the inner element does not reach the corner, the layers are independent and may be tuned by eye.
 
 <a id="sizes"></a>
+
 ## Sizes (size-context)
 
 - Two steps only: default 36px controls and compact 28px. Every dimension steps down together — text 13→12px, icon 16→14px, control padding 12→10px, row padding 8→6px, gap 8→4px — "so the whole control shrinks together, not just its box".
@@ -124,6 +128,7 @@ Systems first — their craft applies across every component below.
 - Density is a region decision, not a per-control one: wrap the region in one `SizeProvider` and everything follows — menus opened from it included, since React context crosses portals.
 
 <a id="typography"></a>
+
 ## Typography (type-scale, typography)
 
 - Six roles, each a size and a whole-pixel line height at both ladder steps: display 28/34px (compact 24/30), title 16/22 (15/20), subtitle 14/20 (13/18), body 13/20 (12/18), caption 12/16 (11/14), micro 11/14 (10/12). Body's 20px is also the paragraph line height, and puts a padded row on the ladder: 8 + 20 + 8 = 36px, 5 + 18 + 5 = 28px. Pairing the leading with the size puts a caption in a menu and a caption in a table on the same rhythm.
@@ -142,6 +147,7 @@ Systems first — their craft applies across every component below.
 - Trim the invisible copies too: a label that reserves its width with a hidden copy in the same grid cell (the semibold copy behind a weight change, the longest value behind a fixed-width field) needs the same `text-box` trim as the visible text. An untrimmed copy keeps the full line height, the cell grows, and the trimmed label sits at its top instead of centered. Trim a flex row's parts, not the flex container: `text-box` skips flex containers.
 
 <a id="scrollbars"></a>
+
 ## Scrollbars (scroll-area)
 
 - On touch-primary devices the custom scrollbar machinery is skipped entirely for native overflow scrolling — better physics, momentum, and rubber-banding beat any custom scrollbar; the exported ScrollBar no-ops there.
@@ -153,6 +159,7 @@ Systems first — their craft applies across every component below.
 - The viewport takes keyboard focus (to scroll) and its focus outline sits 1px inside its edge (`outline-offset: -1px`): the area's root clips, so the default outline 2px outside was cut on every side.
 
 <a id="reveal"></a>
+
 ## Reveal (reveal)
 
 - 1 class on a page's container, like shadcn's `scroll-fade`. Pure CSS: no JavaScript, no hydration, nothing hidden on the server.
@@ -168,6 +175,7 @@ Systems first — their craft applies across every component below.
 # Components
 
 <a id="accordion"></a>
+
 ## Accordion
 
 - The trigger label renders twice in a stacked grid: an invisible semibold copy reserves the width, so the visible label animates 'wght' 400 → 550 ('opsz' 14 → 18, holding advance width within ±0.4px) on open with zero layout shift.
@@ -179,6 +187,7 @@ Systems first — their craft applies across every component below.
 - Closed panels stay mounted for measurement but flip to `hidden` only after the exit finishes, keeping them out of the accessibility tree without cutting the animation short; the keyboard focus ring is one shared rect that springs (spring.fast) between rows at a −2px inset, only on :focus-visible.
 
 <a id="ask-user-questions"></a>
+
 ## AskUserQuestions
 
 - Digits 1-9 answer options from a document-level listener (no focus in the card needed); with several instances mounted, only one answers — the one containing focus, else the most recently mounted — so stacked docs demos never all fire on the same digit. The digit for the Other row focuses its textarea, and digits are ignored while typing in any input.
@@ -193,6 +202,7 @@ Systems first — their craft applies across every component below.
 - Footer Back/Skip show ←/→ icons as keyboard hints on desktop only — mobile has no equivalent keys — while the inline per-row submit arrows stay everywhere because "those are tap affordances, not keyboard hints"; the single-select submit arrow overlays the numbered chip on hover/focus (chipPosition "left" moves it to its own right-edge slot so the action stays where the eye expects).
 
 <a id="badge"></a>
+
 ## Badge
 
 - Solid non-gray badges derive their tint at runtime: `color-mix(in srgb, <color> 15%, var(--background))` with plain `var(--foreground)` text, so one hex per color adapts to light and dark themes.
@@ -205,6 +215,7 @@ Systems first — their craft applies across every component below.
 - Corner radius comes from the shape context (`shape.item`), so badges follow the app's pill/rounded shape system rather than hardcoding a radius.
 
 <a id="banner"></a>
+
 ## Banner
 
 - Contrast puts the status color in one place at a time. `low` sets every status on the same neutral `var(--hover)` fill and colors only the icon; `high` washes the banner in `color-mix(in oklab, <status> 12%, transparent)`, 8% for the neutral default because grey reads darker than a hue at the same mix. There is no solid fill: the status color never sits behind the text at full strength.
@@ -233,6 +244,7 @@ Systems first — their craft applies across every component below.
 - Errors and warnings get `role="alert"` and interrupt a screen reader; the rest get `role="status"`. Uncontrolled, the ✕ hides the banner on its own; pass `open` to bring a dismissed banner back.
 
 <a id="breadcrumb"></a>
+
 ## Breadcrumb
 
 - One fluid hover scope on the <nav> covers every crumb in the trail, the current page included. The separator is each crumb's trailing icon, inside the crumb, so crumbs sit flush (no gap) and the highlight glides along the trail without going dark between items.
@@ -246,6 +258,7 @@ Systems first — their craft applies across every component below.
 - Polymorphism is a local slot (render or asChild), so the component installs the same into Radix and Base UI projects.
 
 <a id="button"></a>
+
 ## Button
 
 - Press effect: the surface layer sits 1px inside the button (inset-px) and a same-color 1px box-shadow spread fills it back to full bounds; pressing collapses the spread so the surface shrinks exactly 1px per side at any width — a scale would warp (2% of a 400px button is 8px sideways but under 1px vertically). Primary's fills are opaque color-mix()es; secondary's are see-through (`--tint`, black 8% / white 25%, lighter on hover), so it takes on whatever surface or tinted banner it sits on, and still never seams because an outer shadow renders only outside the surface box.
@@ -258,6 +271,7 @@ Systems first — their craft applies across every component below.
 - `render` is accepted as a second spelling of `asChild` (and `nativeButton` is accepted and ignored), on the same clone path, so a link stays a plain link with no `role="button"`. The shadcn CLI rewrites `asChild` into `render` plus `nativeButton={false}` when it installs into a Base UI project, so components that hand Button a link keep working there.
 
 <a id="calendar"></a>
+
 ## Calendar
 
 - DayPicker v10 (`@daypicker/react`) owns the date math, the roving tabindex, the grid keys and the locale; every part it renders is swapped for a div with the matching ARIA role (`grid`, `row`, `gridcell`), so the grid lays out with flex and one fluid hover scope can span 2 months. DayPicker's own `animate` stays off.
@@ -274,6 +288,7 @@ Systems first — their craft applies across every component below.
 - 2 months hide outside days so no date renders twice. `orientation="auto"` compares the container's width with what 2 months need at the current `cellSize`; stacked months share one sticky weekday row, page up and down (the chevrons turn to point up and down) and slide like the side-by-side strip, vertically: every grid travels the distance between the two month slots, measured on the layout the change starts from; a mask fades them out over 16px under the sticky weekday row (following it as the months scroll), and the chevrons float outside the strip over the first caption row, where the mask cuts a soft hole (16px fade on its left, 8px at its bottom), so a sliding month goes under both instead of showing through. With week numbers, month titles start at the Monday column (centered over the 7 days side by side). Titles are centered only side by side and left-aligned elsewhere, so a shorter title never sits centered in the cell the outgoing one widened and then jumps left; the single-month title isn't clipped (it is trimmed to cap height, so a clip would shave its ascenders). The stacked strip's mask makes its own stacking layer, so the hover highlight, its ring layer and the focus ring draw inside the strip there, keeping the numbers above the solid preview end. Week numbers are ISO 8601 with a Monday start unless `weekStartsOn` says Sunday.
 
 <a id="card"></a>
+
 ## Card
 
 - Cards are transparent and borderless by default, unlike stock shadcn: they inherit the parent substrate and lean on hairline dividers plus the fluid hover highlight instead of a drawn frame.
@@ -288,6 +303,7 @@ Systems first — their craft applies across every component below.
 - The whole-card link or button draws its focus ring inset: it covers the card, which clips, so a ring outside it never showed.
 
 <a id="carousel-dots"></a>
+
 ## CarouselDots
 
 - Each 6px dot sits in a button with 6px of padding on every side: an 18px round click area, and 12px from dot to dot. The buttons touch (no gap), so one fluid hover highlight (`axis: "x"`) glides between click areas and never drops out between dots.
@@ -299,6 +315,7 @@ Systems first — their craft applies across every component below.
 - Colors are `color-mix()` of `--foreground` (15% track, 40% fill), so the dots follow light and dark themes with no extra tokens. Each dot is a real button with `aria-label` (from `getLabel`) and `aria-current` on the current one.
 
 <a id="chat-message"></a>
+
 ## ChatMessage
 
 - Every message enters with opacity 0, y 8, scale 0.96 → settled on spring.moderate, with transformOrigin bottom-right for user messages and bottom-left for assistant, so bubbles appear to grow from the composer side they belong to.
@@ -311,6 +328,7 @@ Systems first — their craft applies across every component below.
 - Messages cap at max-w-[80%]; attachments render as square thumbnails (default 64px) in a row above the bubble, justified toward the message's own side, and an attachment-only message (no children) drops the text bubble entirely. Each thumbnail gets a 1px inset pure-black/pure-white 10% outline so bright edge pixels do not disappear into the page.
 
 <a id="checkbox"></a>
+
 ## Checkbox
 
 - The square is CheckboxGroup's: 16px (14px compact), a 1.5px --border at rounded-[5px] (4px compact), so a lone checkbox and a group row read as one family.
@@ -321,6 +339,7 @@ Systems first — their craft applies across every component below.
 - Space toggles, as the ARIA checkbox pattern says; inside a choice card (a FieldLabel wrapping a whole Field) Enter toggles too, because the card reads as an option to pick. A plain checkbox, even one wrapped in a label, leaves Enter to submit its form.
 
 <a id="checkbox-group"></a>
+
 ## CheckboxGroup
 
 - Contiguous checked rows merge into one rounded selection block: indices group into runs with stable IDs (reused when any member overlaps the previous render) so framer morphs a growing/shrinking block instead of exit+re-enter.
@@ -332,6 +351,7 @@ Systems first — their craft applies across every component below.
 - Arrow keys wrap, Home/End jump; the item query scopes to row wrappers because the inner primitive also carries role="checkbox" and a bare selector would match twice per row. The focus ring is one shared rect springing (spring.fast) between rows at a −2px inset, only on :focus-visible.
 
 <a id="color-picker"></a>
+
 ## ColorPicker
 
 - Switching format (HEX/RGB/HSL/OKLCH) immediately re-emits the current color formatted in the new format through onValueChange, so consumers stay in sync without touching the color.
@@ -345,6 +365,7 @@ Systems first — their craft applies across every component below.
 - Swatch names share one TooltipGroup (300ms before the first): once a name shows, the bubble glides from swatch to swatch with the next name instead of closing and reopening, and it's never hoverable, so crossing a name never holds off the swatches in its path.
 
 <a id="combobox"></a>
+
 ## Combobox
 
 - Radix has no combobox primitive, so this composes Radix Popover with its own listbox: the input keeps DOM focus the whole time and drives the rows through `aria-activedescendant`; a press on a row is `preventDefault`ed at pointerdown so it never blurs the field, and open/close autofocus is suppressed.
@@ -358,6 +379,7 @@ Systems first — their craft applies across every component below.
 - Selection visuals: single mode glides ONE marker between rows (a value change springs it to the picked row, moderate tier); multiple mode paints one block per contiguous run of checked rows, merging and splitting like CheckboxGroup as picks bridge or break a run. Checked indices are recomputed against the filtered list as the query shifts them.
 
 <a id="command-menu"></a>
+
 ## CommandMenu
 
 - The input keeps DOM focus the whole time and points at the highlighted row through `aria-activedescendant`; there is no list primitive — the one thing a primitive would add, the modal shell, comes from the library's own Dialog. Row mousedown is `preventDefault`ed so a click never blurs the field.
@@ -372,6 +394,7 @@ Systems first — their craft applies across every component below.
 - Suggested rows lead under their own heading while nothing is typed, and leave their original group so nothing is listed twice; the default filter matches every query word against label + description + keywords and never re-sorts, so rows don't move under the cursor as the query grows.
 
 <a id="context-menu"></a>
+
 ## ContextMenu
 
 - ContextMenu is the Dropdown opened at the pointer, not a second menu: a zero-size trigger is portalled to the body at the click point (fixed, so a scaled or scrolled ancestor can't offset it) and the flavored DropdownMenu opens from it. Items, fluid hover, typeahead, submenus and motion are the Dropdown's own in both flavors, with nothing duplicated.
@@ -382,11 +405,13 @@ Systems first — their craft applies across every component below.
 - In DataTable, rowActionsColumn's items are the right-click menu too (meta.rowMenu), so a row's actions are written once; the right-clicked row holds the hover fill in its own cells while its menu is open, rounded at its ends, and the selection is left alone.
 
 <a id="data-table"></a>
+
 ## DataTable
 
 [State and parts](#data-table-state-and-parts) · [Layout and alignment](#data-table-layout-and-alignment) · [Top bar](#data-table-top-bar) · [Headers and columns](#data-table-headers-and-columns) · [Scrolling and sticky columns](#data-table-scrolling-and-sticky-columns) · [Rows, selection and keys](#data-table-rows-selection-and-keys) · [Reordering rows](#data-table-reordering-rows) · [Search, filters and empty states](#data-table-search-filters-and-empty-states) · [Saved views](#data-table-saved-views) · [Editable cells](#data-table-editable-cells) · [Sub-rows](#data-table-sub-rows) · [Loading](#data-table-loading) · [Row actions and the selection bar](#data-table-row-actions-and-the-selection-bar) · [Performance](#data-table-performance) · [Undo](#data-table-undo)
 
 <a id="data-table-state-and-parts"></a>
+
 ### State and parts
 
 - TanStack Table owns every bit of state (sorting, filters, visibility, order, sizing, selection, page); the parts only read and set it, so each one is optional and any can be swapped for your own. useDataTable adds only the Columns menu's per-column text fitting, beside TanStack's state.
@@ -397,6 +422,7 @@ Systems first — their craft applies across every component below.
 - The page holds through data changes: `useDataTable` sets `autoResetPageIndex: false`. TanStack's default returns to page 1 whenever `data` is a new array, so an edited cell, a moved row, a delete or an undo on page 2 threw you back. A new search, filter or sort still starts from the first page, and a page with no rows left steps back to the last one that has some.
 
 <a id="data-table-layout-and-alignment"></a>
+
 ### Layout and alignment
 
 - Headers read `text-muted-foreground`, content `text-foreground`, so the data leads. Every column is left-aligned. `meta.icon` puts a 14px icon 4px before a header's title, in the same muted color; DataTableColumnHeader draws it inside its sort button, so the icon sorts too.
@@ -408,11 +434,13 @@ Systems first — their craft applies across every component below.
 - A focus ring never gets cut: inside a cell (which clips) every ring draws inset, the row's ⋯ button's and every ring in an editor (the whole editor, not only the focused input: a Combobox field rings its wrapper), since in compact the ⋯ sits flush with the cell's edge.
 
 <a id="data-table-top-bar"></a>
+
 ### Top bar
 
 - The top bar is all ghost: the title on the left and, at the right end, the filter button, the Columns button and the search, on one wrapping row 4px apart, their tooltips in one TooltipGroup when two or more show. The title row stands 12px above what follows (the stack's 8px plus 4: `mb-1` on it); the view tabs, the filter chips and the table keep 8px between them as one unit. Past a selection column the title, the view tabs and the chips all step in 28px (`pl-7`), to where the first data column starts: the edge they share with the table when there are no boxes. The search rests as an icon button, and a click springs it open (spring.moderate on its width, from the button's square) into a field that drops Input's hairline (hover fill on hover and while focused), the magnifying glass held at the button's center the whole time; an empty field closes on blur or Esc, a field with text stays open. The Columns menu and the page arrows are icon-only ghost buttons with aria-labels and tooltips. "Page n of m" sits 4px from its arrows, and Rows per page is a borderless Select sized to its value, so it reads as one sentence.
 
 <a id="data-table-headers-and-columns"></a>
+
 ### Headers and columns
 
 - A header that sorts or moves behaves like a ghost Button: its label lifts from muted to foreground on hover, and its hover fill is the header row's own fluid hover (TableHead `hoverIndex` joins a second, x-axis scope in Table, item under the pointer only, hidden while a header drags), gliding from header to header the way the row highlight runs down the body; pressed, that same fill turns `--active` (one surface, no second fill inside it), and it stops 1px above the header's bottom line. A filled table's sticky headers paint the page background over that layer, so there each header keeps its own fill the same way: `--hover`, then `--active`, clear of the bottom line.
@@ -426,6 +454,7 @@ Systems first — their craft applies across every component below.
 - Keyboard focus rings the whole header cell, the area its hover fill covers (a 1px `--focus-ring` border in the shape's fill radius, clear of the header's bottom line), not the label alone.
 
 <a id="data-table-scrolling-and-sticky-columns"></a>
+
 ### Scrolling and sticky columns
 
 - The table sits in the library's ScrollArea (horizontal; both axes under `fill`) with `scroll-fade-x` on its viewport: wider than its box it scrolls sideways under the system thumb (4px at rest, widening on hover, native on touch screens), and each edge fades while there's more to that side. `fill` makes the box `min-h-0 flex-1 overflow-auto` for fixed-height panels: header cells stick (`sticky top-0` on the page background, header row lifted to z-20) and gain an inset 1px hairline in the rows' rule color once the rows scroll (`data-scrolled` set from onScroll, no re-render).
@@ -437,6 +466,7 @@ Systems first — their craft applies across every component below.
 - The selection over frozen columns is Table's own fills drawn again (`selectionMirrors`), clipped to each frozen side and placed where the table's box sits when that side is at rest. A fill per frozen cell could only switch on: a row selected between two others merged into them in the scrolling columns and popped in the frozen ones, and its corners were a second, different set. Fills over the cells tint the text by the fill's few percent, which does not show.
 
 <a id="data-table-rows-selection-and-keys"></a>
+
 ### Rows, selection and keys
 
 - The row's hover fill says the row does something. It shows where a row answers a click (`onRowClick`, a selection column, a row menu, a handle, sub-rows, cell editors) and not on a table that is only read, where a fill promises a click that does nothing. `rowHover` holds it on or off. Off, only the fill goes: what rides the highlight (the empty box, the handle) and the keyboard's place still follow it, and the header keeps its own hover. A header follows the same rule: it takes the hover (the fill, the pointer, the lifted label) only where a click on it does something, so it moves, sorts, or its menu has a filter or a freeze to offer; with all of those off it is a plain label.
@@ -454,6 +484,7 @@ Systems first — their craft applies across every component below.
 - During a keyboard move the highlight is held on its row for the slide, frame by frame (a `translate` offset beside the transform its own animation writes), and the hover band and frozen-column fill take the same offset. Two animations of the same spring started a frame or two apart, and the fill visibly ran ahead of the row's content.
 
 <a id="data-table-reordering-rows"></a>
+
 ### Reordering rows
 
 - Rows reorder by a handle column (`rowHandleColumn()`, first, before the boxes) and `onRowReorder`. The table reports `{ rows, target, place }` and never reorders on its own; `moveRows(data, move)` writes it. Sub-rows travel with their parent and have no handle.
@@ -466,6 +497,7 @@ Systems first — their craft applies across every component below.
 - Under a sort the handles stay and a row drags as usual. The drop, or Alt + ↑ / ↓ when pressed, opens a small Dialog: "Remove sorting?", one line ("Rows can only be moved while the table isn't sorted."), Cancel and Remove sorting. Confirming clears the sort, the rows slide back to their own order, and a dropped row lands beside the row it was dropped on. Never drop a sort unasked, and never leave the handle doing nothing.
 
 <a id="data-table-search-filters-and-empty-states"></a>
+
 ### Search, filters and empty states
 
 - Typing in the search jumps back to page 1, so a shrinking result never strands you past the last page. An empty body holds a page of height (pageSize rows, capped at the data's length, row rules counted), so a search that runs dry doesn't move the pagination. With column filters set, the empty body points back to them: a description or action you leave out says "Remove a filter to see more." and offers a ghost Clear filter(s) button, since the filters are what emptied it.
@@ -477,6 +509,7 @@ Systems first — their craft applies across every component below.
 - A column of true and false values filters as two options, Yes and No. As text it could only match the words true and false, never what a cell shows for them. `meta.filter` names them otherwise.
 
 <a id="data-table-saved-views"></a>
+
 ### Saved views
 
 - Saved views are yours to keep (the URL, storage, your database): a view is the table's state, named (`columnFilters`, `globalFilter`, `sorting`, `columnOrder`, `columnVisibility`), opened with `table.setState` and page 1. Show them as compact Tabs with an "All" first, only once a view exists (a lone All says nothing), the row springing in like the chips row. Save view sits after the chips' + and shows only while the table differs from the open view (compare hidden columns only, not the full visibility map). It is a ghost Button at the size in use, no `size` prop: the same height as the + beside it (36px, or 28px compact). A view tab's name is capped (192px), then cut with an ellipsis, typed or saved: a long name must not push the other tabs and the tools off the row; the naming field keeps to that width and scrolls. A link in a cell that cuts its text short truncates itself (`inline-block max-w-full truncate`) and draws its focus ring inside its box (`outline-offset: -1px`): a ring outside it is cut by the cell on both sides. Saving names the new tab in place: a field laid over the tab in the tab's own type role, corners (the shape setting) and text position, its name selected; Enter or a click away keeps it, Esc keeps the old one, and its × deletes the view with an undo toast. A click on the open tab renames it, inline: the tab's label becomes the draft so the tab grows and pushes the others as you type, a bare field sits on that label in its own type and weight (the tab's fill is the only surface, no box or shadow), and a × fades in at the tab's end to delete the view. Tabs reorder like headers: 4px before a drag, a ghost in the tab's corners and type, a 2px accent bar where it lands, Alt + ← / →, All stays first.
@@ -484,6 +517,7 @@ Systems first — their craft applies across every component below.
 - A view is renamed in its tab: click the open tab, the tab's own label becomes the draft so the tab grows as you type, and a bare field sits on the label with a × at the tab's end that deletes the view. A view just saved opens straight into naming. Saved tabs drag to reorder like column headers (a lifted copy, a 2px accent bar, the others sliding over) and Alt + ← / → moves a focused one; the first tab, the table as it starts, stays first.
 
 <a id="data-table-editable-cells"></a>
+
 ### Editable cells
 
 - Editable cells are opt-in per column (`meta.editor`) and switch on with DataTable's `onCellEdit`, which gets `{ row, columnId, value }` on every change (each keystroke, each pick). The table shows what your data holds, so write the value back; with sub-rows, write it into the parent's children.
@@ -498,6 +532,7 @@ Systems first — their craft applies across every component below.
 - An editor taking focus (or a press, since Safari doesn't focus a button on click; never a press on a chip's ✕, which the scroll would slide from under the pointer before the click) first brings its whole cell into the table's visible box, clear of the 48px edge fade on a side the table can still scroll to, sideways by as little as it takes, so a cell half scrolled out of view (or under the fade) never opens its menu or calendar beside the table, past the edge of whatever holds it. The number, tags and select editors also pass the table's box (caught as they take focus) to their popup as `collisionBoundary`, so a list or menu shifts or flips to stay inside the table even when its cell runs past the edge. If the table scrolls sideways while an editor's popup is open, the popup closes as Esc would rather than ride its trigger out of the box; the reveal's own scroll doesn't count.
 
 <a id="data-table-sub-rows"></a>
+
 ### Sub-rows
 
 - Sub-rows come from TanStack's `getSubRows`. useDataTable adds the expanded row model with `paginateExpandedRows: false`, so a page holds its parents however many children they open, and `filterFromLeafRows: true`, so a search that matches a child keeps its parent. The chevron's column is sized for its sub-rows too: their names, which a collapsed row doesn't render, are measured from the data in the cell's font when widths are read (and again when rows gain sub-rows), so opening a row never wraps or cuts a child's name; short of room it gives up width no further than its widest word (parents and sub-rows), so with text wrap on a name wraps between words, never inside one.
@@ -508,24 +543,27 @@ Systems first — their craft applies across every component below.
 - A sub-row with a chevron of its own breaks the guide: it stops 6px above that chevron and picks up 6px under it, never running through the glyph.
 
 <a id="data-table-loading"></a>
+
 ### Loading
 
 - `loading` shows a page of skeleton rows the size of real ones, each cell a shadcn Skeleton in the library's loading fill, `bg-hover` (the Sidebar's skeleton color, lighter than the Skeleton's own `bg-accent`): the checkbox's square, a text-height bar elsewhere, nothing for the row menu, in a `reveal-swap`, timed by `@fluid/reveal`: skeletons wait 160ms, so fast data never shows one. When it turns false, each new row draws a skeleton over every cell's content box, shown at once (its delayed reveal and pulse off) and fading out while the content fades in under it in its real layout, so no cell blinks empty and no row changes height. The table carries `aria-busy` while loading, since the skeleton rows are aria-hidden. Rows are keyed by record id, so state in a cell follows its record through sorts and page turns. Text sits in a block that carries the cell's fitting (clipped sideways only, so badges still overhang); control columns are left unwrapped so their hit areas aren't clipped.
 - A table that loads again (a reload, a refetch) keeps the column widths its last rows gave it, so the skeletons sit where the data lands and no column moves. Only a first load, with no rows read yet, sizes from the headers. A date editor's column never shrinks below its date: its trigger can't cut text short the way a plain cell does. Widths read from a first load's skeletons are a guess: with `resizeColumns` they seed the sizing, so the rows that land must size the columns again and replace the guess (a name column stayed as narrow as its skeleton bar). Without it, set the fitted widths in the measuring layout effect itself, not in the ResizeObserver's first report, which lands a paint late: rows that had just arrived showed for a frame in their skeletons' columns, wrapped to three times their height. When a first load's rows change the widths, the headers glide to their new place (the same FLIP as a column move) instead of jumping. A page that server-renders a content-sized table should open on the skeleton and land the rows after `document.fonts.ready`, since server-sent rows shift once measured. Selection boxes that stay hidden until hover must show up already checked when many get checked at once (select all, a range): give the hidden ones no border transition, or every row flashes an empty outline while its box fades in and its border fades out. A box switches at once on a selection change, checked or cleared, rather than fading: an opacity fade per row puts each box on its own layer while its check draws, and on a real GPU the checks then come and go a few rows at a time. What is drawn over or behind the rows from outside the scroll box (the frozen columns' fills, the fade bands) is placed in the table's coordinates and rides the vertical scroll on a scroll-driven transform (`animation-timeline` on the box's own block timeline, the range `--ff-scroll-y`): placed from scroll events it trails a fast scroll by a frame and the frozen fills lag their rows. Cut those layers off at the sticky header's bottom (measure a header cell, not the thead, which scrolls away). A column shown after the widths were read takes 166px. Sub-rows open and close in 120ms: the layout changes at once (fills snapped), then the rows below slide from where they were, new rows are uncovered by the rows sliding off them and a copy of the rows a close removed is covered by the rows sliding over it (each cut at the sliding rows' top edge on the slide's own clock, so two rows' text never show through each other; the copy takes its column widths from a colgroup, since widths set on copied cells lose to the cells' own classes); the selection fills under the sliding rows take the same offset as `translate`, apart from their own transform, or they sit a row away from their rows for the slide. While a one-line cell's text field is open the table does not scroll, either way (a mark on the scroll box that a stylesheet reads, since the scroll box rewrites its inline styles): the field hangs from its cell, and scrolled, it slid under the frozen columns and the header mid-typing. No row lights up either while that field is open (the fill, the selection box and the drag handle stay hidden). A column frozen on the left can be reordered like any other: the freeze belongs to the place, so a column dropped first takes the frozen slot and the one it displaced scrolls again. A dragged header lands where the pointer is, not where its ghost stopped at the table's edge: a wide header held at the left edge never got its middle past a narrower first column, so nothing could be dropped first. When rows come or go under the pointer (a sub-row opened or closed), the hover fill must not leave and fade back in: the rows are measured before paint in that commit, so the fill is drawn from them even though the hover hook reports them unmeasured until its own pass a frame later. A filter chip part whose menu is open stays pressed (`aria-expanded`), as every trigger does. A header whose menu is open stays pressed until it closes (Table `heldHeadIndex`; a frozen or sticky header draws its own fill and takes a `data-held` mark): the layer under the menu takes the pointer off the table, so the hover fill alone went out and left the menu hanging from an unmarked header. A column of short whole values (a date) sets a min-width that holds one: short of room a column gives up width down to its header, and a header narrower than the value cut every date short (`Nov 4, …`). The table hands the selection bar one root getter for its whole life: a new function per state change restarted the bar's in-view watcher on every row picked, and the bar left and came back each time. The frozen columns' extent is measured from the header cells as drawn, not summed from fitted widths: a frozen column that takes the room left over (`w-full`) is wider than its fitted width, and fills drawn over the frozen columns stopped partway across it. The last column's resize handle stays inside the column: hanging past the table it adds 4px of sideways scroll to a table that fits. The selection bar is held by the browser in both its places: fixed at the window's bottom while the table runs past it, and absolute on the table's bottom (in page coordinates) once that is in view. Moved there from scroll events, it trails the scroll by a frame and shakes. The selection bar shows only while its table is on screen: a selection the page starts with, or one made before scrolling away, must not leave a bar floating at the window's bottom. A cell never scrolls inside the table: content past a cell's edge is cut (`overflow-x: hidden`, so a field still brings its caret into view), not scrollable, or the cell catches the wheel meant for the table. A table with frozen columns turns off sideways rubber-banding on its scroll box (`overscroll-behavior-x: none`): past either end the browser slides the whole content, frozen columns included, while the fills and fades drawn over them from the box stay put. Up and down too (`overscroll-behavior-y: none`) only where the rows scroll inside the box: a table that doesn't scroll that way must still hand the wheel on to the page. A menu opened from a whole header cell sets `min-w-0` with its own width: a dropdown is at least as wide as its trigger, and a wide column stretched the menu across the table. Standard hover's highlight reports where it is (`onFrame`) on each change, as fluid hover does each frame, so the fill over frozen columns follows it too. A table that scrolls inside its box marks both ends: the header's hairline once rows have passed under it, and at the bottom a 48px fade into the page over a hairline while more rows are below (both hairlines in the frozen columns' edge color, `foreground/8%`: one color for every line that marks content passing under something; the header's is its own bottom border recolored, not a shadow on top of it) (an overlay in the box, keyed on a `data-more-below` mark, not a mask: a mask would fade the sticky header too). A drag that carries a selection shows every carried row in its ghost, where it is: rows that touch share a block, rows apart keep the gap between them, and the grabbed row stays under the pointer. The ghost keeps the fill and the checks; the rows left in place drop their selection fill while it is up (leave them out of `selectedIndices`). Only a selection spread past 60% of the window is stacked and cut short, with a count. A sticky header keeps its rule when the first row is selected (`keepRule` on its TableRow): each sticky cell is its own layer, and repainting the rule on every selection change shows cell by cell. Base UI's hidden form inputs are `position: fixed`, and each fixed element is a compositor layer that splits what paints around it into more: a checkbox per row cut a 34-row table into 230 layers (440MB) that painted a few at a time and blanked on a resize. Make the hidden input absolute (`[&+input]:absolute!` on the box). The frozen bands over pinned columns sit in the scroll box, not the table, so place them again whenever the table moves under them (a scroll with the pointer still), not only when the highlight moves. Row rules that fade for the gliding highlight must switch at once on a selection change (mark the table for a frame from an insertion effect, so the mark is on before any layout effect reads layout): select all otherwise starts a transition per cell border, 1,200 for 34 rows, each firing three events. ⌘A with the pointer over the table selects its rows wherever focus was left (a button pressed last, such as Rows per page, keeps focus), short of a field being typed in or an open popup: otherwise the browser selects every word on the page.
 
 <a id="data-table-row-actions-and-the-selection-bar"></a>
+
 ### Row actions and the selection bar
 
 - Right-click: rowActionsColumn's items are also the row's ContextMenu (meta.rowMenu), opened at the pointer, or with Shift + F10 on a focused row; the row holds the hover fill in its own cells while its menu is open, and the selection is left alone.
 - Destructive actions (Delete, Remove) set MenuItem's and CommandMenu items' `destructive`: the label and icon in `--destructive`, 80% at rest and full when lit. A delete shows the app's toast with the step's label and an Undo; undo keys reach the last table used from the page too (a menu or the selection bar hands focus back to the body), never from a field.
 - Every menu the table opens (a header's, Filter, Columns, a row's ⋯ or right-click, a chip's word and values, a select cell) lays a clear MenuShield over the page just under it: nothing else lights up until it closes, and a press on it closes the menu.
-- DataTableSelectionBar floats over the table while any row is selected (on any page): the count, a ghost Actions button with its ⌘K caps that opens a CommandMenuDialog of `actions` built from the selected rows, and a ghost × that clears the selection, its tooltip drawing Esc as a key cap in the tooltip's inverted colors (like the Sidebar's). ⌘K is bound only while rows are selected, so the page's palette keeps the combo the rest of the time. 
+- DataTableSelectionBar floats over the table while any row is selected (on any page): the count, a ghost Actions button with its ⌘K caps that opens a CommandMenuDialog of `actions` built from the selected rows, and a ghost × that clears the selection, its tooltip drawing Esc as a key cap in the tooltip's inverted colors (like the Sidebar's). ⌘K is bound only while rows are selected, so the page's palette keeps the combo the rest of the time.
 - The bar is portalled and fixed, centered on the table's visible box and 20px above the window's bottom edge, or the table's own once that's in view, placed by hand on scroll and resize (written to the element, no re-render), so it takes no room and needs no particular parent. On each placement it also takes the highest z-index among the table's ancestors, plus one (never below its own sticky step): a table inside a higher layer (a dialog, a full-window preview) hid it otherwise. Its surface is Elevated (offset 2, shadow 3, like Dropdown) with the shape's corners, on the sticky step of the z scale; it rises 8px from 0.96 on spring.moderate from its bottom center and leaves on the tier's exit (opacity only under reduced motion), keeping its count while it goes.
 - The selection bar appears in place, like the library's other floating surfaces: an 8px rise, scale from 0.96 at its bottom center (where it is anchored) and a 4px blur clearing on `spring.moderate`, the fade a short ease-out tween; it leaves the same way, quicker. A toast's entrance (a slide by its own height) read as the bar travelling across the rows it floats over. Its parts don't stagger: the bar is one object. The count rolls when it changes: only the digits that changed slide out and the new ones in, half a line, upward as the count grows and downward as it shrinks, keyed from the right so the units stay the units, and the count's box springs to its measured width when a digit is added (9 to 10). The rolling digits are `aria-hidden`; the live region reads a plain copy of the phrase.
 - The selection bar is inverted like a toast (the page's foreground as its ground, its background as its text) in either theme. It reads the two into `--bar-bg` / `--bar-fg`, and a `contents` box inside redefines `--foreground`, `--background`, `--muted-foreground`, `--hover` and `--active` from them, so its ghost Button and key caps invert by themselves with no styles of their own.
 - It takes a menu's insets, 4px around its buttons; the count sits 8px further in than a menu item's label (20px, 18px compact), for room at the bar's rounded end. Its Actions button ends in the shortcut's key caps, so it takes Button's trailing-icon inset on that side (12px, 8px compact).
 
 <a id="data-table-performance"></a>
+
 ### Performance
 
 - Rows are compared by record (same id, same `original`, same index and parent), not by TanStack's Row object, which is rebuilt for every row whenever `data` is a new array. One edit, move, undo or delete then renders only the rows it changed. For this to hold, keep row objects and `columns` stable across edits: a `columns` memo that depends on something changing with every edit renders every cell again.
@@ -534,11 +572,13 @@ Systems first — their craft applies across every component below.
 - A date trigger holds the width of its widest label with an invisible stack of every weekday and month name, 26 elements a trigger. In a table only the page's first row renders it: its width is read into `--ff-date-w` on the table's box, and the other rows pass `fitLabel` and take that as the label's min-width. Same widths, about a fifth fewer elements in a table with a date column.
 
 <a id="data-table-undo"></a>
+
 ### Undo
 
 - Undo: useUndoableRows keeps rows as snapshots, each change a labelled step (edit, remove, insert, apply), with redo cleared by any new change and the last 100 kept. A cell typed in a burst (same row and fields within 1s) merges into one step, so ⌘Z takes back the word, not the letter. DataTable's onUndo / onRedo bind ⌘Z and ⇧⌘Z (Ctrl+Z, Ctrl+Shift+Z, Ctrl+Y) on the table element itself, never the window, and skip fields so an editor keeps its own undo; a destructive action shows the step's label in the app's toast with an Undo that calls the same `undo`. Saved views are not a part: a view is `getState()`'s filters, sort and visibility, put back with `setState`. When every row has been deleted, the empty body says so ("No components left") and offers the Undo it would take, instead of a search's "No … match". `stepCount` counts every step ever taken, the ones trimmed at `limit` included, so a count read before a change still names its step for `undoTo` once the history is full.
 
 <a id="date-picker"></a>
+
 ## DatePicker
 
 - The outline trigger (the default `variant`) matches Select: the control height, the shape's input radius, a 1px border, and the focus ring. Its parts (the date, each time, the clear button) sit 2px inside the border and share one fluid hover scope along `x`, with corners nested in the field's radius (5px rounded, 17px pill, square when sharp). `variant="ghost"` drops the border for inline use.
@@ -554,6 +594,7 @@ Systems first — their craft applies across every component below.
 - The 2 flavors share everything but the popover: Radix keeps its content mounted with `forceMount` until the exit spring ends; Base UI calls `preventUnmountOnClose()` on every close and releases the unmount from the frame's animation callback, with an exit-length timeout as a fallback.
 
 <a id="dialog"></a>
+
 ## Dialog
 
 - Enters and exits on the slow tier: panel fades and scales 0.97→1 on a spring (0.24s, bounce 0.12); the exit is a quicker plain tween (0.16s) so a dismissal reads crisp and final rather than replaying the entrance in reverse.
@@ -565,6 +606,7 @@ Systems first — their craft applies across every component below.
 - `showCloseButton` (default true) renders the corner ✕ as a ghost icon Button; drop it when the content has its own way out, e.g. a command menu that closes on Escape and on a pick.
 
 <a id="dropdown"></a>
+
 ## Dropdown
 
 - While any popup is open (Dropdown, ContextMenu, Select, Combobox, DatePicker, ColorPicker) two things hold. Its trigger keeps the pressed look (`bg-active`): a Button does it on its own when it has `aria-haspopup` and `aria-expanded`, other triggers style the primitive's open attribute. And nothing else on the page hovers: `PopupShield` from lib/popup, a clear fixed layer one z-step under the popup, takes the pointer, and a press on it is a press outside. A field that stays live under its popup (the Combobox input, the DatePicker's row of segments) is cut out of the layer through its `anchor`. A menu opened by hover gets no layer, since the pointer leaving it is what closes it.
@@ -581,6 +623,7 @@ Systems first — their craft applies across every component below.
 - A submenu sits 2px off the parent menu (`sideOffset` 6 is measured from the trigger row, inside the menu's 4px padding) with its first row level with the trigger (`alignOffset` -4 cancels the padding), keeps its own `w-56` instead of tracking its anchor's width, and never takes focus on a hover open: only a keyboard open (→, Enter) lands on its first row.
 
 <a id="field"></a>
+
 ## Field
 
 - Field is layout and type plus one link: the control (Input, Textarea, Select, Checkbox, any native field) is whatever goes inside, and after each render Field adds the ids of its own FieldDescription and FieldError to that control's aria-describedby, keeping the caller's ids. It is role=group only when named (aria-label or aria-labelledby), so single fields don't announce an empty group. Validation reads data-invalid on Field for the red label and aria-invalid on the control for its border.
@@ -592,6 +635,7 @@ Systems first — their craft applies across every component below.
 - Choice card: a FieldLabel wrapping a whole horizontal Field becomes one bordered, hoverable target (rounded-xl, p-3, hover:bg-hover) whose border darkens to foreground/40 once the checkbox inside is checked. Keyboard focus rings the card's outline in --focus-ring and the checkbox's own ring steps aside, so the focus mark matches the target.
 
 <a id="input"></a>
+
 ## Input
 
 - The frame copies the Select trigger: border border-border that never moves at rest, the ladder's height (h-9 / h-7), px (12px / 10px) and body text, so an Input and a Select side by side match to the pixel.
@@ -602,6 +646,7 @@ Systems first — their craft applies across every component below.
 - type=file gets a file icon over its left padding (px + icon + gap) and the line padding a text input centers by itself (7px, 4px compact); its text stays muted until a file is picked, while the browser's Choose File button keeps full contrast.
 
 <a id="input-copy"></a>
+
 ## InputCopy
 
 - Icon swap is a wait-mode crossfade: the copy icon exits at scale 0.8, the check (or error ×) enters at scale 0.6→1 on spring.fast, and the check/× glyph then draws itself with a pathLength 0→1 stroke animation in 0.08s easeOut.
@@ -613,6 +658,7 @@ Systems first — their craft applies across every component below.
 - Accessible name reflects state ("Copied" / "Copy failed" / "Copy"), and when a field label exists `aria-labelledby` chains button-then-label so screen readers hear "Copy <label>".
 
 <a id="input-group"></a>
+
 ## InputGroup
 
 - A field lights up when it is the hover-nearest item OR focused (`labelActive = isActive || isFocused`): its leading icon shifts muted→foreground and stroke-width 1.5→2 over 80ms.
@@ -625,6 +671,7 @@ Systems first — their craft applies across every component below.
 - Base UI Field wires the a11y plumbing: label htmlFor, error id landing in aria-describedby, `invalid` driving aria-invalid; `Field.Error match` pins the message visible while the controlled `error` prop stands, and `labelHidden` renders sr-only so inline fields keep their accessible name.
 
 <a id="input-message"></a>
+
 ## InputMessage
 
 - Auto-resize clamps the textarea between minRows and maxRows × the parsed line-height (cached per element to avoid getComputedStyle on every keystroke); overflow-y only turns on past maxRows. A width-gated ResizeObserver re-runs the measure because a near-zero-width mount wraps the placeholder into many lines and pins the height at maxRows.
@@ -640,6 +687,7 @@ Systems first — their craft applies across every component below.
 - Suggestions are a listbox that never steals focus: ↓ enters/descends, ↑ walks back up and out, Enter or click fills the composer; the highlighted row is tracked via aria-activedescendant and shares the same sliding fluid-hover overlay as the pointer. While nothing is highlighted the first row shows a ↓ keycap hint in the slot where the active row shows ↵.
 
 <a id="radio-group"></a>
+
 ## RadioGroup
 
 - The selected-row background is one shared motion.div that springs (spring.moderate, 0.16s critically damped) from the old row to the new one instead of fading out/in per row.
@@ -651,6 +699,7 @@ Systems first — their craft applies across every component below.
 - The animated focus ring is a single rect that springs (spring.fast) between rows at a −2px inset, only on :focus-visible; a `value`-controlled group still wraps the Radix primitive even without onValueChange because the hidden per-item inputs need its context.
 
 <a id="select"></a>
+
 ## Select
 
 - Selection acknowledgment: picking an item holds the popup open 300ms (`selectionAckMs`) before closing, so the checkmark drawing in and the selected background springing to the picked row are seen instead of cut off by the ~60ms close fade. Escape, outside press and trigger toggle still close immediately; Radix reports no close reason, so a close arriving within 100ms of `onValueChange` is read as selection-driven.
@@ -662,6 +711,7 @@ Systems first — their craft applies across every component below.
 - The trigger follows the global shape; the popup caps it at "rounded" (pill becomes rounded, sharp stays sharp); the popup enters on the fast tier with the side-aware `popupMotionClass`, tracks the trigger width via `--radix-select-trigger-width`, and caps at min(300px, available height).
 
 <a id="sidebar"></a>
+
 ## Sidebar
 
 - The rail handle does three things: drag to resize clamped 160–360px; drag ≥56px past the minimum (SIDEBAR_COLLAPSE_SLOP) to preview collapse — "the same 'throw it at the edge to dismiss' affordance native apps use" — with drag-back past the threshold re-expanding, nothing committed until release; and a press that never moves ≥4px is the collapse click.
@@ -677,6 +727,7 @@ Systems first — their craft applies across every component below.
 - The avatar remains a consumer-owned ReactNode, but image examples apply a 1px inset pure-black/pure-white 10% outline; at 20px this is the difference between a pale portrait reading as a circle and dissolving into the row surface.
 
 <a id="slider"></a>
+
 ## Slider
 
 - One component, two ladder steps: default size renders the pips/scrubber design, compact the dense one; any compact-only prop (array value, `steps`, `showSteps`, `showValue`, `valuePosition`, track/fill styling, thumb colors) forces the compact engine regardless of size "so no capability is ever lost".
@@ -689,6 +740,7 @@ Systems first — their craft applies across every component below.
 - Comfortable (default-size) designs use a 2px handle line that grows 2px taller (inset 8 → 7) and darkens 25% → 50% → 100% foreground across rest/hover/focus; at min a zeroOffset (8px pips, 17px scrubber) keeps the line visible; scrubber drag sets fill directly (glued, no spring) while pips springs per snap; both add an 8px-beyond-each-edge hit area.
 
 <a id="switch"></a>
+
 ## Switch
 
 - The thumb is draggable, not just clickable: pointer capture + a 2px dead zone distinguishes drag from click, the thumb tracks the pointer clamped to the track, and release toggles when past the track midpoint or springs back otherwise.
@@ -701,6 +753,7 @@ Systems first — their craft applies across every component below.
 - The whole row is the pointer target (touch-none stops scroll fighting the drag); the label shifts muted-foreground → foreground over 80ms when on, with text-box trim recentering letterforms against the taller track without changing layout.
 
 <a id="table"></a>
+
 ## Table
 
 - Row hover is the shared fluid-hover highlight drawn once behind the whole `<table>`, rounded by the shape setting (`shape.bg`) like the selection under it; body rows opt in by passing `index`, header rows omit it.
@@ -718,6 +771,7 @@ Systems first — their craft applies across every component below.
 - Header cells can join their own fluid hover scope: TableHead `hoverIndex` registers the cell in a second, x-axis scope (the cell under the pointer only), whose fill glides along the header row the way the row highlight runs down the body. `hideHeadHighlight` puts it away, e.g. while a header is dragged.
 
 <a id="tabs"></a>
+
 ## Tabs
 
 - The hover pill fades in on the hovered tab at opacity 0.4, glides between unselected tabs on `spring.fast`, and fades out where it is on mouse exit. It hides over the selected tab and never crosses it: past the selected tab a new pill fades in. The selected pill keeps its full opacity while another tab is hovered.
@@ -729,6 +783,7 @@ Systems first — their craft applies across every component below.
 - Activation is manual, `activationMode="manual"` on Radix and `activateOnFocus={false}` on Base UI: arrows move focus, Enter/Space selects. The primitive owns role="tablist", roving tabindex, and Arrow/Home/End.
 
 <a id="textarea"></a>
+
 ## Textarea
 
 - The Input's hairline on a multi-line box: fixed --border at rest, bg-hover on hover, neutral foreground/40 on focus that wins over aria-invalid's red.
@@ -737,6 +792,7 @@ Systems first — their craft applies across every component below.
 - A pill shape steps down to its merged radius, because a full pill radius on a tall box reads as a blob.
 
 <a id="thinking-indicator"></a>
+
 ## ThinkingIndicator
 
 - The glyph is one SVG path morphing circle → infinity → reversed circle → infinity → circle in equal quarters (`times: [0,.25,.5,.75, 1]`) over 6s easeInOut, repeating forever; the two circle paths trace opposite winding directions so the loop keeps flowing.
@@ -747,6 +803,7 @@ Systems first — their craft applies across every component below.
 - Reduced motion drops both the infinite morph and the word cycling — a static infinity glyph and the first word "carry the same meaning without the movement".
 
 <a id="thinking-steps"></a>
+
 ## ThinkingSteps
 
 - Each step enters in two phases: an outer wrapper opens height on spring.slow (to a measured pixel height, never "auto") while the inner content fades in after a default 0.08s delay — space opens first, then content appears. Pixel targets are used because framer resolves an "auto" height from the element's visual (transformed) size, so under a scaled ancestor the whole list would overshoot and snap back.
@@ -758,6 +815,7 @@ Systems first — their craft applies across every component below.
 - Source badges enter with a blur(4px)→0 + scale 0.85→1 + fade on spring.moderate, staggerable via per-badge `delay` (docs use 0.05s increments); step images use the same blur-in without the scale, plus a 1px inset pure-black/pure-white 10% outline so screenshots keep a visible edge on either theme.
 
 <a id="tooltip"></a>
+
 ## Tooltip
 
 - Enters on the fast tier (0.08s spring) with a 4px slide toward the trigger from the chosen side (top→y:4, bottom→y:-4, left→x:4, right→x:-4) and fades out on the quicker 0.06s exit tween; default `sideOffset` is 8.
@@ -775,6 +833,7 @@ Systems first — their craft applies across every component below.
 # Blocks
 
 <a id="queued-stack"></a>
+
 ## Queued message stack (queued-stack)
 
 - At rest only the front card plus at most 2 peeks show: each deeper card rises 12px and scales down 0.05 per step (transform-origin bottom center); anything past peek 2 sits at opacity 0. Card height rides the size ladder (44px default, 38px compact), and collapsedStackHeight() is exported so the transcript can reserve exactly that much padding.
@@ -787,6 +846,7 @@ Systems first — their craft applies across every component below.
 - Attachment thumbnails and the +N tile derive their radius from the queue card's radius minus the actual 8px inset (~7px compact), so the leading nested corner remains concentric in both rounded and pill modes.
 
 <a id="sidebar-app"></a>
+
 ## App Sidebar (sidebar-app)
 
 - While the sidebar is only peeked, the floating overlay covers the pointer's one way to pin it — so a SidebarTrigger takes the workspace tile's slot, positioned as a sibling over the row (never a button inside the row button). Trigger and tile cross-fade in place (opacity only, 80ms, nothing moves) and the row's constant padding keeps the name pinned on the rows' 32px text axis through the swap.
@@ -798,6 +858,7 @@ Systems first — their craft applies across every component below.
 - Collapsed means gone — no icon rail. peek='hover' floats the real sidebar, labels and all, the moment the cursor reaches the collapsed edge; pinning from a peek never shifts the rows. Desktop open state persists to the sidebar_state cookie — read it in a server layout for a flicker-free default.
 
 <a id="dialog-sidebar"></a>
+
 ## Settings Dialog (dialog-sidebar)
 
 - The xl Dialog (880px; 800 compact) becomes a layout canvas: p-0, flex, and a FIXED height (min(640px, 100dvh - 4rem)) so the panel scrolls inside it rather than the dialog growing.

@@ -17,34 +17,34 @@ export interface GoogleFont {
   i?: 1;
   /** Google's category: s serif, a sans serif, d display, h handwriting,
    *  m monospace. Missing when Google's feed doesn't list the family. */
-  c?: "s" | "a" | "d" | "h" | "m";
+  c?: 's' | 'a' | 'd' | 'h' | 'm';
 }
 
 /** Shown before anything is typed: families people reach for in headings. */
 export const POPULAR_GOOGLE_FONTS = [
-  "Playfair Display",
-  "Fraunces",
-  "Instrument Serif",
-  "DM Serif Display",
-  "Newsreader",
-  "Literata",
-  "Lora",
-  "EB Garamond",
-  "Cormorant Garamond",
-  "Libre Baskerville",
-  "Young Serif",
-  "Bricolage Grotesque",
-  "Space Grotesk",
-  "Manrope",
-  "DM Sans",
-  "Syne",
-  "Montserrat",
-  "Poppins",
+  'Playfair Display',
+  'Fraunces',
+  'Instrument Serif',
+  'DM Serif Display',
+  'Newsreader',
+  'Literata',
+  'Lora',
+  'EB Garamond',
+  'Cormorant Garamond',
+  'Libre Baskerville',
+  'Young Serif',
+  'Bricolage Grotesque',
+  'Space Grotesk',
+  'Manrope',
+  'DM Sans',
+  'Syne',
+  'Montserrat',
+  'Poppins',
 ] as const;
 
-const CSS2 = "https://fonts.googleapis.com/css2";
+const CSS2 = 'https://fonts.googleapis.com/css2';
 
-const familyParam = (name: string) => encodeURIComponent(name).replace(/%20/g, "+");
+const familyParam = (name: string) => encodeURIComponent(name).replace(/%20/g, '+');
 
 /** The axis spec of one family: every weight it has, upright unless it only
  *  ships italics. */
@@ -53,13 +53,17 @@ function fullSpec(font: GoogleFont): string {
   const wght = font.a?.wght;
   if (wght) {
     const opsz = font.a?.opsz;
-    const tags = [...(ital ? ["ital"] : []), ...(opsz ? ["opsz"] : []), "wght"];
-    const values = [...(ital ? ["1"] : []), ...(opsz ? [`${opsz[0]}..${opsz[1]}`] : []), `${wght[0]}..${wght[1]}`];
-    return `:${tags.join(",")}@${values.join(",")}`;
+    const tags = [...(ital ? ['ital'] : []), ...(opsz ? ['opsz'] : []), 'wght'];
+    const values = [
+      ...(ital ? ['1'] : []),
+      ...(opsz ? [`${opsz[0]}..${opsz[1]}`] : []),
+      `${wght[0]}..${wght[1]}`,
+    ];
+    return `:${tags.join(',')}@${values.join(',')}`;
   }
   const weights = font.w ?? [400];
-  if (ital) return `:ital,wght@${weights.map((w) => `1,${w}`).join(";")}`;
-  return font.w ? `:wght@${weights.join(";")}` : "";
+  if (ital) return `:ital,wght@${weights.map((w) => `1,${w}`).join(';')}`;
+  return font.w ? `:wght@${weights.join(';')}` : '';
 }
 
 /** One weight only, the regular when the family has it: enough to preview. */
@@ -72,7 +76,7 @@ function previewSpec(font: GoogleFont): string {
       ? 400
       : weights[0];
   if (font.i === 1) return `:ital,wght@1,${weight}`;
-  return weight === 400 ? "" : `:wght@${weight}`;
+  return weight === 400 ? '' : `:wght@${weight}`;
 }
 
 /** Loads the whole family, for the headings. */
@@ -83,8 +87,8 @@ export function googleFontHref(font: GoogleFont): string {
 /** Loads each family's name in its own face, and only those letters: a few
  *  KB for a page of picker rows. */
 export function googleFontPreviewHref(fonts: readonly GoogleFont[]): string {
-  const families = fonts.map((f) => `family=${familyParam(f.n)}${previewSpec(f)}`).join("&");
-  const text = [...new Set(fonts.flatMap((f) => [...f.n]))].sort().join("");
+  const families = fonts.map((f) => `family=${familyParam(f.n)}${previewSpec(f)}`).join('&');
+  const text = [...new Set(fonts.flatMap((f) => [...f.n]))].sort().join('');
   return `${CSS2}?${families}&text=${encodeURIComponent(text)}&display=swap`;
 }
 
@@ -103,7 +107,7 @@ export function googleFontWeights(font: GoogleFont): number[] {
 /** The family's weight closest to `weight` (the lighter one on a tie). */
 export function nearestGoogleFontWeight(font: GoogleFont, weight: number): number {
   return googleFontWeights(font).reduce((best, w) =>
-    Math.abs(w - weight) < Math.abs(best - weight) ? w : best
+    Math.abs(w - weight) < Math.abs(best - weight) ? w : best,
   );
 }
 
@@ -112,20 +116,20 @@ export function nearestGoogleFontWeight(font: GoogleFont, weight: number): numbe
  *  custom mode in globals.css uses for every heading role over the role
  *  weights. Own names, so they stay inert in the other modes. */
 export function customHeadingVars(font: GoogleFont, weight: number | null): Record<string, string> {
-  const vars: Record<string, string> = { "--font-custom": `"${font.n}"` };
-  if (weight !== null) vars["--font-custom-weight"] = String(weight);
+  const vars: Record<string, string> = { '--font-custom': `"${font.n}"` };
+  if (weight !== null) vars['--font-custom-weight'] = String(weight);
   return vars;
 }
 
 /** Display names for the weight scale. */
 export const WEIGHT_NAMES: Record<number, string> = {
-  100: "Thin",
-  200: "Extra Light",
-  300: "Light",
-  400: "Regular",
-  500: "Medium",
-  600: "Semibold",
-  700: "Bold",
-  800: "Extra Bold",
-  900: "Black",
+  100: 'Thin',
+  200: 'Extra Light',
+  300: 'Light',
+  400: 'Regular',
+  500: 'Medium',
+  600: 'Semibold',
+  700: 'Bold',
+  800: 'Extra Bold',
+  900: 'Black',
 };

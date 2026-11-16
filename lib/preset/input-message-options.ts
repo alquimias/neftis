@@ -18,14 +18,14 @@ import {
   decodePreset,
   type PresetComponentDef,
   type PresetField,
-} from "./codec";
-import { DEFAULT_GLOBALS, type PresetGlobals } from "./sidebar-options";
+} from './codec';
+import { DEFAULT_GLOBALS, type PresetGlobals } from './sidebar-options';
 
 export type { PresetField };
 
 /** The queue section's status control: "off" hides the queue wiring entirely;
  *  "idle"/"streaming" enable it seeded in that status. */
-export type InputMessageStatus = "off" | "idle" | "streaming";
+export type InputMessageStatus = 'off' | 'idle' | 'streaming';
 
 export interface InputMessagePlayState {
   // Composer
@@ -60,7 +60,7 @@ export const INPUT_MESSAGE_DEFAULT_STATE: InputMessagePlayState = {
   disabled: false,
   leftSlot: true,
   rightSlot: false,
-  status: "off",
+  status: 'off',
 };
 
 export const INPUT_MESSAGE_DEFAULT_PRESET: InputMessagePreset = {
@@ -71,65 +71,60 @@ export const INPUT_MESSAGE_DEFAULT_PRESET: InputMessagePreset = {
 // Value arrays are ordered DEFAULT-FIRST. Globals ride at the END with the
 // same shapes as the sidebar's, so every playground packs them alike.
 export const INPUT_MESSAGE_PRESET_FIELDS: readonly PresetField[] = [
-  { key: "suggestion", values: [true, false], bits: 1 },
-  { key: "suggestionsOn", values: [true, false], bits: 1 },
-  { key: "historyOn", values: [true, false], bits: 1 },
-  { key: "attachments", values: [false, true], bits: 1 },
-  { key: "minRows", values: [1, 2, 3], bits: 3 },
-  { key: "disabled", values: [false, true], bits: 1 },
-  { key: "leftSlot", values: [true, false], bits: 1 },
-  { key: "rightSlot", values: [false, true], bits: 1 },
-  { key: "status", values: ["off", "idle", "streaming"], bits: 3 },
+  { key: 'suggestion', values: [true, false], bits: 1 },
+  { key: 'suggestionsOn', values: [true, false], bits: 1 },
+  { key: 'historyOn', values: [true, false], bits: 1 },
+  { key: 'attachments', values: [false, true], bits: 1 },
+  { key: 'minRows', values: [1, 2, 3], bits: 3 },
+  { key: 'disabled', values: [false, true], bits: 1 },
+  { key: 'leftSlot', values: [true, false], bits: 1 },
+  { key: 'rightSlot', values: [false, true], bits: 1 },
+  { key: 'status', values: ['off', 'idle', 'streaming'], bits: 3 },
   // ── Site-level globals, appended LAST (same shapes as the sidebar's) ──
-  { key: "flavor", values: ["radix", "base"], bits: 3 },
-  { key: "shape", values: ["rounded", "pill", "sharp"], bits: 2 },
-  { key: "size", values: ["default", "compact"], bits: 2 },
+  { key: 'flavor', values: ['radix', 'base'], bits: 3 },
+  { key: 'shape', values: ['rounded', 'pill', 'sharp'], bits: 2 },
+  { key: 'size', values: ['default', 'compact'], bits: 2 },
 ];
 
 // ── Demo content, shared by the playground preview and both generators ──────
 
 export const IM_SUGGESTIONS: string[] = [
-  "What is Fluid Functionalism about?",
-  "How does Micka tune the springs behind these animations?",
-  "Install the InputMessage component in my project",
-  "Draft a short thank-you note to Micka for the library",
+  'What is Fluid Functionalism about?',
+  'How does Micka tune the springs behind these animations?',
+  'Install the InputMessage component in my project',
+  'Draft a short thank-you note to Micka for the library',
 ];
 
-export const IM_PLACEHOLDER_PROMPT = "Why is every other input box so stiff?";
+export const IM_PLACEHOLDER_PROMPT = 'Why is every other input box so stiff?';
 
 /** The transcript's seed message — read at a glance, and gives ArrowUp
  *  history recall something to recall. */
-export const IM_SEED_MESSAGE = "Make my input box feel less stiff";
+export const IM_SEED_MESSAGE = 'Make my input box feel less stiff';
 
 // ── Registration (tag "m") ──────────────────────────────────────────────────
 
 export const INPUT_MESSAGE_PRESET_DEF: PresetComponentDef = {
-  tag: "m",
-  label: "InputMessage",
-  docsPath: "/docs/input-message",
+  tag: 'm',
+  label: 'InputMessage',
+  docsPath: '/docs/input-message',
   versions: { a: INPUT_MESSAGE_PRESET_FIELDS },
-  currentVersion: "a",
-  defaults: INPUT_MESSAGE_DEFAULT_PRESET as unknown as PresetComponentDef["defaults"],
+  currentVersion: 'a',
+  defaults: INPUT_MESSAGE_DEFAULT_PRESET as unknown as PresetComponentDef['defaults'],
   installable: true,
 };
 registerPresetComponent(INPUT_MESSAGE_PRESET_DEF);
 
-export function encodeInputMessagePreset(
-  config: Partial<InputMessagePreset>
-): string {
+export function encodeInputMessagePreset(config: Partial<InputMessagePreset>): string {
   return encodePreset(INPUT_MESSAGE_PRESET_DEF, config);
 }
 
 export type InputMessageDecodeResult =
-  | { ok: true; preset: InputMessagePreset; version: string }
-  | { ok: false; error: string };
+  { ok: true; preset: InputMessagePreset; version: string } | { ok: false; error: string };
 
-export function decodeInputMessagePreset(
-  code: string
-): InputMessageDecodeResult {
+export function decodeInputMessagePreset(code: string): InputMessageDecodeResult {
   const res = decodePreset(code);
   if (!res.ok) return res;
-  if (res.def.tag !== "m") {
+  if (res.def.tag !== 'm') {
     return {
       ok: false,
       error: `Not an InputMessage preset (tag "${res.def.tag}").`,

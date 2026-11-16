@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useRef,
@@ -14,35 +14,35 @@ import {
   type ReactElement,
   type HTMLAttributes,
   type ComponentPropsWithoutRef,
-} from "react";
-import { motion, AnimatePresence } from "motion/react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { cn } from "@/lib/utils";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { useFluidHover, useFluidHoverSelect, isOwnEvent } from "@/hooks/use-fluid-hover";
+} from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { cn } from '#lib/utils';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { useFluidHover, useFluidHoverSelect, isOwnEvent } from '#hooks/use-fluid-hover';
 import {
   useMergeSplitBlocks,
   useSelectionRuns,
   SelectionBackgrounds,
-} from "@/hooks/use-merge-split";
-import { usePopupShape } from "@/lib/shape-context";
-import { SizeProvider, useSize, typeClass, type SizeVariant } from "@/lib/size-context";
-import { Elevated } from "@/lib/elevated";
+} from '#hooks/use-merge-split';
+import { usePopupShape } from '#lib/shape-context';
+import { SizeProvider, useSize, typeClass, type SizeVariant } from '#lib/size-context';
+import { Elevated } from '#lib/elevated';
 import {
   PopupShield,
   popupMotionClass,
   popupScrollAreaClass,
   popupViewportClass,
   isDisabledRow,
-} from "@/lib/popup";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from '#lib/popup';
+import { ScrollArea } from '#components/ui/scroll-area';
 import {
   DropdownSearch,
   DropdownEmpty,
   DropdownSearchHostContext,
   useDropdownSearchHost,
   type DropdownSearchProps,
-} from "@/components/ui/dropdown-search";
+} from '#components/ui/dropdown-search';
 import {
   DropdownContext,
   MenuItem,
@@ -51,8 +51,8 @@ import {
   useDropdownMaybe,
   type DropdownContextValue,
   type MenuItemRenderOptions,
-} from "@/components/ui/menu-item";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
+} from '#components/ui/menu-item';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
 import {
   SUBMENU_SIDE_OFFSET,
   SUBMENU_ALIGN_OFFSET,
@@ -60,7 +60,7 @@ import {
   useReportSubmenu,
   SubmenuChevron,
   type DropdownSubTriggerProps,
-} from "@/components/ui/dropdown-sub";
+} from '#components/ui/dropdown-sub';
 
 // ---------------------------------------------------------------------------
 // Panel context — shared by the inline Dropdown and the popup DropdownContent.
@@ -102,26 +102,19 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const shape = usePopupShape();
     const containerRef = useRef<HTMLDivElement>(null);
     const hover = useFluidHover(containerRef, { isItemDisabled: isDisabledRow });
-    const {
-      activeStore,
-      setActiveIndex,
-      itemRects,
-      handlers,
-      registerItem,
-    } = hover;
+    const { activeStore, setActiveIndex, itemRects, handlers, registerItem } = hover;
 
     const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
 
     const multiple = checkedIndices != null;
-    const checkedRect =
-      !multiple && checkedIndex != null ? itemRects[checkedIndex] : null;
+    const checkedRect = !multiple && checkedIndex != null ? itemRects[checkedIndex] : null;
     const focusRect = focusedIndex !== null ? itemRects[focusedIndex] : null;
     // Multiple: one merged block per contiguous run of checked rows.
     const runs = useSelectionRuns(checkedIndices ?? []);
     const blocks = useMergeSplitBlocks(runs, itemRects, shape.bgRadius);
     const panelCtx = useMemo(
       () => ({ registerItem, activeStore, checkedIndex, multiple, checkedIndices }),
-      [registerItem, activeStore, checkedIndex, multiple, checkedIndices]
+      [registerItem, activeStore, checkedIndex, multiple, checkedIndices],
     );
     const panel = (
       <DropdownContext.Provider value={panelCtx}>
@@ -130,7 +123,7 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           shadowLevel={3}
           ref={(node) => {
             (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-            if (typeof ref === "function") ref(node);
+            if (typeof ref === 'function') ref(node);
             else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
           }}
           onMouseEnter={handlers.onMouseEnter}
@@ -139,14 +132,12 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           onClick={handlers.onClick}
           onFocus={(e) => {
             const indexAttr = (e.target as HTMLElement)
-              .closest("[data-fluid-hover-index]")
-              ?.getAttribute("data-fluid-hover-index");
+              .closest('[data-fluid-hover-index]')
+              ?.getAttribute('data-fluid-hover-index');
             if (indexAttr != null) {
               const idx = Number(indexAttr);
               setActiveIndex(idx);
-              setFocusedIndex(
-                (e.target as HTMLElement).matches(":focus-visible") ? idx : null
-              );
+              setFocusedIndex((e.target as HTMLElement).matches(':focus-visible') ? idx : null);
             }
           }}
           onBlur={(e) => {
@@ -157,22 +148,22 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           onKeyDown={(e) => {
             const items = Array.from(
               containerRef.current?.querySelectorAll(
-                '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]'
-              ) ?? []
+                '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]',
+              ) ?? [],
             ) as HTMLElement[];
             const currentIdx = items.indexOf(e.target as HTMLElement);
             if (currentIdx === -1) return;
 
-            if (["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)) {
+            if (['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft'].includes(e.key)) {
               e.preventDefault();
-              const next = ["ArrowDown", "ArrowRight"].includes(e.key)
+              const next = ['ArrowDown', 'ArrowRight'].includes(e.key)
                 ? (currentIdx + 1) % items.length
                 : (currentIdx - 1 + items.length) % items.length;
               items[next].focus();
-            } else if (e.key === "Home") {
+            } else if (e.key === 'Home') {
               e.preventDefault();
               items[0]?.focus();
-            } else if (e.key === "End") {
+            } else if (e.key === 'End') {
               e.preventDefault();
               items[items.length - 1]?.focus();
             }
@@ -180,7 +171,7 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           role="group"
           className={cn(
             `relative flex flex-col w-72 max-w-full ${shape.container} p-1 select-none`,
-            className
+            className,
           )}
           {...props}
         >
@@ -210,10 +201,7 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           </AnimatePresence>
 
           {/* Hover background */}
-          <FluidHoverHighlight
-            hover={hover}
-            className={shape.bg}
-          />
+          <FluidHoverHighlight hover={hover} className={shape.bg} />
 
           {/* Focus ring */}
           <AnimatePresence>
@@ -243,10 +231,10 @@ const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
     // A size prop pins every row in the panel to one ladder step.
     return size ? <SizeProvider size={size}>{panel}</SizeProvider> : panel;
-  }
+  },
 );
 
-Dropdown.displayName = "Dropdown";
+Dropdown.displayName = 'Dropdown';
 
 // ---------------------------------------------------------------------------
 // DropdownMenu (popup root)
@@ -298,10 +286,7 @@ const DropdownMenuContext = createContext<DropdownMenuContextValue | null>(null)
 
 function useDropdownMenuContext() {
   const ctx = useContext(DropdownMenuContext);
-  if (!ctx)
-    throw new Error(
-      "DropdownMenu compound components must be inside <DropdownMenu>"
-    );
+  if (!ctx) throw new Error('DropdownMenu compound components must be inside <DropdownMenu>');
   return ctx;
 }
 
@@ -344,16 +329,13 @@ function DropdownMenu({
         return pinned;
       },
     }),
-    [hoverControl]
+    [hoverControl],
   );
   // Closed by any route, a parent's own `open` included: the next open
   // starts as a clicked one until the hover timer says otherwise.
   if (!open && openedByHover) setOpenedByHover(false);
 
-  const ctx = useMemo(
-    () => ({ open, disabled, sub: false, hover }),
-    [open, disabled, hover]
-  );
+  const ctx = useMemo(() => ({ open, disabled, sub: false, hover }), [open, disabled, hover]);
 
   // A size prop pins the whole compound (trigger content + portalled popup —
   // React context crosses portals) to one ladder step.
@@ -380,7 +362,7 @@ function DropdownMenu({
   return size ? <SizeProvider size={size}>{root}</SizeProvider> : root;
 }
 
-DropdownMenu.displayName = "DropdownMenu";
+DropdownMenu.displayName = 'DropdownMenu';
 
 /** How long after the hover timer asks to open an open still counts as the
  *  hover's: one commit, with room for a slow frame. */
@@ -390,10 +372,7 @@ const HOVER_CLAIM_MS = 100;
  *  by hover closes when the pointer leaves both; one opened by click, the
  *  keyboard, or pinned by a click stays until dismissed as usual. Exported for
  *  the unit test. */
-export function useHoverControl(
-  open: boolean,
-  setOpen: (open: boolean) => void
-): HoverControl {
+export function useHoverControl(open: boolean, setOpen: (open: boolean) => void): HoverControl {
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const hoverOpened = useRef(false);
   const closeDelayRef = useRef<number | null>(null);
@@ -495,11 +474,10 @@ export function useHoverControl(
 // with Base UI's Menu.Root: the flag flows through context onto the trigger.
 // ---------------------------------------------------------------------------
 
-interface DropdownTriggerProps
-  extends Omit<
-    ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>,
-    "asChild"
-  > {
+interface DropdownTriggerProps extends Omit<
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>,
+  'asChild'
+> {
   /** Element to render as the trigger (Base-UI-style `render` composition
    *  API). */
   render?: ReactElement;
@@ -528,7 +506,7 @@ const DropdownTrigger = forwardRef<HTMLButtonElement, DropdownTriggerProps>(
       onPointerDown,
       ...props
     },
-    ref
+    ref,
   ) => {
     const { disabled: rootDisabled, hover } = useDropdownMenuContext();
     const isDisabled = disabled || rootDisabled;
@@ -545,11 +523,11 @@ const DropdownTrigger = forwardRef<HTMLButtonElement, DropdownTriggerProps>(
       ? {
           onPointerEnter: (e: React.PointerEvent<HTMLButtonElement>) => {
             onPointerEnter?.(e);
-            if (e.pointerType === "mouse") hover.enter(delay);
+            if (e.pointerType === 'mouse') hover.enter(delay);
           },
           onPointerLeave: (e: React.PointerEvent<HTMLButtonElement>) => {
             onPointerLeave?.(e);
-            if (e.pointerType === "mouse") hover.leave(closeDelay);
+            if (e.pointerType === 'mouse') hover.leave(closeDelay);
           },
           onPointerDown: (e: React.PointerEvent<HTMLButtonElement>) => {
             onPointerDown?.(e);
@@ -574,19 +552,14 @@ const DropdownTrigger = forwardRef<HTMLButtonElement, DropdownTriggerProps>(
       );
     }
     return (
-      <DropdownMenuPrimitive.Trigger
-        ref={ref}
-        disabled={isDisabled}
-        {...props}
-        {...hoverProps}
-      >
+      <DropdownMenuPrimitive.Trigger ref={ref} disabled={isDisabled} {...props} {...hoverProps}>
         {children}
       </DropdownMenuPrimitive.Trigger>
     );
-  }
+  },
 );
 
-DropdownTrigger.displayName = "DropdownTrigger";
+DropdownTrigger.displayName = 'DropdownTrigger';
 
 // ---------------------------------------------------------------------------
 // DropdownContent (popup panel)
@@ -598,11 +571,9 @@ DropdownTrigger.displayName = "DropdownTrigger";
 // radio values are strings, so the index maps through String()).
 // ---------------------------------------------------------------------------
 
-type RadixContentProps = ComponentPropsWithoutRef<
-  typeof DropdownMenuPrimitive.Content
->;
+type RadixContentProps = ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>;
 
-type LitBy = "open" | "pointer" | "keyboard";
+type LitBy = 'open' | 'pointer' | 'keyboard';
 
 interface DropdownContentProps {
   children: ReactNode;
@@ -614,8 +585,8 @@ interface DropdownContentProps {
    *  keep the menu open when toggled, and contiguous runs share one merged
    *  background (see CheckboxGroup). */
   checkedIndices?: number[];
-  side?: RadixContentProps["side"];
-  align?: RadixContentProps["align"];
+  side?: RadixContentProps['side'];
+  align?: RadixContentProps['align'];
   sideOffset?: number;
   /** Shift along the trigger edge, in px. */
   alignOffset?: number;
@@ -633,28 +604,21 @@ const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
       children,
       checkedIndex,
       checkedIndices,
-      side = "bottom",
-      align = "start",
+      side = 'bottom',
+      align = 'start',
       sideOffset = 6,
       alignOffset = 0,
       collisionBoundary,
       collisionPadding,
     },
-    ref
+    ref,
   ) => {
     const shape = usePopupShape();
     const { open, sub, hover: menuHover } = useDropdownMenuContext();
     const containerRef = useRef<HTMLDivElement>(null);
 
     const hover = useFluidHover(containerRef, { isItemDisabled: isDisabledRow });
-    const {
-      activeStore,
-      setActiveIndex,
-      itemRects,
-      handlers,
-      registerItem,
-      remeasure,
-    } = hover;
+    const { activeStore, setActiveIndex, itemRects, handlers, registerItem, remeasure } = hover;
 
     // Submenus opened from these rows: their trigger stays lit while the
     // pointer crosses to them (see dropdown-sub.tsx).
@@ -684,9 +648,13 @@ const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
         inner = requestAnimationFrame(() => {
           if (hasSearch()) return;
           const container = containerRef.current;
-          if (!container || container.contains(document.activeElement) && document.activeElement !== container) return;
+          if (
+            !container ||
+            (container.contains(document.activeElement) && document.activeElement !== container)
+          )
+            return;
           const first = container.querySelector<HTMLElement>(
-            '[role="menuitem"]:not([aria-disabled="true"]), [role="menuitemradio"]:not([aria-disabled="true"]), [role="menuitemcheckbox"]:not([aria-disabled="true"])'
+            '[role="menuitem"]:not([aria-disabled="true"]), [role="menuitemradio"]:not([aria-disabled="true"]), [role="menuitemcheckbox"]:not([aria-disabled="true"])',
           );
           first?.focus();
         });
@@ -724,15 +692,14 @@ const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
     }, [open, mounted, remeasure]);
 
     const multiple = checkedIndices != null;
-    const checkedRect =
-      !multiple && checkedIndex != null ? itemRects[checkedIndex] : null;
+    const checkedRect = !multiple && checkedIndex != null ? itemRects[checkedIndex] : null;
     // What lit the highlight: the open itself (its first-row focus), the
     // pointer, or the keyboard. The handlers read it as a ref: a key press
     // updates it before the focus it moves arrives, in the same event.
     // Each open starts over as "open".
-    const litByRef = useRef<LitBy>("open");
+    const litByRef = useRef<LitBy>('open');
     useEffect(() => {
-      if (open) litByRef.current = "open";
+      if (open) litByRef.current = 'open';
     }, [open]);
     const markLitBy = (by: LitBy) => {
       litByRef.current = by;
@@ -765,9 +732,7 @@ const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
           onClick: onActivate,
           // Radix closes the menu on select by default; preventing the select
           // event keeps it open — Base UI's closeOnClick={false} parity.
-          onSelect: closeOnClick
-            ? undefined
-            : (event: Event) => event.preventDefault(),
+          onSelect: closeOnClick ? undefined : (event: Event) => event.preventDefault(),
         };
         const item = cloneElement(element, {}, children);
         if (checkbox) {
@@ -784,12 +749,10 @@ const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             {item}
           </DropdownMenuPrimitive.RadioItem>
         ) : (
-          <DropdownMenuPrimitive.Item {...commonProps}>
-            {item}
-          </DropdownMenuPrimitive.Item>
+          <DropdownMenuPrimitive.Item {...commonProps}>{item}</DropdownMenuPrimitive.Item>
         );
       },
-      []
+      [],
     );
 
     const contentCtx = useMemo(
@@ -811,7 +774,7 @@ const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
         checkedIndices,
         renderMenuItem,
         submenus.onSubmenuOpenChange,
-      ]
+      ],
     );
 
     if (!mounted) return null;
@@ -854,23 +817,23 @@ const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
           }}
         >
           <motion.div
-            className={cn("z-[var(--z-popover,60)] outline-none", popupMotionClass)}
-            initial={{ opacity: 0, y: "var(--popup-enter-y)", scaleY: 0.96 }}
+            className={cn('z-[var(--z-popover,60)] outline-none', popupMotionClass)}
+            initial={{ opacity: 0, y: 'var(--popup-enter-y)', scaleY: 0.96 }}
             animate={
               open
                 ? { opacity: 1, y: 0, scaleY: 1 }
-                : { opacity: 0, y: "var(--popup-enter-y)", scaleY: 0.96 }
+                : { opacity: 0, y: 'var(--popup-enter-y)', scaleY: 0.96 }
             }
             transition={open ? spring.fast : spring.fast.exit}
             // A hover-opened menu stays while the pointer is over it and
             // closes once it leaves both the menu and its trigger.
             onPointerEnter={(e) => {
-              if (e.pointerType === "mouse" && menuHover?.getCloseDelay() != null)
+              if (e.pointerType === 'mouse' && menuHover?.getCloseDelay() != null)
                 menuHover.cancel();
             }}
             onPointerLeave={(e) => {
               const closeDelay = menuHover?.getCloseDelay();
-              if (e.pointerType === "mouse" && closeDelay != null) menuHover?.leave(closeDelay);
+              if (e.pointerType === 'mouse' && closeDelay != null) menuHover?.leave(closeDelay);
             }}
             // Release the deferred unmount once the exit spring has finished
             // so the close animation fully plays.
@@ -879,137 +842,133 @@ const DropdownContent = forwardRef<HTMLDivElement, DropdownContentProps>(
             }}
           >
             <DropdownContext.Provider value={contentCtx}>
-            <DropdownSearchHostContext.Provider value={searchHost}>
-              <Elevated
-                offset={2}
-                shadowLevel={3}
-                ref={ref}
-                // The handlers below skip events from an open submenu: it
-                // renders through a portal, so its events bubble here
-                // through React, and focus on a submenu row would light the
-                // parent row with the same index. The gap click already
-                // ignores them in the hook.
-                onKeyDownCapture={(e) => {
-                  if (!isOwnEvent(e)) return;
-                  markLitBy("keyboard");
-                  redirectTypingToSearch(e);
-                }}
-                onMouseEnter={(e) => {
-                  if (!isOwnEvent(e)) return;
-                  markLitBy("pointer");
-                  submenus.onMouseEnter();
-                }}
-                onMouseMove={(e) => {
-                  if (!isOwnEvent(e)) return;
-                  markLitBy("pointer");
-                  submenus.onMouseMove(e);
-                }}
-                onClick={handlers.onClick}
-                onMouseLeave={(e) => {
-                  if (!isOwnEvent(e)) return;
-                  submenus.onMouseLeave();
-                }}
-                onFocus={(e) => {
-                  if (!isOwnEvent(e)) return;
-                  const indexAttr = (e.target as HTMLElement)
-                    .closest("[data-fluid-hover-index]")
-                    ?.getAttribute("data-fluid-hover-index");
-                  // Keyboard navigation moves the hover background only — no
-                  // ring: in a menu the highlighted row is the focus indicator.
-                  if (indexAttr != null) {
-                    // With an autofocusing search field, the primitive's open
-                    // autofocus lands on the first row a frame before the
-                    // field takes over: that row stays unlit.
-                    if (litByRef.current === "open" && searchTakesFocus()) return;
-                    setActiveIndex(Number(indexAttr));
-                  } else if (e.target !== e.currentTarget) {
-                    // Focus moved to a non-row inside the popup, such as the
-                    // search field: no row is highlighted any more. The field
-                    // is a stop like a row, it just draws no background. The
-                    // popup focusing itself (pointer leaving a row) doesn't
-                    // count.
+              <DropdownSearchHostContext.Provider value={searchHost}>
+                <Elevated
+                  offset={2}
+                  shadowLevel={3}
+                  ref={ref}
+                  // The handlers below skip events from an open submenu: it
+                  // renders through a portal, so its events bubble here
+                  // through React, and focus on a submenu row would light the
+                  // parent row with the same index. The gap click already
+                  // ignores them in the hook.
+                  onKeyDownCapture={(e) => {
+                    if (!isOwnEvent(e)) return;
+                    markLitBy('keyboard');
+                    redirectTypingToSearch(e);
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isOwnEvent(e)) return;
+                    markLitBy('pointer');
+                    submenus.onMouseEnter();
+                  }}
+                  onMouseMove={(e) => {
+                    if (!isOwnEvent(e)) return;
+                    markLitBy('pointer');
+                    submenus.onMouseMove(e);
+                  }}
+                  onClick={handlers.onClick}
+                  onMouseLeave={(e) => {
+                    if (!isOwnEvent(e)) return;
+                    submenus.onMouseLeave();
+                  }}
+                  onFocus={(e) => {
+                    if (!isOwnEvent(e)) return;
+                    const indexAttr = (e.target as HTMLElement)
+                      .closest('[data-fluid-hover-index]')
+                      ?.getAttribute('data-fluid-hover-index');
+                    // Keyboard navigation moves the hover background only — no
+                    // ring: in a menu the highlighted row is the focus indicator.
+                    if (indexAttr != null) {
+                      // With an autofocusing search field, the primitive's open
+                      // autofocus lands on the first row a frame before the
+                      // field takes over: that row stays unlit.
+                      if (litByRef.current === 'open' && searchTakesFocus()) return;
+                      setActiveIndex(Number(indexAttr));
+                    } else if (e.target !== e.currentTarget) {
+                      // Focus moved to a non-row inside the popup, such as the
+                      // search field: no row is highlighted any more. The field
+                      // is a stop like a row, it just draws no background. The
+                      // popup focusing itself (pointer leaving a row) doesn't
+                      // count.
+                      setActiveIndex(null);
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (!isOwnEvent(e)) return;
+                    // The popup itself takes focus when the pointer leaves a row; only a
+                    // departure from the whole popup ends the hover session.
+                    if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+                    // Focus moving into an open submenu keeps its trigger lit.
+                    if (submenus.holding()) return;
                     setActiveIndex(null);
-                  }
-                }}
-                onBlur={(e) => {
-                  if (!isOwnEvent(e)) return;
-                  // The popup itself takes focus when the pointer leaves a row; only a
-                  // departure from the whole popup ends the hover session.
-                  if (e.currentTarget.contains(e.relatedTarget as Node))
-                    return;
-                  // Focus moving into an open submenu keeps its trigger lit.
-                  if (submenus.holding()) return;
-                  setActiveIndex(null);
-                }}
-                className={cn(
-                  // min-w tracks the trigger; the available-height guard maps
-                  // Base UI's --available-height to Radix's equivalent var.
-                  // A submenu's anchor is a row, so it keeps its own
-                  // narrower width instead.
-                  `flex flex-col ${sub ? "w-56" : "w-72 min-w-[var(--radix-dropdown-menu-trigger-width)]"} max-w-full max-h-[min(480px,var(--radix-dropdown-menu-content-available-height))] overflow-hidden ${shape.container} select-none outline-none`,
-                  className
-                )}
-              >
-                {/* The list scrolls inside a ScrollArea; this wrapper is the rows'
-                    offsetParent, so the overlays scroll with them. */}
-                <ScrollArea className={popupScrollAreaClass} viewportClassName={cn(popupViewportClass, !searchMounted && "scroll-fade")}>
-                  <div
-                    ref={containerRef}
-                    className="relative flex flex-col p-1"
-                  >
-                {/* Selected backgrounds — merged runs in multiple mode */}
-                {multiple && <SelectionBackgrounds blocks={blocks} />}
-
-                {/* Selected background */}
-                <AnimatePresence>
-                  {checkedRect && (
-                    <motion.div
-                      className={`absolute ${shape.bg} bg-active pointer-events-none`}
-                      initial={false}
-                      animate={{
-                        top: checkedRect.top,
-                        left: checkedRect.left,
-                        width: checkedRect.width,
-                        height: checkedRect.height,
-                        opacity: 1,
-                      }}
-                      exit={{ opacity: 0, transition: spring.moderate.exit }}
-                      transition={{
-                        ...spring.moderate,
-                        opacity: { duration: 0.08 },
-                      }}
-                    />
+                  }}
+                  className={cn(
+                    // min-w tracks the trigger; the available-height guard maps
+                    // Base UI's --available-height to Radix's equivalent var.
+                    // A submenu's anchor is a row, so it keeps its own
+                    // narrower width instead.
+                    `flex flex-col ${sub ? 'w-56' : 'w-72 min-w-[var(--radix-dropdown-menu-trigger-width)]'} max-w-full max-h-[min(480px,var(--radix-dropdown-menu-content-available-height))] overflow-hidden ${shape.container} select-none outline-none`,
+                    className,
                   )}
-                </AnimatePresence>
+                >
+                  {/* The list scrolls inside a ScrollArea; this wrapper is the rows'
+                    offsetParent, so the overlays scroll with them. */}
+                  <ScrollArea
+                    className={popupScrollAreaClass}
+                    viewportClassName={cn(popupViewportClass, !searchMounted && 'scroll-fade')}
+                  >
+                    <div ref={containerRef} className="relative flex flex-col p-1">
+                      {/* Selected backgrounds — merged runs in multiple mode */}
+                      {multiple && <SelectionBackgrounds blocks={blocks} />}
 
-                {/* Hover background */}
-                <FluidHoverHighlight
-                  hover={hover}
-                  className={shape.bg}
-                />
+                      {/* Selected background */}
+                      <AnimatePresence>
+                        {checkedRect && (
+                          <motion.div
+                            className={`absolute ${shape.bg} bg-active pointer-events-none`}
+                            initial={false}
+                            animate={{
+                              top: checkedRect.top,
+                              left: checkedRect.left,
+                              width: checkedRect.width,
+                              height: checkedRect.height,
+                              opacity: 1,
+                            }}
+                            exit={{ opacity: 0, transition: spring.moderate.exit }}
+                            transition={{
+                              ...spring.moderate,
+                              opacity: { duration: 0.08 },
+                            }}
+                          />
+                        )}
+                      </AnimatePresence>
 
-                {/* display: contents keeps items direct flex children of the
+                      {/* Hover background */}
+                      <FluidHoverHighlight hover={hover} className={shape.bg} />
+
+                      {/* display: contents keeps items direct flex children of the
                     wrapper so fluid hover measurement and gap layout still work,
                     while the group provides the radio value context. */}
-                <DropdownMenuPrimitive.RadioGroup
-                  value={checkedIndex != null ? String(checkedIndex) : undefined}
-                  className="contents"
-                >
-                  {children}
-                </DropdownMenuPrimitive.RadioGroup>
-                  </div>
-                </ScrollArea>
-              </Elevated>
-            </DropdownSearchHostContext.Provider>
+                      <DropdownMenuPrimitive.RadioGroup
+                        value={checkedIndex != null ? String(checkedIndex) : undefined}
+                        className="contents"
+                      >
+                        {children}
+                      </DropdownMenuPrimitive.RadioGroup>
+                    </div>
+                  </ScrollArea>
+                </Elevated>
+              </DropdownSearchHostContext.Provider>
             </DropdownContext.Provider>
           </motion.div>
         </Content>
       </DropdownMenuPrimitive.Portal>
     );
-  }
+  },
 );
 
-DropdownContent.displayName = "DropdownContent";
+DropdownContent.displayName = 'DropdownContent';
 
 // ---------------------------------------------------------------------------
 // DropdownSub, DropdownSubTrigger, DropdownSubContent (submenus)
@@ -1045,7 +1004,6 @@ function DropdownSub({
   const [open, handleOpenChange] = useControllableOpen(openProp, defaultOpen, onOpenChange);
   const { disabled } = useDropdownMenuContext();
 
-
   const ctx = useMemo(() => ({ open, disabled, sub: true }), [open, disabled]);
 
   return (
@@ -1057,7 +1015,7 @@ function DropdownSub({
   );
 }
 
-DropdownSub.displayName = "DropdownSub";
+DropdownSub.displayName = 'DropdownSub';
 
 const DropdownSubTrigger = forwardRef<HTMLDivElement, DropdownSubTriggerProps>(
   ({ index, ...props }, ref) => {
@@ -1082,11 +1040,11 @@ const DropdownSubTrigger = forwardRef<HTMLDivElement, DropdownSubTriggerProps>(
             <>
               {children}
               <SubmenuChevron lit={lit} />
-            </>
+            </>,
           )}
         </DropdownMenuPrimitive.SubTrigger>
       ),
-      [lit]
+      [lit],
     );
     const ctx = useMemo(() => ({ ...parent, renderMenuItem }), [parent, renderMenuItem]);
 
@@ -1095,34 +1053,22 @@ const DropdownSubTrigger = forwardRef<HTMLDivElement, DropdownSubTriggerProps>(
         <MenuItem ref={ref} index={index} {...props} />
       </DropdownContext.Provider>
     );
-  }
+  },
 );
 
-DropdownSubTrigger.displayName = "DropdownSubTrigger";
+DropdownSubTrigger.displayName = 'DropdownSubTrigger';
 
-type DropdownSubContentProps = Omit<DropdownContentProps, "side" | "align">;
+type DropdownSubContentProps = Omit<DropdownContentProps, 'side' | 'align'>;
 
 /** The submenu popup: DropdownContent beside its trigger row, the first row
  *  level with the trigger. */
 const DropdownSubContent = forwardRef<HTMLDivElement, DropdownSubContentProps>(
-  (
-    {
-      sideOffset = SUBMENU_SIDE_OFFSET,
-      alignOffset = SUBMENU_ALIGN_OFFSET,
-      ...props
-    },
-    ref
-  ) => (
-    <DropdownContent
-      ref={ref}
-      sideOffset={sideOffset}
-      alignOffset={alignOffset}
-      {...props}
-    />
-  )
+  ({ sideOffset = SUBMENU_SIDE_OFFSET, alignOffset = SUBMENU_ALIGN_OFFSET, ...props }, ref) => (
+    <DropdownContent ref={ref} sideOffset={sideOffset} alignOffset={alignOffset} {...props} />
+  ),
 );
 
-DropdownSubContent.displayName = "DropdownSubContent";
+DropdownSubContent.displayName = 'DropdownSubContent';
 
 // ---------------------------------------------------------------------------
 // DropdownLabel
@@ -1131,40 +1077,39 @@ DropdownSubContent.displayName = "DropdownSubContent";
 const DropdownLabel = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
     // Group labels are the caption role of the type scale — see /docs/sizes.
-    const compact = useSize().variant === "compact";
+    const compact = useSize().variant === 'compact';
     return (
-    <div
-      ref={ref}
-      className={cn(
-        "px-2 py-1.5 shrink-0 text-muted-foreground",
-        typeClass("caption", compact ? "compact" : "default"),
-        className
-      )}
-      {...props}
-    />
+      <div
+        ref={ref}
+        className={cn(
+          'px-2 py-1.5 shrink-0 text-muted-foreground',
+          typeClass('caption', compact ? 'compact' : 'default'),
+          className,
+        )}
+        {...props}
+      />
     );
-  }
+  },
 );
 
-DropdownLabel.displayName = "DropdownLabel";
+DropdownLabel.displayName = 'DropdownLabel';
 
 // ---------------------------------------------------------------------------
 // DropdownSeparator
 // ---------------------------------------------------------------------------
 
-const DropdownSeparator = forwardRef<
-  HTMLDivElement,
-  HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    role="separator"
-    className={cn("my-1 -mx-1 h-px shrink-0 bg-border/60", className)}
-    {...props}
-  />
-));
+const DropdownSeparator = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      role="separator"
+      className={cn('my-1 -mx-1 h-px shrink-0 bg-border/60', className)}
+      {...props}
+    />
+  ),
+);
 
-DropdownSeparator.displayName = "DropdownSeparator";
+DropdownSeparator.displayName = 'DropdownSeparator';
 
 export {
   Dropdown,

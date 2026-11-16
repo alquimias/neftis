@@ -11,35 +11,66 @@ import {
   encodePreset,
   decodePreset,
   type PresetComponentDef,
-} from "./codec";
-import {
-  SIDEBAR_PRESET_FIELDS,
-  DEFAULT_PRESET,
-  type SidebarPreset,
-} from "./sidebar-options";
+} from './codec';
+import { SIDEBAR_PRESET_FIELDS, DEFAULT_PRESET, type SidebarPreset } from './sidebar-options';
 
-export { decodePreset, encodePreset } from "./codec";
+export { decodePreset, encodePreset } from './codec';
 // Side-effect registrations for components defined in their own modules.
-export * from "./ask-user-questions-options";
-export { CARD_PRESET_DEF, encodeCardPreset, decodeCardPreset, CARD_DEFAULT_CODE } from "./card-options";
-export * from "./input-message-options";
-export { DROPDOWN_PRESET_DEF, encodeDropdownPreset, decodeDropdownPreset, DROPDOWN_DEFAULT_CODE } from "./dropdown-options";
-export { COMBOBOX_PRESET_DEF, encodeComboboxPreset, decodeComboboxPreset, COMBOBOX_DEFAULT_CODE } from "./combobox-options";
-export { COMMAND_MENU_PRESET_DEF, encodeCommandMenuPreset, decodeCommandMenuPreset, COMMAND_MENU_DEFAULT_CODE } from "./command-menu-options";
-export { CALENDAR_PRESET_DEF, encodeCalendarPreset, decodeCalendarPreset, CALENDAR_DEFAULT_CODE } from "./calendar-options";
-export { DATE_PICKER_PRESET_DEF, encodeDatePickerPreset, decodeDatePickerPreset, DATE_PICKER_DEFAULT_CODE } from "./date-picker-options";
-export { DATA_TABLE_PRESET_DEF, encodeDataTablePreset, decodeDataTablePreset, DATA_TABLE_DEFAULT_CODE } from "./data-table-options";
-export type { PresetComponentDef, DecodeResult } from "./codec";
+export * from './ask-user-questions-options';
+export {
+  CARD_PRESET_DEF,
+  encodeCardPreset,
+  decodeCardPreset,
+  CARD_DEFAULT_CODE,
+} from './card-options';
+export * from './input-message-options';
+export {
+  DROPDOWN_PRESET_DEF,
+  encodeDropdownPreset,
+  decodeDropdownPreset,
+  DROPDOWN_DEFAULT_CODE,
+} from './dropdown-options';
+export {
+  COMBOBOX_PRESET_DEF,
+  encodeComboboxPreset,
+  decodeComboboxPreset,
+  COMBOBOX_DEFAULT_CODE,
+} from './combobox-options';
+export {
+  COMMAND_MENU_PRESET_DEF,
+  encodeCommandMenuPreset,
+  decodeCommandMenuPreset,
+  COMMAND_MENU_DEFAULT_CODE,
+} from './command-menu-options';
+export {
+  CALENDAR_PRESET_DEF,
+  encodeCalendarPreset,
+  decodeCalendarPreset,
+  CALENDAR_DEFAULT_CODE,
+} from './calendar-options';
+export {
+  DATE_PICKER_PRESET_DEF,
+  encodeDatePickerPreset,
+  decodeDatePickerPreset,
+  DATE_PICKER_DEFAULT_CODE,
+} from './date-picker-options';
+export {
+  DATA_TABLE_PRESET_DEF,
+  encodeDataTablePreset,
+  decodeDataTablePreset,
+  DATA_TABLE_DEFAULT_CODE,
+} from './data-table-options';
+export type { PresetComponentDef, DecodeResult } from './codec';
 
 // ── Sidebar (tag "s") ───────────────────────────────────────────────────────
 
 export const SIDEBAR_PRESET_DEF: PresetComponentDef = {
-  tag: "s",
-  label: "Sidebar",
-  docsPath: "/docs/sidebar",
+  tag: 's',
+  label: 'Sidebar',
+  docsPath: '/docs/sidebar',
   versions: { a: SIDEBAR_PRESET_FIELDS },
-  currentVersion: "a",
-  defaults: DEFAULT_PRESET as unknown as PresetComponentDef["defaults"],
+  currentVersion: 'a',
+  defaults: DEFAULT_PRESET as unknown as PresetComponentDef['defaults'],
   installable: true,
 };
 registerPresetComponent(SIDEBAR_PRESET_DEF);
@@ -49,13 +80,12 @@ export function encodeSidebarPreset(config: Partial<SidebarPreset>): string {
 }
 
 export type SidebarDecodeResult =
-  | { ok: true; preset: SidebarPreset; version: string }
-  | { ok: false; error: string };
+  { ok: true; preset: SidebarPreset; version: string } | { ok: false; error: string };
 
 export function decodeSidebarPreset(code: string): SidebarDecodeResult {
   const res = decodePreset(code);
   if (!res.ok) return res;
-  if (res.def.tag !== "s") {
+  if (res.def.tag !== 's') {
     return { ok: false, error: `Not a sidebar preset (tag "${res.def.tag}").` };
   }
   return {

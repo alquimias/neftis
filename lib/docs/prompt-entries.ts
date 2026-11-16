@@ -24,25 +24,25 @@ export interface PromptEntry {
 }
 
 export const PROMPT_ENTRIES: Record<string, PromptEntry> = {
-  "fluid-hover": {
+  'fluid-hover': {
     craft: [
       "By default only the item the pointer is inside lights: empty space (a gap, the container padding, past the last row) puts the highlight out, and the next item lit fades it in fresh instead of sliding over. Where the highlight is hover only (a table's rows), pass `followScroll: true`: when the items scroll under a pointer at rest, the highlight goes to the item now under it (as the browser's own `:hover` does) and glides there, so on screen it stays at the pointer. Leave it off where the highlight is also where focus is (menus, selects, list boxes): moving the fill without the focus lights an item that Enter doesn't pick. A highlight set from the keyboard or focus is not the pointer's: a scroll leaves it alone until the pointer moves. Never on touch screens, which have no pointer at rest. Whatever an item shows under the pointer (a row's checkbox, its drag handle) keys off the item's highlight (`is-active`), not `:hover`: the browser updates `:hover` only when the pointer moves again, so after a scroll it sits on the item that scrolled away. `nearest: true` swaps in one pure function: an item the pointer is inside always wins; otherwise the item whose center is nearest does, so a cursor in a gap still lands. Ties keep the first item. Axes, for `nearest`: `y` for lists, `x` for strips, `xy` for grids (Euclidean distance to centers).",
       "One highlight per list: a single absolutely positioned `bg-hover` element pinned to the container's padding corner, travelling on a transform (framer `x`/`y`) on `spring.fast` so per-frame work stays on the compositor; width/height are layout values but only change when the target rect's size does \u2014 in most lists never.",
-      "The pointer session counter increments on `onMouseEnter` and re-keys the highlight, so a fresh entry fades in at the row it lands on instead of sliding over from wherever it was last; `from` sets where that fresh entry fades in from, for a fill the hover extends: the calendar passes the start of the range being picked, with `fadeIn={false}` so the highlight starts opaque and slides out of it.",
-      "A selected item takes no part in hover. The highlight fades in on the item under the pointer and fades out where it is: never born on the selected (checked, active, open) item to slide out of it, never sliding back into it on leave, so no `from={selectedRect}` on the highlight. The selected fill stays at full opacity while another item is hovered.",
-      "Gap click: a click that lands between items (gap, padding, past the last row) is routed as a real DOM `.click()` to the highlighted item's activator \u2014 \"what is lit is what a click hits\". Clicks inside an item, on controls between rows (a menu's search field), and on disabled items are left alone; `gapClick: false` turns it off, `{maxDistance}` caps it (the card grid uses 16px).",
-      "Gate overlays on `isMeasured`: an overlay mounted against a rect a later pass corrects animates from the wrong place to the right one, which reads as the highlight sliding in from another row. Measurement coalesces every trigger into one rAF pass, retries up to 3 frames while a popup has no layout box, and never publishes zeroed rects \u2014 the last complete measurement stands.",
+      'The pointer session counter increments on `onMouseEnter` and re-keys the highlight, so a fresh entry fades in at the row it lands on instead of sliding over from wherever it was last; `from` sets where that fresh entry fades in from, for a fill the hover extends: the calendar passes the start of the range being picked, with `fadeIn={false}` so the highlight starts opaque and slides out of it.',
+      'A selected item takes no part in hover. The highlight fades in on the item under the pointer and fades out where it is: never born on the selected (checked, active, open) item to slide out of it, never sliding back into it on leave, so no `from={selectedRect}` on the highlight. The selected fill stays at full opacity while another item is hovered.',
+      'Gap click: a click that lands between items (gap, padding, past the last row) is routed as a real DOM `.click()` to the highlighted item\'s activator \u2014 "what is lit is what a click hits". Clicks inside an item, on controls between rows (a menu\'s search field), and on disabled items are left alone; `gapClick: false` turns it off, `{maxDistance}` caps it (the card grid uses 16px).',
+      'Gate overlays on `isMeasured`: an overlay mounted against a rect a later pass corrects animates from the wrong place to the right one, which reads as the highlight sliding in from another row. Measurement coalesces every trigger into one rAF pass, retries up to 3 frames while a popup has no layout box, and never publishes zeroed rects \u2014 the last complete measurement stands.',
       "Rows never read `activeIndex` from a context: every row would re-render on every highlight change. Pass the hook's stable `activeStore` down instead and read it per row with `useFluidHoverSelect(store, (i) => i === index)`, which re-renders only the row the highlight left and the row it reached. The selector returns a primitive (a boolean, or a small number for a table row whose border hides next to the lit one).",
-      "Reduced motion is handled inside the component itself via `useReducedMotion()`: travel snaps, the 0.08s opacity fade stays \u2014 so an installed copy behaves correctly without the consumer wrapping their app in `MotionConfig`.",
+      'Reduced motion is handled inside the component itself via `useReducedMotion()`: travel snaps, the 0.08s opacity fade stays \u2014 so an installed copy behaves correctly without the consumer wrapping their app in `MotionConfig`.',
       "Only click targets register: a card without `href` or `onClick` does not join the highlight, because lighting it would promise a click with nowhere to land. One list per group of alternatives \u2014 children ride in the parent's list, a divider between different kinds of rows means a new container and a new hook.",
       "The docs' skip-list is explicit UX judgment: skip fluid hover when a wrong click would hurt, when only some items are clickable, when there is a lot of empty space around items, or when rows change place as you scroll.",
-      "Overlays are placed from `offsetTop`/`offsetLeft`, which round to whole pixels (they ignore transforms on purpose, so a scaling popup measures right). Keep the layout above the items on whole pixels: a fractional height higher up (a row at 80% of a 36px cell, 28.8px) sets the highlight and any ring a fraction off every item below. Round the height (CSS `round()`, with a `calc()` fallback) rather than changing how the hook measures.",
+      'Overlays are placed from `offsetTop`/`offsetLeft`, which round to whole pixels (they ignore transforms on purpose, so a scaling popup measures right). Keep the layout above the items on whole pixels: a fractional height higher up (a row at 80% of a 36px cell, 28.8px) sets the highlight and any ring a fraction off every item below. Round the height (CSS `round()`, with a `calc()` fallback) rather than changing how the hook measures.',
       "A wrapper with a mask, a clip-path or a filter makes its own stacking layer: everything inside it paints as one block, above or below the highlight but never between. When items live in such a wrapper, render the highlight (and any ring or focus overlay) inside it too; the wrapper isn't a containing block, so the same rects still position them.",
       "Items register in a layout effect (`useRegisterFluidHoverItem`), so a parent that measures in its own layout effect (a Table snapping its fills as rows move) already sees every item at its new index: a child's layout effect runs before its parent's.",
     ],
     usage: `import { useRef } from "react";
-import { useFluidHover, useRegisterFluidHoverItem } from "@/hooks/use-fluid-hover";
-import { FluidHoverHighlight } from "@/components/fluid-hover-highlight";
+import { useFluidHover, useRegisterFluidHoverItem } from "#hooks/use-fluid-hover";
+import { FluidHoverHighlight } from "#components/fluid-hover-highlight";
 
 function List({ rows }: { rows: string[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -57,39 +57,39 @@ function List({ rows }: { rows: string[] }) {
 // Inside Row: const ref = useRef<HTMLButtonElement>(null); useRegisterFluidHoverItem(registerItem, index, ref);
 // then render <button ref={ref} className="relative z-10 ...">`,
     props: [
-      "axis: \"y\" | \"x\" | \"xy\" (default \"y\"). Hook option. Which way the list runs: y for lists, x for strips, xy for grids.",
-      "isItemDisabled: (el: HTMLElement) => boolean. Hook option. Skips an item: never lit, never clicked.",
-      "gapClick: boolean | { maxDistance?: number } (default true). Hook option. A click between items goes to the lit one.",
-      "handlers: { onMouseEnter, onMouseMove, onMouseLeave, onClick }. Returned. Spread onto the container.",
-      "registerItem: (index, element | null) => void. Returned. Give it to each row via useRegisterFluidHoverItem; indices start at 0.",
-      "activeIndex: number | null. Returned. The lit item, also set as data-fluid-hover-active on the item.",
-      "setActiveIndex: (index | null) => void. Returned. Light an item yourself, for keyboard focus.",
-      "remeasure: () => void. Returned. Measure again and hide the highlight until done; call it when a popup opens.",
-      "FluidHoverHighlight hover: ReturnType<typeof useFluidHover>. The hook; the highlight reads what it needs from it.",
-      "FluidHoverHighlight transition: Transition | false (default spring.fast). The travel; false snaps in place after a reflow.",
+      'axis: "y" | "x" | "xy" (default "y"). Hook option. Which way the list runs: y for lists, x for strips, xy for grids.',
+      'isItemDisabled: (el: HTMLElement) => boolean. Hook option. Skips an item: never lit, never clicked.',
+      'gapClick: boolean | { maxDistance?: number } (default true). Hook option. A click between items goes to the lit one.',
+      'handlers: { onMouseEnter, onMouseMove, onMouseLeave, onClick }. Returned. Spread onto the container.',
+      'registerItem: (index, element | null) => void. Returned. Give it to each row via useRegisterFluidHoverItem; indices start at 0.',
+      'activeIndex: number | null. Returned. The lit item, also set as data-fluid-hover-active on the item.',
+      'setActiveIndex: (index | null) => void. Returned. Light an item yourself, for keyboard focus.',
+      'remeasure: () => void. Returned. Measure again and hide the highlight until done; call it when a popup opens.',
+      'FluidHoverHighlight hover: ReturnType<typeof useFluidHover>. The hook; the highlight reads what it needs from it.',
+      'FluidHoverHighlight transition: Transition | false (default spring.fast). The travel; false snaps in place after a reflow.',
     ],
   },
   motion: {
     craft: [
-      "Three spring tiers only: `fast` 0.08s bounce 0, `moderate` 0.16s bounce 0, `slow` 0.24s bounce 0.12. Rule: the bigger the thing that moves, the slower the spring \u2014 never hand-write a duration, always reach for a tier.",
-      "Exits are plain tweens, no bounce, one tier quicker than the enter (fast 0.06s, moderate 0.12s, slow 0.16s), so a dismissal reads as crisp and final rather than replaying the entrance in reverse.",
-      "`moderate` is critically damped: same perceived speed as a bouncier tier but it lands exactly with no overshoot, so it also carries panels/sheets that must settle precisely (dropdowns, tabs, mobile drawer, merged selection backgrounds).",
-      "Icon swaps you write yourself keep both glyphs mounted in one icon-sized grid cell and crossfade opacity 1\u21920, blur 0\u21924px, scale 1\u21920.6; the arriving glyph rides the tier's full 0.08s (easeOut) and the leaving one the 0.06s exit (easeIn), so an appear always outlasts a disappear. Both are tweens on purpose: a critically damped spring settles well before its nominal duration and would invert that order, and blur is a `filter` string a spring cannot drive. No shipped component uses this recipe: InputCopy takes the simpler route of one glyph at a time under `AnimatePresence mode=\"wait\"` on `spring.fast` with no blur, so match the component you are extending rather than assuming the recipe is inside it.",
-      "Reduced motion means fewer and gentler, not none: `<MotionConfig reducedMotion=\"user\">` at the root drops transform/layout animation but keeps opacity and colour fades (they aid comprehension) \u2014 a dialog fades instead of scaling, a drawer appears in place.",
+      'Three spring tiers only: `fast` 0.08s bounce 0, `moderate` 0.16s bounce 0, `slow` 0.24s bounce 0.12. Rule: the bigger the thing that moves, the slower the spring \u2014 never hand-write a duration, always reach for a tier.',
+      'Exits are plain tweens, no bounce, one tier quicker than the enter (fast 0.06s, moderate 0.12s, slow 0.16s), so a dismissal reads as crisp and final rather than replaying the entrance in reverse.',
+      '`moderate` is critically damped: same perceived speed as a bouncier tier but it lands exactly with no overshoot, so it also carries panels/sheets that must settle precisely (dropdowns, tabs, mobile drawer, merged selection backgrounds).',
+      'Icon swaps you write yourself keep both glyphs mounted in one icon-sized grid cell and crossfade opacity 1\u21920, blur 0\u21924px, scale 1\u21920.6; the arriving glyph rides the tier\'s full 0.08s (easeOut) and the leaving one the 0.06s exit (easeIn), so an appear always outlasts a disappear. Both are tweens on purpose: a critically damped spring settles well before its nominal duration and would invert that order, and blur is a `filter` string a spring cannot drive. No shipped component uses this recipe: InputCopy takes the simpler route of one glyph at a time under `AnimatePresence mode="wait"` on `spring.fast` with no blur, so match the component you are extending rather than assuming the recipe is inside it.',
+      'Reduced motion means fewer and gentler, not none: `<MotionConfig reducedMotion="user">` at the root drops transform/layout animation but keeps opacity and colour fades (they aid comprehension) \u2014 a dialog fades instead of scaling, a drawer appears in place.',
       "Never stack two measured-height collapses: a wrapper animating to a ResizeObserver-measured height springs only when it itself toggles and snaps (`{duration: 0}`) when a child's collapse changed the measurement \u2014 before the guard, the sub-menu landed in 218ms while its group wrapper took 326ms, diverging ~80px mid-flight.",
-      "Animate `transform` and `opacity`, never `top`/`left`/`width`/`height`: that keeps motion on the compositor AND lets root MotionConfig auto-reduce it \u2014 a component that animates layout properties gets neither.",
+      'Animate `transform` and `opacity`, never `top`/`left`/`width`/`height`: that keeps motion on the compositor AND lets root MotionConfig auto-reduce it \u2014 a component that animates layout properties gets neither.',
       "A menu should open in the frame it's asked for. No `:has()` keyed on an attribute that toggles as you interact (`data-popup-open`, `aria-expanded`, `data-state=open`, `:hover`), and no Tailwind `group-has-*` (it compiles to `:is(.group:has(...) *)`): Chrome then restyles the whole page on every toggle, or on every DOM insertion anywhere (a menu's portal, Base UI's focus guards), about 25ms each on a long page. Read the state in React instead and put it on the element that changes as a data attribute (a row's `data-action-open`, a Banner's `data-described` read from its children), or watch the one trigger with a MutationObserver. Measure with `long-animation-frame` entries (`forcedStyleAndLayoutDuration`).",
       "No sibling selector that ends in a bare `*` (`h2 + *`, `hr + *`, Tailwind `[&>*+*]:…`): the browser can't narrow it, so every child added to or removed from <body> (each menu, popover and tooltip portals there) restyles the whole page. Name what can follow (`h2 + :is(p, ul, ol, …)`), or count from the parent (`[&>*:not(:first-child)]:…`). And a Radix ScrollArea's viewport rewrites its <style> on every render: memoize it, its children passed through context.",
-      "One key cap everywhere: a filled chip with a 5px radius that keeps that radius under every shape setting, in the sans font. On a normal surface it is `bg-hover` with muted text (CommandMenuShortcut); on an inverted one (tooltip, toast, selection bar) the same chip in `bg-background/15` with `text-background`. No outlined caps and no pill caps: two looks read as two kinds of key.",
-      "No `:has()` on a page-level wrapper with a descendant target (`[&:has(x)_y]`): whenever anything mounts inside it, the browser restyles everything under it, on every menu, tooltip and popover. Let the page that needs the exception render its own rule (a `<style>` that lives and dies with it).",
-      "Never set an inherited property (`cursor`, `pointer-events`, `user-select`) on the root or a large container for the length of a gesture: the browser restyles every element under it at each end. Put a fixed layer over the page for the cursor and to block hover.",
+      'One key cap everywhere: a filled chip with a 5px radius that keeps that radius under every shape setting, in the sans font. On a normal surface it is `bg-hover` with muted text (CommandMenuShortcut); on an inverted one (tooltip, toast, selection bar) the same chip in `bg-background/15` with `text-background`. No outlined caps and no pill caps: two looks read as two kinds of key.',
+      'No `:has()` on a page-level wrapper with a descendant target (`[&:has(x)_y]`): whenever anything mounts inside it, the browser restyles everything under it, on every menu, tooltip and popover. Let the page that needs the exception render its own rule (a `<style>` that lives and dies with it).',
+      'Never set an inherited property (`cursor`, `pointer-events`, `user-select`) on the root or a large container for the length of a gesture: the browser restyles every element under it at each end. Put a fixed layer over the page for the cursor and to block hover.',
       "Don't switch a container's `display` (block to flex) in the frame a transition starts: the browser rebuilds the layout of everything inside it in that frame. Give it its final `display` from the start and change only sizes.",
       "Read nothing from the DOM in a per-frame callback. A read right after a write forces a layout in the middle of the frame, and the write after it a second one. Measure once (layout offsets, not boxes, so a transform in flight doesn't skew it) and keep it until the layout can have changed: new children, a resize, rows added or removed.",
-      "A job longer than a frame (coloring a code sample) runs in a worker, not on the main thread beside a transition; where it must run on the main thread, it waits until the page is quiet.",
+      'A job longer than a frame (coloring a code sample) runs in a worker, not on the main thread beside a transition; where it must run on the main thread, it waits until the page is quiet.',
       "A surface of the page that grows to fill the window (an expanded preview) is still the page: it sits above the sticky chrome and below every overlay's backdrop, so a dialog or the command menu dims it like the rest.",
     ],
     usage: `import { motion } from "motion/react";
-import { spring } from "@/lib/springs";
+import { spring } from "#lib/springs";
 
 // fast: 0.08s, bounce 0. Hover, fades, tooltips, focus rings.
 // moderate: 0.16s, bounce 0. Dropdowns, tabs, short travel, panels that must land exactly.
@@ -100,11 +100,11 @@ import { spring } from "@/lib/springs";
   exit={{ opacity: 0, transition: spring.fast.exit }}
 />`,
     props: [
-      "spring.fast: { type: \"spring\", duration: 0.08, bounce: 0, exit: { duration: 0.06 } }. Hover, fades, tooltips, focus rings.",
-      "spring.moderate: { type: \"spring\", duration: 0.16, bounce: 0, exit: { duration: 0.12 } }. Critically damped: dropdowns, tabs, drawers, short travel.",
-      "spring.slow: { type: \"spring\", duration: 0.24, bounce: 0.12, exit: { duration: 0.16 } }. Dialogs, drawers, large surfaces.",
-      "spring.<tier>.exit: tween config. Pass as the transition of an exit prop; never reuse the enter spring for a dismissal.",
-      "exitFallbackMs(tier): number. Exit duration in ms plus a 100ms buffer, for deferred-unmount timers that guard an exit tween.",
+      'spring.fast: { type: "spring", duration: 0.08, bounce: 0, exit: { duration: 0.06 } }. Hover, fades, tooltips, focus rings.',
+      'spring.moderate: { type: "spring", duration: 0.16, bounce: 0, exit: { duration: 0.12 } }. Critically damped: dropdowns, tabs, drawers, short travel.',
+      'spring.slow: { type: "spring", duration: 0.24, bounce: 0.12, exit: { duration: 0.16 } }. Dialogs, drawers, large surfaces.',
+      'spring.<tier>.exit: tween config. Pass as the transition of an exit prop; never reuse the enter spring for a dismissal.',
+      'exitFallbackMs(tier): number. Exit duration in ms plus a 100ms buffer, for deferred-unmount timers that guard an exit tween.',
     ],
   },
   reveal: {
@@ -114,10 +114,10 @@ import { spring } from "@/lib/springs";
       "`reveal-product` is for the app people come back to: every child fades in on first paint, 0.06s apart, with no rise, and nothing moves on scroll: an app's layout should feel like it was already there. Scroll reveals in an app are noise on the 10th visit.",
       "Slow data in `reveal-product` waits on shadcn's Skeleton (installed with the item), given the library's loading fill `bg-hover` (the hover tint every loading state shares: Sidebar's menu skeleton, DataTable's rows), lighter than its own `bg-accent`. Never swap a skeleton out and the data in on the same frame: the data starts at opacity 0, so the space blinks empty. `reveal-swap` stacks both in 1 grid cell: render the skeleton, then add the real block after it when the data lands, and the skeleton fades out as the block fades in. With `reveal-items` on both, each skeleton row hands over to its real row a step apart. Build the skeleton the size of the real block so nothing shifts, and keep Skeletons inside a block: a Skeleton that is itself an animated child loses its pulse. Skeletons in a preset, a `reveal-items` block, or a `reveal-swap` wait 160ms, then fade in over 250ms on an even ease-in-out curve before shadcn's pulse starts: data that lands within 160ms never shows a skeleton, and a slower one arrives instead of popping in. A swapped-out skeleton pauses where it is and fades out from there, never jumping back to full opacity first. Reduced motion keeps the wait and the fade and stops the pulse.",
       "`reveal-items` on a block keeps the block still and brings its children in one by one, a step apart, for 8 steps: table rows, metrics, and a sidebar's items fill in in order when their data lands instead of all at once. Inside a preset it takes the preset's travel and step; outside one (a sidebar beside the preset) it fades like the product, 0.06s apart.",
-      "`-subtle` tones the gesture down: landing 8px and 0.98 scale, 0.06s steps, 8px to 60px of scroll; product 0.04s steps.",
-      "No new token: landing steps ride `spring.slow` (0.24s, bounce 0.12), the tier for large surfaces; product steps ride `spring.moderate` (0.16s, no bounce), since app blocks are panels and a fade has no travel for a bounce to act on. Both are written as CSS `linear()` in `--reveal-motion`, and only the `from` keyframe is set, so each block lands on its own styles.",
-      "The header, sidebar, and footer stay outside the container, so they never move. A revealed landing section keeps a `transform`, so a `position: fixed` element inside one pins to the section: keep fixed elements outside too.",
-      "Browsers without view() timelines show landing sections still; the on-load steps play everywhere. Reduced motion drops the travel, keeps the on-load fade, and turns the scroll off.",
+      '`-subtle` tones the gesture down: landing 8px and 0.98 scale, 0.06s steps, 8px to 60px of scroll; product 0.04s steps.',
+      'No new token: landing steps ride `spring.slow` (0.24s, bounce 0.12), the tier for large surfaces; product steps ride `spring.moderate` (0.16s, no bounce), since app blocks are panels and a fade has no travel for a bounce to act on. Both are written as CSS `linear()` in `--reveal-motion`, and only the `from` keyframe is set, so each block lands on its own styles.',
+      'The header, sidebar, and footer stay outside the container, so they never move. A revealed landing section keeps a `transform`, so a `position: fixed` element inside one pins to the section: keep fixed elements outside too.',
+      'Browsers without view() timelines show landing sections still; the on-load steps play everywhere. Reduced motion drops the travel, keeps the on-load fade, and turns the scroll off.',
     ],
     usage: `// A page read once: the 1st child is the hero, later children rise on scroll.
 <Header />
@@ -130,7 +130,7 @@ import { spring } from "@/lib/springs";
 
 // The app itself: every child steps in on load, nothing on scroll.
 // Slow data shows a Skeleton block, then swaps in and plays its step.
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "#components/ui/skeleton";
 
 <Sidebar />
 <main className="reveal-product">
@@ -141,26 +141,26 @@ import { Skeleton } from "@/components/ui/skeleton";
   </div>
 </main>`,
     props: [
-      ".reveal-landing: class. A page read once: the hero plays on load, every later section rises on scroll, and each leaves the same way at the top. 12px rise, 0.94 scale, 0.1s steps, from 12px to 120px of scroll.",
-      ".reveal-landing-subtle: class. 8px rise, 0.98 scale, 0.06s steps, from 8px to 60px of scroll.",
-      ".reveal-scroll: class. Inside a landing preset, makes a deeper element (a grid card) a scroll section of its own; nested in another, it follows half a range later.",
-      ".reveal-product: class. The app: every block fades in on load, 0.06s apart. Nothing moves on scroll.",
-      ".reveal-product-subtle: class. 0.04s steps.",
-      ".reveal-swap: class. Stacks a skeleton and its real block; add the block when the data lands and one crossfades into the other.",
-      ".reveal-items: class. Children arrive one by one, 8 steps at most, inside a preset or beside it.",
+      '.reveal-landing: class. A page read once: the hero plays on load, every later section rises on scroll, and each leaves the same way at the top. 12px rise, 0.94 scale, 0.1s steps, from 12px to 120px of scroll.',
+      '.reveal-landing-subtle: class. 8px rise, 0.98 scale, 0.06s steps, from 8px to 60px of scroll.',
+      '.reveal-scroll: class. Inside a landing preset, makes a deeper element (a grid card) a scroll section of its own; nested in another, it follows half a range later.',
+      '.reveal-product: class. The app: every block fades in on load, 0.06s apart. Nothing moves on scroll.',
+      '.reveal-product-subtle: class. 0.04s steps.',
+      '.reveal-swap: class. Stacks a skeleton and its real block; add the block when the data lands and one crossfades into the other.',
+      '.reveal-items: class. Children arrive one by one, 8 steps at most, inside a preset or beside it.',
     ],
   },
   scrollbars: {
     craft: [
-      "On touch-primary devices the custom scrollbar machinery is skipped entirely for native overflow scrolling \u2014 better physics, momentum, and rubber-banding beat any custom scrollbar; the exported ScrollBar no-ops there.",
-      "The thumb rests narrow and low-contrast (4px wide, 8% overlay tint), then widens to 6px and darkens on hover (12%, 16% while dragging), \"so it gets out of the way until you reach for it\"; the 10px track stays as a comfortable hit target.",
+      'On touch-primary devices the custom scrollbar machinery is skipped entirely for native overflow scrolling \u2014 better physics, momentum, and rubber-banding beat any custom scrollbar; the exported ScrollBar no-ops there.',
+      'The thumb rests narrow and low-contrast (4px wide, 8% overlay tint), then widens to 6px and darkens on hover (12%, 16% while dragging), "so it gets out of the way until you reach for it"; the 10px track stays as a comfortable hit target.',
       "Show/hide is a plain CSS opacity fade matching the cue fade: 160ms in, 120ms out \u2014 exits faster, per the animation guidelines; spring tokens are Motion configs and don't apply to CSS. On hide, a 160ms delay waits out the thumb shrink first so the thumb visibly narrows back rather than the fade masking it.",
-      "The thumb is nudged 2px off the container edge with a `-translate`, but the track (and its 10px hit target) stays flush with the edge so edge-throws still land.",
-      "The baseline edge treatment is a vendored shadcn `scroll-fade`: a 48px mask dissolves content toward edges that have more to scroll, and CSS scroll-driven animations keep the true start/end edge crisp until you scroll past it \u2014 no JavaScript; browsers without scroll-driven animations (Firefox) get no fade, since a static one would sit on edges with nothing past them.",
+      'The thumb is nudged 2px off the container edge with a `-translate`, but the track (and its 10px hit target) stays flush with the edge so edge-throws still land.',
+      'The baseline edge treatment is a vendored shadcn `scroll-fade`: a 48px mask dissolves content toward edges that have more to scroll, and CSS scroll-driven animations keep the true start/end edge crisp until you scroll past it \u2014 no JavaScript; browsers without scroll-driven animations (Firefox) get no fade, since a static one would sit on edges with nothing past them.',
       "`scroll-divider` draws the hairline the fade can't: the line lives on the parent's pseudo-elements (inside the scroller the fade's own mask would erase it at exactly the edge it marks) and borrows the scroller's timeline by name; a region flush with the panel's top suppresses its start line, which would otherwise read as a stray border.",
       "The viewport takes keyboard focus (to scroll) and its focus outline sits 1px inside its edge (`outline-offset: -1px`): the area's root clips, so the default outline 2px outside was cut on every side.",
     ],
-    usage: `import { ScrollArea } from "@/components/ui/scroll-area";
+    usage: `import { ScrollArea } from "#components/ui/scroll-area";
 
 // className constrains the outer box; viewportClassName goes on the inner
 // scrolling viewport, where the scroll-fade / scroll-fade-x utility lives.
@@ -174,23 +174,24 @@ import { Skeleton } from "@/components/ui/skeleton";
   </div>
 </ScrollArea>`,
     props: [
-      "orientation: \"vertical\" | \"horizontal\" | \"both\" (default \"vertical\"). Which axes get scrollbars.",
-      "viewportClassName: string. Classes for the inner scrolling viewport, where the scroll-fade utility goes.",
-      "className: string. Classes for the outer container; set the height or width constraint here.",
+      'orientation: "vertical" | "horizontal" | "both" (default "vertical"). Which axes get scrollbars.',
+      'viewportClassName: string. Classes for the inner scrolling viewport, where the scroll-fade utility goes.',
+      'className: string. Classes for the outer container; set the height or width constraint here.',
     ],
-    flavorNote: "Radix flavor wraps @radix-ui/react-scroll-area, Base UI flavor wraps @base-ui/react ScrollArea. Both export ScrollArea and ScrollBar with the same props.",
+    flavorNote:
+      'Radix flavor wraps @radix-ui/react-scroll-area, Base UI flavor wraps @base-ui/react ScrollArea. Both export ScrollArea and ScrollBar with the same props.',
   },
   sizes: {
     craft: [
-      "Two steps only: default 36px controls and compact 28px. Every dimension steps down together \u2014 text 13\u219212px, icon 16\u219214px, control padding 12\u219210px, row padding 8\u21926px, gap 8\u21924px \u2014 \"so the whole control shrinks together, not just its box\".",
-      "One `control` height token by design for BOTH bounded controls (buttons, inputs, select triggers) AND list/menu rows: a popup row lines up with the trigger that opened it because they share this height.",
-      "Tabs take the `control` height directly (36px default, 28px compact), so a tab row lines up with the buttons, selects and inputs beside it. The `segmentPad` + `segmentItem` pair stays on the ladder for segmented controls built by hand.",
-      "The compact step halves the `gap` token (8px \u2192 4px) because \"density is spacing as much as control height\" \u2014 control-to-control spacing comes from the ladder, not from layout code.",
-      "Type follows the ladder: compact drops each of the six roles one notch, size and leading together (body 13/20px \u2192 12/18px, caption 12/16px \u2192 11/14px), so a dense region reads as \"a smaller sibling of the same hierarchy, not a squeezed copy\". The scale itself is its own system: see Typography.",
-      "Resolution order is explicit component `size` prop > surrounding `SizeProvider` > `\"default\"`; ~20 components accept the per-component override and it wins over the provider.",
-      "Density is a region decision, not a per-control one: wrap the region in one `SizeProvider` and everything follows \u2014 menus opened from it included, since React context crosses portals.",
+      'Two steps only: default 36px controls and compact 28px. Every dimension steps down together \u2014 text 13\u219212px, icon 16\u219214px, control padding 12\u219210px, row padding 8\u21926px, gap 8\u21924px \u2014 "so the whole control shrinks together, not just its box".',
+      'One `control` height token by design for BOTH bounded controls (buttons, inputs, select triggers) AND list/menu rows: a popup row lines up with the trigger that opened it because they share this height.',
+      'Tabs take the `control` height directly (36px default, 28px compact), so a tab row lines up with the buttons, selects and inputs beside it. The `segmentPad` + `segmentItem` pair stays on the ladder for segmented controls built by hand.',
+      'The compact step halves the `gap` token (8px \u2192 4px) because "density is spacing as much as control height" \u2014 control-to-control spacing comes from the ladder, not from layout code.',
+      'Type follows the ladder: compact drops each of the six roles one notch, size and leading together (body 13/20px \u2192 12/18px, caption 12/16px \u2192 11/14px), so a dense region reads as "a smaller sibling of the same hierarchy, not a squeezed copy". The scale itself is its own system: see Typography.',
+      'Resolution order is explicit component `size` prop > surrounding `SizeProvider` > `"default"`; ~20 components accept the per-component override and it wins over the provider.',
+      'Density is a region decision, not a per-control one: wrap the region in one `SizeProvider` and everything follows \u2014 menus opened from it included, since React context crosses portals.',
     ],
-    usage: `import { SizeProvider, useSize } from "@/lib/size-context";
+    usage: `import { SizeProvider, useSize } from "#lib/size-context";
 
 // One SizeProvider pins every control in its subtree to a step:
 // default is 36px controls, compact is 28px. Components also take a
@@ -204,34 +205,34 @@ function Toolbar() {
   );
 }`,
     props: [
-      "SizeProvider size: \"default\" | \"compact\". Controlled variant; pins every control in the subtree to one step.",
-      "SizeProvider defaultSize: \"default\" | \"compact\" (default \"default\"). Uncontrolled initial variant, switchable via useSizeContext().setSize.",
-      "useSize(override?): SizeClasses. Returns { variant, control, controlHeight, segmentItem, segmentPad, text, field, type, px, itemPx, gap, icon } (field = text plus 16px on touch screens, for editable fields; type = one size + leading class per role) for the current step.",
-      "useSizeVariant(override?): \"default\" | \"compact\". The resolved step, honoring a per-component override over the provider.",
-      "useSizeContext(): { size, setSize }. Read or switch the step from inside a SizeProvider.",
-      "useTypeScale(override?): Record<TypeScaleRole, number>. Font size in px per role (display, title, subtitle, body, caption, micro) for the current step. Line heights are in typeStyles and the --lh-* tokens.",
-      "size (on components): \"default\" | \"compact\" (default from provider). Per-component override on Button, Badge, Select, Tabs, Dropdown, Accordion, Card and most others.",
+      'SizeProvider size: "default" | "compact". Controlled variant; pins every control in the subtree to one step.',
+      'SizeProvider defaultSize: "default" | "compact" (default "default"). Uncontrolled initial variant, switchable via useSizeContext().setSize.',
+      'useSize(override?): SizeClasses. Returns { variant, control, controlHeight, segmentItem, segmentPad, text, field, type, px, itemPx, gap, icon } (field = text plus 16px on touch screens, for editable fields; type = one size + leading class per role) for the current step.',
+      'useSizeVariant(override?): "default" | "compact". The resolved step, honoring a per-component override over the provider.',
+      'useSizeContext(): { size, setSize }. Read or switch the step from inside a SizeProvider.',
+      'useTypeScale(override?): Record<TypeScaleRole, number>. Font size in px per role (display, title, subtitle, body, caption, micro) for the current step. Line heights are in typeStyles and the --lh-* tokens.',
+      'size (on components): "default" | "compact" (default from provider). Per-component override on Button, Badge, Select, Tabs, Dropdown, Accordion, Card and most others.',
     ],
   },
   typography: {
     craft: [
       "Six roles, each a size and a whole-pixel line height at both ladder steps: display 28/34px (compact 24/30), title 16/22 (15/20), subtitle 14/20 (13/18), body 13/20 (12/18), caption 12/16 (11/14), micro 11/14 (10/12). Body's 20px is also the paragraph line height, and puts a padded row on the ladder: 8 + 20 + 8 = 36px, 5 + 18 + 5 = 28px. Pairing the leading with the size puts a caption in a menu and a caption in a table on the same rhythm.",
-      "Pick the role by purpose, then check its default/compact pair: a 14/13px chat bubble is `subtitle` at both steps, not `body` when compact; an 11px error inside a compact control is compact `caption`. `micro` is only for keyboard caps, counters, and tiny badges, single line, so its leading is tight on purpose.",
-      "Components never write `text-[13px]`: they use `typeClass(role, variant)` or `useSize().type.<role>`, which emit `text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)]`. Stock tailwind-merge reads a bare `text-caption` as a color and drops it next to `text-muted-foreground` inside `cn()`; the arbitrary form survives, and its px fallbacks render even without the `type-scale` tokens.",
+      'Pick the role by purpose, then check its default/compact pair: a 14/13px chat bubble is `subtitle` at both steps, not `body` when compact; an 11px error inside a compact control is compact `caption`. `micro` is only for keyboard caps, counters, and tiny badges, single line, so its leading is tight on purpose.',
+      'Components never write `text-[13px]`: they use `typeClass(role, variant)` or `useSize().type.<role>`, which emit `text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)]`. Stock tailwind-merge reads a bare `text-caption` as a color and drops it next to `text-muted-foreground` inside `cn()`; the arbitrary form survives, and its px fallbacks render even without the `type-scale` tokens.',
       "To override a role's line height (a `leading-none` key cap, a `leading-5` input whose line box sets the caret height), put the `leading-*` after `typeClass()` inside `cn()`: tailwind-merge drops the role's own leading. In a plain class string, two leadings resolve by stylesheet order, not by the order you wrote them.",
       "Editable fields are the one exception: an input or textarea takes `useSize().field` (the body role plus `fieldTouchClass`, which is `pointer-coarse:text-[16px]`), or adds `fieldTouchClass` after another role, because iOS Safari zooms the page into any focused field under 16px. It sets the size only, so the role's leading and the field's height stay, and desktop keeps the role; lint allows this one raw size and no other, and a test fails any field without it. Never stop the zoom with `maximum-scale=1`: other browsers then block pinch zoom.",
-      "`typeClass` lives in `@/lib/type-scale`, which has no \"use client\" directive; `@/lib/size-context` re-exports it for client components. Import from `type-scale` in a server component, where a function from a client module can't be called.",
-      "Text uses 2 colors, `text-foreground` and `text-muted-foreground` (`text-background` on a dark fill), and red only for errors: never an opacity step like `text-muted-foreground/60`. No uppercase, no letter-spacing, and no eyebrow labels above titles: hierarchy comes from size and weight. Lint enforces the colors, case, and spacing.",
+      '`typeClass` lives in `@/lib/type-scale`, which has no "use client" directive; `@/lib/size-context` re-exports it for client components. Import from `type-scale` in a server component, where a function from a client module can\'t be called.',
+      'Text uses 2 colors, `text-foreground` and `text-muted-foreground` (`text-background` on a dark fill), and red only for errors: never an opacity step like `text-muted-foreground/60`. No uppercase, no letter-spacing, and no eyebrow labels above titles: hierarchy comes from size and weight. Lint enforces the colors, case, and spacing.',
       "Text uses 3 weights: `fontWeights.normal` (400, opsz 14) for text, `fontWeights.semibold` (550, opsz 18) for headings and selected items, and `fontWeights.bold` (700, opsz 25) only for the display style, the page title. The paired optical size holds a label's width when it turns semibold, within \u00b10.4px across a corpus of real labels, where weight alone widens a 25-character label by about 3.4px.",
       "`.typeset` sets markdown the way the site sets its pages, with nothing to tune: h1 display in bold, h2 title, h3 to h6 subtitle, paragraphs body in the muted color, figcaption and code caption, each with its role's line height. It reads the `--fs-*` and `--lh-*` tokens (px fallbacks), so a tuned scale reaches prose too. Micro stays out of prose: it sizes key caps, counters, and initials inside components, never reading text.",
       "Prose spacing is fixed in whole pixels: 12px between blocks and 8px below a heading, as on the site's doc pages, 24px above h1 and h2, 20px above h3 to h6, 24px on both sides of a rule, 4px between list items. `.typeset-compact`, next to `.typeset`, switches to the compact roles (12/18 body, 24/30 display) and steps the spacing down to 8, 4, 16, 12, 16, and 4.",
-      "The prose sheet sits in `@layer components` with every selector inside `:where()`, so it has zero specificity and any utility on an element wins without `!important`. Each selector is scoped whole to `.typeset`, so a list or a `.not-typeset` around the prose changes nothing inside it. `.not-typeset` skips a subtree but keeps its outer spacing, so a component dropped into prose still sits in the rhythm, and plain divs take no rhythm at all, so an embedded component spaces itself.",
+      'The prose sheet sits in `@layer components` with every selector inside `:where()`, so it has zero specificity and any utility on an element wins without `!important`. Each selector is scoped whole to `.typeset`, so a list or a `.not-typeset` around the prose changes nothing inside it. `.not-typeset` skips a subtree but keeps its outer spacing, so a component dropped into prose still sits in the rhythm, and plain divs take no rhythm at all, so an embedded component spaces itself.',
       "It styles editors as well as rendered markdown: GFM task lists (remark-gfm classes) and Tiptap's markup (a `li[data-type=taskItem]` with a checkbox label and a content div, tables in `.tableWrapper`) both work as is. A to-do's checkbox is drawn like the library's CheckboxItem: a 16px outline (14px compact) with 5px corners that steps aside for the tick alone when checked, never a filled box. Hovered, the outline darkens, and on a checked box it comes back around the tick. It centers on its first line and sits 8px from its text (4px compact), CheckboxItem's row gap. Every list puts its text 24px in (18px compact): disc bullets and numbers sit in the indent with 4px before their text, like the site's own lists. Sub-items step in 20px (16px compact), whatever the marker. A checked item strikes through, as in Notion; its nested sub-tasks keep their own state.",
       "Space only goes above an element (no `:last-child`, no `:has()`, no `margin-bottom`) and lines wrap plainly (no `text-wrap: pretty` or `balance`, which re-wrap earlier lines as words arrive), so text streamed in at the end of a chat reply never moves what is already on screen. The root also resets `white-space`, so markdown's newlines between blocks don't turn into blank lines inside a pre-wrap chat bubble.",
       "Trim the invisible copies too: a label that reserves its width with a hidden copy in the same grid cell (the semibold copy behind a weight change, the longest value behind a fixed-width field) needs the same `text-box` trim as the visible text. An untrimmed copy keeps the full line height, the cell grows, and the trimmed label sits at its top instead of centered. Trim a flex row's parts, not the flex container: `text-box` skips flex containers.",
     ],
-    usage: `import { typeClass } from "@/lib/type-scale"; // no "use client", fine in server components
-import { useSize } from "@/lib/size-context";
+    usage: `import { typeClass } from "#lib/type-scale"; // no "use client", fine in server components
+import { useSize } from "#lib/size-context";
 
 // Six roles (display, title, subtitle, body, caption, micro), each a size and
 // a leading, at the default and compact steps of the size ladder.
@@ -249,27 +250,27 @@ const { type } = useSize(); // type.caption, type.body, ...
 // One notch down in a compact region:
 <article className={cn("typeset", compact && "typeset-compact")}>{markdown}</article>`,
     props: [
-      "typeClass(role, variant = \"default\"): string. Size + leading classes with px fallbacks for one role at one step.",
-      "useSize().type: Record<TypeScaleRole, string>. The same classes for the resolved step.",
-      "useTypeScale(override?): Record<TypeScaleRole, number>. Font size in px per role for the resolved step.",
-      ".typeset: sets plain elements in the type styles, as on the site. .typeset-compact (next to it) steps it down; .not-typeset opts a subtree out; .typeset-scroll wraps wide tables.",
+      'typeClass(role, variant = "default"): string. Size + leading classes with px fallbacks for one role at one step.',
+      'useSize().type: Record<TypeScaleRole, string>. The same classes for the resolved step.',
+      'useTypeScale(override?): Record<TypeScaleRole, number>. Font size in px per role for the resolved step.',
+      '.typeset: sets plain elements in the type styles, as on the site. .typeset-compact (next to it) steps it down; .not-typeset opts a subtree out; .typeset-scroll wraps wide tables.',
     ],
   },
   surfaces: {
     craft: [
-      "Eight surface levels, each paired 1:1 with a shadow recipe. Light mode has only two color steps (#FAFAFA floor, #FCFCFC sunken) and flattens to #FFFFFF from surface-3 up \u2014 shadow alone carries elevation; dark mode is an additive white-opacity ladder #171717 \u2192 #484848 in even steps.",
-      "The motivating failure: a dropdown that hard-codes its background ends up surface-5 on surface-5 inside a dialog \u2014 the elevation shadow still gives a faint edge, but the menu body melts straight into the dialog.",
-      "Substrate flows through React context (default 1 = the page); `Elevated` computes its own level as `min(substrate + offset, 8)` and re-provides it, so further nesting walks up the ladder automatically and a popover lands at the right depth on the page or inside a dialog with no props passed.",
-      "Conventional offsets: `2` for dropdown / popover / select menu, `4` for dialog / modal.",
-      "`shadowLevel` decouples shadow from background: a dropdown always reads `shadow-surface-3` whether it opens on the page or inside a dialog \u2014 the background tracks the substrate, but the shadow weight stays constant, so \"a popover still reads as a popover three layers down\".",
-      "Hover and selected states are surface-relative overlays, not fixed colors, so they work at any elevation: `--overlay` flips tint direction per theme (black on light, white on dark); dark hover is +6% white and selected +10% (light: 4% / 7%) \u2014 the demo labels these exactly.",
-      "One accent, `--fluid-accent` (#6B97FF by default), carries the brand: every focus ring (through `--focus-ring: var(--fluid-accent)`), the switch track, drag-over and swatch rings, and the copy highlight. Hover and selected stay neutral overlays. Components read `var(--fluid-accent, #6B97FF)` and derive shades in place with `color-mix(in oklab, …)`, never a raw hex. Declare the accent on `:root` only: a `.light` / `.dark` subtree that re-declares it resets a forced-theme preview to the default.",
+      'Eight surface levels, each paired 1:1 with a shadow recipe. Light mode has only two color steps (#FAFAFA floor, #FCFCFC sunken) and flattens to #FFFFFF from surface-3 up \u2014 shadow alone carries elevation; dark mode is an additive white-opacity ladder #171717 \u2192 #484848 in even steps.',
+      'The motivating failure: a dropdown that hard-codes its background ends up surface-5 on surface-5 inside a dialog \u2014 the elevation shadow still gives a faint edge, but the menu body melts straight into the dialog.',
+      'Substrate flows through React context (default 1 = the page); `Elevated` computes its own level as `min(substrate + offset, 8)` and re-provides it, so further nesting walks up the ladder automatically and a popover lands at the right depth on the page or inside a dialog with no props passed.',
+      'Conventional offsets: `2` for dropdown / popover / select menu, `4` for dialog / modal.',
+      '`shadowLevel` decouples shadow from background: a dropdown always reads `shadow-surface-3` whether it opens on the page or inside a dialog \u2014 the background tracks the substrate, but the shadow weight stays constant, so "a popover still reads as a popover three layers down".',
+      'Hover and selected states are surface-relative overlays, not fixed colors, so they work at any elevation: `--overlay` flips tint direction per theme (black on light, white on dark); dark hover is +6% white and selected +10% (light: 4% / 7%) \u2014 the demo labels these exactly.',
+      'One accent, `--fluid-accent` (#6B97FF by default), carries the brand: every focus ring (through `--focus-ring: var(--fluid-accent)`), the switch track, drag-over and swatch rings, and the copy highlight. Hover and selected stay neutral overlays. Components read `var(--fluid-accent, #6B97FF)` and derive shades in place with `color-mix(in oklab, …)`, never a raw hex. Declare the accent on `:root` only: a `.light` / `.dark` subtree that re-declares it resets a forced-theme preview to the default.',
       "Closely nested rounded surfaces use concentric corners: inner radius = max(0, outer radius - inset - border), where inset is the interior spacing (usually parent padding) and border is the parent's border width. The fixed shape pair (`container` 12/24px \u2192 `bg` 8/20px) is for a 4px total inset (sharp stays 1px at both levels); any other padding uses `nestedRadius()` instead of reusing those classes. Past 24px, with asymmetric gaps, or when the inner element does not reach the corner, the layers are independent and may be tuned by eye.",
     ],
-    usage: `import { Elevated } from "@/lib/elevated";
-import { SurfaceProvider, useSurface } from "@/lib/surface-context";
-import { surfaceClasses } from "@/lib/surface-classes";
-import { nestedRadius, useShape } from "@/lib/shape-context";
+    usage: `import { Elevated } from "#lib/elevated";
+import { SurfaceProvider, useSurface } from "#lib/surface-context";
+import { surfaceClasses } from "#lib/surface-classes";
+import { nestedRadius, useShape } from "#lib/shape-context";
 
 // Elevated reads the substrate from context, computes min(substrate + offset, 8),
 // applies the surface background and shadow classes, then re-provides the new
@@ -281,27 +282,27 @@ import { nestedRadius, useShape } from "@/lib/shape-context";
 // Nested corner: const shape = useShape();
 // const inner = nestedRadius(shape.containerRadius, padding, borderWidth);`,
     props: [
-      "offset: number. Steps above the current substrate; the surface level becomes min(substrate + offset, 8). Use 2 for dropdown, popover, select menu and 4 for dialog, modal.",
-      "shadowLevel: number (default the computed level). Override the shadow level so a dropdown keeps a constant shadow weight however deep it nests.",
-      "className: string. Merged after the surface classes; radius and padding go here.",
-      "...div props: ComponentPropsWithoutRef<\"div\">. Everything else is forwarded to the div, ref included.",
-      "SurfaceProvider value: number. Set the substrate for a subtree by hand (1 page, 3 popover, 5 dialog).",
-      "useSurface(): number. The current substrate level from context, 1 when no provider is present.",
-      "surfaceClasses(bgLevel, shadowLevel = bgLevel): string. Background plus shadow Tailwind classes for a level, for components that do not use Elevated.",
-      "nestedRadius(outerRadius, inset, borderWidth = 0): number. Returns max(0, outerRadius - inset - borderWidth) for concentric nested corners.",
+      'offset: number. Steps above the current substrate; the surface level becomes min(substrate + offset, 8). Use 2 for dropdown, popover, select menu and 4 for dialog, modal.',
+      'shadowLevel: number (default the computed level). Override the shadow level so a dropdown keeps a constant shadow weight however deep it nests.',
+      'className: string. Merged after the surface classes; radius and padding go here.',
+      '...div props: ComponentPropsWithoutRef<"div">. Everything else is forwarded to the div, ref included.',
+      'SurfaceProvider value: number. Set the substrate for a subtree by hand (1 page, 3 popover, 5 dialog).',
+      'useSurface(): number. The current substrate level from context, 1 when no provider is present.',
+      'surfaceClasses(bgLevel, shadowLevel = bgLevel): string. Background plus shadow Tailwind classes for a level, for components that do not use Elevated.',
+      'nestedRadius(outerRadius, inset, borderWidth = 0): number. Returns max(0, outerRadius - inset - borderWidth) for concentric nested corners.',
     ],
   },
   accordion: {
     craft: [
       "The trigger label renders twice in a stacked grid: an invisible semibold copy reserves the width, so the visible label animates 'wght' 400 \u2192 550 ('opsz' 14 \u2192 18, holding advance width within \u00b10.4px) on open with zero layout shift.",
-      "The chevron points right when collapsed and springs 90\u00b0 down on expand via spring.fast; its strokeWidth also steps 1.5 \u2192 2 when the row is open or hovered.",
-      "Panel height animates to a self-measured offsetHeight pixel value, never `height:\"auto\"` \u2014 framer measures \"auto\" visually, so under a scaled ancestor the open would overshoot to scale\u00d7 the real height and snap back.",
-      "Open uses spring.fast with bounce 0 so height \"lands with the trigger's chevron\" without overshoot; close takes the quicker 0.06s exit tween because \"a close is a decision already made\". Opacity runs ahead of height (0.06s in / 0.04s out) so the body dissolves rather than being sliced by the clip edge.",
+      'The chevron points right when collapsed and springs 90\u00b0 down on expand via spring.fast; its strokeWidth also steps 1.5 \u2192 2 when the row is open or hovered.',
+      'Panel height animates to a self-measured offsetHeight pixel value, never `height:"auto"` \u2014 framer measures "auto" visually, so under a scaled ancestor the open would overshoot to scale\u00d7 the real height and snap back.',
+      'Open uses spring.fast with bounce 0 so height "lands with the trigger\'s chevron" without overshoot; close takes the quicker 0.06s exit tween because "a close is a decision already made". Opacity runs ahead of height (0.06s in / 0.04s out) so the body dissolves rather than being sliced by the clip edge.',
       "Reduced motion is read via useReducedMotion (not trusted to a consumer MotionConfig) and drops the height transition to duration 0; content resizing underneath an open panel (e.g. a nested accordion) also snaps, since a re-targeted spring would chase the child's animation and land late.",
-      "highlight=\"item\" (default) tints the whole open row + panel as one accent/20 block (accent/12 dark); highlight=\"trigger\" scopes the fill to the row on hover only, \"the way a sidebar row highlights without colouring its sub-tree\". The open tint keeps its full opacity while another trigger is hovered.",
-      "Closed panels stay mounted for measurement but flip to `hidden` only after the exit finishes, keeping them out of the accessibility tree without cutting the animation short; the keyboard focus ring is one shared rect that springs (spring.fast) between rows at a \u22122px inset, only on :focus-visible.",
+      'highlight="item" (default) tints the whole open row + panel as one accent/20 block (accent/12 dark); highlight="trigger" scopes the fill to the row on hover only, "the way a sidebar row highlights without colouring its sub-tree". The open tint keeps its full opacity while another trigger is hovered.',
+      'Closed panels stay mounted for measurement but flip to `hidden` only after the exit finishes, keeping them out of the accessibility tree without cutting the animation short; the keyboard focus ring is one shared rect that springs (spring.fast) between rows at a \u22122px inset, only on :focus-visible.',
     ],
-    usage: `import { Accordion, AccordionGroup, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+    usage: `import { Accordion, AccordionGroup, AccordionItem, AccordionTrigger, AccordionContent } from "#components/ui/accordion";
 
 // Standalone: one Accordion, one item. Grouped: AccordionGroup with an
 // index on every AccordionItem so the fluid hover highlight can track rows.
@@ -316,33 +317,34 @@ import { nestedRadius, useShape } from "@/lib/shape-context";
   </AccordionItem>
 </AccordionGroup>`,
     props: [
-      "type: \"single\" | \"multiple\" (default \"single\"). Whether one or multiple items can be expanded.",
-      "collapsible: boolean (default true). Allow collapsing all items when type is single.",
-      "defaultValue: string | string[]. Initially expanded item value(s).",
-      "value: string | string[]. Controlled expanded value(s).",
-      "onValueChange: (value) => void. Callback when expanded state changes.",
-      "highlight: \"trigger\" | \"item\" (default \"item\"). What an open item tints: item fills the row and its panel, trigger scopes the fill to the row and shows it on hover.",
-      "AccordionItem value: string. Unique identifier for this item.",
-      "AccordionItem index: number. Position for fluid hover. Required inside AccordionGroup, omit for standalone.",
-      "AccordionItem disabled: boolean (default false). Whether this item is disabled.",
-      "AccordionTrigger / AccordionContent children: ReactNode. Trigger label and collapsible content.",
+      'type: "single" | "multiple" (default "single"). Whether one or multiple items can be expanded.',
+      'collapsible: boolean (default true). Allow collapsing all items when type is single.',
+      'defaultValue: string | string[]. Initially expanded item value(s).',
+      'value: string | string[]. Controlled expanded value(s).',
+      'onValueChange: (value) => void. Callback when expanded state changes.',
+      'highlight: "trigger" | "item" (default "item"). What an open item tints: item fills the row and its panel, trigger scopes the fill to the row and shows it on hover.',
+      'AccordionItem value: string. Unique identifier for this item.',
+      'AccordionItem index: number. Position for fluid hover. Required inside AccordionGroup, omit for standalone.',
+      'AccordionItem disabled: boolean (default false). Whether this item is disabled.',
+      'AccordionTrigger / AccordionContent children: ReactNode. Trigger label and collapsible content.',
     ],
-    flavorNote: "Radix flavor builds on @radix-ui/react-accordion, Base UI flavor on @base-ui/react Accordion. Same exports and props in both.",
+    flavorNote:
+      'Radix flavor builds on @radix-ui/react-accordion, Base UI flavor on @base-ui/react Accordion. Same exports and props in both.',
   },
-  "ask-user-questions": {
+  'ask-user-questions': {
     craft: [
-      "Digits 1-9 answer options from a document-level listener (no focus in the card needed); with several instances mounted, only one answers \u2014 the one containing focus, else the most recently mounted \u2014 so stacked docs demos never all fire on the same digit. The digit for the Other row focuses its textarea, and digits are ignored while typing in any input.",
-      "\u2191/\u2193 move a highlight that reuses the exact same fluid-hover indicator as the mouse, \"so keyboard and pointer focus look identical\"; \u2190 is Back, \u2192 is Skip, with stopPropagation so the doc page's arrow-key page nav doesn't also fire. Inside the Other textarea, \u2191/\u2193 are stolen only when the caret is at the very start/end \u2014 anywhere else the caret moves natively, so multi-line drafts stay editable.",
+      'Digits 1-9 answer options from a document-level listener (no focus in the card needed); with several instances mounted, only one answers \u2014 the one containing focus, else the most recently mounted \u2014 so stacked docs demos never all fire on the same digit. The digit for the Other row focuses its textarea, and digits are ignored while typing in any input.',
+      '\u2191/\u2193 move a highlight that reuses the exact same fluid-hover indicator as the mouse, "so keyboard and pointer focus look identical"; \u2190 is Back, \u2192 is Skip, with stopPropagation so the doc page\'s arrow-key page nav doesn\'t also fire. Inside the Other textarea, \u2191/\u2193 are stolen only when the caret is at the very start/end \u2014 anywhere else the caret moves natively, so multi-line drafts stay editable.',
       "\u2318+Enter (macOS) / \u2303+Enter commits multi-select and freeText from anywhere inside the card; the platform is detected in a lazy initializer (not an effect) so the very first keydown checks the right modifier, and the ShortcutChip carries suppressHydrationWarning to absorb the server's \u2303-for-\u2318 one-character delta.",
-      "The Q/A region animates its REAL height (spring.slow) to a ResizeObserver-measured content height, so the card border and footer reflow frame-by-frame in lockstep with the morph; header and footer live outside the clipped region so neither is yanked.",
-      "Contiguous selected rows merge into a single rounded background block; stable run IDs make a growing/shrinking run morph instead of exit+re-enter, and useMergeSplitBlocks draws two abutting halves mid merge/split so a bridging row animates the boundary.",
-      "One morphing blue focus ring springs between rows, gated to real keyboard focus: a module-level `pointerFocusRedirect` flag marks the row's mousedown focus() redirect, because Chrome reports script focus as :focus-visible and would otherwise light the ring on every click. The ring is intentionally suppressed on the Other row \u2014 it has its own input-field treatment and the ring \"reads as noise while typing\".",
+      'The Q/A region animates its REAL height (spring.slow) to a ResizeObserver-measured content height, so the card border and footer reflow frame-by-frame in lockstep with the morph; header and footer live outside the clipped region so neither is yanked.',
+      'Contiguous selected rows merge into a single rounded background block; stable run IDs make a growing/shrinking run morph instead of exit+re-enter, and useMergeSplitBlocks draws two abutting halves mid merge/split so a bridging row animates the boundary.',
+      'One morphing blue focus ring springs between rows, gated to real keyboard focus: a module-level `pointerFocusRedirect` flag marks the row\'s mousedown focus() redirect, because Chrome reports script focus as :focus-visible and would otherwise light the ring on every click. The ring is intentionally suppressed on the Other row \u2014 it has its own input-field treatment and the ring "reads as noise while typing".',
       "The Other row's textarea auto-resizes (height 0 \u2192 scrollHeight) and only switches to top-aligned chip once content actually exceeds ~1.5\u00d7 the measured line-height \u2014 zoom-safe \u2014 so a single line stays optically centered like sibling rows; plain Enter submits it in single-select (Shift+Enter newlines), and once it has text it joins the merged selected background instead of reading as a detached field.",
-      "A11y structure: the visible rows carry role radio/checkbox with a roving tabindex (one tab stop \u2014 first selected row, else first row), while hidden sr-only Base UI primitives carry the group plumbing; every keyboard query is scoped to `[data-fluid-hover-index]` because a bare role selector would also match the hidden primitive and land arrow focus on invisible controls.",
+      'A11y structure: the visible rows carry role radio/checkbox with a roving tabindex (one tab stop \u2014 first selected row, else first row), while hidden sr-only Base UI primitives carry the group plumbing; every keyboard query is scoped to `[data-fluid-hover-index]` because a bare role selector would also match the hidden primitive and land arrow focus on invisible controls.',
       "Question changes restore keyboard focus to the new question's first row only when the user was actually keyboard-driving (the component's own focusedIndexRef is the modality signal, since the DOM can't distinguish); restoring after a mouse click would leave the ring stuck on screen.",
-      "Footer Back/Skip show \u2190/\u2192 icons as keyboard hints on desktop only \u2014 mobile has no equivalent keys \u2014 while the inline per-row submit arrows stay everywhere because \"those are tap affordances, not keyboard hints\"; the single-select submit arrow overlays the numbered chip on hover/focus (chipPosition \"left\" moves it to its own right-edge slot so the action stays where the eye expects).",
+      'Footer Back/Skip show \u2190/\u2192 icons as keyboard hints on desktop only \u2014 mobile has no equivalent keys \u2014 while the inline per-row submit arrows stay everywhere because "those are tap affordances, not keyboard hints"; the single-select submit arrow overlays the numbered chip on hover/focus (chipPosition "left" moves it to its own right-edge slot so the action stays where the eye expects).',
     ],
-    usage: `import { AskUserQuestions, type AskUserQuestion } from "@/components/ui/ask-user-questions";
+    usage: `import { AskUserQuestions, type AskUserQuestion } from "#components/ui/ask-user-questions";
 
 const questions: AskUserQuestion[] = [
   {
@@ -359,67 +361,67 @@ const questions: AskUserQuestion[] = [
 
 <AskUserQuestions questions={questions} onComplete={(answers) => console.log(answers)} />`,
     props: [
-      "questions: AskUserQuestion[]. Ordered list of questions to ask; 2 to 5 options per question is recommended.",
-      "currentIndex: number. Controlled index of the active question; pair with onCurrentIndexChange.",
-      "defaultCurrentIndex: number (default 0). Initial question index (uncontrolled).",
-      "answers: Record<string, AskUserAnswer>. Controlled answers map keyed by question id; pair with onAnswersChange.",
-      "onComplete: (answers: Record<string, AskUserAnswer>) => void. Called after the last question is answered or submitted.",
-      "onSkip: (questionId: string, index: number) => void. Called when the user clicks Skip on a question.",
-      "skipLabel: string (default \"Skip\"). Label for the skip control in the header.",
-      "AskUserQuestion: { id, title, options?, multiSelect?, allowOther?, skippable?, layout?: \"inline\" | \"stacked\", chipPosition?: \"left\" | \"right\", freeText?, freeTextValidate? }. multiSelect adds a Next button; allowOther adds an inline textarea; freeText makes a textarea the only answer.",
-      "AskUserOption: { id, title, description? }. Bold title plus muted description per row.",
-      "AskUserAnswer: { questionId, selectedIds: string[], otherText?, skipped? }. What each question resolves to.",
+      'questions: AskUserQuestion[]. Ordered list of questions to ask; 2 to 5 options per question is recommended.',
+      'currentIndex: number. Controlled index of the active question; pair with onCurrentIndexChange.',
+      'defaultCurrentIndex: number (default 0). Initial question index (uncontrolled).',
+      'answers: Record<string, AskUserAnswer>. Controlled answers map keyed by question id; pair with onAnswersChange.',
+      'onComplete: (answers: Record<string, AskUserAnswer>) => void. Called after the last question is answered or submitted.',
+      'onSkip: (questionId: string, index: number) => void. Called when the user clicks Skip on a question.',
+      'skipLabel: string (default "Skip"). Label for the skip control in the header.',
+      'AskUserQuestion: { id, title, options?, multiSelect?, allowOther?, skippable?, layout?: "inline" | "stacked", chipPosition?: "left" | "right", freeText?, freeTextValidate? }. multiSelect adds a Next button; allowOther adds an inline textarea; freeText makes a textarea the only answer.',
+      'AskUserOption: { id, title, description? }. Bold title plus muted description per row.',
+      'AskUserAnswer: { questionId, selectedIds: string[], otherText?, skipped? }. What each question resolves to.',
     ],
   },
   badge: {
     craft: [
-      "Solid non-gray badges derive their tint at runtime: `color-mix(in srgb, <color> 15%, var(--background))` with plain `var(--foreground)` text, so one hex per color adapts to light and dark themes.",
+      'Solid non-gray badges derive their tint at runtime: `color-mix(in srgb, <color> 15%, var(--background))` with plain `var(--foreground)` text, so one hex per color adapts to light and dark themes.',
       "Solid gray is special-cased to the theme's `--accent` background instead of a mixed tint.",
-      "The dot variant keeps a neutral `border-border` outline and foreground text; only the dot itself carries the color \u2014 full-strength hex, or `--muted-foreground` for gray.",
-      "The ghost variant drops the outline and the side padding and inherits the text color, so in a table the dot lines up with the column edge and the label stays muted until its row lights.",
-      "Two sizes on the shared ladder: default h-6, px-2.5, 12px text, gap-1.5; compact h-5, px-2, 11px text, gap-1. Legacy sm/md/lg still compile as aliases (sm \u2192 compact, md/lg \u2192 default).",
-      "Size resolves explicit prop > surrounding SizeProvider > default, so badges inside a compact region shrink automatically.",
-      "The label sits in its own span with `text-box: trim-both cap alphabetic`; the badge height is fixed, so trimming only recenters the letterforms vertically.",
+      'The dot variant keeps a neutral `border-border` outline and foreground text; only the dot itself carries the color \u2014 full-strength hex, or `--muted-foreground` for gray.',
+      'The ghost variant drops the outline and the side padding and inherits the text color, so in a table the dot lines up with the column edge and the label stays muted until its row lights.',
+      'Two sizes on the shared ladder: default h-6, px-2.5, 12px text, gap-1.5; compact h-5, px-2, 11px text, gap-1. Legacy sm/md/lg still compile as aliases (sm \u2192 compact, md/lg \u2192 default).',
+      'Size resolves explicit prop > surrounding SizeProvider > default, so badges inside a compact region shrink automatically.',
+      'The label sits in its own span with `text-box: trim-both cap alphabetic`; the badge height is fixed, so trimming only recenters the letterforms vertically.',
       "Corner radius comes from the shape context (`shape.item`), so badges follow the app's pill/rounded shape system rather than hardcoding a radius.",
     ],
-    usage: `import { Badge } from "@/components/ui/badge";
+    usage: `import { Badge } from "#components/ui/badge";
 
 <Badge color="violet">Fiction</Badge>
 <Badge color="amber">Science</Badge>
 <Badge variant="ghost" color="green">Philosophy</Badge>
 <Badge size="compact" color="blue">History</Badge>`,
     props: [
-      "variant: \"solid\" | \"dot\" | \"ghost\" (default \"solid\"). Solid uses a tinted background; dot shows a colored indicator in an outline; ghost is the indicator and label alone, for tables.",
-      "size: \"default\" | \"compact\" (default from SizeProvider). Step on the size ladder; legacy sm/md/lg values resolve as aliases.",
-      "color: BadgeColor (default \"gray\"). accent (the app's --fluid-accent), or a Tailwind palette name: gray, red, orange, amber, yellow, lime, green, emerald, teal, cyan, blue, indigo, violet, purple, fuchsia, pink, rose.",
+      'variant: "solid" | "dot" | "ghost" (default "solid"). Solid uses a tinted background; dot shows a colored indicator in an outline; ghost is the indicator and label alone, for tables.',
+      'size: "default" | "compact" (default from SizeProvider). Step on the size ladder; legacy sm/md/lg values resolve as aliases.',
+      'color: BadgeColor (default "gray"). accent (the app\'s --fluid-accent), or a Tailwind palette name: gray, red, orange, amber, yellow, lime, green, emerald, teal, cyan, blue, indigo, violet, purple, fuchsia, pink, rose.',
     ],
   },
   banner: {
     craft: [
-      "Contrast puts the status color in one place at a time. `low` sets every status on the same neutral `var(--hover)` fill and colors only the icon; `high` washes the banner in `color-mix(in oklab, <status> 12%, transparent)`, 8% for the neutral default because grey reads darker than a hue at the same mix. There is no solid fill: the status color never sits behind the text at full strength.",
-      "Both fills are translucent, so an inline banner takes on the surface under it. The fixed bar paints the same fill over an opaque `var(--background)`, so the page scrolling under it never shows through.",
+      'Contrast puts the status color in one place at a time. `low` sets every status on the same neutral `var(--hover)` fill and colors only the icon; `high` washes the banner in `color-mix(in oklab, <status> 12%, transparent)`, 8% for the neutral default because grey reads darker than a hue at the same mix. There is no solid fill: the status color never sits behind the text at full strength.',
+      'Both fills are translucent, so an inline banner takes on the surface under it. The fixed bar paints the same fill over an opaque `var(--background)`, so the page scrolling under it never shows through.',
       "Status colors ship as the component's own `--info`, `--success` and `--warning` tokens: Tailwind 500s in light mode and 300s in dark mode, where the mark cut into the glyph turns dark. Error reuses `--destructive`, so it matches the app's other error states.",
       "The 4 colored statuses get filled glyphs drawn in the component (a circle or triangle in the status color, the mark stroked in the page color with `stroke-background`), so they stay filled whatever icon library the app uses. The neutral default uses the icon set's outline `info` icon at the usual 1.5 stroke, and the `icon` prop draws any icon as an outline in the status color.",
-      "The title is semibold on the foreground, and so is the description, in regular: muted-foreground drops under 4.5:1 on the tinted and neutral fills, and the weight already separates the two. Ghost actions use the foreground too.",
-      "Every part sits on one 4-column grid (icon, text, actions, \u2715), so layout is pure CSS: actions trail a title-only banner and drop under the text (8px below it, 6px compact) when a BannerDescription is present (read from the children into `data-described`, not `:has()`, which made every menu on the page restyle it) or the banner is under 24rem (container query). Margins space the columns, not grid gaps, so a missing part leaves no gap.",
-      "The icon box is one title line tall (20px, 18px compact). A title-only banner centres the icon, actions and \u2715 on the text; a description switches the grid to `items-start` so they hold the first line.",
-      "The inset is even on all 4 sides (16px, 12px compact). Trailing actions and the \u2715 are 28px targets pulled into the padding with negative margins, so a one-line banner is 52px tall with or without actions.",
-      "BannerAction is the library Button at its compact size, so it presses like every other button, and its secondary is the see-through `--tint`, which darkens (or, in dark mode, lightens) whatever fill the banner has. Each action orders itself by variant with CSS `order`: trailing the title, ghost, secondary, primary, the strongest at the edge; under the text, primary first. Tab order follows the markup, so write primary first.",
-      "The fixed variant is `position: sticky; top: 0`, not `fixed`: it takes its own height and pushes the content down instead of covering it, and it goes between the header and the content that scrolls. It runs edge to edge with square corners and no border.",
-      "The space and the banner move separately. Two progress values drive everything (how open the row is, how shown the banner is) and every style is a `useTransform` of them, so the row and the banner render from the same frame. A change listener in their place lagged by a frame and cut 24px off the banner.",
-      "Appear: the row opens on a spring twice the moderate tier (0.32s, no bounce). A fast tier later (0.08s) the banner fades in and grows from 40%, from its top edge, on `spring.slow` (0.24s, bounce 0.12).",
+      'The title is semibold on the foreground, and so is the description, in regular: muted-foreground drops under 4.5:1 on the tinted and neutral fills, and the weight already separates the two. Ghost actions use the foreground too.',
+      'Every part sits on one 4-column grid (icon, text, actions, \u2715), so layout is pure CSS: actions trail a title-only banner and drop under the text (8px below it, 6px compact) when a BannerDescription is present (read from the children into `data-described`, not `:has()`, which made every menu on the page restyle it) or the banner is under 24rem (container query). Margins space the columns, not grid gaps, so a missing part leaves no gap.',
+      'The icon box is one title line tall (20px, 18px compact). A title-only banner centres the icon, actions and \u2715 on the text; a description switches the grid to `items-start` so they hold the first line.',
+      'The inset is even on all 4 sides (16px, 12px compact). Trailing actions and the \u2715 are 28px targets pulled into the padding with negative margins, so a one-line banner is 52px tall with or without actions.',
+      'BannerAction is the library Button at its compact size, so it presses like every other button, and its secondary is the see-through `--tint`, which darkens (or, in dark mode, lightens) whatever fill the banner has. Each action orders itself by variant with CSS `order`: trailing the title, ghost, secondary, primary, the strongest at the edge; under the text, primary first. Tab order follows the markup, so write primary first.',
+      'The fixed variant is `position: sticky; top: 0`, not `fixed`: it takes its own height and pushes the content down instead of covering it, and it goes between the header and the content that scrolls. It runs edge to edge with square corners and no border.',
+      'The space and the banner move separately. Two progress values drive everything (how open the row is, how shown the banner is) and every style is a `useTransform` of them, so the row and the banner render from the same frame. A change listener in their place lagged by a frame and cut 24px off the banner.',
+      'Appear: the row opens on a spring twice the moderate tier (0.32s, no bounce). A fast tier later (0.08s) the banner fades in and grows from 40%, from its top edge, on `spring.slow` (0.24s, bounce 0.12).',
       "Dismiss: the row starts closing on the first frame (easeInOut, twice the moderate exit, 0.24s) and the banner rides it. While the row closes to 60% of its height, the banner shrinks to 60% and fades out, so its visible height equals the row's on every frame. `shrinkTo` is one number for both, or the closing row would cut the banner.",
       "A fixed bar can't shrink without pulling its ends in from the window edges, so it rides its row both ways: its offset is `(row - 1) * 100%` and its opacity is the row. It slides down into the opening row while fading in, and up out of the closing one while fading out, on the row's own curve.",
-      "The row is a one-row grid whose track runs between `0fr` and `1fr`. At rest it is exactly the content height, so a text rewrap never waits on a measurement, and fr resolves from layout, so a scaled parent can't skew it the way it skews a framer `\"auto\"` target.",
+      'The row is a one-row grid whose track runs between `0fr` and `1fr`. At rest it is exactly the content height, so a text rewrap never waits on a measurement, and fr resolves from layout, so a scaled parent can\'t skew it the way it skews a framer `"auto"` target.',
       "The clip goes on the grid container, not on the `min-h-0` track item: below 1fr, Chrome sizes the container to f of the content but the track to f\u00b2 (0.5fr renders a quarter). The container's height is the space pushed down, so clipping there keeps what is shown and what is pushed the same box.",
       "The row clips only while it has to: `overflow: visible` while an inline banner appears, so the slow bounce's small overshoot isn't cut; `hidden` while leaving, where the banner matches the row and nothing is lost, and always for the fixed bar.",
       "In a flex column with a gap, `margin-bottom` follows the row down to minus that gap (read from the parent's `row-gap` as the banner mounts, before it paints, and 0 when it is the only child), so the content below never jumps when the banner mounts or unmounts, the first open included.",
-      "A banner open on first render arrives already in place (`PresenceContext.initial`). Reduced motion keeps the fades on the fast tier, drops the scale and the slide, and snaps the row once the fade is done.",
-      "The defaults live in the exported `bannerMotion` object, each value derived from a motion token; the `motion` prop overrides them for one banner (spread `bannerMotion` to change one value). Values are read when an animation starts, so changing them never restarts one in flight.",
-      "Presence is hand-rolled with `usePresence`, and `safeToRemove` is read through a ref: AnimatePresence hands out a new one on every render while a child leaves, so depending on it would restart the close on every parent re-render and a page that re-renders often would never finish a dismiss.",
-      "Appear and dismiss start from wherever the banner is: re-opening mid-dismiss continues the scale and fade instead of snapping, and a dismiss mid-appear fades from the current opacity and never lets the banner outgrow the closing row.",
+      'A banner open on first render arrives already in place (`PresenceContext.initial`). Reduced motion keeps the fades on the fast tier, drops the scale and the slide, and snaps the row once the fade is done.',
+      'The defaults live in the exported `bannerMotion` object, each value derived from a motion token; the `motion` prop overrides them for one banner (spread `bannerMotion` to change one value). Values are read when an animation starts, so changing them never restarts one in flight.',
+      'Presence is hand-rolled with `usePresence`, and `safeToRemove` is read through a ref: AnimatePresence hands out a new one on every render while a child leaves, so depending on it would restart the close on every parent re-render and a page that re-renders often would never finish a dismiss.',
+      'Appear and dismiss start from wherever the banner is: re-opening mid-dismiss continues the scale and fade instead of snapping, and a dismiss mid-appear fades from the current opacity and never lets the banner outgrow the closing row.',
       "A banner that is mostly faded (under 50%) takes no clicks, so one appearing can't catch clicks meant for what's under it and one leaving can't be clicked twice. When a banner closes with keyboard focus inside, focus moves to the next focusable element after it (else the one before), not back to the top of the page.",
-      "Errors and warnings get `role=\"alert\"` and interrupt a screen reader; the rest get `role=\"status\"`. Uncontrolled, the \u2715 hides the banner on its own; pass `open` to bring a dismissed banner back.",
+      'Errors and warnings get `role="alert"` and interrupt a screen reader; the rest get `role="status"`. Uncontrolled, the \u2715 hides the banner on its own; pass `open` to bring a dismissed banner back.',
     ],
     usage: `import {
   Banner,
@@ -427,7 +429,7 @@ const questions: AskUserQuestion[] = [
   BannerDescription,
   BannerActions,
   BannerAction,
-} from "@/components/ui/banner";
+} from "#components/ui/banner";
 
 <Banner status="warning" contrast="high" dismissible>
   <BannerTitle>Inter is missing its opsz axis</BannerTitle>
@@ -439,33 +441,33 @@ const questions: AskUserQuestion[] = [
   </BannerActions>
 </Banner>`,
     props: [
-      "status: \"default\" | \"info\" | \"success\" | \"warning\" | \"error\" (default \"default\"). The status color and the glyph that carries it.",
-      "contrast: \"low\" | \"high\" (default \"low\"). low: neutral fill, colored icon. high: a light wash of the status color.",
-      "variant: \"inline\" | \"fixed\" (default \"inline\"). fixed: a full-bleed bar that sticks to the top of its scroll container and pushes the content down.",
-      "icon: IconComponent. Replaces the status icon, drawn as an outline in the status color.",
-      "dismissible: boolean (default false). Shows a ✕ button; onDismiss fires when it is pressed.",
-      "open: boolean. Controls visibility; omitted, the ✕ hides the banner on its own. Closing collapses its height.",
-      "size: \"default\" | \"compact\" (default from SizeProvider). Step on the size ladder.",
-      "motion: BannerMotionConfig (default bannerMotion). Overrides the appear and dismiss values for this banner; the exported `bannerMotion` holds the token-derived defaults.",
-      "BannerAction: the library Button at its compact size (takes Button props). variant: \"primary\" | \"secondary\" | \"ghost\" (default \"secondary\"), laid out by variant; href renders a link; external opens it in a new tab.",
+      'status: "default" | "info" | "success" | "warning" | "error" (default "default"). The status color and the glyph that carries it.',
+      'contrast: "low" | "high" (default "low"). low: neutral fill, colored icon. high: a light wash of the status color.',
+      'variant: "inline" | "fixed" (default "inline"). fixed: a full-bleed bar that sticks to the top of its scroll container and pushes the content down.',
+      'icon: IconComponent. Replaces the status icon, drawn as an outline in the status color.',
+      'dismissible: boolean (default false). Shows a ✕ button; onDismiss fires when it is pressed.',
+      'open: boolean. Controls visibility; omitted, the ✕ hides the banner on its own. Closing collapses its height.',
+      'size: "default" | "compact" (default from SizeProvider). Step on the size ladder.',
+      'motion: BannerMotionConfig (default bannerMotion). Overrides the appear and dismiss values for this banner; the exported `bannerMotion` holds the token-derived defaults.',
+      'BannerAction: the library Button at its compact size (takes Button props). variant: "primary" | "secondary" | "ghost" (default "secondary"), laid out by variant; href renders a link; external opens it in a new tab.',
     ],
   },
   breadcrumb: {
     craft: [
       "One fluid hover scope on the <nav> covers every crumb in the trail, the current page included. The separator is each crumb's trailing icon, inside the crumb, so crumbs sit flush (no gap) and the highlight glides along the trail without going dark between items.",
-      "Targets register by DOM order (a data attribute read in a layout effect after each render), so parts compose freely with no index props; only slots whose element changed re-register, so a re-render costs no measurement pass. Dropdown popups are portalled out of the nav and never join the scope.",
+      'Targets register by DOM order (a data attribute read in a layout effect after each render), so parts compose freely with no index props; only slots whose element changed re-register, so a re-render costs no measurement pass. Dropdown popups are portalled out of the nav and never join the scope.',
       "Crumbs are one segment item high (28px, 24px compact) with the ladder's row padding (8px, 6px compact), so the highlight has room around the text; the current page keeps the same padding so its text lines up with the links. A crumb with a trailing separator steps its right padding down (6px, 4px compact) because the chevron glyph carries its own side bearing.",
-      "Links and buttons are muted-foreground at rest and turn foreground while the highlight sits on them (data-fluid-hover-active), while their menu is open (data-state=open, data-popup-open), or on keyboard focus, which also draws the 1px --focus-ring. The current page is foreground at the normal weight: color, not weight, marks where you are.",
+      'Links and buttons are muted-foreground at rest and turn foreground while the highlight sits on them (data-fluid-hover-active), while their menu is open (data-state=open, data-popup-open), or on keyboard focus, which also draws the 1px --focus-ring. The current page is foreground at the normal weight: color, not weight, marks where you are.',
       "The separator is the icon set's chevron-right, 2px under the glyph size, in muted-foreground and aria-hidden, hidden on the last item (li:last-child). On a step that opens a Dropdown (aria-haspopup) the same chevron turns 90deg to point down while the highlight sits on it, on keyboard focus, and while the menu is open (data-state=open / data-popup-open, 150ms ease-out, off under reduced motion), so the step needs no second chevron. Breadcrumb separator swaps the glyph (a slash) without the turn, or null drops it.",
       "The trail stays on one row. Links and buttons stop at 12rem (10rem compact), so a long middle step truncates at that cap with an ellipsis while short steps are never cut; the item holding the current page is the only one that shrinks, taking whatever room is left. Text children are wrapped in a truncate span (a bare text node in a flex row cannot take an ellipsis). A crumb whose label is cut shows its full name in the library Tooltip (side bottom); whether it is cut is read as the pointer or keyboard focus arrives, the tooltip is forced closed while the name fits and while the crumb's own menu is open.",
       "useBreadcrumbCollapse({ count }) hides middle steps while the trail is wider than its Breadcrumb: steps go from the second on, the first step, the last link and the page always stay, and past that the page truncates. Widths are read in a layout effect before paint and cached per step (the page's cut overflow added back), so a hidden step returns as soon as its width fits; a ResizeObserver on the nav re-runs the pass.",
-      "Breadcrumb menus open on hover by default in the docs and playground: DropdownTrigger openOnHover (100ms rest; Base UI natively, Radix through a timer the trigger and popup share, 150ms close delay to cross the gap; a click pins it open). Pass nothing for click-only menus, the Dropdown default. The collapsed ellipsis shows what it hides in one way at a time: on hover the menu itself opens (no tooltip, it would stack on the menu); with click-only menus a Tooltip counts the hidden steps (\"3 hidden steps\", side bottom), forced closed while the menu is open. The button's aria-label carries the count either way. Breadcrumb menus pass DropdownContent className w-max with min-w-[max(8rem, trigger width)]: the menu fits its rows instead of the default 288px, keeps 8rem so a checked row's check has room, and never gets narrower than its trigger (Radix --radix-dropdown-menu-trigger-width, Base UI --anchor-width).",
-      "Polymorphism is a local slot (render or asChild), so the component installs the same into Radix and Base UI projects.",
+      'Breadcrumb menus open on hover by default in the docs and playground: DropdownTrigger openOnHover (100ms rest; Base UI natively, Radix through a timer the trigger and popup share, 150ms close delay to cross the gap; a click pins it open). Pass nothing for click-only menus, the Dropdown default. The collapsed ellipsis shows what it hides in one way at a time: on hover the menu itself opens (no tooltip, it would stack on the menu); with click-only menus a Tooltip counts the hidden steps ("3 hidden steps", side bottom), forced closed while the menu is open. The button\'s aria-label carries the count either way. Breadcrumb menus pass DropdownContent className w-max with min-w-[max(8rem, trigger width)]: the menu fits its rows instead of the default 288px, keeps 8rem so a checked row\'s check has room, and never gets narrower than its trigger (Radix --radix-dropdown-menu-trigger-width, Base UI --anchor-width).',
+      'Polymorphism is a local slot (render or asChild), so the component installs the same into Radix and Base UI projects.',
     ],
     usage: `import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
+} from "#components/ui/breadcrumb";
 
 <Breadcrumb>
   <BreadcrumbList>
@@ -481,27 +483,27 @@ const questions: AskUserQuestion[] = [
   </BreadcrumbList>
 </Breadcrumb>`,
     props: [
-      "Breadcrumb size: \"default\" | \"compact\". Pins the trail to 28px or 24px crumbs.",
-      "BreadcrumbLink render: ReactElement, or asChild: boolean. Renders a framework link instead of <a>.",
+      'Breadcrumb size: "default" | "compact". Pins the trail to 28px or 24px crumbs.',
+      'BreadcrumbLink render: ReactElement, or asChild: boolean. Renders a framework link instead of <a>.',
       "BreadcrumbButton: a <button> crumb. Pass it to a DropdownTrigger's render prop to open a menu from a step; its chevron points down while open.",
-      "Breadcrumb separator: ReactNode | null (default chevron-right). The trailing glyph of every crumb but the last.",
-      "BreadcrumbEllipsis: the collapsed middle; wrap it in a BreadcrumbButton with an aria-label.",
+      'Breadcrumb separator: ReactNode | null (default chevron-right). The trailing glyph of every crumb but the last.',
+      'BreadcrumbEllipsis: the collapsed middle; wrap it in a BreadcrumbButton with an aria-label.',
     ],
   },
-  "button": {
+  button: {
     craft: [
       "Press effect: the surface layer sits 1px inside the button (inset-px) and a same-color 1px box-shadow spread fills it back to full bounds; pressing collapses the spread so the surface shrinks exactly 1px per side at any width \u2014 a scale would warp (2% of a 400px button is 8px sideways but under 1px vertically). Primary's fills are opaque color-mix()es; secondary's are see-through (`--tint`, black 8% / white 25%, lighter on hover), so it takes on whatever surface or tinted banner it sits on, and still never seams because an outer shadow renders only outside the surface box.",
-      "The press geometry releases slowly, presses fast: box-shadow transitions at 180ms cubic-bezier(0.23,1,0.32,1) at rest, dropping to 80ms while :active; background-color always runs 80ms ease.",
+      'The press geometry releases slowly, presses fast: box-shadow transitions at 180ms cubic-bezier(0.23,1,0.32,1) at rest, dropping to 80ms while :active; background-color always runs 80ms ease.',
       "Tertiary's border is an outer 1px shadow at rest that hands off to an inset 1px shadow when pressed, so the ring moves inward with the shrinking surface.",
-      "Icons thicken on hover instead of the label changing: strokeWidth animates 1.5 \u2192 2 over 80ms; icons also sit 4px closer to their edge than text (12px default / 8px compact vs 16px / 12px base padding).",
+      'Icons thicken on hover instead of the label changing: strokeWidth animates 1.5 \u2192 2 over 80ms; icons also sit 4px closer to their edge than text (12px default / 8px compact vs 16px / 12px base padding).',
       "Loading keeps label and icons mounted at opacity-0 so the button's width never changes; the spinner overlays them at icon size (16px, 14px compact) with the 1.5 icon stroke. It draws two opposite arcs that turn one lap per second on cubic-bezier(0.65,0,0.35,1): they stretch to 26% of the ring mid-turn and shrink back into 2 dots as they settle, the dash offset moving half the growth so both ends move. The dashes sit at 25% and 75% of the path (circle rotated -90deg) so neither crosses the path start, where a split dash gets 2 extra round caps and draws a stroke-width too long. Reduced motion slows it to 2s rather than stopping it.",
-      "`active` prop forces the pressed colors at full size \u2014 for a button holding a dropdown/popover open \u2014 and the geometric press-collapse still reacts on top.",
+      '`active` prop forces the pressed colors at full size \u2014 for a button holding a dropdown/popover open \u2014 and the geometric press-collapse still reacts on top.',
       "Size ladder: default h-9 (36px) px-4 13px text, compact h-7 (28px) px-3 12px text; unset size follows the surrounding SizeProvider, legacy sm/md/lg resolve as aliases. asChild clones the user's element with the button's internals as children and drops `disabled` on non-button roots.",
-      "`render` is accepted as a second spelling of `asChild` (and `nativeButton` is accepted and ignored), on the same clone path, so a link stays a plain link with no `role=\"button\"`. The shadcn CLI rewrites `asChild` into `render` plus `nativeButton={false}` when it installs into a Base UI project, so components that hand Button a link keep working there.",
+      '`render` is accepted as a second spelling of `asChild` (and `nativeButton` is accepted and ignored), on the same clone path, so a link stays a plain link with no `role="button"`. The shadcn CLI rewrites `asChild` into `render` plus `nativeButton={false}` when it installs into a Base UI project, so components that hand Button a link keep working there.',
     ],
     usage: `"use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "#components/ui/button";
 import { Plus, ArrowRight } from "lucide-react";
 
 <Button variant="primary">Primary</Button>
@@ -513,24 +515,24 @@ import { Plus, ArrowRight } from "lucide-react";
     props: [
       'variant: "primary" | "secondary" | "tertiary" | "ghost" | "destructive" (default "primary"). Visual style of the button.',
       'size: "default" | "compact" | "icon" | "icon-compact" (default from SizeProvider). Step on the size ladder: 36px default, 28px compact.',
-      "loading: boolean (default false). Shows a spinner and disables the button.",
-      "active: boolean (default false). Forces the pressed visual, e.g. while a menu the button opened is showing.",
-      "leadingIcon: IconComponent. Icon displayed before the label.",
-      "trailingIcon: IconComponent. Icon displayed after the label.",
-      "asChild: boolean (default false). Merge props onto the child element instead of rendering a <button>.",
-      "disabled: boolean (default false). Disables the button.",
+      'loading: boolean (default false). Shows a spinner and disables the button.',
+      'active: boolean (default false). Forces the pressed visual, e.g. while a menu the button opened is showing.',
+      'leadingIcon: IconComponent. Icon displayed before the label.',
+      'trailingIcon: IconComponent. Icon displayed after the label.',
+      'asChild: boolean (default false). Merge props onto the child element instead of rendering a <button>.',
+      'disabled: boolean (default false). Disables the button.',
     ],
   },
   calendar: {
     craft: [
       "DayPicker v10 (`@daypicker/react`) owns the date math, the roving tabindex, the grid keys and the locale; every part it renders is swapped for a div with the matching ARIA role (`grid`, `row`, `gridcell`), so the grid lays out with flex and one fluid hover scope can span 2 months. DayPicker's own `animate` stays off.",
-      "One `useFluidHover` with `axis: \"xy\"` over every month on screen, rows stacked gap-0, so the highlight glides from Oct 31 to Nov 1 across the gap between the grids. Captions, the weekday row, week numbers and unavailable days are inert: the highlight leaves while the pointer crosses them and fades back in on the next day.",
+      'One `useFluidHover` with `axis: "xy"` over every month on screen, rows stacked gap-0, so the highlight glides from Oct 31 to Nov 1 across the gap between the grids. Captions, the weekday row, week numbers and unavailable days are inert: the highlight leaves while the pointer crosses them and fades back in on the next day.',
       "The highlight follows keyboard focus. A month change re-registers every day under new indices, so the highlight and the focus ring snap to the newly focused cell (`transition={false}`) instead of gliding from the old grid's geometry.",
       "Selected days and range ends are a solid `bg-foreground text-background` fill, at the regular weight: selection never changes a day's weight. Today is semibold with a 4px dot under the number that turns `text-background` when today is picked. The palette stays neutral: no brand color, no colored today.",
       "The range is one `--hover` band per week row (a long band reads heavier than a small fill; the highlight over it stacks a step up), drawn as each cell's slice: from the start cell's center to its far edge, full width in the middle, to the end cell's center. Where a row ends, or a month ends while outside days are hidden, the band gets 2px corners, and square ones where the row above or below continues the band at that edge, so stacked rows read as one block.",
       "While the end is being picked, the band follows the hovered or focused day across both months; the proposed end is the fluid hover highlight itself, restyled as a solid cell with a 1px background-colored ring 1px inside it (radius concentric with the cell: 7px in an 8px cell, round in pill), so it glides to the pointer on the same spring as single select. Cells under it only swap their number to the background color, over 80ms to match the highlight's arrival. The click that commits the end fills the cell in the same frame, with no fade. The highlight sits under filled days, so a second fluid hover layer above the cells carries the same inner ring at 40%, gliding on the same rect and spring and shown only while the lit day is a filled start, end or single selection. A preview that would cross a booked day is not drawn, matching `excludeDisabled`, which resets a range that spans one.",
-      "Range picks use `resetOnSelect`: the first click starts a new range, the second sets the end (either side of the start). Escape before the second pick restores the range that was there before.",
-      "Booked days are disabled, muted, struck through, and announced with a \", booked\" suffix on the day's label. Days outside `available`, `disabled` days and the past are disabled and muted without the line-through.",
+      'Range picks use `resetOnSelect`: the first click starts a new range, the second sets the end (either side of the start). Escape before the second pick restores the range that was there before.',
+      'Booked days are disabled, muted, struck through, and announced with a ", booked" suffix on the day\'s label. Days outside `available`, `disabled` days and the past are disabled and muted without the line-through.',
       "`cellSize` writes `--cell-size` (36px, 32px compact); cells, the weekday row, the week number column, the nav buttons (78% of the cell) and the today dot derive from it, while the numbers stay on the body type role. `fill` stretches the columns and caps the row height at `cellSize`. `dayDetail` stacks a caption-size line under the number, 8px below it (both trimmed, so the gap is exactly that), muted; on a selected day everything in it takes the fill's text color, overriding any color the caller gave it, so a colored price never vanishes on the fill. It drops today's dot in favor of the weight, describes the day (aria-describedby) so any node reads after the date, and is memoized per day so pointer moves while picking don't rerun it.",
       "The weekday row's height (80% of the cell) is rounded down to whole pixels with CSS `round()`, a plain `calc()` kept as the fallback: the hover layers are placed from `offsetTop`, which rounds, so a fractional row (36 x 0.8 = 28.8) would set them a fraction of a pixel off every day below and show as an uneven inner ring.",
       "A month change slides the month out while the next one comes in from the other side, on `spring.moderate`, panels stacked in one grid cell so the incoming days are measured where they land; one month travels a third of its width (plus the gap) and crossfades where the two meet, the title fading out before the chevron pair and each panel carrying its weekday row as the grid's column headers; side by side months travel a full month width plus the gap, each with its own weekday row in the sliding panel (labels move with their days) and at the taller month's height (nothing resizes mid-slide), inside a strip whose mask fades 8px at the outer edges (the strip reaches 8px past the months, so nothing is dimmed at rest); the month leaving one slot and the same month entering the next share a path and read as one strip (the outgoing copy of a month still on screen hides, so its translucent band never stacks into a darker blink); side by side captions fade out on their chevron's side through a mask (clear under the chevron, then a 24px ramp, the scroll-fade recipe), so a title never slides under it; the grid box springs between 5- and 6-week heights from a measured `offsetHeight`, never `\"auto\"`. Reduced motion keeps the crossfade only.",
@@ -539,7 +541,7 @@ import { Plus, ArrowRight } from "lucide-react";
     usage: `"use client";
 
 import { useState } from "react";
-import { Calendar, type DateRange } from "@/components/ui/calendar";
+import { Calendar, type DateRange } from "#components/ui/calendar";
 
 export function Stay() {
   const [range, setRange] = useState<DateRange | undefined>();
@@ -555,42 +557,42 @@ export function Stay() {
   );
 }`,
     props: [
-      "mode: \"single\" | \"range\" (default \"single\"). One day, or a start and an end.",
+      'mode: "single" | "range" (default "single"). One day, or a start and an end.',
       "selected: Date | DateRange. With onSelect it is controlled; without, it seeds the calendar's own state.",
-      "onSelect: (value) => void. Called on every pick; in range mode the first pick returns a range with no `to`.",
-      "booked: Matcher | Matcher[]. Unavailable, struck through, announced as booked.",
-      "available: Matcher | Matcher[]. When set, every day it does not match is unavailable.",
+      'onSelect: (value) => void. Called on every pick; in range mode the first pick returns a range with no `to`.',
+      'booked: Matcher | Matcher[]. Unavailable, struck through, announced as booked.',
+      'available: Matcher | Matcher[]. When set, every day it does not match is unavailable.',
       "disabled: Matcher | Matcher[]. Days that can't be picked, e.g. { before: new Date() }.",
-      "numberOfMonths: 1 | 2 (default 1). Two months share one fluid hover and hide outside days.",
-      "orientation: \"auto\" | \"horizontal\" | \"vertical\" (default \"auto\"). auto: side by side when the container fits both months.",
-      "cellSize: number (default 36, 32 compact). Cell size in px.",
+      'numberOfMonths: 1 | 2 (default 1). Two months share one fluid hover and hide outside days.',
+      'orientation: "auto" | "horizontal" | "vertical" (default "auto"). auto: side by side when the container fits both months.',
+      'cellSize: number (default 36, 32 compact). Cell size in px.',
       "dayDetail: (date: Date) => ReactNode. A line under each day's number (a price); null for none. Needs a taller cellSize (56+). A pure function of the date: results are memoized per day until the function changes.",
       "required: boolean (default false). Keeps a selection: picking the selected day again doesn't clear it.",
-      "fill: boolean (default false). Columns stretch to the container; cellSize caps the row height.",
-      "showWeekNumber: boolean (default false). Muted ISO week column.",
-      "size: \"default\" | \"compact\". Step on the size ladder.",
-      "Every other DayPicker prop (weekStartsOn, locale, timeZone, month, onMonthChange, min, max) passes through.",
+      'fill: boolean (default false). Columns stretch to the container; cellSize caps the row height.',
+      'showWeekNumber: boolean (default false). Muted ISO week column.',
+      'size: "default" | "compact". Step on the size ladder.',
+      'Every other DayPicker prop (weekStartsOn, locale, timeZone, month, onMonthChange, min, max) passes through.',
     ],
   },
-  "card": {
+  card: {
     craft: [
-      "Cards are transparent and borderless by default, unlike stock shadcn: they inherit the parent substrate and lean on hairline dividers plus the fluid hover highlight instead of a drawn frame.",
-      "Only clickable cards (href/onClick) register with the group's fluid hover \u2014 \"a highlight on an informational card would promise a click that has nowhere to land\".",
-      "With columns > 1 one fluid hover runs across rows and columns (axis \"xy\"): the card under the pointer lights, and the gaps between cards light nothing, so a click there lands nowhere.",
-      "Hairline dividers drop next to the active OR selected card so highlight and selection fill read clean (the Table row-border trick); where a bottom and right hairline meet, the vertical one stops 1px short so the horizontal line owns the crossing pixel \u2014 two 60%-alpha lines stacked would read brighter than the grid.",
+      'Cards are transparent and borderless by default, unlike stock shadcn: they inherit the parent substrate and lean on hairline dividers plus the fluid hover highlight instead of a drawn frame.',
+      'Only clickable cards (href/onClick) register with the group\'s fluid hover \u2014 "a highlight on an informational card would promise a click that has nowhere to land".',
+      'With columns > 1 one fluid hover runs across rows and columns (axis "xy"): the card under the pointer lights, and the gaps between cards light nothing, so a click there lands nowhere.',
+      'Hairline dividers drop next to the active OR selected card so highlight and selection fill read clean (the Table row-border trick); where a bottom and right hairline meet, the vertical one stops 1px short so the horizontal line owns the crossing pixel \u2014 two 60%-alpha lines stacked would read brighter than the grid.',
       "CardTitle uses the ghost-span pattern (invisible semibold copy reserves width) and animates 'wght' 400 \u2192 550 only for the persistent `selected` state \u2014 fluid hover previews via the highlight fill, not by bolding the label. A consumer's `truncate` still ellipsizes via overflow-hidden cell spans clamped by grid-cols-[minmax(0,1fr)].",
       "Clickable cards use a stretched z-20 overlay link/button, with footer actions and dismiss at z-30 above it \u2014 the accessible alternative to nesting interactive elements; a disabled card drops the overlay entirely so keyboard can't reach it (pointer-events-none only blocks the mouse).",
-      "The on-hover dismiss \u2715 gates pointer-events alongside opacity (an invisible control must not swallow touch taps meant for the card), gets a bg-card/70 backdrop-blur ground over images so the icon never reads against arbitrary pixels, and in inline rows the header yields pr-10 only while the control is revealed.",
+      'The on-hover dismiss \u2715 gates pointer-events alongside opacity (an invisible control must not swallow touch taps meant for the card), gets a bg-card/70 backdrop-blur ground over images so the icon never reads against arbitrary pixels, and in inline rows the header yields pr-10 only while the control is revealed.',
       "An inline card with a CardImage reflows its text + actions into a centred column beside the image (footer drops below the text in natural order); CardImage keeps a fixed 2px corner radius in every state rather than inheriting a frame's larger clip \u2014 a 16:9 banner stacked, a 160px square inline.",
-      "CardImage and CardMedia logos paint a 1px inset image outline over their outermost pixels (pure black at 10% in light mode, pure white at 10% in dark), so pale image edges keep their shape without a border changing the box size.",
-      "The whole-card link or button draws its focus ring inset: it covers the card, which clips, so a ring outside it never showed.",
+      'CardImage and CardMedia logos paint a 1px inset image outline over their outermost pixels (pure black at 10% in light mode, pure white at 10% in dark), so pale image edges keep their shape without a border changing the box size.',
+      'The whole-card link or button draws its focus ring inset: it covers the card, which clips, so a ring outside it never showed.',
     ],
     usage: `"use client";
 
 import {
   Card, CardGroup, CardHeader, CardMedia,
   CardTitle, CardDescription, CardFooter, CardButton,
-} from "@/components/ui/card";
+} from "#components/ui/card";
 import { Circle } from "lucide-react";
 
 <CardGroup orientation="inline">
@@ -604,29 +606,29 @@ import { Circle } from "lucide-react";
   </Card>
 </CardGroup>`,
     props: [
-      "onClick: () => void. Makes the whole card a clickable target (stretched button).",
-      "href: string. Makes the whole card a link (stretched anchor).",
-      "selected: boolean (default false). Persistent selected fill and title emphasis on top of fluid hover.",
-      "disabled: boolean (default false). Dims and disables the card.",
-      "dismissible: boolean (default false). Shows a dismiss button, revealed on hover or focus.",
-      "onDismiss: () => void. Called when the dismiss button is pressed.",
+      'onClick: () => void. Makes the whole card a clickable target (stretched button).',
+      'href: string. Makes the whole card a link (stretched anchor).',
+      'selected: boolean (default false). Persistent selected fill and title emphasis on top of fluid hover.',
+      'disabled: boolean (default false). Dims and disables the card.',
+      'dismissible: boolean (default false). Shows a dismiss button, revealed on hover or focus.',
+      'onDismiss: () => void. Called when the dismiss button is pressed.',
       'CardGroup orientation: "card" | "inline" (default "card"). Stacked layout or a horizontal row.',
-      "CardGroup columns: number (default 1). Grid columns; more than 1 enables 2-D fluid hover.",
+      'CardGroup columns: number (default 1). Grid columns; more than 1 enables 2-D fluid hover.',
       'CardGroup border: "none" | "outlined" (default "none"). Borderless with dividers, or a drawn border.',
-      "CardGroup separated: boolean (default false). Individually shaped tiles with a gap instead of one divided block.",
+      'CardGroup separated: boolean (default false). Individually shaped tiles with a gap instead of one divided block.',
     ],
   },
-  "carousel-dots": {
+  'carousel-dots': {
     craft: [
-      "Each 6px dot sits in a button with 6px of padding on every side: an 18px round click area, and 12px from dot to dot. The buttons touch (no gap), so one fluid hover highlight (`axis: \"x\"`) glides between click areas and never drops out between dots.",
+      'Each 6px dot sits in a button with 6px of padding on every side: an 18px round click area, and 12px from dot to dot. The buttons touch (no gap), so one fluid hover highlight (`axis: "x"`) glides between click areas and never drops out between dots.',
       "The current dot is a 24px pill whose width springs on the moderate tier. Static, the pill is solid; the other dots keep the same light track color, so only the current pill's fill reads as dark.",
-      "Built-in autoplay runs its own requestAnimationFrame clock: the fill advances by elapsed time over `duration`, then calls `onValueChange` with the next index once, and waits for `value` to change before filling again. Any change of `value` (a click, the clock, the parent) restarts the fill.",
+      'Built-in autoplay runs its own requestAnimationFrame clock: the fill advances by elapsed time over `duration`, then calls `onValueChange` with the next index once, and waits for `value` to change before filling again. Any change of `value` (a click, the clock, the parent) restarts the fill.',
       "Autoplay never runs under reduced motion: no timer moves the page on the reader's behalf. `paused` holds the fill in place, and a stalled frame (a background tab) is skipped rather than counted.",
-      "The fill is a full-width pill slid in with `translateX`, never scaled: `scaleX` would squash its rounded end. The track clips it, so the leading edge is always a perfect half-circle, and the fill starts as a full 6px dot at 0 instead of nothing.",
-      "`progress` (a number or a MotionValue) hands the clock to the caller and takes precedence over `autoplay`; a MotionValue moves the fill every frame through a transform, with no React re-render.",
-      "Colors are `color-mix()` of `--foreground` (15% track, 40% fill), so the dots follow light and dark themes with no extra tokens. Each dot is a real button with `aria-label` (from `getLabel`) and `aria-current` on the current one.",
+      'The fill is a full-width pill slid in with `translateX`, never scaled: `scaleX` would squash its rounded end. The track clips it, so the leading edge is always a perfect half-circle, and the fill starts as a full 6px dot at 0 instead of nothing.',
+      '`progress` (a number or a MotionValue) hands the clock to the caller and takes precedence over `autoplay`; a MotionValue moves the fill every frame through a transform, with no React re-render.',
+      'Colors are `color-mix()` of `--foreground` (15% track, 40% fill), so the dots follow light and dark themes with no extra tokens. Each dot is a real button with `aria-label` (from `getLabel`) and `aria-current` on the current one.',
     ],
-    usage: `import { CarouselDots } from "@/components/ui/carousel-dots";
+    usage: `import { CarouselDots } from "#components/ui/carousel-dots";
 
 const [slide, setSlide] = useState(0);
 
@@ -641,27 +643,27 @@ const [slide, setSlide] = useState(0);
   autoplay={{ duration: 3000, paused: hovering }}
 />`,
     props: [
-      "count: number. How many dots to show.",
-      "value: number. Index of the current dot.",
+      'count: number. How many dots to show.',
+      'value: number. Index of the current dot.',
       "onValueChange: (index: number) => void. Called with a clicked dot's index, and with the next index each time autoplay finishes a slide.",
-      "autoplay: boolean | { duration?: number; paused?: boolean; loop?: boolean } (default off). The current pill fills over duration (default 3000ms), then the next slide comes in; loop (default true) wraps to the first. Off under reduced motion.",
-      "progress: number | MotionValue<number>. Drive the fill yourself, 0 to 1, when something else owns the clock. Takes precedence over autoplay.",
-      "getLabel: (index: number) => string (default \"Go to slide N\"). Accessible name for each dot.",
+      'autoplay: boolean | { duration?: number; paused?: boolean; loop?: boolean } (default off). The current pill fills over duration (default 3000ms), then the next slide comes in; loop (default true) wraps to the first. Off under reduced motion.',
+      'progress: number | MotionValue<number>. Drive the fill yourself, 0 to 1, when something else owns the clock. Takes precedence over autoplay.',
+      'getLabel: (index: number) => string (default "Go to slide N"). Accessible name for each dot.',
     ],
   },
-  "chat-message": {
+  'chat-message': {
     craft: [
-      "Every message enters with opacity 0, y 8, scale 0.96 \u2192 settled on spring.moderate, with transformOrigin bottom-right for user messages and bottom-left for assistant, so bubbles appear to grow from the composer side they belong to.",
-      "`layout=\"position\"` is baked in so earlier messages slide up smoothly when a new one is appended to the transcript.",
-      "Messages already sent when the transcript first renders skip the entrance: wrap the list in `<AnimatePresence initial={false}>` (keyed children), so loaded history appears settled and only messages added later rise in. Layout motion starts once a message has entered, so page-load width changes never slide a bubble sideways mid-entrance.",
-      "User = right-aligned accent bubble filled with `color-mix(in oklab, var(--accent), var(--background) 45%)`; assistant = flush-left plain text with no background at all.",
-      "`text-pretty` is applied only to user bubbles and deliberately left off assistant replies: `text-wrap: pretty` re-balances the last lines on every content change, so a word-by-word stream would visibly reflow earlier words onto new lines; normal wrapping appends left-to-right and stays put.",
-      "The meta row (timestamp + icon actions) is always rendered so it reserves its height and the gap between bubbles never shifts; it fades in over 150ms on hover or focus-within, and stays permanently visible on touch where hover is unreachable.",
-      "Timestamps are a user-message-only affordance \u2014 `time` is ignored on assistant replies, which show their actions alone; the timestamp renders tabular-nums.",
+      'Every message enters with opacity 0, y 8, scale 0.96 \u2192 settled on spring.moderate, with transformOrigin bottom-right for user messages and bottom-left for assistant, so bubbles appear to grow from the composer side they belong to.',
+      '`layout="position"` is baked in so earlier messages slide up smoothly when a new one is appended to the transcript.',
+      'Messages already sent when the transcript first renders skip the entrance: wrap the list in `<AnimatePresence initial={false}>` (keyed children), so loaded history appears settled and only messages added later rise in. Layout motion starts once a message has entered, so page-load width changes never slide a bubble sideways mid-entrance.',
+      'User = right-aligned accent bubble filled with `color-mix(in oklab, var(--accent), var(--background) 45%)`; assistant = flush-left plain text with no background at all.',
+      '`text-pretty` is applied only to user bubbles and deliberately left off assistant replies: `text-wrap: pretty` re-balances the last lines on every content change, so a word-by-word stream would visibly reflow earlier words onto new lines; normal wrapping appends left-to-right and stays put.',
+      'The meta row (timestamp + icon actions) is always rendered so it reserves its height and the gap between bubbles never shifts; it fades in over 150ms on hover or focus-within, and stays permanently visible on touch where hover is unreachable.',
+      'Timestamps are a user-message-only affordance \u2014 `time` is ignored on assistant replies, which show their actions alone; the timestamp renders tabular-nums.',
       "Messages cap at max-w-[80%]; attachments render as square thumbnails (default 64px) in a row above the bubble, justified toward the message's own side, and an attachment-only message (no children) drops the text bubble entirely. Each thumbnail gets a 1px inset pure-black/pure-white 10% outline so bright edge pixels do not disappear into the page.",
     ],
     usage: `import { AnimatePresence } from "motion/react";
-import { ChatMessage } from "@/components/ui/chat-message";
+import { ChatMessage } from "#components/ui/chat-message";
 import { Copy } from "lucide-react";
 
 const actions = <button aria-label="Copy"><Copy size={13} /></button>;
@@ -679,51 +681,51 @@ const actions = <button aria-label="Copy"><Copy size={13} /></button>;
 </div>`,
     props: [
       'from: "user" | "assistant". Who sent it: user is a right-aligned accent bubble, assistant is left-aligned plain text.',
-      "children: ReactNode. Message body. Omit for an attachment-only message.",
-      "time: ReactNode. Pre-formatted timestamp in the hover-revealed meta row. User messages only.",
-      "actions: ReactNode. Icon-only action buttons next to the timestamp. Row height is always reserved, so nothing shifts.",
-      "files: File[]. Optional attachments rendered as square thumbnails above the bubble. Images and PDFs supported.",
-      "thumbnailSize: number (default 64). Side length in px of each attachment thumbnail.",
-      "className: string. Merged onto the outer motion wrapper, e.g. to tweak max-width.",
+      'children: ReactNode. Message body. Omit for an attachment-only message.',
+      'time: ReactNode. Pre-formatted timestamp in the hover-revealed meta row. User messages only.',
+      'actions: ReactNode. Icon-only action buttons next to the timestamp. Row height is always reserved, so nothing shifts.',
+      'files: File[]. Optional attachments rendered as square thumbnails above the bubble. Images and PDFs supported.',
+      'thumbnailSize: number (default 64). Side length in px of each attachment thumbnail.',
+      'className: string. Merged onto the outer motion wrapper, e.g. to tweak max-width.',
     ],
   },
   checkbox: {
     craft: [
       "The square is CheckboxGroup's: 16px (14px compact), a 1.5px --border at rounded-[5px] (4px compact), so a lone checkbox and a group row read as one family.",
-      "Checked, the border goes transparent and the drawn check alone marks the state; the check draws itself (pathLength 0 \u2192 1 over 0.08s easeOut) and retracts faster (0.04s easeIn). AnimatePresence initial={false} so a box checked at mount does not animate on load.",
+      'Checked, the border goes transparent and the drawn check alone marks the state; the check draws itself (pathLength 0 \u2192 1 over 0.08s easeOut) and retracts faster (0.04s easeIn). AnimatePresence initial={false} so a box checked at mount does not animate on load.',
       "Hover darkens an unchecked border to foreground/40, the same neutral as the Input's focus border, and so does hovering the Field row it sits in (group-hover/field), so the label is part of the target.",
-      "Keyboard focus shows the 1px --focus-ring; aria-invalid tints only the unchecked border red, and disabled dims to 50% with no pointer events.",
+      'Keyboard focus shows the 1px --focus-ring; aria-invalid tints only the unchecked border red, and disabled dims to 50% with no pointer events.',
       "Uncontrolled use is mirrored in local state because the check's enter and exit need the value in render; onCheckedChange always reports a plain boolean in both flavors.",
-      "Space toggles, as the ARIA checkbox pattern says; inside a choice card (a FieldLabel wrapping a whole Field) Enter toggles too, because the card reads as an option to pick. A plain checkbox, even one wrapped in a label, leaves Enter to submit its form.",
+      'Space toggles, as the ARIA checkbox pattern says; inside a choice card (a FieldLabel wrapping a whole Field) Enter toggles too, because the card reads as an option to pick. A plain checkbox, even one wrapped in a label, leaves Enter to submit its form.',
     ],
-    usage: `import { Checkbox } from "@/components/ui/checkbox";
-import { Field, FieldLabel } from "@/components/ui/field";
+    usage: `import { Checkbox } from "#components/ui/checkbox";
+import { Field, FieldLabel } from "#components/ui/field";
 
 <Field orientation="horizontal">
   <Checkbox id="terms" checked={accepted} onCheckedChange={setAccepted} />
   <FieldLabel htmlFor="terms">Accept terms and conditions</FieldLabel>
 </Field>`,
     props: [
-      "checked: boolean. Controlled state; pair it with onCheckedChange.",
-      "defaultChecked: boolean (default false). Initial state when uncontrolled.",
-      "indeterminate: boolean (default false). Draws a dash instead of the check, for a partly selected set; clicking reports true.",
-      "onCheckedChange: (checked: boolean) => void. Called on every toggle.",
-      "size: \"default\" | \"compact\". Pins the box to 16px or 14px.",
-      "aria-invalid: boolean. Tints the unchecked box red.",
-      "disabled: boolean (default false). Dims the box and drops pointer events.",
+      'checked: boolean. Controlled state; pair it with onCheckedChange.',
+      'defaultChecked: boolean (default false). Initial state when uncontrolled.',
+      'indeterminate: boolean (default false). Draws a dash instead of the check, for a partly selected set; clicking reports true.',
+      'onCheckedChange: (checked: boolean) => void. Called on every toggle.',
+      'size: "default" | "compact". Pins the box to 16px or 14px.',
+      'aria-invalid: boolean. Tints the unchecked box red.',
+      'disabled: boolean (default false). Dims the box and drops pointer events.',
     ],
   },
-  "checkbox-group": {
+  'checkbox-group': {
     craft: [
-      "Contiguous checked rows merge into one rounded selection block: indices group into runs with stable IDs (reused when any member overlaps the previous render) so framer morphs a growing/shrinking block instead of exit+re-enter.",
+      'Contiguous checked rows merge into one rounded selection block: indices group into runs with stable IDs (reused when any member overlaps the previous render) so framer morphs a growing/shrinking block instead of exit+re-enter.',
       "Checking a row that bridges two runs plays a merge: both inner edges glide to the bridging row's midpoint, facing corners straightening to sharp, then swap to one block with no visible motion \u2014 instead of the surviving block spring-growing over the whole union. Unchecking a middle row plays the inverse.",
-      "The merge/split edges ride spring.moderate (0.16s, critically damped) \"so converging edges meet exactly instead of overshooting\"; inner corners trail by 0.07s, staying rounded until the halves meet.",
-      "The check mark draws itself: pathLength animates 0 \u2192 1 over 0.08s easeOut on check, retracts over 0.04s easeIn on uncheck; items already checked at mount skip the draw.",
+      'The merge/split edges ride spring.moderate (0.16s, critically damped) "so converging edges meet exactly instead of overshooting"; inner corners trail by 0.07s, staying rounded until the halves meet.',
+      'The check mark draws itself: pathLength animates 0 \u2192 1 over 0.08s easeOut on check, retracts over 0.04s easeIn on uncheck; items already checked at mount skip the draw.',
       "When checked, the box's 1.5px border turns transparent (the check alone marks the state); hover darkens it from `border` to neutral-400/500. The label animates 'wght' 400 \u2192 550 plus muted \u2192 foreground over 80ms via the invisible-semibold-sizer grid, both spans carrying the text-box trim so their boxes stay identical; rows are fixed-height so the trim doesn't shrink the row.",
       "Mousedown on the checkbox square prevents native focus from landing on the hidden primitive and refocuses the row \u2014 otherwise arrow-key nav dead-zones because the group's keydown handler can't find the target among row wrappers.",
-      "Arrow keys wrap, Home/End jump; the item query scopes to row wrappers because the inner primitive also carries role=\"checkbox\" and a bare selector would match twice per row. The focus ring is one shared rect springing (spring.fast) between rows at a \u22122px inset, only on :focus-visible.",
+      'Arrow keys wrap, Home/End jump; the item query scopes to row wrappers because the inner primitive also carries role="checkbox" and a bare selector would match twice per row. The focus ring is one shared rect springing (spring.fast) between rows at a \u22122px inset, only on :focus-visible.',
     ],
-    usage: `import { CheckboxGroup, CheckboxItem } from "@/components/ui/checkbox-group";
+    usage: `import { CheckboxGroup, CheckboxItem } from "#components/ui/checkbox-group";
 import { useState } from "react";
 
 const items = ["Apples", "Bananas", "Cherries", "Dates"];
@@ -738,27 +740,27 @@ const toggle = (i: number) => setChecked((prev) => {
   ))}
 </CheckboxGroup>`,
     props: [
-      "checkedIndices: Set<number>. Set of checked item indices; drives the merged background across contiguous picks.",
-      "children: ReactNode. CheckboxItem children.",
-      "CheckboxItem label: string. Text label for the checkbox.",
-      "CheckboxItem index: number. Position index within the group.",
-      "CheckboxItem checked: boolean. Whether this item is checked.",
-      "CheckboxItem onToggle: () => void. Called when this item is toggled.",
+      'checkedIndices: Set<number>. Set of checked item indices; drives the merged background across contiguous picks.',
+      'children: ReactNode. CheckboxItem children.',
+      'CheckboxItem label: string. Text label for the checkbox.',
+      'CheckboxItem index: number. Position index within the group.',
+      'CheckboxItem checked: boolean. Whether this item is checked.',
+      'CheckboxItem onToggle: () => void. Called when this item is toggled.',
     ],
   },
-  "color-picker": {
+  'color-picker': {
     craft: [
-      "Switching format (HEX/RGB/HSL/OKLCH) immediately re-emits the current color formatted in the new format through onValueChange, so consumers stay in sync without touching the color.",
+      'Switching format (HEX/RGB/HSL/OKLCH) immediately re-emits the current color formatted in the new format through onValueChange, so consumers stay in sync without touching the color.',
       "The eyedropper is the native `window.EyeDropper` API; support is detected in an effect (SSR-safe) and the button renders only when supported \u2014 the docs note it's Chromium-only and auto-hidden elsewhere; user cancellation is silently swallowed.",
       "The saturation square hides the OS cursor (`cursor-none`); a ghost ring cursor follows hover (suppressed while dragging), and the real 18px thumb is filled with the live color, white border + black ring, moving with duration 0 so it never lags the pointer; arrow keys nudge S/V by 0.01, Shift by 0.1. Its radius is derived from the panel's outer radius minus the real 12px padding, keeping the top corners concentric in rounded and pill modes.",
-      "Hue and alpha rails are the compact Slider engine with `hideFill` and the thumb colored by the current color; the alpha gradient's transparent stop keeps the same hue at alpha 0 \"so the gradient stays chromatically consistent and reaches fully opaque at 100% with no edge gap\", over an 8px conic-gradient checker.",
-      "HSV is the canonical internal state with H preserved across S=0/V=0 transitions, and a sticky OKLCH hue preserves the user's stated H across the lossy RGB round-trip and achromatic colors (where RGB-derived H would collapse to 0); L/C edits anchor on that stated H \"so we don't drift along with chroma changes\".",
-      "Channel fields are scrubbable (Base UI NumberField ScrubArea with pointer-lock and a virtual cursor); a no-drag press enters edit mode (focus + select), typing commits on blur (per-keystroke parses ignored) while keyboard nudges/scroll/scrub commit immediately, and Escape reverts the draft; nudge steps are 1 / Shift 10 (0.01 / 0.1 for OKLCH chroma).",
-      "Hue-like fields wrap modulo instead of clamping (361 \u2192 1, -1 \u2192 359; exactly max stays put) \u2014 used for HSL hue and OKLCH H.",
-      "Swatch selection compares hex-normalized values, resolving named CSS colors (\"red\", \"tomato\") through the browser in an effect so render/SSR never touch the DOM; the hex field accepts named colors too, via a canvas fillStyle round-trip.",
+      'Hue and alpha rails are the compact Slider engine with `hideFill` and the thumb colored by the current color; the alpha gradient\'s transparent stop keeps the same hue at alpha 0 "so the gradient stays chromatically consistent and reaches fully opaque at 100% with no edge gap", over an 8px conic-gradient checker.',
+      'HSV is the canonical internal state with H preserved across S=0/V=0 transitions, and a sticky OKLCH hue preserves the user\'s stated H across the lossy RGB round-trip and achromatic colors (where RGB-derived H would collapse to 0); L/C edits anchor on that stated H "so we don\'t drift along with chroma changes".',
+      'Channel fields are scrubbable (Base UI NumberField ScrubArea with pointer-lock and a virtual cursor); a no-drag press enters edit mode (focus + select), typing commits on blur (per-keystroke parses ignored) while keyboard nudges/scroll/scrub commit immediately, and Escape reverts the draft; nudge steps are 1 / Shift 10 (0.01 / 0.1 for OKLCH chroma).',
+      'Hue-like fields wrap modulo instead of clamping (361 \u2192 1, -1 \u2192 359; exactly max stays put) \u2014 used for HSL hue and OKLCH H.',
+      'Swatch selection compares hex-normalized values, resolving named CSS colors ("red", "tomato") through the browser in an effect so render/SSR never touch the DOM; the hex field accepts named colors too, via a canvas fillStyle round-trip.',
       "Swatch names share one TooltipGroup (300ms before the first): once a name shows, the bubble glides from swatch to swatch with the next name instead of closing and reopening, and it's never hoverable, so crossing a name never holds off the swatches in its path.",
     ],
-    usage: `import { ColorPicker, ColorPickerPopover } from "@/components/ui/color-picker";
+    usage: `import { ColorPicker, ColorPickerPopover } from "#components/ui/color-picker";
 import { useState } from "react";
 
 const [color, setColor] = useState("#6B97FF");
@@ -769,34 +771,34 @@ const [color, setColor] = useState("#6B97FF");
 // Popover with a trigger tile and label
 <ColorPickerPopover triggerLabel="Fill" defaultValue="#6B97FF" />`,
     props: [
-      "value: string. Controlled color value in any supported format.",
+      'value: string. Controlled color value in any supported format.',
       'defaultValue: string (default "#6B97FF"). Initial color when uncontrolled.',
-      "onValueChange: (value, parsed) => void. Fired on every change with the formatted string and a parsed color object.",
+      'onValueChange: (value, parsed) => void. Fired on every change with the formatted string and a parsed color object.',
       'format: "hex" | "rgb" | "hsl" | "oklch". Controlled format selection.',
       'defaultFormat: "hex" | "rgb" | "hsl" | "oklch" (default "hex"). Initial format when uncontrolled.',
-      "swatches: (string | { color, label? })[]. Optional preset swatches; a label names the color in a tooltip and to screen readers. The strip is hidden when omitted.",
-      "hideEyedropper: boolean (default false). Force-hide the eyedropper button.",
-      "ColorPickerPopover triggerLabel: string. Optional label rendered next to the color tile.",
-      "ColorPickerPopover triggerShowValue: boolean (default true). Show the hex value next to the tile.",
-      "ColorPickerPopover triggerShowRemove: boolean (default false). Render an X button on the trigger; pairs with onTriggerRemove.",
+      'swatches: (string | { color, label? })[]. Optional preset swatches; a label names the color in a tooltip and to screen readers. The strip is hidden when omitted.',
+      'hideEyedropper: boolean (default false). Force-hide the eyedropper button.',
+      'ColorPickerPopover triggerLabel: string. Optional label rendered next to the color tile.',
+      'ColorPickerPopover triggerShowValue: boolean (default true). Show the hex value next to the tile.',
+      'ColorPickerPopover triggerShowRemove: boolean (default false). Render an X button on the trigger; pairs with onTriggerRemove.',
     ],
   },
-  "combobox": {
+  combobox: {
     craft: [
-      "Radix has no combobox primitive, so this composes Radix Popover with its own listbox: the input keeps DOM focus the whole time and drives the rows through `aria-activedescendant`; a press on a row is `preventDefault`ed at pointerdown so it never blurs the field, and open/close autofocus is suppressed.",
-      "Arrows loop THROUGH the field: past the last row the highlight clears (the input is the stop) and the next press wraps to the first row \u2014 the APG combobox pattern. Enter picks the highlighted row; ArrowDown/ArrowUp on a closed field open it highlighting the first/last row.",
-      "The first row is highlighted the moment the list opens, whatever opened it (click, chevron, typing), so Enter always has a target; typing re-highlights index 0. An opener that already chose a row (ArrowUp picks the last) keeps its choice.",
-      "The highlight knows keyboard from pointer: a keyboard/auto highlight scrolls its row into view (`block: \"nearest\"` \u2014 the input keeps focus, so the browser won't) and survives the pointer leaving the list; a pointer highlight only makes the row Enter's target and drops on mouse-leave.",
-      "What the field shows is split from what filters: opening with a selection shows its label but lists everything until the user types; closing without a pick reverts the field to the selection and clears the query.",
-      "The create row (`onCreate`) appears once the trimmed query matches no label exactly and is appended LAST, so Enter picks a real match while one exists and only creates once nothing matches; its value is a NUL-prefixed sentinel, written `\"\\u0000create\"` in the source, so it can't collide with a consumer's.",
-      "Chips (multiple mode) pop in/out on the fast tier and slide into new slots with `layout`; `popLayout` lifts an exiting chip out of the flow at once so the field reflows immediately. The text input itself never animates \u2014 \"chips slide, the field snaps\" \u2014 because animating it read as the placeholder sliding in from the right when the last chip went. Backspace in an empty field removes the last chip.",
-      "Multiple-pick close behavior: a pick from an unfiltered list toggles and keeps the popup open for the next pick; a pick made while filtering closes it and clears the query.",
-      "Selection visuals: single mode glides ONE marker between rows (a value change springs it to the picked row, moderate tier); multiple mode paints one block per contiguous run of checked rows, merging and splitting like CheckboxGroup as picks bridge or break a run. Checked indices are recomputed against the filtered list as the query shifts them.",
+      'Radix has no combobox primitive, so this composes Radix Popover with its own listbox: the input keeps DOM focus the whole time and drives the rows through `aria-activedescendant`; a press on a row is `preventDefault`ed at pointerdown so it never blurs the field, and open/close autofocus is suppressed.',
+      'Arrows loop THROUGH the field: past the last row the highlight clears (the input is the stop) and the next press wraps to the first row \u2014 the APG combobox pattern. Enter picks the highlighted row; ArrowDown/ArrowUp on a closed field open it highlighting the first/last row.',
+      'The first row is highlighted the moment the list opens, whatever opened it (click, chevron, typing), so Enter always has a target; typing re-highlights index 0. An opener that already chose a row (ArrowUp picks the last) keeps its choice.',
+      'The highlight knows keyboard from pointer: a keyboard/auto highlight scrolls its row into view (`block: "nearest"` \u2014 the input keeps focus, so the browser won\'t) and survives the pointer leaving the list; a pointer highlight only makes the row Enter\'s target and drops on mouse-leave.',
+      'What the field shows is split from what filters: opening with a selection shows its label but lists everything until the user types; closing without a pick reverts the field to the selection and clears the query.',
+      'The create row (`onCreate`) appears once the trimmed query matches no label exactly and is appended LAST, so Enter picks a real match while one exists and only creates once nothing matches; its value is a NUL-prefixed sentinel, written `"\\u0000create"` in the source, so it can\'t collide with a consumer\'s.',
+      'Chips (multiple mode) pop in/out on the fast tier and slide into new slots with `layout`; `popLayout` lifts an exiting chip out of the flow at once so the field reflows immediately. The text input itself never animates \u2014 "chips slide, the field snaps" \u2014 because animating it read as the placeholder sliding in from the right when the last chip went. Backspace in an empty field removes the last chip.',
+      'Multiple-pick close behavior: a pick from an unfiltered list toggles and keeps the popup open for the next pick; a pick made while filtering closes it and clears the query.',
+      'Selection visuals: single mode glides ONE marker between rows (a value change springs it to the picked row, moderate tier); multiple mode paints one block per contiguous run of checked rows, merging and splitting like CheckboxGroup as picks bridge or break a run. Checked indices are recomputed against the filtered list as the query shifts them.',
     ],
     usage: `import {
   Combobox, ComboboxInput, ComboboxContent,
   ComboboxList, ComboboxItem, ComboboxEmpty,
-} from "@/components/ui/combobox";
+} from "#components/ui/combobox";
 import { useState } from "react";
 
 const frameworks = [{ value: "next", label: "Next.js" }, { value: "astro", label: "Astro" }];
@@ -812,48 +814,48 @@ const [value, setValue] = useState("");
   </ComboboxContent>
 </Combobox>`,
     props: [
-      "items: readonly (string | { value: string; label: string })[]. The options; a string is its own value and label.",
-      "multiple: boolean (default false). Any number of picks; values become string[] and the field is ComboboxChips.",
+      'items: readonly (string | { value: string; label: string })[]. The options; a string is its own value and label.',
+      'multiple: boolean (default false). Any number of picks; values become string[] and the field is ComboboxChips.',
       'value: string | string[]. Selected value; "" means none, an array when multiple.',
       'onValueChange: (value: string | string[]) => void. Called with the pick, "" when cleared, or the array when multiple.',
-      "filter: (item, query: string) => boolean. Match an item against the query. Default is case-insensitive contains on the label.",
-      "onCreate: (query: string) => item | void. Adds a create row for the query when no label matches exactly.",
-      "hideSelected: boolean (default false). Multiple only; picked items leave the list.",
-      "disabled: boolean (default false). Disables the field and the popup.",
+      'filter: (item, query: string) => boolean. Match an item against the query. Default is case-insensitive contains on the label.',
+      'onCreate: (query: string) => item | void. Adds a create row for the query when no label matches exactly.',
+      'hideSelected: boolean (default false). Multiple only; picked items leave the list.',
+      'disabled: boolean (default false). Disables the field and the popup.',
       'size: "default" | "compact". Pins field and popup to one size step; otherwise follows the SizeProvider.',
       'ComboboxInput variant: "bordered" | "borderless" (default "bordered"). Also takes icon, placeholder, error, clearable.',
     ],
   },
-  "data-table": {
+  'data-table': {
     craft: [
-      "### State and parts",
+      '### State and parts',
       "TanStack Table owns every bit of state (sorting, filters, visibility, order, sizing, selection, page); the parts only read and set it, so each one is optional and any can be swapped for your own. useDataTable adds only the Columns menu's per-column text fitting, beside TanStack's state.",
       "The body is the library's Table: rows get its fluid hover highlight (rounded by the shape setting) and border fade; body rows pass their page index, header rows none.",
       "Body rows are memoized (`DataTableBodyRow`): a row redraws when its record (a new row object), its selection (and whether it ends a selected run, which rounds its pinned fills), its expansion, the pinned columns, its open row menu, the column definitions, the visible columns and their text fitting, or the table's look change, never on every table state change, so an arrow press redraws nothing and a Shift + arrow step only the rows it selects. A cell that reads other table state belongs in a column you redefine when that state changes. The editors' context is one stable object reading the latest handlers through a ref. Leave one of those out of the memo's comparison and the row keeps drawing its last state: a sticky switch once moved only the header while every row kept sticking.",
       "A long page mounts in steps. Rows already on screen always render; of the rows that are new (another page, other data, a first load) 30 go in at once and the rest follow 30 at a time, each step a transition. A sort, a search or an edit brings no new rows, so nothing is held back from those and their animations see every row. A hundred rows in one commit held the page still for most of a second on a dev build, most of it style recalculation and forced measurement that scale with the rows mounted together. Column widths are read from the first batch. The rows still to mount hold their place with a spacer row under the drawn ones (the rest, at the drawn rows' average height, read on every commit while rows are pending since the first one sees columns not yet sized): without it the table, the page's scrollbar and the pagination jumped with every batch. Related: the skeletons left over from a load come out in a transition too (that update re-renders every row), and a table whose rows land after a load should set `loading` false inside `startTransition`.",
-      "Every part that reads the table opts out of the React Compiler (`\"use no memo\"`), and useDataTable hands out a fresh view of the same table on each state change, because TanStack mutates one table object for its whole life.",
+      'Every part that reads the table opts out of the React Compiler (`"use no memo"`), and useDataTable hands out a fresh view of the same table on each state change, because TanStack mutates one table object for its whole life.',
       "The page holds through data changes: `useDataTable` sets `autoResetPageIndex: false`. TanStack's default returns to page 1 whenever `data` is a new array, so an edited cell, a moved row, a delete or an undo on page 2 threw you back. A new search, filter or sort still starts from the first page, and a page with no rows left steps back to the last one that has some.",
-      "### Layout and alignment",
+      '### Layout and alignment',
       "Headers read `text-muted-foreground`, content `text-foreground`, so the data leads. Every column is left-aligned. `meta.icon` puts a 14px icon 4px before a header's title, in the same muted color; DataTableColumnHeader draws it inside its sort button, so the icon sorts too.",
       "The selection column is 28px: 8px before the 16px box, so its focus ring never clips, and 4px after it; the next column's left padding (`pl-2`) adds 8px, so the box sits 12px from the text and a header's fill starts 8px before its label instead of on it. Its boxes show only on the row under the pointer or holding focus, on checked (or partly checked) boxes, and always on touch screens; a selection doesn't bring the other boxes up; the row dividers start after the column (its cells draw their bottom border transparent; the table is `border-separate` with no spacing, each cell drawing its own divider, so a sticky cell paints over the dividers scrolling under it), so no line runs above or below a box. The whole cell is the box's hit area (padding and row height included, via negative margins put back as padding), and `group/field` darkens the box while it's hovered. The select-all box selects every row the search leaves, on every page (a page is a view, not a scope), in one state update; it shows the Checkbox `indeterminate` dash for a partial selection, and its tooltip names the next click with the row count the footer shows (Select all 35 / Unselect all 35), so “all” never reads as more or fewer than it is.",
-      "Checkboxes, badges and the ⋯ button sit in a `h-[1lh]` cell and overhang it evenly, so nothing pushes a row off the 36px / 28px ladder. Status badges use Badge `variant=\"ghost\"`: no outline or side padding, so the dot lines up with the column and the label reads as row text.",
+      'Checkboxes, badges and the ⋯ button sit in a `h-[1lh]` cell and overhang it evenly, so nothing pushes a row off the 36px / 28px ladder. Status badges use Badge `variant="ghost"`: no outline or side padding, so the dot lines up with the column and the label reads as row text.',
       "Edges line up: the selection checkbox and the row count sit 8px in, the box 4px from its column's end and 12px from the text; the search sits at the right end beside the Columns icon, the ⋯ row icons (rowActionsColumn hugs its 28px button with 4px each side: 36px, and 32px compact with the button flush right, so a sticky right column is no wider than its button) and the next-page arrow share one center line 18px from the right (14px compact).",
-      "Nothing in a cell is ever cut at its edge: text ends in an ellipsis (or clamps to its lines), a header's title truncates beside its icon and sort arrow, a Badge shrinks and ellipsizes its label (overflow-x: clip, so its trimmed descenders survive), and a tags field wraps its chips when its column wraps text (`lines: \"wrap\"`) or, on one line, cuts them at the cell's edge with its last 16px faded (it does not scroll by hand).",
-      "DataTablePagination wraps by group, never by word: on a narrow bar the row count, the Rows per page select and the \"Page n of m\" with its arrows each stay whole (`whitespace-nowrap`) and drop to the next line together, so no label ever breaks over two lines. Its two arrows share one TooltipGroup.",
+      'Nothing in a cell is ever cut at its edge: text ends in an ellipsis (or clamps to its lines), a header\'s title truncates beside its icon and sort arrow, a Badge shrinks and ellipsizes its label (overflow-x: clip, so its trimmed descenders survive), and a tags field wraps its chips when its column wraps text (`lines: "wrap"`) or, on one line, cuts them at the cell\'s edge with its last 16px faded (it does not scroll by hand).',
+      'DataTablePagination wraps by group, never by word: on a narrow bar the row count, the Rows per page select and the "Page n of m" with its arrows each stay whole (`whitespace-nowrap`) and drop to the next line together, so no label ever breaks over two lines. Its two arrows share one TooltipGroup.',
       "A focus ring never gets cut: inside a cell (which clips) every ring draws inset, the row's ⋯ button's and every ring in an editor (the whole editor, not only the focused input: a Combobox field rings its wrapper), since in compact the ⋯ sits flush with the cell's edge.",
-      "### Top bar",
+      '### Top bar',
       "The top bar is all ghost: the title on the left and, at the right end, the filter button, the Columns button and the search, on one wrapping row 4px apart, their tooltips in one TooltipGroup when two or more show. The title row stands 12px above what follows (the stack's 8px plus 4: `mb-1` on it); the view tabs, the filter chips and the table keep 8px between them as one unit. Past a selection column the title, the view tabs and the chips all step in 28px (`pl-7`), to where the first data column starts: the edge they share with the table when there are no boxes. The search rests as an icon button, and a click springs it open (spring.moderate on its width, from the button's square) into a field that drops Input's hairline (hover fill on hover and while focused), the magnifying glass held at the button's center the whole time; an empty field closes on blur or Esc, a field with text stays open. The Columns menu and the page arrows are icon-only ghost buttons with aria-labels and tooltips. \"Page n of m\" sits 4px from its arrows, and Rows per page is a borderless Select sized to its value, so it reads as one sentence.",
-      "### Headers and columns",
+      '### Headers and columns',
       "A header that sorts or moves behaves like a ghost Button: its label lifts from muted to foreground on hover, and its hover fill is the header row's own fluid hover (TableHead `hoverIndex` joins a second, x-axis scope in Table, item under the pointer only, hidden while a header drags), gliding from header to header the way the row highlight runs down the body; pressed, that same fill turns `--active` (one surface, no second fill inside it), and it stops 1px above the header's bottom line. A filled table's sticky headers paint the page background over that layer, so there each header keeps its own fill the same way: `--hover`, then `--active`, clear of the bottom line.",
       "A header cell's own click (open its menu), drag start and Alt + arrow move ignore events that didn't happen inside the cell's DOM: React bubbles the header menu's portalled item clicks up through the cell, so a pick ran its action and the menu opened again at once.",
       "The sort glyph is one 14px cell, empty while the column isn't sorted (no up-down chevrons at rest, so the headers read as plain labels): the arrow arrives (blur 4px, scale 0.6) on `spring.fast` once it sorts and leaves the same way, and the arrow turns over 180° on `spring.moderate` for descending rather than swapping glyphs. Every column sorts ascending first, numbers included; sorted headers carry `aria-sort`. The sorted column's whole header (icon, label and arrow) reads `text-foreground`, so the sort shows from across the table, not just its glyph.",
       "The Columns menu opens with a Wrap text switch for the whole table (every column with `meta.lines`), kept even while those columns are hidden so rows never shift under their selection fills. Below it, columns in display order, each with a grip (MenuItem `leading`), its icon and name: dragging a row by its grip (motion Reorder; rows swap on spring.fast, the order kept in the menu until release, then applied to the table once; a dragged row can't leave the list (`dragConstraints` on the list, no elastic); the drop settles on spring.fast without momentum: the row's y is animated by hand on drag end, because motion's own drag release ignores `transition` for a 750ms inertia glide) or Alt + ↑ / ↓ reorders the table. The menu's tooltip is forced closed while it's open, because React carries the portalled menu's pointer events up to the tooltip's wrapper.",
-      "Text columns choose `meta.lines`: `1` truncates, `2` line-clamps, `\"wrap\"` runs free and breaks anywhere (`overflow-wrap: anywhere`, so a URL can't run out of its column); each adds `max-w-0` so long text takes only the room the column gets (pair with `className: \"w-full\"`). `cellAlign=\"auto\"` aligns to the top while any visible column runs past one line, centered otherwise.",
+      'Text columns choose `meta.lines`: `1` truncates, `2` line-clamps, `"wrap"` runs free and breaks anywhere (`overflow-wrap: anywhere`, so a URL can\'t run out of its column); each adds `max-w-0` so long text takes only the room the column gets (pair with `className: "w-full"`). `cellAlign="auto"` aligns to the top while any visible column runs past one line, centered otherwise.',
       "Columns start at their content's width: once per page of rows, in one synchronous pass that never paints, every cell is measured on one line at max-content, header included, and capped at 240px (a min width or the header can take a column past it). Those widths fill the box and the column that takes the rest (`w-full`, else the last resizable or data column) gets what's left; short of room, the columns that can shrink give it up together, none narrower than its header and pinned ones not at all, and past that the table scrolls. A column `size` always wins, and columns with no `lines` cut their text short. Without `resizeColumns` the widths follow the box (a ResizeObserver refits them); with it they seed the sizing once. Column resizing is opt-in (`resizeColumns`). An 8px grab strip over each header's right edge shows a 1px rule on hover and follows the pointer (`columnResizeMode: \"onChange\"`); it's a focusable separator (plain ← / → step 16px and stop there, leaving Alt + arrow to the header's move; double-click resets). The last resizable column takes the remaining width and its handle sets the least it takes; fixed columns (selection, row menu) keep theirs; past the box the table scrolls sideways.",
       "Column reordering is opt-in (`reorderColumns`): a header drag starts after 4px of travel, so a click still opens the header's menu (its trigger is a hidden button over the cell that never takes the pointer, so a press can start a drag). A click anywhere in an acting header (its padding, the space past the label) opens the menu too: the cell forwards it to the header's button once the click has finished, so the menu doesn't read that same click as a press outside it; those cells show the pointer. The drag carries a copy of the header as it looks (icon, sort arrow), the way a row drag carries its row: the `--active` fill over `--background` at 80%, no border or shadow, while the column it left, header and cells, stays in place at 40% (a frozen cell dims its content only, so its surface still covers what scrolls under it). The dimmed column ties the carried header to its cells; an emptied header slot over untouched cells read as cut off from them. The copy stays within the table's visible box (it stops at the left and right edges), and the landing spot follows the pointer, not where the copy stopped. Held within 48px of an edge (the edge fade's band), the table scrolls that way, up to 720px a second and faster nearer the edge (time-based, so a slow frame rate scrolls as far), so a column can travel to one out of view on a narrow screen. A 2px accent line the column's height marks where it lands, and the click that ends the drag is swallowed. Alt + ← / → moves a focused header. Only data columns move.",
       "Layout changes animate from a snapshot (FLIP): a reorder, a column shown or hidden, a change to how text wraps. Whatever makes the change first calls `captureLayout()`, which records header lefts (`offsetLeft`, which ignores transforms), row tops and the box's height; the next commit slides moved headers and cells to 0 on `spring.moderate`, fades a new column in, slides rows to their new tops, and springs the box's height (`overflow-y-hidden` while it does). Nothing is measured on other renders. A row that wasn't there before the snapshot fades in where it lands.",
       "Keyboard focus rings the whole header cell, the area its hover fill covers (a 1px `--focus-ring` border in the shape's fill radius, clear of the header's bottom line), not the label alone.",
-      "### Scrolling and sticky columns",
+      '### Scrolling and sticky columns',
       "The table sits in the library's ScrollArea (horizontal; both axes under `fill`) with `scroll-fade-x` on its viewport: wider than its box it scrolls sideways under the system thumb (4px at rest, widening on hover, native on touch screens), and each edge fades while there's more to that side. `fill` makes the box `min-h-0 flex-1 overflow-auto` for fixed-height panels: header cells stick (`sticky top-0` on the page background, header row lifted to z-20) and gain an inset 1px hairline in the rows' rule color once the rows scroll (`data-scrolled` set from onScroll, no re-render).",
       "Pinning: useDataTable pins the selection column and the first data column left, and the `actions` column right (`initialState.columnPinning` overrides, `enableColumnPinning: false` turns it off). Pinned cells are `sticky` at offsets summed from the measured widths, keep their width when room runs short, and can't be dragged. They are always opaque, scrolled or not, and the row's hover and selection fills are always drawn over them (see the two notes on fills over frozen columns). Never switch a frozen cell between see-through at rest and opaque while scrolling: the scroll runs on the compositor and any flag that follows it (a scroll event, a scroll-driven custom property) lands a frame or two later, so the fill doubled or the text showed through as the scroll started and ended. With one state there is nothing to hand over. Only the 1px line inside the edge cell follows the scroll (a `--ff-pin` flag set by a scroll-driven animation on `scroll(nearest inline)`, data-x-start / data-x-end on the root as the Firefox fallback), and a frame's delay on a line that fades in does not show. Each pinned cell's opaque layer and fills reach 1px under the NEXT pinned cell only (it paints later and covers the overlap), which closes the hairline two cells leave at a fractional position; reaching back over the previous cell cut a 1px line of page color through its hover and selection. A cell's bottom rule lives in its border, outside those layers, so the rules scrolling under showed through it: a 1px background strip of the page color on the cell itself covers the border, and the row's fills are drawn over the frozen columns as a whole, strip included. The scroll fade moves in to the pinned columns' edge (scroll-fade-x's animated --sf-start / --sf-end, with the mask's stops at --pin-l / --pin-r, the pinned widths), so content fades in just past the divider and the pinned cells never fade. Pinned cells sit at z-[2], one above anything a scrolling cell lifts to z-[1] (a date editor's trigger, a chip's parts): at an equal z those painted over the pinned columns in DOM order as they scrolled under; only a raised editor (z-30) still covers them.",
       "The frozen edge's hairline is `bg-foreground/[0.08]`, a see-through tint of the text color, not the rows' opaque rule color: it shows over a selected or hovered row, where the light rule vanished.",
@@ -861,7 +863,7 @@ const [value, setValue] = useState("");
       "A frozen cell paints a 1px strip of the page color over its bottom border so rows passing under don't show through it; the cell's own rule still draws over the strip.",
       "The hover over frozen columns is one fill, not one per cell: frozen cells are opaque, so they hide the gliding fill behind the table, and a fill of their own could only fade in place while the rest of the row glided. A fill over them (in the scroll root at z-11: above the rows, under a raised editor) takes the highlight's place, height and opacity each frame through `onHighlightFrame`, and spans each frozen side from where its first cell starts, at rest as well as scrolled.",
       "The selection over frozen columns is Table's own fills drawn again (`selectionMirrors`), clipped to each frozen side and placed where the table's box sits when that side is at rest. A fill per frozen cell could only switch on: a row selected between two others merged into them in the scrolling columns and popped in the frozen ones, and its corners were a second, different set. Fills over the cells tint the text by the fill's few percent, which does not show.",
-      "### Rows, selection and keys",
+      '### Rows, selection and keys',
       "The row's hover fill says the row does something. It shows where a row answers a click (`onRowClick`, a selection column, a row menu, a handle, sub-rows, cell editors) and not on a table that is only read, where a fill promises a click that does nothing. `rowHover` holds it on or off. Off, only the fill goes: what rides the highlight (the empty box, the handle) and the keyboard's place still follow it, and the header keeps its own hover. A header follows the same rule: it takes the hover (the fill, the pointer, the lifted label) only where a click on it does something, so it moves, sorts, or its menu has a filter or a freeze to offer; with all of those off it is a plain label.",
       "Selected rows get CheckboxGroup's merged fill through Table's `selectedIndices`: contiguous rows share one `bg-active` block with the merge/split animation (use-merge-split), drawn under the hover highlight, and the rules through and above a selected run step aside. A row background would sit above the highlight and hide it.",
       "Keys work like a spreadsheet's rows (Google Sheets, Gmail). Rows that can be selected or opened are one roving tab stop (the last focused, else the first), and the stop moves in the DOM (`tabIndex` set on focus), never in state. ↓ from DataTableSearch or from a header steps into the first row (`table.focusFirstRow()`); ↑ / ↓ and Home / End move between rows, or, from a control in a cell (checkbox, link, row menu), to the same column's control in the next row that has one.",
@@ -869,55 +871,55 @@ const [value, setValue] = useState("");
       "A focused row looks hovered, never ringed: Table moves its fluid hover highlight to the row holding keyboard focus (`:focus-visible` only, so a click doesn't), and the row's checkbox takes its hover border. There is no blue ring on the row or around the box.",
       "A hovered row counts as focused: pointing at a row and pressing a row key (arrows, Shift + arrows, Home / End, X, Enter, Space, ⌘A, Esc) moves focus there and runs the key from it, every time, not just the first. It applies while focus rests on the page (or a preview frame around the table), or on a row once the pointer has really moved since the last key, so a resting pointer never pulls focus back while the keys walk away. A window capture listener stops the original key and replays it on the row; it reads the table's box live (the ScrollArea root can remount) and counts only pointer moves that change the client point.",
       "Arrow travel stays readable: arrows keep one row ahead in view, scrolling the nearest scrolling box (or the page) by as little as it takes, measured by hand rather than scrollIntoView so a wide table never slides sideways, and clear of the sticky header when filled. Keyboard focus owns the highlight until the pointer really moves, so a scroll sliding rows under a still pointer can't snatch it back, and while an arrow auto-repeats the highlight snaps row to row instead of trailing its spring; a single press still glides.",
-      "Keys typed into a field (the search, an editable cell) stay with it. A key the table acts on is `preventDefault`ed (and its replay stopped), so page shortcuts that respect `defaultPrevented` skip it; on the docs, every preview also carries `data-keyboard-scope`, which site shortcuts stand aside for.",
-      "`onRowClick` ignores clicks that land on a control in the row (button, link, input, checkbox, menu item, the selection cell) and clicks React carries up from a portalled popup (the row menu); Space on a focused row runs it, and so does Enter when the table has no selection column (with one, Enter selects).",
+      'Keys typed into a field (the search, an editable cell) stay with it. A key the table acts on is `preventDefault`ed (and its replay stopped), so page shortcuts that respect `defaultPrevented` skip it; on the docs, every preview also carries `data-keyboard-scope`, which site shortcuts stand aside for.',
+      '`onRowClick` ignores clicks that land on a control in the row (button, link, input, checkbox, menu item, the selection cell) and clicks React carries up from a portalled popup (the row menu); Space on a focused row runs it, and so does Enter when the table has no selection column (with one, Enter selects).',
       "One empty selection box rides the row highlight (Table `hoverMarker`) and glides from row to row with it, instead of each row's box fading in and out. The row's own box shows where it says more: checked or partly checked, under the pointer itself, on touch screens, and whenever its column is frozen (a frozen cell is always opaque, so it covers the carried box: gate this on the cell being frozen, not on the table being scrolled, or the hovered row shows no box at all until the table scrolls). The carried box sits where the row's own does: on the first line in rows that read from the top, else in the middle of the row whatever its height.",
-      "A keyboard-focused row shows its own box only while the highlight is on it. Once the pointer takes the highlight to another row the box goes with it, so two boxes never show at once.",
-      "The handle and the box each have a tooltip that names the next action with its keys as caps in the tooltip's inverted colors (\"Drag to move\" with Alt or ⌥ and the two arrows; \"Select\" or \"Unselect\" with X). A row with both wraps its cells in one TooltipGroup, so the bubble glides between the two. Both pass `hoverable={false}`: the bubble sits over the row above, and a pointer moving up to that row goes through it instead of landing on the tooltip.",
+      'A keyboard-focused row shows its own box only while the highlight is on it. Once the pointer takes the highlight to another row the box goes with it, so two boxes never show at once.',
+      'The handle and the box each have a tooltip that names the next action with its keys as caps in the tooltip\'s inverted colors ("Drag to move" with Alt or ⌥ and the two arrows; "Select" or "Unselect" with X). A row with both wraps its cells in one TooltipGroup, so the bubble glides between the two. Both pass `hoverable={false}`: the bubble sits over the row above, and a pointer moving up to that row goes through it instead of landing on the tooltip.',
       "During a keyboard move the highlight is held on its row for the slide, frame by frame (a `translate` offset beside the transform its own animation writes), and the hover band and frozen-column fill take the same offset. Two animations of the same spring started a frame or two apart, and the fill visibly ran ahead of the row's content.",
-      "### Reordering rows",
-      "Rows reorder by a handle column (`rowHandleColumn()`, first, before the boxes) and `onRowReorder`. The table reports `{ rows, target, place }` and never reorders on its own; `moveRows(data, move)` writes it. Sub-rows travel with their parent and have no handle.",
+      '### Reordering rows',
+      'Rows reorder by a handle column (`rowHandleColumn()`, first, before the boxes) and `onRowReorder`. The table reports `{ rows, target, place }` and never reorders on its own; `moveRows(data, move)` writes it. Sub-rows travel with their parent and have no handle.',
       "The grip rides the row highlight like the empty box; the row's own handle is the hit target. A press past 4px lifts a copy of the row that follows the pointer, the rows being moved dim to 40% (an `!important` rule: a row keeps an inline opacity from its last animation), and a 2px accent line marks where they land.",
-      "The copy is the row as it looks: every cell held to its measured width from both sides, frozen cells still sticky in a copy scrolled as far as the table, the handle and the box shown, and the `--active` tint laid over all of it so frozen cells take it too.",
+      'The copy is the row as it looks: every cell held to its measured width from both sides, frozen cells still sticky in a copy scrolled as far as the table, the handle and the box shown, and the `--active` tint laid over all of it so frozen cells take it too.',
       "The copy stops at the first and last row, but the drop follows where the row is being carried, not where its copy stops. Read from the stopped copy, its middle equals the first row's middle and nothing could be dropped first. Near the top or bottom edge of what scrolls, it scrolls. Esc puts the row back.",
-      "While a row is carried, a fixed layer over the page holds the grabbing cursor and keeps rows from lighting. Never set `cursor` on the root or `pointer-events` on the table for a drag: both are inherited and restyle every element under them at each end.",
+      'While a row is carried, a fixed layer over the page holds the grabbing cursor and keeps rows from lighting. Never set `cursor` on the root or `pointer-events` on the table for a drag: both are inherited and restyle every element under them at each end.',
       "A selected row carries the page's other selected rows, and the copy shows a count. From the keyboard, Alt + ↑ / ↓ moves the selection when there is one, whichever row is under the pointer or holds focus; with none, it moves the row under the pointer or the focused one. Selected rows step together past the row before the first of them (or after the last), closing any gaps.",
-      "After a keyboard move the highlight, with its handle and box, goes with the row: the row asks the Table for it (`TABLE_HIGHLIGHT_EVENT`, a bubbling event) and the keyboard owns the highlight until the pointer moves.",
-      "Under a sort the handles stay and a row drags as usual. The drop, or Alt + ↑ / ↓ when pressed, opens a small Dialog: \"Remove sorting?\", one line (\"Rows can only be moved while the table isn't sorted.\"), Cancel and Remove sorting. Confirming clears the sort, the rows slide back to their own order, and a dropped row lands beside the row it was dropped on. Never drop a sort unasked, and never leave the handle doing nothing.",
-      "### Search, filters and empty states",
-      "Typing in the search jumps back to page 1, so a shrinking result never strands you past the last page. An empty body holds a page of height (pageSize rows, capped at the data's length, row rules counted), so a search that runs dry doesn't move the pagination. With column filters set, the empty body points back to them: a description or action you leave out says \"Remove a filter to see more.\" and offers a ghost Clear filter(s) button, since the filters are what emptied it.",
+      'After a keyboard move the highlight, with its handle and box, goes with the row: the row asks the Table for it (`TABLE_HIGHLIGHT_EVENT`, a bubbling event) and the keyboard owns the highlight until the pointer moves.',
+      'Under a sort the handles stay and a row drags as usual. The drop, or Alt + ↑ / ↓ when pressed, opens a small Dialog: "Remove sorting?", one line ("Rows can only be moved while the table isn\'t sorted."), Cancel and Remove sorting. Confirming clears the sort, the rows slide back to their own order, and a dropped row lands beside the row it was dropped on. Never drop a sort unasked, and never leave the handle doing nothing.',
+      '### Search, filters and empty states',
+      'Typing in the search jumps back to page 1, so a shrinking result never strands you past the last page. An empty body holds a page of height (pageSize rows, capped at the data\'s length, row rules counted), so a search that runs dry doesn\'t move the pagination. With column filters set, the empty body points back to them: a description or action you leave out says "Remove a filter to see more." and offers a ghost Clear filter(s) button, since the filters are what emptied it.',
       "Filters: DataTableFilters is an icon-only ghost button (the `filter` icon, a tooltip) whose menu lists the columns that can filter with a DropdownSearch on top; a pick calls `table.openFilter(id)`, which sets that column's empty filter and asks DataTableFilterChips to open its chip's editor (a column header's Filter item does the same). The kind comes from `meta.filter`, else the editor, else the values (numbers, ISO days, up to 12 repeated strings, else text). useDataTable's default filterFn reads those shapes and a plain string (DataTableSearch on one column); an empty chip hides nothing yet, and every change goes back to page 1.",
       "DataTableFilterChips is its own row between the toolbar and the table, gone while nothing is filtered; while filters are set, the toolbar's Filter button toggles that row (pressed while it shows; a dot on the button while filters apply out of sight, so they are never hidden unmarked), and a filter asked for from a header brings it back; it ends with a + Add filter icon button (the same searchable menu, gone once every filterable column has a chip), and its children (a Save view button) sit right after that +, and ride the row without bringing it: with no filter set the row stays away, so a moved or hidden column or a sort never pushes the table down under a lone + and a button. The row comes and goes with a measured-height spring (spring.moderate from 0, never \"auto\", the column's gap folded in as a negative top margin so the table glides; its start set before the first paint, since animate() applies its first keyframe a frame late; on the page's first render it is simply there). While it moves it clips with `overflow: clip`, not `hidden`: hidden makes the row a scroll container, and a field focused inside it as it grows (a new chip's input) scrolled the row's content, which then jumped back when the clip came off.",
       "A chip springs to its content's measured width (spring.moderate, plus its border and inset) as the value changes, clipping while it catches up; 4px pad the word and the value, the × keeps its square. Each chip is built like the DatePicker field (a hairline box, its parts 2px inside with corners nested in its radius, one fluid hover gliding between the word, the value and the ×, which has a Remove filter tooltip; the chip hugs its content, its text fields sized to what's typed; its border is Field's, `border-border` at rest and `foreground/40` only while one of its text fields has focus, tracked in state as `data-typing`, since focus-within stays true on a value or word button after its menu closes and left the chip darker than every Field) It reads as one phrase, \"Status is any of Active, Invited ×\".",
       "The chips row only makes room: its height springs open from 0 (measured, the stack's gap folded in) so the table glides down, with no fade or wipe of its own. Each chip enters on its own with the library's enter (opacity, a 4px blur clearing, scale from 0.96 at its leading edge, `spring.moderate`); chips that arrive with the row (a saved view) come in left to right 40ms apart, capped at 80ms, and the + comes in one 40ms step after the last chip, so it ends the run. A chip added to a row already there enters the same way while the + slides over to make room, and a removed chip blurs out where it was (AnimatePresence `popLayout`) while the rest slide into its place. The slide and the enter sit on two nested boxes so they never write the same transform, and the slide's start is set before paint (animate() applies its first keyframe a frame late). The row is never clipped; the items time themselves to the room instead. Arriving with the row, they wait 60ms, until it is open far enough that they clear the table's header (clipped, they were cut off by the row's edge as they came in; unclipped and unwaited, they sat over the header sliding out from under them). When the row closes its items blur out together, no stagger, on the fast tier's exit, and the height closes after those 60ms. A new chip's editor opens once the chip has landed, 150ms on, not while it moves. Keep the items out of the row's own presence (a null PresenceContext around them): under it each item's exit joined the row's, and the row, waiting on them, never left the page. The whole row unrolling as one clipped block read as a panel, not as a filter arriving.",
-      "The chip's parts: the word is a menu where it has choices (is / is not for options, between / before / after for days, a single-day picker for the last two, and for text is / is not / contains / does not contain / starts with / ends with / is empty / is not empty, the last two hiding the input); text (a bare input), options (a Dropdown with merged checked rows that stays open; an option with a Badge `color`, from `meta.filter` or a select editor, shows its dot in the menu and in the chip, as the cells do; one picked value reads in full, cut short when long, and two or more read as their dots and \"N items\" so the chip keeps its width), a number from/to, or a range of days (a ghost range DatePicker with `fitLabel`, so an empty chip hugs \"any day\" instead of holding room for a full range, and `typeable`, so the days can be typed like the text chips' values; it fills the chip's inner row, 2px inside the border like the word, not a 28px control of its own).",
-      "A column of true and false values filters as two options, Yes and No. As text it could only match the words true and false, never what a cell shows for them. `meta.filter` names them otherwise.",
-      "### Saved views",
+      'The chip\'s parts: the word is a menu where it has choices (is / is not for options, between / before / after for days, a single-day picker for the last two, and for text is / is not / contains / does not contain / starts with / ends with / is empty / is not empty, the last two hiding the input); text (a bare input), options (a Dropdown with merged checked rows that stays open; an option with a Badge `color`, from `meta.filter` or a select editor, shows its dot in the menu and in the chip, as the cells do; one picked value reads in full, cut short when long, and two or more read as their dots and "N items" so the chip keeps its width), a number from/to, or a range of days (a ghost range DatePicker with `fitLabel`, so an empty chip hugs "any day" instead of holding room for a full range, and `typeable`, so the days can be typed like the text chips\' values; it fills the chip\'s inner row, 2px inside the border like the word, not a 28px control of its own).',
+      'A column of true and false values filters as two options, Yes and No. As text it could only match the words true and false, never what a cell shows for them. `meta.filter` names them otherwise.',
+      '### Saved views',
       "Saved views are yours to keep (the URL, storage, your database): a view is the table's state, named (`columnFilters`, `globalFilter`, `sorting`, `columnOrder`, `columnVisibility`), opened with `table.setState` and page 1. Show them as compact Tabs with an \"All\" first, only once a view exists (a lone All says nothing), the row springing in like the chips row. Save view sits after the chips' + and shows only while the table differs from the open view (compare hidden columns only, not the full visibility map). It is a ghost Button at the size in use, no `size` prop: the same height as the + beside it (36px, or 28px compact). A view tab's name is capped (192px), then cut with an ellipsis, typed or saved: a long name must not push the other tabs and the tools off the row; the naming field keeps to that width and scrolls. A link in a cell that cuts its text short truncates itself (`inline-block max-w-full truncate`) and draws its focus ring inside its box (`outline-offset: -1px`): a ring outside it is cut by the cell on both sides. Saving names the new tab in place: a field laid over the tab in the tab's own type role, corners (the shape setting) and text position, its name selected; Enter or a click away keeps it, Esc keeps the old one, and its × deletes the view with an undo toast. A click on the open tab renames it, inline: the tab's label becomes the draft so the tab grows and pushes the others as you type, a bare field sits on that label in its own type and weight (the tab's fill is the only surface, no box or shadow), and a × fades in at the tab's end to delete the view. Tabs reorder like headers: 4px before a drag, a ghost in the tab's corners and type, a 2px accent bar where it lands, Alt + ← / →, All stays first.",
-      "The view tabs are the regular Tabs size and follow the size setting, like the table. With a title they sit on a row of their own under it; without one they share the row with the Filter, Columns and Search icons (tabs from the left edge, icons at the right end, the tabs scrolling sideways inside their share), and fade in with the first saved view since the row is already there.",
+      'The view tabs are the regular Tabs size and follow the size setting, like the table. With a title they sit on a row of their own under it; without one they share the row with the Filter, Columns and Search icons (tabs from the left edge, icons at the right end, the tabs scrolling sideways inside their share), and fade in with the first saved view since the row is already there.',
       "A view is renamed in its tab: click the open tab, the tab's own label becomes the draft so the tab grows as you type, and a bare field sits on the label with a × at the tab's end that deletes the view. A view just saved opens straight into naming. Saved tabs drag to reorder like column headers (a lifted copy, a 2px accent bar, the others sliding over) and Alt + ← / → moves a focused one; the first tab, the table as it starts, stays first.",
-      "### Editable cells",
+      '### Editable cells',
       "Editable cells are opt-in per column (`meta.editor`) and switch on with DataTable's `onCellEdit`, which gets `{ row, columnId, value }` on every change (each keystroke, each pick). The table shows what your data holds, so write the value back; with sub-rows, write it into the parent's children.",
       "Editors look like the cell, not like fields: no border and no fill at any state, only the text cursor and the caret. Each control fills the row's height and reaches into the cell's padding just far enough that its text (or first chip) starts where the column's text does, at both size steps, so rows never grow and nothing shifts on focus. Typed fields carry the 16px touch size, so iOS never zooms into a cell.",
-      "The editor types: `\"text\"` shows the cell's own text at rest, cut short (a focusable span with an invisible layer over the row's height, so a click anywhere in the cell edits and nothing scrolls sideways), and edits in a textarea; `{ type: \"text\", link }` reads as a link at rest (a click on the text follows it, a click beside it, the cell's right padding included, edits with the caret at the end, F2 from the link too); in a column that wraps (`lines: 2` or \"wrap\") the text editor is a textarea in the cell that grows with its text (two lines at most for `lines: 2`), sized by hand since field-sizing isn't everywhere; `\"number\"` a Combobox over `options` that also takes any number typed (Use 42), selects its value on focus and lists every option while the field still shows its own value; `\"date\"` the ghost DatePicker; `\"tags\"` the chips Combobox held to one line that scrolls sideways (`creatable` adds what's typed); `{ type: \"select\", options }` keeps the column's own cell as a full-height trigger (a badge stays a badge) and opens a Dropdown with the current option checked, each option given a `color` showing its Badge dot (7px, gray as the muted foreground, as Badge does). The Combobox editors drop their ring, fills and chevron.",
+      'The editor types: `"text"` shows the cell\'s own text at rest, cut short (a focusable span with an invisible layer over the row\'s height, so a click anywhere in the cell edits and nothing scrolls sideways), and edits in a textarea; `{ type: "text", link }` reads as a link at rest (a click on the text follows it, a click beside it, the cell\'s right padding included, edits with the caret at the end, F2 from the link too); in a column that wraps (`lines: 2` or "wrap") the text editor is a textarea in the cell that grows with its text (two lines at most for `lines: 2`), sized by hand since field-sizing isn\'t everywhere; `"number"` a Combobox over `options` that also takes any number typed (Use 42), selects its value on focus and lists every option while the field still shows its own value; `"date"` the ghost DatePicker; `"tags"` the chips Combobox held to one line that scrolls sideways (`creatable` adds what\'s typed); `{ type: "select", options }` keeps the column\'s own cell as a full-height trigger (a badge stays a badge) and opens a Dropdown with the current option checked, each option given a `color` showing its Badge dot (7px, gray as the muted foreground, as Badge does). The Combobox editors drop their ring, fills and chevron.',
       "A column let go of after a drag: its header lands from where its copy was, not from the slot it left (the layout snapshot takes the copy's place for that header, in the table's own coordinates, since the table may have scrolled under the drag). Its cells never left their slot, so they travel from there. All of it, the header, its cells and the neighbors that step aside, moves on `spring.moderate`: on two tiers the column and the rest read as two unrelated moves.",
       "Editors that carry a whole control (select, number, date, tags) mount late. At rest the cell draws a stand-in: the same pixels from a handful of plain elements, one tab stop, no state, no primitive. The pointer entering a row wakes the editors typed into in place, number and tags (in a transition, so rows passing under the pointer during a scroll never hold it up), which lands long before a click can; a select and a date are pop-ups behind a trigger the stand-in already is, so they wait for the press, as Linear's and Notion's cells do; focus on a stand-in (Tab) or a press on one (touch, a script) wakes its own and hands the focus or the press on to the real control. An editor goes back to sleep once the pointer has left its row and it holds neither focus nor an open popup, so the live ones never add up to more than a row or two, and a row the pointer only crosses never mounts at all (both updates are transitions and cancel out). A press that lands on a stand-in (a click in the instant the pointer enters, every touch) wakes it at once and is handed on: read in the capture phase on the row, since the stand-in is gone before the event reaches it, no click follows a press whose target was removed, and the press's own mousedown (retargeted to whatever ancestor is left) is swallowed so it cannot take the focus back. The field is pressed after the control's own effects; a chip's ✕ a frame later, because a list part knows its place only a render after it mounts. A table of always-live editors paid for every Combobox, menu and date picker on first paint and again on each page, sort and opened parent: 24 editable rows took about half as long again to mount as 24 plain ones, and with stand-ins they cost the same. Notion's table does the same thing further: no cell holds a control at all, a click mounts one editor in an overlay and closing it removes it. The text editors already worked this way (a span until focus). Keep a stand-in pixel-identical to its control at rest, at both sizes and in a wrapping column, and no wider at max-content (a number's stand-in has no width of its own, like its field), or columns shift as the pointer crosses them: check by screenshot before and after sweeping the pointer over every row. The page's first date editor stays live, since it carries the label sizer the others read.",
-      "While any editor has focus or an open popup the rows hold their order (and their page), so a sorted column never moves the row from under you; edits still show. The hold is a count across editors (the next one takes focus before the last lets go), and leaving is checked 60ms later, since a closing popup hands focus back to its trigger after it has left. Each editor that lets go catches the order up through the FLIP snapshot, so its row settles into its sorted, filtered and paged place as soon as you leave it, even into another cell, which then holds the order from there.",
+      'While any editor has focus or an open popup the rows hold their order (and their page), so a sorted column never moves the row from under you; edits still show. The hold is a count across editors (the next one takes focus before the last lets go), and leaving is checked 60ms later, since a closing popup hands focus back to its trigger after it has left. Each editor that lets go catches the order up through the FLIP snapshot, so its row settles into its sorted, filtered and paged place as soon as you leave it, even into another cell, which then holds the order from there.',
       "The whole cell is the editor's: a row grown taller by a wrapped neighbor leaves room under a field, and a click there (or in the padding) presses the editor itself, a field focused with the caret at the end, a trigger (and a combobox's field, number or tags) given the pointerdown / mousedown / pointerup / mouseup / click sequence a real click would send, so every menu, list and calendar opens, whichever event its primitive listens for. An editor that takes clicks on its own box (the link's beside-the-text) is marked `data-cell-editor` and hears it there. The cell shows `cursor-text` for text editors, `cursor-pointer` for the rest.",
-      "Esc in an editor takes focus out of it and onto its row (where rows take focus), so the arrows and Tab carry on from there; left on the page, the next key started from nowhere. What was typed stays (it was written as it was typed), and nothing else hears the key (it is caught in the capture phase, before a Combobox field reads Esc on a closed list as \"clear\" and wipes a number just confirmed), neither the selection's Esc nor the page's. An editor with its popup open (a list, a calendar, a menu) closes that first, and keys coming up from a popup are left to it. Enter finishes a text field the same way.",
+      'Esc in an editor takes focus out of it and onto its row (where rows take focus), so the arrows and Tab carry on from there; left on the page, the next key started from nowhere. What was typed stays (it was written as it was typed), and nothing else hears the key (it is caught in the capture phase, before a Combobox field reads Esc on a closed list as "clear" and wipes a number just confirmed), neither the selection\'s Esc nor the page\'s. An editor with its popup open (a list, a calendar, a menu) closes that first, and keys coming up from a popup are left to it. Enter finishes a text field the same way.',
       "A one-line text editor whose text outgrows its column rises out of it while it has focus: a raised field over the cells beside and below (a hairline, the card fill, the shape's input corners; rows each stack on their own at z-10, so the row holding it lifts to z-30 and the field covers the rows below), as wide as the text up to 400px and never narrower than the cell, past which the text wraps and the field grows down. It sits 9px out and on the row's top, so its first line stays exactly where the cell's text was; the cell (and the chevron column's indent box) let it out only while it's raised (`data-cell-expanded`). Width comes from measuring the text in the field's own font in the handlers, so no extra render; leaving folds it back.",
       "An editor taking focus (or a press, since Safari doesn't focus a button on click; never a press on a chip's ✕, which the scroll would slide from under the pointer before the click) first brings its whole cell into the table's visible box, clear of the 48px edge fade on a side the table can still scroll to, sideways by as little as it takes, so a cell half scrolled out of view (or under the fade) never opens its menu or calendar beside the table, past the edge of whatever holds it. The number, tags and select editors also pass the table's box (caught as they take focus) to their popup as `collisionBoundary`, so a list or menu shifts or flips to stay inside the table even when its cell runs past the edge. If the table scrolls sideways while an editor's popup is open, the popup closes as Esc would rather than ride its trigger out of the box; the reveal's own scroll doesn't count.",
-      "### Sub-rows",
+      '### Sub-rows',
       "Sub-rows come from TanStack's `getSubRows`. useDataTable adds the expanded row model with `paginateExpandedRows: false`, so a page holds its parents however many children they open, and `filterFromLeafRows: true`, so a search that matches a child keeps its parent. The chevron's column is sized for its sub-rows too: their names, which a collapsed row doesn't render, are measured from the data in the cell's font when widths are read (and again when rows gain sub-rows), so opening a row never wraps or cuts a child's name; short of room it gives up width no further than its widest word (parents and sub-rows), so with text wrap on a name wraps between words, never inside one.",
       "The first data column carries the chevron: a 24px ghost icon button (its hover fill, a 14px chevron; not a tab stop, above an editor's reach) turning a quarter in 160ms (the moderate tier's duration, an ease-out tween so it lands on time, animated as a `transform` string so it runs off the main thread: the sub-rows mount in the same frame, and a JS-driven rotate stalled and jumped), with a tooltip that names the next click and its count (Expand 5 / Collapse 5, as the select-all box does). Sub-rows don't indent: leaf rows keep the chevron's width, so every row's text lines up with its parent's. A parent whose children are only partly selected shows the Checkbox dash.",
       "An open row draws a 1px `bg-border` guide from 6px under its chevron down through every row below it, centered on the chevron's slot at every depth, and an open group has no row rules inside it (the last sub-row keeps its rule, closing the group): a sub-row reads as its parent's with no fill of its own (a row fill would cover the hover and selection drawn behind the table). Opening and closing keep the snap and the fade-in; no glide.",
       "Opening and closing don't slide: the rows below jump to their new places in one frame, Table snaps its selection fill and hover highlight with them (a new `snapKey`), and only the rows that appear fade in, on spring.moderate. A slide left the selection fill, keyed by position, springing apart from the rows it belongs to. From a focused row, → opens it or steps into its first child, and ← closes it or steps up to its parent. The rule under a row whose group opens or closes switches in that frame (a `data-snap-rule` flag for one frame), not over the 80ms its color fades for the gliding highlight, which left a line fading across the opening group.",
       "In rows that read from the top the chevron sits on the first line (a 1lh slot, `items-start`), where the guides under it start from, not in the middle of the cell's content: beside a field taller than one line the middle put it 10px under the name.",
-      "A sub-row with a chevron of its own breaks the guide: it stops 6px above that chevron and picks up 6px under it, never running through the glyph.",
-      "### Loading",
+      'A sub-row with a chevron of its own breaks the guide: it stops 6px above that chevron and picks up 6px under it, never running through the glyph.',
+      '### Loading',
       "`loading` shows a page of skeleton rows the size of real ones, each cell a shadcn Skeleton in the library's loading fill, `bg-hover` (the Sidebar's skeleton color, lighter than the Skeleton's own `bg-accent`): the checkbox's square, a text-height bar elsewhere, nothing for the row menu, in a `reveal-swap`, timed by `@fluid/reveal`: skeletons wait 160ms, so fast data never shows one. When it turns false, each new row draws a skeleton over every cell's content box, shown at once (its delayed reveal and pulse off) and fading out while the content fades in under it in its real layout, so no cell blinks empty and no row changes height. The table carries `aria-busy` while loading, since the skeleton rows are aria-hidden. Rows are keyed by record id, so state in a cell follows its record through sorts and page turns. Text sits in a block that carries the cell's fitting (clipped sideways only, so badges still overhang); control columns are left unwrapped so their hit areas aren't clipped.",
       "A table that loads again (a reload, a refetch) keeps the column widths its last rows gave it, so the skeletons sit where the data lands and no column moves. Only a first load, with no rows read yet, sizes from the headers. A date editor's column never shrinks below its date: its trigger can't cut text short the way a plain cell does. Widths read from a first load's skeletons are a guess: with `resizeColumns` they seed the sizing, so the rows that land must size the columns again and replace the guess (a name column stayed as narrow as its skeleton bar). Without it, set the fitted widths in the measuring layout effect itself, not in the ResizeObserver's first report, which lands a paint late: rows that had just arrived showed for a frame in their skeletons' columns, wrapped to three times their height. When a first load's rows change the widths, the headers glide to their new place (the same FLIP as a column move) instead of jumping. A page that server-renders a content-sized table should open on the skeleton and land the rows after `document.fonts.ready`, since server-sent rows shift once measured. Selection boxes that stay hidden until hover must show up already checked when many get checked at once (select all, a range): give the hidden ones no border transition, or every row flashes an empty outline while its box fades in and its border fades out. A box switches at once on a selection change, checked or cleared, rather than fading: an opacity fade per row puts each box on its own layer while its check draws, and on a real GPU the checks then come and go a few rows at a time. What is drawn over or behind the rows from outside the scroll box (the frozen columns' fills, the fade bands) is placed in the table's coordinates and rides the vertical scroll on a scroll-driven transform (`animation-timeline` on the box's own block timeline, the range `--ff-scroll-y`): placed from scroll events it trails a fast scroll by a frame and the frozen fills lag their rows. Cut those layers off at the sticky header's bottom (measure a header cell, not the thead, which scrolls away). A column shown after the widths were read takes 166px. Sub-rows open and close in 120ms: the layout changes at once (fills snapped), then the rows below slide from where they were, new rows are uncovered by the rows sliding off them and a copy of the rows a close removed is covered by the rows sliding over it (each cut at the sliding rows' top edge on the slide's own clock, so two rows' text never show through each other; the copy takes its column widths from a colgroup, since widths set on copied cells lose to the cells' own classes); the selection fills under the sliding rows take the same offset as `translate`, apart from their own transform, or they sit a row away from their rows for the slide. While a one-line cell's text field is open the table does not scroll, either way (a mark on the scroll box that a stylesheet reads, since the scroll box rewrites its inline styles): the field hangs from its cell, and scrolled, it slid under the frozen columns and the header mid-typing. No row lights up either while that field is open (the fill, the selection box and the drag handle stay hidden). A column frozen on the left can be reordered like any other: the freeze belongs to the place, so a column dropped first takes the frozen slot and the one it displaced scrolls again. A dragged header lands where the pointer is, not where its ghost stopped at the table's edge: a wide header held at the left edge never got its middle past a narrower first column, so nothing could be dropped first. When rows come or go under the pointer (a sub-row opened or closed), the hover fill must not leave and fade back in: the rows are measured before paint in that commit, so the fill is drawn from them even though the hover hook reports them unmeasured until its own pass a frame later. A filter chip part whose menu is open stays pressed (`aria-expanded`), as every trigger does. A header whose menu is open stays pressed until it closes (Table `heldHeadIndex`; a frozen or sticky header draws its own fill and takes a `data-held` mark): the layer under the menu takes the pointer off the table, so the hover fill alone went out and left the menu hanging from an unmarked header. A column of short whole values (a date) sets a min-width that holds one: short of room a column gives up width down to its header, and a header narrower than the value cut every date short (`Nov 4, …`). The table hands the selection bar one root getter for its whole life: a new function per state change restarted the bar's in-view watcher on every row picked, and the bar left and came back each time. The frozen columns' extent is measured from the header cells as drawn, not summed from fitted widths: a frozen column that takes the room left over (`w-full`) is wider than its fitted width, and fills drawn over the frozen columns stopped partway across it. The last column's resize handle stays inside the column: hanging past the table it adds 4px of sideways scroll to a table that fits. The selection bar is held by the browser in both its places: fixed at the window's bottom while the table runs past it, and absolute on the table's bottom (in page coordinates) once that is in view. Moved there from scroll events, it trails the scroll by a frame and shakes. The selection bar shows only while its table is on screen: a selection the page starts with, or one made before scrolling away, must not leave a bar floating at the window's bottom. A cell never scrolls inside the table: content past a cell's edge is cut (`overflow-x: hidden`, so a field still brings its caret into view), not scrollable, or the cell catches the wheel meant for the table. A table with frozen columns turns off sideways rubber-banding on its scroll box (`overscroll-behavior-x: none`): past either end the browser slides the whole content, frozen columns included, while the fills and fades drawn over them from the box stay put. Up and down too (`overscroll-behavior-y: none`) only where the rows scroll inside the box: a table that doesn't scroll that way must still hand the wheel on to the page. A menu opened from a whole header cell sets `min-w-0` with its own width: a dropdown is at least as wide as its trigger, and a wide column stretched the menu across the table. Standard hover's highlight reports where it is (`onFrame`) on each change, as fluid hover does each frame, so the fill over frozen columns follows it too. A table that scrolls inside its box marks both ends: the header's hairline once rows have passed under it, and at the bottom a 48px fade into the page over a hairline while more rows are below (both hairlines in the frozen columns' edge color, `foreground/8%`: one color for every line that marks content passing under something; the header's is its own bottom border recolored, not a shadow on top of it) (an overlay in the box, keyed on a `data-more-below` mark, not a mask: a mask would fade the sticky header too). A drag that carries a selection shows every carried row in its ghost, where it is: rows that touch share a block, rows apart keep the gap between them, and the grabbed row stays under the pointer. The ghost keeps the fill and the checks; the rows left in place drop their selection fill while it is up (leave them out of `selectedIndices`). Only a selection spread past 60% of the window is stacked and cut short, with a count. A sticky header keeps its rule when the first row is selected (`keepRule` on its TableRow): each sticky cell is its own layer, and repainting the rule on every selection change shows cell by cell. Base UI's hidden form inputs are `position: fixed`, and each fixed element is a compositor layer that splits what paints around it into more: a checkbox per row cut a 34-row table into 230 layers (440MB) that painted a few at a time and blanked on a resize. Make the hidden input absolute (`[&+input]:absolute!` on the box). The frozen bands over pinned columns sit in the scroll box, not the table, so place them again whenever the table moves under them (a scroll with the pointer still), not only when the highlight moves. Row rules that fade for the gliding highlight must switch at once on a selection change (mark the table for a frame from an insertion effect, so the mark is on before any layout effect reads layout): select all otherwise starts a transition per cell border, 1,200 for 34 rows, each firing three events. ⌘A with the pointer over the table selects its rows wherever focus was left (a button pressed last, such as Rows per page, keeps focus), short of a field being typed in or an open popup: otherwise the browser selects every word on the page.",
-      "### Row actions and the selection bar",
+      '### Row actions and the selection bar',
       "Right-click: rowActionsColumn's items are also the row's ContextMenu (meta.rowMenu), opened at the pointer, or with Shift + F10 on a focused row; the row holds the hover fill in its own cells while its menu is open, and the selection is left alone.",
       "Destructive actions (Delete, Remove) set MenuItem's and CommandMenu items' `destructive`: the label and icon in `--destructive`, 80% at rest and full when lit. A delete shows the app's toast with the step's label and an Undo; undo keys reach the last table used from the page too (a menu or the selection bar hands focus back to the body), never from a field.",
       "Every menu the table opens (a header's, Filter, Columns, a row's ⋯ or right-click, a chip's word and values, a select cell) lays a clear MenuShield over the page just under it: nothing else lights up until it closes, and a press on it closes the menu.",
@@ -926,12 +928,12 @@ const [value, setValue] = useState("");
       "The selection bar appears in place, like the library's other floating surfaces: an 8px rise, scale from 0.96 at its bottom center (where it is anchored) and a 4px blur clearing on `spring.moderate`, the fade a short ease-out tween; it leaves the same way, quicker. A toast's entrance (a slide by its own height) read as the bar travelling across the rows it floats over. Its parts don't stagger: the bar is one object. The count rolls when it changes: only the digits that changed slide out and the new ones in, half a line, upward as the count grows and downward as it shrinks, keyed from the right so the units stay the units, and the count's box springs to its measured width when a digit is added (9 to 10). The rolling digits are `aria-hidden`; the live region reads a plain copy of the phrase.",
       "The selection bar is inverted like a toast (the page's foreground as its ground, its background as its text) in either theme. It reads the two into `--bar-bg` / `--bar-fg`, and a `contents` box inside redefines `--foreground`, `--background`, `--muted-foreground`, `--hover` and `--active` from them, so its ghost Button and key caps invert by themselves with no styles of their own.",
       "It takes a menu's insets, 4px around its buttons; the count sits 8px further in than a menu item's label (20px, 18px compact), for room at the bar's rounded end. Its Actions button ends in the shortcut's key caps, so it takes Button's trailing-icon inset on that side (12px, 8px compact).",
-      "### Performance",
+      '### Performance',
       "Rows are compared by record (same id, same `original`, same index and parent), not by TanStack's Row object, which is rebuilt for every row whenever `data` is a new array. One edit, move, undo or delete then renders only the rows it changed. For this to hold, keep row objects and `columns` stable across edits: a `columns` memo that depends on something changing with every edit renders every cell again.",
       "A row's cells are their own memoized component, apart from the row's shell. A sort, a page turn or a moved row changes a row's index, which only the shell reads, so the cells (editors and all) are skipped and the DOM just moves.",
-      "Held keys that change the rows (undo, redo, Alt + arrows) take one step per frame and drop repeats that land before the last step has painted; a held move skips the slide, a single press keeps it.",
+      'Held keys that change the rows (undo, redo, Alt + arrows) take one step per frame and drop repeats that land before the last step has painted; a held move skips the slide, a single press keeps it.',
       "A date trigger holds the width of its widest label with an invisible stack of every weekday and month name, 26 elements a trigger. In a table only the page's first row renders it: its width is read into `--ff-date-w` on the table's box, and the other rows pass `fitLabel` and take that as the label's min-width. Same widths, about a fifth fewer elements in a table with a date column.",
-      "### Undo",
+      '### Undo',
       "Undo: useUndoableRows keeps rows as snapshots, each change a labelled step (edit, remove, insert, apply), with redo cleared by any new change and the last 100 kept. A cell typed in a burst (same row and fields within 1s) merges into one step, so ⌘Z takes back the word, not the letter. DataTable's onUndo / onRedo bind ⌘Z and ⇧⌘Z (Ctrl+Z, Ctrl+Shift+Z, Ctrl+Y) on the table element itself, never the window, and skip fields so an editor keeps its own undo; a destructive action shows the step's label in the app's toast with an Undo that calls the same `undo`. Saved views are not a part: a view is `getState()`'s filters, sort and visibility, put back with `setState`. When every row has been deleted, the empty body says so (\"No components left\") and offers the Undo it would take, instead of a search's \"No … match\". `stepCount` counts every step ever taken, the ones trimmed at `limit` included, so a count read before a change still names its step for `undoTo` once the history is full.",
     ],
     usage: `import { useMemo } from "react";
@@ -939,7 +941,7 @@ import {
   useDataTable, DataTable, DataTableColumnHeader,
   DataTableSearch, DataTableViewOptions, DataTablePagination,
   selectColumn, type ColumnDef,
-} from "@/components/ui/data-table";
+} from "#components/ui/data-table";
 
 type Payment = { id: string; email: string; amount: number };
 
@@ -961,38 +963,38 @@ const table = useDataTable({ data: payments, columns, pageSize: 5 });
   <DataTablePagination table={table} />
 </div>`,
     props: [
-      "useDataTable({ data, columns, pageSize = 10, ...TableOptions }). useReactTable with the sorted, filtered and paginated row models set.",
-      "DataTable.table: Table<TData>. What useDataTable returns.",
-      "DataTable.size: \"default\" | \"compact\" (default from SizeProvider). Pins the rows to one ladder step.",
-      "DataTable.empty: { title?, description?, action? } (default title \"No results\"). The empty body.",
-      "DataTable.onRowClick: (row) => void. Clickable rows; clicks on controls in the row are ignored.",
-      "DataTable.resizeColumns: boolean (default false). Drag or arrow-key handles on header edges; fixed columns set enableResizing: false and a size.",
-      "DataTable.rowHover: boolean (default: by the table). The gliding hover fill on rows; unset, on where a row answers a click and off on a read-only table.",
-      "DataTable.cellAlign: \"auto\" | \"center\" | \"top\" (default \"auto\"). Auto aligns to the top while text wraps.",
-      "DataTable.loading: boolean (default false). Skeleton rows the size of real ones; set false with the data in place and each cell crossfades in. loadingRows: number (default the page size).",
+      'useDataTable({ data, columns, pageSize = 10, ...TableOptions }). useReactTable with the sorted, filtered and paginated row models set.',
+      'DataTable.table: Table<TData>. What useDataTable returns.',
+      'DataTable.size: "default" | "compact" (default from SizeProvider). Pins the rows to one ladder step.',
+      'DataTable.empty: { title?, description?, action? } (default title "No results"). The empty body.',
+      'DataTable.onRowClick: (row) => void. Clickable rows; clicks on controls in the row are ignored.',
+      'DataTable.resizeColumns: boolean (default false). Drag or arrow-key handles on header edges; fixed columns set enableResizing: false and a size.',
+      'DataTable.rowHover: boolean (default: by the table). The gliding hover fill on rows; unset, on where a row answers a click and off on a read-only table.',
+      'DataTable.cellAlign: "auto" | "center" | "top" (default "auto"). Auto aligns to the top while text wraps.',
+      'DataTable.loading: boolean (default false). Skeleton rows the size of real ones; set false with the data in place and each cell crossfades in. loadingRows: number (default the page size).',
       "DataTable.fill: boolean (default false). Fills a flex-column parent's height: rows scroll under a sticky header.",
-      "DataTable.reorderColumns: boolean (default false). Drag headers, or Alt + arrow keys, to move data columns.",
-      "ColumnDef.meta: { label?, className?, lines?: 1 | 2 | \"wrap\", icon? }. Columns menu name, cell classes, how text fits, and a header icon. Every column is left-aligned.",
+      'DataTable.reorderColumns: boolean (default false). Drag headers, or Alt + arrow keys, to move data columns.',
+      'ColumnDef.meta: { label?, className?, lines?: 1 | 2 | "wrap", icon? }. Columns menu name, cell classes, how text fits, and a header icon. Every column is left-aligned.',
       "DataTableColumnHeader: { column, title }. A plain-text header on a data column renders through it too, so every data column has the menu. Click opens the column's menu (Sort ascending / descending / Clear sort, Filter when DataTableFilters is mounted, Move left / right with reorderColumns, Freeze up to here / Unfreeze columns); shift-click adds to the sort.",
-      "DataTableSearch: { table, column?, placeholder = \"Search…\", collapsible = true, width = 224 }. A ghost search button that opens into a ghost field (its width springs open from the button's), over one column, or every column when column is omitted. An empty field closes on blur or Esc; collapsible={false} keeps it open. Put it at the toolbar's right end, after the Columns button.",
+      'DataTableSearch: { table, column?, placeholder = "Search…", collapsible = true, width = 224 }. A ghost search button that opens into a ghost field (its width springs open from the button\'s), over one column, or every column when column is omitted. An empty field closes on blur or Esc; collapsible={false} keeps it open. Put it at the toolbar\'s right end, after the Columns button.',
       "useUndoableRows(initial, { getId, limit = 100 }) → { rows, edit, remove, insert, apply, undo, redo, canUndo, canRedo, lastStep }. Pass rows to useDataTable and undo / redo to DataTable's onUndo / onRedo.",
       "DataTableTitle: { children, table?, as = \"h1\", size? }. The table's heading on the toolbar's row, the display role (28px, 24 compact) at semibold; given the table, it steps in 28px past a selection column so it starts where the first data column does; the view tabs and the filter chips step in the same 28px, so all three keep the table's first-column edge with or without boxes. Optional.",
-      "DataTableFilters: { table, size? }. An icon-only filter button whose searchable menu adds a filter on a column (by its meta.filter, editor or values: text contains, options, a number range, a range of days).",
-      "DataTableFilterChips: { table, size? }. The filters set, one chip each, on their own row between the toolbar and the table, ended by a + Add filter button and then its children; nothing while none is set.",
-      "DataTableViewOptions: { table, label = \"Columns\" }. Icon button menu, with a tooltip, that shows and hides columns.",
-      "DataTableRowActions: { children, label = \"Row actions\" }. The ⋯ menu for a row; children are MenuItems.",
-      "DataTablePagination: { table, pageSizes = [10, 20, 50] }. Row count (\"10 / 35 rows\" across pages) or selection count, a rows-per-page select, page, and previous / next arrow buttons.",
-      "selectColumn<TData>(): ColumnDef. Checkbox column; the header box selects every matching row on every page.",
-      "rowActionsColumn<TData>(row => MenuItems, { label? }): ColumnDef. The \u22ef column, sized to line up with the toolbar icons.",
+      'DataTableFilters: { table, size? }. An icon-only filter button whose searchable menu adds a filter on a column (by its meta.filter, editor or values: text contains, options, a number range, a range of days).',
+      'DataTableFilterChips: { table, size? }. The filters set, one chip each, on their own row between the toolbar and the table, ended by a + Add filter button and then its children; nothing while none is set.',
+      'DataTableViewOptions: { table, label = "Columns" }. Icon button menu, with a tooltip, that shows and hides columns.',
+      'DataTableRowActions: { children, label = "Row actions" }. The ⋯ menu for a row; children are MenuItems.',
+      'DataTablePagination: { table, pageSizes = [10, 20, 50] }. Row count ("10 / 35 rows" across pages) or selection count, a rows-per-page select, page, and previous / next arrow buttons.',
+      'selectColumn<TData>(): ColumnDef. Checkbox column; the header box selects every matching row on every page.',
+      'rowActionsColumn<TData>(row => MenuItems, { label? }): ColumnDef. The \u22ef column, sized to line up with the toolbar icons.',
     ],
   },
-  "date-picker": {
+  'date-picker': {
     craft: [
-      "The outline trigger (the default `variant`) matches Select: the control height, the shape's input radius, a 1px border, and the focus ring. Its parts (the date, each time, the clear button) sit 2px inside the border and share one fluid hover scope along `x`, with corners nested in the field's radius (5px rounded, 17px pill, square when sharp). `variant=\"ghost\"` drops the border for inline use.",
+      'The outline trigger (the default `variant`) matches Select: the control height, the shape\'s input radius, a 1px border, and the focus ring. Its parts (the date, each time, the clear button) sit 2px inside the border and share one fluid hover scope along `x`, with corners nested in the field\'s radius (5px rounded, 17px pill, square when sharp). `variant="ghost"` drops the border for inline use.',
       "Labels come from `Intl`, no date library: `Wed Oct 21`, the year added outside the current one; ranges read `Oct 21 → Oct 24`. Times follow the locale's 12 or 24 hour clock unless `hourCycle` says otherwise.",
-      "The date popover opens on the selected day (or today) with focus on it; Escape closes it and focus returns to the trigger. A single pick holds the popover 200ms so the fill is seen landing, then closes. A range closes once its end is picked, and only complete ranges reach `onValueChange`: the half-picked one lives in the picker, and closing mid-pick drops it.",
+      'The date popover opens on the selected day (or today) with focus on it; Escape closes it and focus returns to the trigger. A single pick holds the popover 200ms so the fill is seen landing, then closes. A range closes once its end is picked, and only complete ranges reach `onValueChange`: the half-picked one lives in the picker, and closing mid-pick drops it.',
       "Escape mid-pick restores the previous range and keeps the popover open; the next Escape closes it. Range mode shows 2 months, side by side when the viewport has room, stacked and scrolling under one weekday row when it doesn't.",
-      "Presets are a fluid hover list beside the calendar, or below it when the months stack, so the calendar stays first in reading and tab order. Picking one sets the range and moves the calendar to its first month.",
+      'Presets are a fluid hover list beside the calendar, or below it when the months stack, so the calendar stays first in reading and tab order. Picking one sets the range and moves the calendar to its first month.',
       "Each time is an editable field that anchors its own popover, separate from the date's: type `1130`, `11:30` or `11:30am`, and the nearest slot lights and scrolls to the middle of the list; Enter commits the typed time, arrows walk the slots. Focus never leaves the field: the list is a listbox driven by `aria-activedescendant`, and pressing a row doesn't blur the field.",
       "Slot lists are Dropdown rows: one fluid hover scope, gap-0, `step` minutes apart (15 by default), opening scrolled to the value, or to now. The end list starts one step after the start and shows each row's duration (`15min`, `1h`, `1h 45min`) right after the time with a 6px gap, a step quieter (muted at 60%); every row's time is as wide as the list's longest label (laid out invisibly, with its AM/PM twin), so the durations form one column; the time fields do the same (left-aligned text, the longest time laid out invisibly), so picking 1:00 or 12:30 never moves what follows; the date does too: its label lays out its widest form invisibly, part by part from the locale's own format (every weekday name stacked in one cell, every month in another, a two-digit tabular day), plus the placeholder; the label's invisible width sizer carries the same text-box trim, so time and duration share one centered line. In the field, the end's duration turns invisible while the time is edited, keeping its width. Moving the start keeps the duration; times stay on the same day.",
       "Time fields keep one width: invisible copies of the field's text and of the list's longest time (with its AM/PM twin) share the input's grid cell, the input takes `size={1}` so its intrinsic ~20ch width doesn't win, and the text is left-aligned, so picking 1:00 or 12:30 never moves what follows. The date label does the same part by part from the locale's format (every weekday name stacked in one cell, every month in another, a two-digit tabular day) plus the placeholder. Fields take `useSize().field`: 16px on touch screens, where iOS zooms into anything smaller; the input has no radius, so the text selection isn't clipped by the shape's corners.",
@@ -1003,7 +1005,7 @@ const table = useDataTable({ data: payments, columns, pageSize: 5 });
     usage: `"use client";
 
 import { useState } from "react";
-import { DatePicker, type TimeRange } from "@/components/ui/date-picker";
+import { DatePicker, type TimeRange } from "#components/ui/date-picker";
 
 export function EventWhen() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -1019,39 +1021,39 @@ export function EventWhen() {
   );
 }`,
     props: [
-      "mode: \"single\" | \"range\" (default \"single\"). One date, or a start and an end.",
-      "value / defaultValue: Date | DateRange. A range reaches onValueChange only once both ends are set.",
-      "onValueChange: (value) => void. Called on a pick, a complete range, or a clear.",
-      "variant: \"outline\" | \"ghost\" (default \"outline\"). A bordered field like Select, or inline text with a hover fill.",
-      "placeholder: string (default \"Pick a date\" / \"Pick dates\").",
-      "presets: { label, range }[]. Range mode: ranges listed beside the calendar.",
-      "time / defaultTime / onTimeChange: string | null. One \"HH:mm\" time on the same day.",
-      "timeRange / defaultTimeRange / onTimeRangeChange: { start, end } | null. A start and an end with the duration shown.",
-      "step: number (default 15). Minutes between slots.",
-      "hourCycle: 12 | 24 (default from the locale).",
-      "locale: string. BCP 47 locale for labels and times.",
-      "numberOfMonths: 1 | 2 (default 1 single, 2 range). orientation: \"auto\" | \"horizontal\" | \"vertical\".",
-      "calendarProps: Partial<CalendarProps>. booked, available, disabled, cellSize, showWeekNumber, weekStartsOn, locale.",
-      "clearable: boolean (default true). Outline variant: clear button once a value is set.",
-      "open / defaultOpen / onOpenChange: the date popover. disabled: boolean. size: \"default\" | \"compact\".",
+      'mode: "single" | "range" (default "single"). One date, or a start and an end.',
+      'value / defaultValue: Date | DateRange. A range reaches onValueChange only once both ends are set.',
+      'onValueChange: (value) => void. Called on a pick, a complete range, or a clear.',
+      'variant: "outline" | "ghost" (default "outline"). A bordered field like Select, or inline text with a hover fill.',
+      'placeholder: string (default "Pick a date" / "Pick dates").',
+      'presets: { label, range }[]. Range mode: ranges listed beside the calendar.',
+      'time / defaultTime / onTimeChange: string | null. One "HH:mm" time on the same day.',
+      'timeRange / defaultTimeRange / onTimeRangeChange: { start, end } | null. A start and an end with the duration shown.',
+      'step: number (default 15). Minutes between slots.',
+      'hourCycle: 12 | 24 (default from the locale).',
+      'locale: string. BCP 47 locale for labels and times.',
+      'numberOfMonths: 1 | 2 (default 1 single, 2 range). orientation: "auto" | "horizontal" | "vertical".',
+      'calendarProps: Partial<CalendarProps>. booked, available, disabled, cellSize, showWeekNumber, weekStartsOn, locale.',
+      'clearable: boolean (default true). Outline variant: clear button once a value is set.',
+      'open / defaultOpen / onOpenChange: the date popover. disabled: boolean. size: "default" | "compact".',
       "name: string. Submits the value with a native form (hidden input, ISO 8601 local: 2026-10-21, 2026-10-21T11:00, or two joined by / for a range or a time range). id: the date trigger's id, for <label htmlFor>. aria-label: names the group, read before the date. className: classes on the group.",
     ],
   },
-  "dialog": {
+  dialog: {
     craft: [
-      "Enters and exits on the slow tier: panel fades and scales 0.97\u21921 on a spring (0.24s, bounce 0.12); the exit is a quicker plain tween (0.16s) so a dismissal reads crisp and final rather than replaying the entrance in reverse.",
+      'Enters and exits on the slow tier: panel fades and scales 0.97\u21921 on a spring (0.24s, bounce 0.12); the exit is a quicker plain tween (0.16s) so a dismissal reads crisp and final rather than replaying the entrance in reverse.',
       "Radix flavor: the portal stays mounted through the exit tween (forceMount + `onAnimationComplete`), with a timeout at `exitFallbackMs(spring.slow)` (exit ms + 100) as fallback: a throttled/background tab can stall rAF callbacks, which would leave an invisible full-screen overlay and Radix's scroll lock in place. The Base UI flavor needs none of it: `DialogPrimitive.Popup` owns its own unmount and waits on `element.getAnimations()`.",
-      "Elevation: the panel sits 4 surface steps above the current substrate (capped at 8) and re-provides that level via SurfaceProvider, so popups opened inside a dialog walk further up the ladder automatically.",
-      "Three widths \u2014 sm 400, lg 540, xl 880 \u2014 each one notch narrower in compact regions (360/480/800); width only, the padding stays put. `xl` is the canvas for composed layouts (sidebar beside a panel), usually with `p-0` and a fixed height.",
-      "`position=\"top\"` anchors the panel 12dvh from the top instead of centering, so a panel whose height follows its content (a command menu) keeps its top edge still.",
-      "`container` retargets the portal and switches overlay + panel from `fixed` to `absolute`, scoping the dialog to a positioned, overflow-hidden region \u2014 usually paired with `modal={false}` (e.g. a docs preview).",
-      "`showCloseButton` (default true) renders the corner \u2715 as a ghost icon Button; drop it when the content has its own way out, e.g. a command menu that closes on Escape and on a pick.",
+      'Elevation: the panel sits 4 surface steps above the current substrate (capped at 8) and re-provides that level via SurfaceProvider, so popups opened inside a dialog walk further up the ladder automatically.',
+      'Three widths \u2014 sm 400, lg 540, xl 880 \u2014 each one notch narrower in compact regions (360/480/800); width only, the padding stays put. `xl` is the canvas for composed layouts (sidebar beside a panel), usually with `p-0` and a fixed height.',
+      '`position="top"` anchors the panel 12dvh from the top instead of centering, so a panel whose height follows its content (a command menu) keeps its top edge still.',
+      '`container` retargets the portal and switches overlay + panel from `fixed` to `absolute`, scoping the dialog to a positioned, overflow-hidden region \u2014 usually paired with `modal={false}` (e.g. a docs preview).',
+      '`showCloseButton` (default true) renders the corner \u2715 as a ghost icon Button; drop it when the content has its own way out, e.g. a command menu that closes on Escape and on a pick.',
     ],
     usage: `import {
   Dialog, DialogTrigger, DialogContent, DialogHeader,
   DialogFooter, DialogTitle, DialogDescription, DialogClose,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from "#components/ui/dialog";
+import { Button } from "#components/ui/button";
 
 <Dialog>
   <DialogTrigger render={<Button variant="tertiary">Open dialog</Button>} />
@@ -1067,35 +1069,36 @@ import { Button } from "@/components/ui/button";
   </DialogContent>
 </Dialog>`,
     props: [
-      "open: boolean. Controlled open state.",
-      "defaultOpen: boolean (default false). Initial open state.",
-      "onOpenChange: (open: boolean) => void. Called when the dialog opens or closes.",
-      "modal: boolean (default true). Traps focus and locks page scroll while open.",
+      'open: boolean. Controlled open state.',
+      'defaultOpen: boolean (default false). Initial open state.',
+      'onOpenChange: (open: boolean) => void. Called when the dialog opens or closes.',
+      'modal: boolean (default true). Traps focus and locks page scroll while open.',
       'DialogContent size: "sm" | "lg" | "xl" (default "sm"). Width 400, 540, or 880; xl is a canvas for layouts.',
-      "DialogContent container: HTMLElement | null. Portal target; scopes overlay and panel to a positioned container.",
-      "DialogTrigger / DialogClose render: ReactElement. The element that becomes the control, e.g. a Button.",
-      "DialogTrigger / DialogClose asChild: boolean (default false). Compose onto the single child instead of render.",
+      'DialogContent container: HTMLElement | null. Portal target; scopes overlay and panel to a positioned container.',
+      'DialogTrigger / DialogClose render: ReactElement. The element that becomes the control, e.g. a Button.',
+      'DialogTrigger / DialogClose asChild: boolean (default false). Compose onto the single child instead of render.',
     ],
-    flavorNote: "Radix and Base UI flavors share the same API. DialogTrigger and DialogClose accept either render={<Button />} or asChild with a single child in both flavors.",
+    flavorNote:
+      'Radix and Base UI flavors share the same API. DialogTrigger and DialogClose accept either render={<Button />} or asChild with a single child in both flavors.',
   },
-  "dropdown": {
+  dropdown: {
     craft: [
       "While any popup is open (Dropdown, ContextMenu, Select, Combobox, DatePicker, ColorPicker) two things hold. Its trigger keeps the pressed look (`bg-active`): a Button does it on its own when it has `aria-haspopup` and `aria-expanded`, other triggers style the primitive's open attribute. And nothing else on the page hovers: `PopupShield` from lib/popup, a clear fixed layer one z-step under the popup, takes the pointer, and a press on it is a press outside. A field that stays live under its popup (the Combobox input, the DatePicker's row of segments) is cut out of the layer through its `anchor`. A menu opened by hover gets no layer, since the pointer leaving it is what closes it.",
-      "Two forms with different semantics: the inline always-rendered panel is a plain `role=\"group\"` (name it with `aria-label`) \u2014 real `role=\"menu\"` lives only on the popup DropdownContent, so a hand-rolled trigger around the inline panel never announces a falsely popup menu.",
-      "The popup enters/exits on the fast tier (0.08s spring in, 0.06s tween out) with opacity + `scaleY 0.96` + a 4px slide; origin and slide direction follow the RESOLVED side after collision flipping via `popupMotionClass`, so a popup that flips above its anchor grows upward from its bottom edge.",
-      "Keyboard navigation inside the popup moves the hover background only \u2014 no ring: \"in a menu the highlighted row is the focus indicator\". The inline panel, by contrast, draws an animated focus ring on `:focus-visible`.",
-      "The selected background is a separate overlay that springs between rows on the moderate tier (0.16s) with an 0.08s opacity tween, and the fluid hover highlight starts `from` the checked rect so hover appears to grow out of the selection.",
+      'Two forms with different semantics: the inline always-rendered panel is a plain `role="group"` (name it with `aria-label`) \u2014 real `role="menu"` lives only on the popup DropdownContent, so a hand-rolled trigger around the inline panel never announces a falsely popup menu.',
+      'The popup enters/exits on the fast tier (0.08s spring in, 0.06s tween out) with opacity + `scaleY 0.96` + a 4px slide; origin and slide direction follow the RESOLVED side after collision flipping via `popupMotionClass`, so a popup that flips above its anchor grows upward from its bottom edge.',
+      'Keyboard navigation inside the popup moves the hover background only \u2014 no ring: "in a menu the highlighted row is the focus indicator". The inline panel, by contrast, draws an animated focus ring on `:focus-visible`.',
+      'The selected background is a separate overlay that springs between rows on the moderate tier (0.16s) with an 0.08s opacity tween, and the fluid hover highlight starts `from` the checked rect so hover appears to grow out of the selection.',
       "`checkedIndices` flips rows to checkbox items that keep the menu open on toggle (Radix's close-on-select is suppressed by preventing the select event \u2014 Base UI `closeOnClick={false}` parity), and contiguous checked rows share one merged background that merges/splits as picks bridge or break a run.",
       "Opens ready to act: two rAFs after the primitive's own open autofocus, focus lands on the first enabled row \u2014 unless a DropdownSearch is mounted, which takes focus itself so a searchable menu opens ready to type. A row lit by that open, by the keyboard or by the pointer fades in where it is: the highlight never starts on the checked row to slide out of it. With a search mounted, the primitive's brief first-row focus on open lights nothing.",
       "DropdownSearch: typing while a row is focused is redirected into the field (capture-phase keydown refocuses and appends the character; Backspace too; Space is left alone because on a row it activates). The field is one stop in the ring of rows: \u2193/\u2191 jump to the first/last row, arrowing off either end of the list returns to the field, and while the field has focus no row is highlighted (the field is the active stop, it just draws no background). Enter in the field picks nothing: only a row the user arrowed onto activates, so a searchable menu never selects a row nobody landed on. Without a search field the first row takes focus on open, so Enter picks it. The field is a menu row: a row's height, with the popup's 4px inset above and below it inside the sticky band (box-content, so the padding and the edge-to-edge 1px divider sit outside the row height), and the first row 4px below the divider: 4px on every side, like the rows.",
       "The search field is sticky at the popup's top, bleeding into the 4px padding so its divider runs edge to edge and rows scroll underneath; the popup drops its scroll fade while a field is pinned there. The query resets on close (`clearOnClose` default true) so the menu reopens unfiltered.",
-      "The popup caps the global shape at \"rounded\" (`usePopupShape()`): a pill UI still gets rounded menus, because heavy pill bubbling distorts perceived padding at this scale and produces corner-shadow asymmetry. A sharp UI gets sharp menus. Elevation is substrate + 2 with the shadow pinned to level 3, so a dropdown reads the same shadow on the page or inside a dialog. Width: min-w tracks the trigger, max-h is min(480px, available height).",
+      'The popup caps the global shape at "rounded" (`usePopupShape()`): a pill UI still gets rounded menus, because heavy pill bubbling distorts perceived padding at this scale and produces corner-shadow asymmetry. A sharp UI gets sharp menus. Elevation is substrate + 2 with the shadow pinned to level 3, so a dropdown reads the same shadow on the page or inside a dialog. Width: min-w tracks the trigger, max-h is min(480px, available height).',
       "Submenus: the primitive owns the safe area (the pointer can cut diagonally across other rows to an open submenu without closing it), but the fluid hover would still follow the pointer onto those rows. So while a submenu is open, the parent's highlight stays on its trigger and moves only with focus: both primitives move focus to another row only once the pointer leaves the safe area, and close the submenu as they do. The submenu renders through a portal yet is a React child of the parent, so the parent's handlers skip events from outside their own DOM; otherwise a click on a submenu row would also reach the parent's gap-click routing.",
       "A submenu sits 2px off the parent menu (`sideOffset` 6 is measured from the trigger row, inside the menu's 4px padding) with its first row level with the trigger (`alignOffset` -4 cancels the padding), keeps its own `w-56` instead of tracking its anchor's width, and never takes focus on a hover open: only a keyboard open (→, Enter) lands on its first row.",
     ],
-    usage: `import { DropdownMenu, DropdownTrigger, DropdownContent } from "@/components/ui/dropdown";
-import { MenuItem } from "@/components/ui/menu-item";
-import { Button } from "@/components/ui/button";
+    usage: `import { DropdownMenu, DropdownTrigger, DropdownContent } from "#components/ui/dropdown";
+import { MenuItem } from "#components/ui/menu-item";
+import { Button } from "#components/ui/button";
 import { Clock, Star, Users } from "lucide-react";
 import { useState } from "react";
 
@@ -1111,33 +1114,34 @@ const [view, setView] = useState(0);
   </DropdownContent>
 </DropdownMenu>`,
     props: [
-      "DropdownMenu open: boolean. Controlled open state; defaultOpen and onOpenChange also available.",
-      "DropdownTrigger render: ReactElement. The element that becomes the trigger, e.g. a Button.",
-      "DropdownContent checkedIndex: number. The checked row; drives the selected background and radio value.",
-      "DropdownContent checkedIndices: number[]. Checked rows become checkboxes that keep the menu open; touching picks share one background.",
+      'DropdownMenu open: boolean. Controlled open state; defaultOpen and onOpenChange also available.',
+      'DropdownTrigger render: ReactElement. The element that becomes the trigger, e.g. a Button.',
+      'DropdownContent checkedIndex: number. The checked row; drives the selected background and radio value.',
+      'DropdownContent checkedIndices: number[]. Checked rows become checkboxes that keep the menu open; touching picks share one background.',
       'DropdownContent side: "top" | "bottom" | "left" | "right" (default "bottom"). Side of the trigger the popup prefers.',
       'DropdownContent align: "start" | "center" | "end" (default "start"). Alignment against the trigger.',
-      "MenuItem icon: IconComponent. Leading icon.",
-      "MenuItem label: string. Row text.",
-      "MenuItem index: number. Position in the list.",
-      "MenuItem checked: boolean (default false). Set it, even to false, for a radio or checkbox row; leave undefined for a plain action.",
-      "DropdownSub open: boolean. Controlled open state of one submenu; defaultOpen and onOpenChange also available. Wraps a DropdownSubTrigger and its DropdownSubContent.",
+      'MenuItem icon: IconComponent. Leading icon.',
+      'MenuItem label: string. Row text.',
+      'MenuItem index: number. Position in the list.',
+      'MenuItem checked: boolean (default false). Set it, even to false, for a radio or checkbox row; leave undefined for a plain action.',
+      'DropdownSub open: boolean. Controlled open state of one submenu; defaultOpen and onOpenChange also available. Wraps a DropdownSubTrigger and its DropdownSubContent.',
       "DropdownSubTrigger index, label, icon, disabled: a MenuItem row among its parent's rows, with a trailing chevron. Hover, click or → opens the submenu.",
-      "DropdownSubContent: a DropdownContent beside its trigger row (checkedIndex, checkedIndices, sideOffset default 6, alignOffset default -4). Its rows index from 0 again.",
+      'DropdownSubContent: a DropdownContent beside its trigger row (checkedIndex, checkedIndices, sideOffset default 6, alignOffset default -4). Its rows index from 0 again.',
     ],
-    flavorNote: "Radix and Base UI flavors share the same API. Dropdown (inline panel without a trigger), DropdownLabel, DropdownSeparator, DropdownSub, DropdownSubTrigger, DropdownSubContent, DropdownSearch and DropdownEmpty export from the same file; MenuItem installs alongside at @/components/ui/menu-item. Escape inside a submenu follows each primitive: Base UI closes just the submenu, Radix closes the whole menu.",
+    flavorNote:
+      'Radix and Base UI flavors share the same API. Dropdown (inline panel without a trigger), DropdownLabel, DropdownSeparator, DropdownSub, DropdownSubTrigger, DropdownSubContent, DropdownSearch and DropdownEmpty export from the same file; MenuItem installs alongside at @/components/ui/menu-item. Escape inside a submenu follows each primitive: Base UI closes just the submenu, Radix closes the whole menu.',
   },
-  "input-copy": {
+  'input-copy': {
     craft: [
-      "Icon swap is a wait-mode crossfade: the copy icon exits at scale 0.8, the check (or error \u00d7) enters at scale 0.6\u21921 on spring.fast, and the check/\u00d7 glyph then draws itself with a pathLength 0\u21921 stroke animation in 0.08s easeOut.",
-      "Success and error glyphs are keyed by a copy counter (`check-${copyCount}`), so clicking Copy again while already in the \"copied\" state replays the draw animation instead of doing nothing.",
-      "Status resets to idle after exactly 2000ms; \"copied\" and \"error\" deliberately occupy the same animation slot on the button.",
-      "Tooltip choreography (icon variant): tooltip visibility is captured on pointerdown \u2014 before Radix closes it on press \u2014 and after copying the tooltip is force-opened as \"Copied\" only if it was already showing; otherwise it's suppressed. Leaving the row suppresses it, re-entering re-arms normal 500ms-delay behavior.",
-      "Button variant renders an invisible \"Copied\" layer in the same grid cell behind Copy/Copied/Failed, so the label swap never shifts the row's width.",
-      "The entire row is one `<button>`; hovering it highlights the mono value with a `<mark>` tinted with the accent at 20% (`color-mix(in oklab, var(--fluid-accent, #6B97FF) 20%, transparent)`) and thickens icon strokes 1.5\u21922 over 80ms, making the whole value read as the click target.",
-      "Accessible name reflects state (\"Copied\" / \"Copy failed\" / \"Copy\"), and when a field label exists `aria-labelledby` chains button-then-label so screen readers hear \"Copy <label>\".",
+      'Icon swap is a wait-mode crossfade: the copy icon exits at scale 0.8, the check (or error \u00d7) enters at scale 0.6\u21921 on spring.fast, and the check/\u00d7 glyph then draws itself with a pathLength 0\u21921 stroke animation in 0.08s easeOut.',
+      'Success and error glyphs are keyed by a copy counter (`check-${copyCount}`), so clicking Copy again while already in the "copied" state replays the draw animation instead of doing nothing.',
+      'Status resets to idle after exactly 2000ms; "copied" and "error" deliberately occupy the same animation slot on the button.',
+      'Tooltip choreography (icon variant): tooltip visibility is captured on pointerdown \u2014 before Radix closes it on press \u2014 and after copying the tooltip is force-opened as "Copied" only if it was already showing; otherwise it\'s suppressed. Leaving the row suppresses it, re-entering re-arms normal 500ms-delay behavior.',
+      'Button variant renders an invisible "Copied" layer in the same grid cell behind Copy/Copied/Failed, so the label swap never shifts the row\'s width.',
+      'The entire row is one `<button>`; hovering it highlights the mono value with a `<mark>` tinted with the accent at 20% (`color-mix(in oklab, var(--fluid-accent, #6B97FF) 20%, transparent)`) and thickens icon strokes 1.5\u21922 over 80ms, making the whole value read as the click target.',
+      'Accessible name reflects state ("Copied" / "Copy failed" / "Copy"), and when a field label exists `aria-labelledby` chains button-then-label so screen readers hear "Copy <label>".',
     ],
-    usage: `import { InputCopy } from "@/components/ui/input-copy";
+    usage: `import { InputCopy } from "#components/ui/input-copy";
 
 <InputCopy
   label="Install command"
@@ -1145,12 +1149,12 @@ const [view, setView] = useState(0);
   onCopy={() => console.log("copied")}
 />`,
     props: [
-      "value: string. The text to display and copy to the clipboard.",
-      "label: string. Optional label displayed above the input.",
+      'value: string. The text to display and copy to the clipboard.',
+      'label: string. Optional label displayed above the input.',
       'variant: "icon" | "button" (default "icon"). Icon-only with tooltip, or a button with a visible label.',
       'align: "right" | "left" (default "right"). Position of the copy action relative to the value.',
-      "onCopy: () => void. Fires after the value is successfully copied.",
-      "disabled: boolean (default false). Disables the input and the copy button.",
+      'onCopy: () => void. Fires after the value is successfully copied.',
+      'disabled: boolean (default false). Disables the input and the copy button.',
     ],
   },
   field: {
@@ -1159,14 +1163,14 @@ const [view, setView] = useState(0);
       "Labels are body text in muted-foreground above a control and full foreground beside one (orientation horizontal), where they read as the control's own text.",
       "Labels, descriptions and errors sit flush with the control's left edge; FieldError leads with the circle-alert icon nudged 1px down so it centers on the first caption line even when the message wraps or lists, the ladder's icon-to-label gap (8px, 4px compact) from its text.",
       "Spacing comes from the size rules: stacked, label, control, description and error sit 4px apart at both steps, as in InputField; fields (and a fieldset's legend block) sit 12px apart, InputGroup's step; side by side, a control and its label or label column take the ladder gap (8px, 4px compact), as in a CheckboxGroup row. A choice card pads with the ladder's px (12px, 10px compact) and takes the shape's container radius.",
-      "FieldError takes children or an errors array from a form library or Standard Schema; duplicate messages collapse and several render as a plain list, false or empty children fall back to the array, and it renders nothing when there is nothing to say, so it can stay in the tree.",
+      'FieldError takes children or an errors array from a form library or Standard Schema; duplicate messages collapse and several render as a plain list, false or empty children fall back to the array, and it renders nothing when there is nothing to say, so it can stay in the tree.',
       "FieldGroup is an @container/field-group, so orientation responsive switches to a row on the group's width, not the viewport's.",
       "Choice card: a FieldLabel wrapping a whole horizontal Field becomes one bordered, hoverable target (rounded-xl, p-3, hover:bg-hover) whose border darkens to foreground/40 once the checkbox inside is checked. Keyboard focus rings the card's outline in --focus-ring and the checkbox's own ring steps aside, so the focus mark matches the target.",
     ],
     usage: `import {
   Field, FieldDescription, FieldError, FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+} from "#components/ui/field";
+import { Input } from "#components/ui/input";
 
 <Field data-invalid={!!error}>
   <FieldLabel htmlFor="email">Work email address</FieldLabel>
@@ -1175,53 +1179,53 @@ import { Input } from "@/components/ui/input";
   <FieldError>{error}</FieldError>
 </Field>`,
     props: [
-      "Field orientation: \"vertical\" | \"horizontal\" | \"responsive\" (default \"vertical\"). Label above, beside, or beside once the FieldGroup is wide enough.",
-      "Field data-invalid: boolean. Turns the label red; put aria-invalid on the control too.",
-      "FieldLegend variant: \"legend\" | \"label\" (default \"legend\"). Section title, or label-sized for a nested fieldset.",
-      "FieldLabel htmlFor: string. The id of the control it names. Wrap a whole Field in it for a choice card.",
-      "FieldSeparator children: ReactNode. Optional text centered on the rule.",
-      "FieldError children: ReactNode, or errors: Array<{ message?: string } | undefined>. Duplicates collapse, several render as a list.",
+      'Field orientation: "vertical" | "horizontal" | "responsive" (default "vertical"). Label above, beside, or beside once the FieldGroup is wide enough.',
+      'Field data-invalid: boolean. Turns the label red; put aria-invalid on the control too.',
+      'FieldLegend variant: "legend" | "label" (default "legend"). Section title, or label-sized for a nested fieldset.',
+      'FieldLabel htmlFor: string. The id of the control it names. Wrap a whole Field in it for a choice card.',
+      'FieldSeparator children: ReactNode. Optional text centered on the rule.',
+      'FieldError children: ReactNode, or errors: Array<{ message?: string } | undefined>. Duplicates collapse, several render as a list.',
     ],
   },
   input: {
     craft: [
       "The frame copies the Select trigger: border border-border that never moves at rest, the ladder's height (h-9 / h-7), px (12px / 10px) and body text, so an Input and a Select side by side match to the pixel.",
-      "Hover adds bg-hover; focus darkens the border to a neutral foreground/40 instead of an accent ring and drops the hover fill.",
+      'Hover adds bg-hover; focus darkens the border to a neutral foreground/40 instead of an accent ring and drops the hover fill.',
       "Focus wins over aria-invalid's red while the value is being fixed; Tailwind sorts aria-* after focus, so the invalid case carries its own stacked aria-invalid:focus: class.",
       "On touch screens the text steps up to 16px inside the same height (the ladder's field class), so iOS Safari never zooms on focus.",
-      "type=number swaps the browser spinners for \u2212 and + buttons side by side at the right end, inset like segmented tabs (28px buttons 4px in, 24px and 2px compact) with nested corners; they stay out of the tab order (arrow keys already step) and call stepUp/stepDown, then dispatch an input event so a controlled onChange sees the new value and min, max and step hold.",
+      'type=number swaps the browser spinners for \u2212 and + buttons side by side at the right end, inset like segmented tabs (28px buttons 4px in, 24px and 2px compact) with nested corners; they stay out of the tab order (arrow keys already step) and call stepUp/stepDown, then dispatch an input event so a controlled onChange sees the new value and min, max and step hold.',
       "type=file gets a file icon over its left padding (px + icon + gap) and the line padding a text input centers by itself (7px, 4px compact); its text stays muted until a file is picked, while the browser's Choose File button keeps full contrast.",
     ],
-    usage: `import { Input } from "@/components/ui/input";
-import { Field, FieldLabel } from "@/components/ui/field";
+    usage: `import { Input } from "#components/ui/input";
+import { Field, FieldLabel } from "#components/ui/field";
 
 <Field>
   <FieldLabel htmlFor="email">Work email address</FieldLabel>
   <Input id="email" type="email" placeholder="you@company.com" />
 </Field>`,
     props: [
-      "size: \"default\" | \"compact\". Pins the field to 36px or 28px.",
-      "aria-invalid: boolean. Tints the hairline red until the field is focused.",
-      "disabled: boolean (default false). Dims the field and drops pointer events.",
-      "Every native input attribute passes through: type, value, placeholder, onChange.",
+      'size: "default" | "compact". Pins the field to 36px or 28px.',
+      'aria-invalid: boolean. Tints the hairline red until the field is focused.',
+      'disabled: boolean (default false). Dims the field and drops pointer events.',
+      'Every native input attribute passes through: type, value, placeholder, onChange.',
     ],
   },
-  "input-group": {
+  'input-group': {
     craft: [
-      "A field lights up when it is the hover-nearest item OR focused (`labelActive = isActive || isFocused`): its leading icon shifts muted\u2192foreground and stroke-width 1.5\u21922 over 80ms.",
+      'A field lights up when it is the hover-nearest item OR focused (`labelActive = isActive || isFocused`): its leading icon shifts muted\u2192foreground and stroke-width 1.5\u21922 over 80ms.',
       "The frame is the Select trigger's hairline: an inset ring-1 in --border that never moves at rest, bg-hover on the field under the pointer, and the ladder's px (12px, compact 10px) so text lines up with a Select beside it.",
-      "Focus darkens the ring to a neutral ring-foreground/40 instead of an accent, and it wins over the error tint (ring-destructive/50) while the value is being fixed; the red comes back on blur if the field is still invalid. Focus also drops the hover fill.",
+      'Focus darkens the ring to a neutral ring-foreground/40 instead of an accent, and it wins over the error tint (ring-destructive/50) while the value is being fixed; the red comes back on blur if the field is still invalid. Focus also drops the hover fill.',
       "Label and error message sit flush with the field's edge, not inset to the text; the error leads with the circle-alert icon (14px, compact 12px) on the caption role.",
-      "The label stacks an invisible semibold layer under the visible one in one grid cell, reserving the bold width so weight changes never shift layout.",
+      'The label stacks an invisible semibold layer under the visible one in one grid cell, reserving the bold width so weight changes never shift layout.',
       "Mousedown anywhere on the input container (icon, padding) focuses the input \u2014 preserving the old one-big-label behavior \u2014 while clicks on the input itself are left alone so caret placement isn't disturbed.",
       "The input container uses a fixed ladder control height (rather than py-2 around the line box) so the field sits exactly on the 36px / 28px size steps. On touch screens the text steps up to 16px inside that same height, so iOS Safari never zooms the page on focus and the row doesn't move.",
-      "Base UI Field wires the a11y plumbing: label htmlFor, error id landing in aria-describedby, `invalid` driving aria-invalid; `Field.Error match` pins the message visible while the controlled `error` prop stands, and `labelHidden` renders sr-only so inline fields keep their accessible name.",
+      'Base UI Field wires the a11y plumbing: label htmlFor, error id landing in aria-describedby, `invalid` driving aria-invalid; `Field.Error match` pins the message visible while the controlled `error` prop stands, and `labelHidden` renders sr-only so inline fields keep their accessible name.',
     ],
     usage: `"use client";
 
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { InputGroup, InputField } from "@/components/ui/input-group";
+import { InputGroup, InputField } from "#components/ui/input-group";
 
 const [value, setValue] = useState("");
 
@@ -1230,34 +1234,34 @@ const [value, setValue] = useState("");
     icon={Search} value={value} onChange={setValue} />
 </InputGroup>`,
     props: [
-      "InputGroup children: ReactNode. One or more InputField children.",
-      "index: number. Position of the field within the group (required for fluid hover).",
-      "label: string. Label text above the input.",
-      "labelHidden: boolean (default false). Keep the label for assistive tech but do not render it.",
-      "value: string. Controlled input value.",
-      "onChange: (value: string) => void. Called when the value changes.",
-      "placeholder: string. Placeholder text.",
-      "icon: IconComponent. Leading icon inside the input.",
-      "error: string. Error message shown below the input.",
-      "disabled: boolean (default false). Disables the input.",
+      'InputGroup children: ReactNode. One or more InputField children.',
+      'index: number. Position of the field within the group (required for fluid hover).',
+      'label: string. Label text above the input.',
+      'labelHidden: boolean (default false). Keep the label for assistive tech but do not render it.',
+      'value: string. Controlled input value.',
+      'onChange: (value: string) => void. Called when the value changes.',
+      'placeholder: string. Placeholder text.',
+      'icon: IconComponent. Leading icon inside the input.',
+      'error: string. Error message shown below the input.',
+      'disabled: boolean (default false). Disables the input.',
     ],
   },
-  "input-message": {
+  'input-message': {
     craft: [
-      "Auto-resize clamps the textarea between minRows and maxRows \u00d7 the parsed line-height (cached per element to avoid getComputedStyle on every keystroke); overflow-y only turns on past maxRows. A width-gated ResizeObserver re-runs the measure because a near-zero-width mount wraps the placeholder into many lines and pins the height at maxRows.",
-      "Enter sends, Shift+Enter newlines, and IME composition keydowns are ignored (`e.nativeEvent.isComposing`) so committing Japanese/Chinese input never fires a send.",
-      "The composer's edge is the box-shadow's 1px hairline ring recolored in place \u2014 drag-over accent (`var(--fluid-accent, #6B97FF)`) > focus (20% foreground) > hover (border) \u2014 so state changes bump contrast \"without ever appearing to thicken\" the stroke; the 0 1px 1px drop layer is kept so the lift never flickers. Applied inline because Tailwind shadow utilities mangle multi-layer arbitrary values.",
-      "File drop only reacts to drags whose dataTransfer types include \"Files\" (text/HTML drags don't trigger), sets dropEffect \"copy\", swaps the placeholder to \"Drop files here to add to chat\", and ignores dragLeave into children; drops are filtered by accept and deduped by a name+size+lastModified fingerprint.",
+      'Auto-resize clamps the textarea between minRows and maxRows \u00d7 the parsed line-height (cached per element to avoid getComputedStyle on every keystroke); overflow-y only turns on past maxRows. A width-gated ResizeObserver re-runs the measure because a near-zero-width mount wraps the placeholder into many lines and pins the height at maxRows.',
+      'Enter sends, Shift+Enter newlines, and IME composition keydowns are ignored (`e.nativeEvent.isComposing`) so committing Japanese/Chinese input never fires a send.',
+      'The composer\'s edge is the box-shadow\'s 1px hairline ring recolored in place \u2014 drag-over accent (`var(--fluid-accent, #6B97FF)`) > focus (20% foreground) > hover (border) \u2014 so state changes bump contrast "without ever appearing to thicken" the stroke; the 0 1px 1px drop layer is kept so the lift never flickers. Applied inline because Tailwind shadow utilities mangle multi-layer arbitrary values.',
+      'File drop only reacts to drags whose dataTransfer types include "Files" (text/HTML drags don\'t trigger), sets dropEffect "copy", swaps the placeholder to "Drop files here to add to chat", and ignores dragLeave into children; drops are filtered by accept and deduped by a name+size+lastModified fingerprint.',
       "Attachment thumbnails use a 1px inset image outline (pure black at 10% in light mode, pure white at 10% in dark) instead of an outside border, so light image/PDF edges stay legible without shrinking the preview or changing its box. Their radius is the composer's outer radius minus its real 8px padding, not the popup-specific 4px shape pair.",
-      "The three collapsible regions (attachments, queue, suggestions) spring to a self-measured PIXEL height, never `height:\"auto\"`, because framer resolves auto from the element's visual (transformed) size \u2014 under a scaled ancestor the region would balloon to scale\u00d7 and snap back. The suggestions region exits height-only (no opacity fade) because a simultaneous fade \"read as a height glitch\".",
-      "Send button morphs by state: Stop (streaming + empty draft) \u21c4 arrow-up; Send and Queue intentionally share the arrow glyph so only the Stop\u21c4arrow swap animates. While streaming, a submit enqueues the draft (text + attached files snapshot) instead of sending; on the streaming\u2192idle edge the queue head auto-dispatches through onSend with meta.queuedId, and an sr-only aria-live=\"polite\" region announces \"Message sent. N still queued.\".",
-      "Queued rows are fully keyboard-operable: Enter/F2 edits the row back into the composer, Delete/Backspace removes, Alt+\u2191/\u2193 reorders (drag via Reorder also works); the \u00d7 is hover-revealed on pointer devices but persistent on touch, detected via `(hover: none)`.",
-      "History recall is readline-style: plain ArrowUp only when the caret is on the first line, ArrowDown on the last, so multi-line editing still works; the in-progress draft is stashed and restored when walking past the newest entry, and real typing exits history mode.",
-      "The placeholder suggestion is a real overlay, not the native placeholder, so a Tab keycap can render inline after the text; its typography mirrors the textarea's step exactly \"so it sits where typed text will\", long suggestions truncate on one flex line so the chip is never cut, and an sr-only hint joins the textarea's aria-describedby. Tab fills without sending; Shift+Tab still moves focus back.",
-      "Suggestions are a listbox that never steals focus: \u2193 enters/descends, \u2191 walks back up and out, Enter or click fills the composer; the highlighted row is tracked via aria-activedescendant and shares the same sliding fluid-hover overlay as the pointer. While nothing is highlighted the first row shows a \u2193 keycap hint in the slot where the active row shows \u21b5.",
+      'The three collapsible regions (attachments, queue, suggestions) spring to a self-measured PIXEL height, never `height:"auto"`, because framer resolves auto from the element\'s visual (transformed) size \u2014 under a scaled ancestor the region would balloon to scale\u00d7 and snap back. The suggestions region exits height-only (no opacity fade) because a simultaneous fade "read as a height glitch".',
+      'Send button morphs by state: Stop (streaming + empty draft) \u21c4 arrow-up; Send and Queue intentionally share the arrow glyph so only the Stop\u21c4arrow swap animates. While streaming, a submit enqueues the draft (text + attached files snapshot) instead of sending; on the streaming\u2192idle edge the queue head auto-dispatches through onSend with meta.queuedId, and an sr-only aria-live="polite" region announces "Message sent. N still queued.".',
+      'Queued rows are fully keyboard-operable: Enter/F2 edits the row back into the composer, Delete/Backspace removes, Alt+\u2191/\u2193 reorders (drag via Reorder also works); the \u00d7 is hover-revealed on pointer devices but persistent on touch, detected via `(hover: none)`.',
+      'History recall is readline-style: plain ArrowUp only when the caret is on the first line, ArrowDown on the last, so multi-line editing still works; the in-progress draft is stashed and restored when walking past the newest entry, and real typing exits history mode.',
+      'The placeholder suggestion is a real overlay, not the native placeholder, so a Tab keycap can render inline after the text; its typography mirrors the textarea\'s step exactly "so it sits where typed text will", long suggestions truncate on one flex line so the chip is never cut, and an sr-only hint joins the textarea\'s aria-describedby. Tab fills without sending; Shift+Tab still moves focus back.',
+      'Suggestions are a listbox that never steals focus: \u2193 enters/descends, \u2191 walks back up and out, Enter or click fills the composer; the highlighted row is tracked via aria-activedescendant and shares the same sliding fluid-hover overlay as the pointer. While nothing is highlighted the first row shows a \u2193 keycap hint in the slot where the active row shows \u21b5.',
     ],
     usage: `import { useState } from "react";
-import { InputMessage } from "@/components/ui/input-message";
+import { InputMessage } from "#components/ui/input-message";
 
 const [value, setValue] = useState("");
 
@@ -1269,30 +1273,30 @@ const [value, setValue] = useState("");
   />
 </div>`,
     props: [
-      "value: string. Controlled textarea value.",
-      "onValueChange: (value: string) => void. Called on every textarea change.",
-      "onSend: (value: string, files: File[]) => void. Fires on Enter (without Shift) or send click, skipped when empty.",
+      'value: string. Controlled textarea value.',
+      'onValueChange: (value: string) => void. Called on every textarea change.',
+      'onSend: (value: string, files: File[]) => void. Fires on Enter (without Shift) or send click, skipped when empty.',
       'placeholder: string (default "Ask me anything…"). Placeholder shown while the value is empty.',
       'size: "default" | "compact" (default from SizeProvider). Step on the size ladder.',
-      "leftSlot / rightSlot: ReactNode | (ctx) => ReactNode. Content in the bottom action areas; render-fn receives { openFilePicker, files }.",
-      "files / onFilesChange: File[] / (files: File[]) => void. Controlled attachments; enables drag-and-drop and the file picker.",
+      'leftSlot / rightSlot: ReactNode | (ctx) => ReactNode. Content in the bottom action areas; render-fn receives { openFilePicker, files }.',
+      'files / onFilesChange: File[] / (files: File[]) => void. Controlled attachments; enables drag-and-drop and the file picker.',
       'status: "idle" | "streaming". While streaming, the send button becomes Stop (empty draft) or Queue (non-empty draft).',
-      "suggestions: string[]. Suggested prompts listed under the action bar while the draft is empty.",
-      "disabled: boolean (default false). Disables the textarea, send button, and drag-and-drop.",
+      'suggestions: string[]. Suggested prompts listed under the action bar while the draft is empty.',
+      'disabled: boolean (default false). Disables the textarea, send button, and drag-and-drop.',
     ],
   },
-  "radio-group": {
+  'radio-group': {
     craft: [
-      "The selected-row background is one shared motion.div that springs (spring.moderate, 0.16s critically damped) from the old row to the new one instead of fading out/in per row.",
-      "The dot pops in with spring.fast from scale 0.3 / opacity 0 and exits shrinking over 0.04s; items selected at mount skip the entrance entirely.",
+      'The selected-row background is one shared motion.div that springs (spring.moderate, 0.16s critically damped) from the old row to the new one instead of fading out/in per row.',
+      'The dot pops in with spring.fast from scale 0.3 / opacity 0 and exits shrinking over 0.04s; items selected at mount skip the entrance entirely.',
       "When selected, the circle's 1.5px border turns transparent \u2014 the dot alone marks the state; hover darkens the border from `border` to neutral-400 (neutral-500 dark) over 80ms. The circle is 16px (14px compact) with an 8px (7px) dot.",
       "The label animates 'wght' 400 \u2192 550 over 80ms on selection only, while its color shifts muted \u2192 foreground on selection or hover; an invisible semibold sizer span reserves the width, both stacked spans carrying the text-box trim so their boxes stay identical, and rows are fixed-height so the trim doesn't shrink the row.",
-      "Arrow keys (all four) move focus AND select in one step, wrapping at the ends; Home/End jump-and-select. The item query scopes to row wrappers because the hidden primitive also carries role=\"radio\" and a bare selector would match twice per row.",
-      "Roving tabindex: the selected item is the tab stop, and with no selection the first item takes it \"or the whole group becomes unreachable by keyboard\".",
-      "The animated focus ring is a single rect that springs (spring.fast) between rows at a \u22122px inset, only on :focus-visible; a `value`-controlled group still wraps the Radix primitive even without onValueChange because the hidden per-item inputs need its context.",
+      'Arrow keys (all four) move focus AND select in one step, wrapping at the ends; Home/End jump-and-select. The item query scopes to row wrappers because the hidden primitive also carries role="radio" and a bare selector would match twice per row.',
+      'Roving tabindex: the selected item is the tab stop, and with no selection the first item takes it "or the whole group becomes unreachable by keyboard".',
+      'The animated focus ring is a single rect that springs (spring.fast) between rows at a \u22122px inset, only on :focus-visible; a `value`-controlled group still wraps the Radix primitive even without onValueChange because the hidden per-item inputs need its context.',
     ],
     usage: `import { useState } from "react";
-import { RadioGroup, RadioItem } from "@/components/ui/radio-group";
+import { RadioGroup, RadioItem } from "#components/ui/radio-group";
 
 const options = ["Option A", "Option B", "Option C"];
 const [selected, setSelected] = useState(0);
@@ -1303,27 +1307,27 @@ const [selected, setSelected] = useState(0);
   ))}
 </RadioGroup>`,
     props: [
-      "RadioGroup selectedIndex: number. Index of the currently selected item.",
-      "RadioGroup children: ReactNode. RadioItem children.",
-      "index: number. Position index within the group.",
-      "label: string. Text label for the item.",
-      "selected: boolean. Whether this item is selected.",
-      "onSelect: () => void. Called when this item is selected.",
-      "value: string. Optional value forwarded to the underlying primitive for form integration.",
+      'RadioGroup selectedIndex: number. Index of the currently selected item.',
+      'RadioGroup children: ReactNode. RadioItem children.',
+      'index: number. Position index within the group.',
+      'label: string. Text label for the item.',
+      'selected: boolean. Whether this item is selected.',
+      'onSelect: () => void. Called when this item is selected.',
+      'value: string. Optional value forwarded to the underlying primitive for form integration.',
     ],
   },
   select: {
     craft: [
-      "Selection acknowledgment: picking an item holds the popup open 300ms (`selectionAckMs`) before closing, so the checkmark drawing in and the selected background springing to the picked row are seen instead of cut off by the ~60ms close fade. Escape, outside press and trigger toggle still close immediately; Radix reports no close reason, so a close arriving within 100ms of `onValueChange` is read as selection-driven.",
+      'Selection acknowledgment: picking an item holds the popup open 300ms (`selectionAckMs`) before closing, so the checkmark drawing in and the selected background springing to the picked row are seen instead of cut off by the ~60ms close fade. Escape, outside press and trigger toggle still close immediately; Radix reports no close reason, so a close arriving within 100ms of `onValueChange` is read as selection-driven.',
       "The checkmark draws in as an SVG path (`pathLength` 0\u21921, 0.08s easeOut) and erases faster (0.04s easeIn); its slot is always rendered at fixed width so a check appearing never changes the row's intrinsic width \u2014 without it the whole popup would resize when a selection lands.",
       "The selected-background overlay keeps its position in `animate` (not `initial`) so an in-session value change springs the marker (moderate tier) from the old row to the picked one; a value change while open deliberately does NOT remeasure \u2014 the rows haven't moved, so only `checkedIndex` switches and the marker glides.",
       "Keyboard focus ring is gated: seeded from the trigger's `:focus-visible` at open and earned by nav keys (arrows/Home/End/PageUp/PageDown/Tab) inside the popup, tracked in the capture phase because the primitive moves focus during its own keydown. Pointer-driven focus never draws the ring.",
-      "SelectContent renders unconditionally: while closed, Radix parks its children in a detached DocumentFragment, which the selected label portal into the trigger, closed-trigger typeahead, and the hidden native `<select>` options all depend on \u2014 never gate it behind a mounted flag.",
-      "Flavor difference a user feels: the Radix flavor is modal-ish \u2014 it scroll-locks the page and disables outside pointer events while open; the Base UI flavor is non-modal \u2014 the page keeps scrolling and the positioner tracks the anchor.",
-      "The trigger follows the global shape; the popup caps it at \"rounded\" (pill becomes rounded, sharp stays sharp); the popup enters on the fast tier with the side-aware `popupMotionClass`, tracks the trigger width via `--radix-select-trigger-width`, and caps at min(300px, available height).",
+      'SelectContent renders unconditionally: while closed, Radix parks its children in a detached DocumentFragment, which the selected label portal into the trigger, closed-trigger typeahead, and the hidden native `<select>` options all depend on \u2014 never gate it behind a mounted flag.',
+      'Flavor difference a user feels: the Radix flavor is modal-ish \u2014 it scroll-locks the page and disables outside pointer events while open; the Base UI flavor is non-modal \u2014 the page keeps scrolling and the positioner tracks the anchor.',
+      'The trigger follows the global shape; the popup caps it at "rounded" (pill becomes rounded, sharp stays sharp); the popup enters on the fast tier with the side-aware `popupMotionClass`, tracks the trigger width via `--radix-select-trigger-width`, and caps at min(300px, available height).',
     ],
     usage: `import { useState } from "react";
-import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
+import { Select, SelectTrigger, SelectContent, SelectItem } from "#components/ui/select";
 
 const [value, setValue] = useState("");
 
@@ -1336,31 +1340,31 @@ const [value, setValue] = useState("");
   </SelectContent>
 </Select>`,
     props: [
-      "value: string. Controlled selected value.",
-      "defaultValue: string. Uncontrolled default value.",
-      "onValueChange: (value: string) => void. Called when the selected value changes.",
-      "disabled: boolean (default false). Disables the entire select.",
-      "name: string. Name for form submission.",
+      'value: string. Controlled selected value.',
+      'defaultValue: string. Uncontrolled default value.',
+      'onValueChange: (value: string) => void. Called when the selected value changes.',
+      'disabled: boolean (default false). Disables the entire select.',
+      'name: string. Name for form submission.',
       'SelectTrigger variant: "bordered" | "borderless" (default "bordered"). Visual style of the trigger.',
       'SelectTrigger placeholder: string (default "Select…"). Text shown when no value is selected.',
-      "SelectTrigger icon: IconComponent. Optional icon before the value.",
-      "SelectTrigger error: string. Error message shown below the trigger.",
-      "SelectItem index: number. Position within the content, required for fluid hover. SelectItem also takes value, icon, disabled.",
+      'SelectTrigger icon: IconComponent. Optional icon before the value.',
+      'SelectTrigger error: string. Error message shown below the trigger.',
+      'SelectItem index: number. Position within the content, required for fluid hover. SelectItem also takes value, icon, disabled.',
     ],
   },
   sidebar: {
     craft: [
-      "The rail handle does three things: drag to resize clamped 160\u2013360px; drag \u226556px past the minimum (SIDEBAR_COLLAPSE_SLOP) to preview collapse \u2014 \"the same 'throw it at the edge to dismiss' affordance native apps use\" \u2014 with drag-back past the threshold re-expanding, nothing committed until release; and a press that never moves \u22654px is the collapse click.",
-      "Toggle shortcut is a bare `[` (left side) / `]` (right side) \u2014 bare \"so the browser's history shortcuts stay untouched\" (\u2318[/\u2318] skipped when a modifier is held), skipped while typing, and focus-scoped: only one mounted provider answers a keypress \u2014 the innermost provider containing focus, else the outermost mounted one.",
-      "Peek: the collapsed edge is a 12px (`w-3`) strip whose hairline brightens on hover; hover mode arms the peek after a 150ms intent delay and dismisses after 250ms, with ONE shared timer serving the strip, the collapsed trigger, and the peeked card so crossing between them cancels a pending dismissal; Escape or an outside press dismisses, and peeking never pins the sidebar or writes the cookie.",
-      "Hover-peek dismissal uses geometric containment of the pointer, not enter/leave events, because a portalled tooltip or menu covering the card steals the hit-test and fires pointerleave even though the cursor never left the sidebar.",
-      "Motion tiers: open/close ride `spring.slow` (\"a whole column moving is the largest thing this component animates\"; the sheet and peek stay on moderate), drag-resize is glued duration-0 tracking, mid-drag collapse/re-expand flips ride `spring.moderate`, and reduced motion snaps instead of sliding.",
-      "Desktop open state persists to a `sidebar_state` cookie for 7 days (`persist` prop; read it in a server layout to restore the last visit); the mobile drawer state never persists, and below 768px the sidebar becomes a modal drawer \u2014 crossing the breakpoint DISSOLVES the desktop rail (opacity fade with display allow-discrete) instead of snapping it away.",
+      'The rail handle does three things: drag to resize clamped 160\u2013360px; drag \u226556px past the minimum (SIDEBAR_COLLAPSE_SLOP) to preview collapse \u2014 "the same \'throw it at the edge to dismiss\' affordance native apps use" \u2014 with drag-back past the threshold re-expanding, nothing committed until release; and a press that never moves \u22654px is the collapse click.',
+      'Toggle shortcut is a bare `[` (left side) / `]` (right side) \u2014 bare "so the browser\'s history shortcuts stay untouched" (\u2318[/\u2318] skipped when a modifier is held), skipped while typing, and focus-scoped: only one mounted provider answers a keypress \u2014 the innermost provider containing focus, else the outermost mounted one.',
+      'Peek: the collapsed edge is a 12px (`w-3`) strip whose hairline brightens on hover; hover mode arms the peek after a 150ms intent delay and dismisses after 250ms, with ONE shared timer serving the strip, the collapsed trigger, and the peeked card so crossing between them cancels a pending dismissal; Escape or an outside press dismisses, and peeking never pins the sidebar or writes the cookie.',
+      'Hover-peek dismissal uses geometric containment of the pointer, not enter/leave events, because a portalled tooltip or menu covering the card steals the hit-test and fires pointerleave even though the cursor never left the sidebar.',
+      'Motion tiers: open/close ride `spring.slow` ("a whole column moving is the largest thing this component animates"; the sheet and peek stay on moderate), drag-resize is glued duration-0 tracking, mid-drag collapse/re-expand flips ride `spring.moderate`, and reduced motion snaps instead of sliding.',
+      'Desktop open state persists to a `sidebar_state` cookie for 7 days (`persist` prop; read it in a server layout to restore the last visit); the mobile drawer state never persists, and below 768px the sidebar becomes a modal drawer \u2014 crossing the breakpoint DISSOLVES the desktop rail (opacity fade with display allow-discrete) instead of snapping it away.',
       "SidebarMenuSub collapses on the content's measured `offsetHeight`, \"never to 'auto', which framer measures wrong under a scaled ancestor\", and springs only when that sub itself toggles \u2014 a height change from a nested sub collapsing inside it snaps, so the wrapper never chases with a stacked second spring.",
       "One highlight scope per SidebarMenu tree: hover/active/focus overlays glide between all visible rows, sub-rows included; hit-testing measures the row's BUTTON, not the `<li>` (an expanded sub-tree would otherwise hand its gaps to the parent row), and overlay height is clamped to the button box with a 48px fallback.",
-      "Active backgrounds are keyed per level so the selection GLIDES when it moves instead of remounting; a rect change on the SAME row (reflow from a sibling collapsing) snaps rather than springing, and hover tracking freezes across every scope while any sidebar-anchored popup is open.",
-      "There is deliberately no icon-rail collapsed mode (`collapsible` is only \"offcanvas\" | \"none\"): the docs argue icon rails make \"every destination take a hover, a beat, a tooltip\" and section labels collapse to a divider \u2014 collapsed means gone, and `peek=\"hover\"` floats the REAL sidebar, labels and all, instead.",
-      "The avatar remains a consumer-owned ReactNode, but image examples apply a 1px inset pure-black/pure-white 10% outline; at 20px this is the difference between a pale portrait reading as a circle and dissolving into the row surface.",
+      'Active backgrounds are keyed per level so the selection GLIDES when it moves instead of remounting; a rect change on the SAME row (reflow from a sibling collapsing) snaps rather than springing, and hover tracking freezes across every scope while any sidebar-anchored popup is open.',
+      'There is deliberately no icon-rail collapsed mode (`collapsible` is only "offcanvas" | "none"): the docs argue icon rails make "every destination take a hover, a beat, a tooltip" and section labels collapse to a divider \u2014 collapsed means gone, and `peek="hover"` floats the REAL sidebar, labels and all, instead.',
+      'The avatar remains a consumer-owned ReactNode, but image examples apply a 1px inset pure-black/pure-white 10% outline; at 20px this is the difference between a pale portrait reading as a circle and dissolving into the row surface.',
     ],
     usage: `"use client";
 
@@ -1368,7 +1372,7 @@ import { Home, Inbox } from "lucide-react";
 import {
   SidebarProvider, Sidebar, SidebarContent, SidebarInset, SidebarTrigger,
   SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton,
-} from "@/components/ui/sidebar";
+} from "#components/ui/sidebar";
 
 <SidebarProvider defaultOpen>
   <Sidebar side="left" variant="sidebar">
@@ -1385,33 +1389,33 @@ import {
   <SidebarInset><SidebarTrigger />{/* page content */}</SidebarInset>
 </SidebarProvider>`,
     props: [
-      "SidebarProvider open / onOpenChange: boolean / (open: boolean) => void. Controlled open state.",
-      "SidebarProvider defaultOpen: boolean (default true). Uncontrolled initial state; read the sidebar_state cookie in a server layout to restore it.",
-      "SidebarProvider persist: boolean (default true). Write the desktop state to the sidebar_state cookie.",
+      'SidebarProvider open / onOpenChange: boolean / (open: boolean) => void. Controlled open state.',
+      'SidebarProvider defaultOpen: boolean (default true). Uncontrolled initial state; read the sidebar_state cookie in a server layout to restore it.',
+      'SidebarProvider persist: boolean (default true). Write the desktop state to the sidebar_state cookie.',
       'SidebarProvider peek: "none" | "hover" | "click" (default "none"). Collapsed edge strip reveals the sidebar as a floating overlay.',
       'SidebarProvider shortcut: string | null (default "[" left, "]" right). Bare-key toggle; null disables.',
-      "SidebarProvider mobileBreakpoint: number (default 768). Width below which the sidebar becomes a modal drawer.",
+      'SidebarProvider mobileBreakpoint: number (default 768). Width below which the sidebar becomes a modal drawer.',
       'SidebarProvider width / widthMobile: string (default "16rem" / "18rem"). Rail and drawer widths.',
       'Sidebar side: "left" | "right" (default "left"). Which edge the rail lives on.',
       'Sidebar variant: "sidebar" | "floating" | "inset" (default "sidebar"). Transparent rail, floating card, or inset pairing where SidebarInset becomes the card.',
       'Sidebar collapsible: "offcanvas" | "none" (default "offcanvas"). Offcanvas slides away; none is a static column. Also: rail (boolean, default true) for the drag-resize handle, bordered (boolean, default true).',
     ],
     flavorNote:
-      "Both flavors install sidebar.tsx plus sidebar-core.tsx and sidebar-menu.tsx; import everything from @/components/ui/sidebar. SidebarMenuButton accepts render={<Link href=... />} (Base UI) or asChild (Radix) for custom elements.",
+      'Both flavors install sidebar.tsx plus sidebar-core.tsx and sidebar-menu.tsx; import everything from @/components/ui/sidebar. SidebarMenuButton accepts render={<Link href=... />} (Base UI) or asChild (Radix) for custom elements.',
   },
   slider: {
     craft: [
-      "One component, two ladder steps: default size renders the pips/scrubber design, compact the dense one; any compact-only prop (array value, `steps`, `showSteps`, `showValue`, `valuePosition`, track/fill styling, thumb colors) forces the compact engine regardless of size \"so no capability is ever lost\".",
-      "Compact thumb snaps to the step grid continuously during drag (pixel \u2192 snapped value \u2192 pixel on every move); a track click spring-animates the thumb to the snapped position (`spring.moderate`), and release spring-settles to the final quantized position.",
+      'One component, two ladder steps: default size renders the pips/scrubber design, compact the dense one; any compact-only prop (array value, `steps`, `showSteps`, `showValue`, `valuePosition`, track/fill styling, thumb colors) forces the compact engine regardless of size "so no capability is ever lost".',
+      'Compact thumb snaps to the step grid continuously during drag (pixel \u2192 snapped value \u2192 pixel on every move); a track click spring-animates the thumb to the snapped position (`spring.moderate`), and release spring-settles to the final quantized position.',
       "The compact engine's value label is click-to-edit: clicking swaps in a number input, auto-selected; Enter/blur commits (clamped to min/max then snapped to step or nearest `steps` entry), Escape cancels; an invisible ghost of the widest possible value reserves width so nothing shifts.",
-      "Hovering the track previews the change: a 40%-accent bar runs from the nearest thumb center to the snapped hover value (extended to the track edge at min/max \"so there's no gap\", rounded only on its leading edge), plus a tooltip that appears after a 100ms delay and hides while pressed.",
-      "That same compact value display shifts normal \u2192 semibold while hovering/pressing (fontVariationSettings, 100ms transition) with tabular-nums, so interaction is signalled without layout shift; the comfortable design instead animates its value color muted \u2192 foreground on `spring.fast`.",
+      'Hovering the track previews the change: a 40%-accent bar runs from the nearest thumb center to the snapped hover value (extended to the track edge at min/max "so there\'s no gap", rounded only on its leading edge), plus a tooltip that appears after a 100ms delay and hides while pressed.',
+      'That same compact value display shifts normal \u2192 semibold while hovering/pressing (fontVariationSettings, 100ms transition) with tabular-nums, so interaction is signalled without layout shift; the comfortable design instead animates its value color muted \u2192 foreground on `spring.fast`.',
       "Range mode: pointer-down grabs the nearest thumb, and thumbs can't cross \u2014 each is clamped half a thumb-width (10px of the 20px thumb) from the other.",
       "Step dots are masked out on the filled side of the track with a 2px feather (a moving linear-gradient mask driven by the thumb's motion value) and grow 1.25x on hover; an invisible Radix slider supplies ARIA + keyboard, and non-uniform `steps` runs it on indices so arrow keys walk the list, with `aria-valuetext` reporting the formatted value.",
-      "Comfortable (default-size) designs use a 2px handle line that grows 2px taller (inset 8 \u2192 7) and darkens 25% \u2192 50% \u2192 100% foreground across rest/hover/focus; at min a zeroOffset (8px pips, 17px scrubber) keeps the line visible; scrubber drag sets fill directly (glued, no spring) while pips springs per snap; both add an 8px-beyond-each-edge hit area.",
+      'Comfortable (default-size) designs use a 2px handle line that grows 2px taller (inset 8 \u2192 7) and darkens 25% \u2192 50% \u2192 100% foreground across rest/hover/focus; at min a zeroOffset (8px pips, 17px scrubber) keeps the line visible; scrubber drag sets fill directly (glued, no spring) while pips springs per snap; both add an 8px-beyond-each-edge hit area.',
     ],
     usage: `import { useState } from "react";
-import { Slider } from "@/components/ui/slider";
+import { Slider } from "#components/ui/slider";
 
 const [value, setValue] = useState(25);
 
@@ -1420,31 +1424,31 @@ const [value, setValue] = useState(25);
 // Dense design: pass size="compact"
 <Slider size="compact" value={value} onChange={(v) => setValue(v as number)} />`,
     props: [
-      "value: number | [number, number]. Current value; an array enables range mode with two thumbs.",
-      "onChange: (value: SliderValue) => void. Called on drag, click, or keyboard change.",
+      'value: number | [number, number]. Current value; an array enables range mode with two thumbs.',
+      'onChange: (value: SliderValue) => void. Called on drag, click, or keyboard change.',
       'size: "default" | "compact" (default from SizeProvider). Default renders the pip/scrubber design, compact the dense design.',
       'variant: "pips" | "scrubber" (default "pips"). Default-step layout; ignored when compact renders.',
-      "min: number (default 0). Minimum value.",
-      "max: number (default 100). Maximum value.",
-      "step: number (default 1). Step increment the thumb snaps to.",
-      "steps: number[]. Discrete allowed values; min/max derive from the list and step is ignored.",
+      'min: number (default 0). Minimum value.',
+      'max: number (default 100). Maximum value.',
+      'step: number (default 1). Step increment the thumb snaps to.',
+      'steps: number[]. Discrete allowed values; min/max derive from the list and step is ignored.',
       'valuePosition: "left" | "right" | "top" | "bottom" | "tooltip" (default "left"). Where the value label renders; showValue (default true) toggles it.',
-      "label: string. Accessible label, also shown as a prefix in the value display. formatValue: (v: number) => string customizes the label.",
+      'label: string. Accessible label, also shown as a prefix in the value display. formatValue: (v: number) => string customizes the label.',
     ],
   },
-  "switch": {
+  switch: {
     craft: [
-      "The thumb is draggable, not just clickable: pointer capture + a 2px dead zone distinguishes drag from click, the thumb tracks the pointer clamped to the track, and release toggles when past the track midpoint or springs back otherwise.",
-      "After a drag, a `didDrag` flag suppresses the click/onCheckedChange that follows the same pointer-up (cleared next animation frame) so a drag never double-toggles; a system-cancelled gesture snaps back without toggling.",
-      "Hover extends the thumb into a pill (+2px width); press extends it further (+4px) and squashes it (\u22124px height, recentred). Compact keeps the same +2px hover pill and softens only the press, to +3/\u22123, \"so the compact switch keeps the same feel\".",
+      'The thumb is draggable, not just clickable: pointer capture + a 2px dead zone distinguishes drag from click, the thumb tracks the pointer clamped to the track, and release toggles when past the track midpoint or springs back otherwise.',
+      'After a drag, a `didDrag` flag suppresses the click/onCheckedChange that follows the same pointer-up (cleared next animation frame) so a drag never double-toggles; a system-cancelled gesture snaps back without toggling.',
+      'Hover extends the thumb into a pill (+2px width); press extends it further (+4px) and squashes it (\u22124px height, recentred). Compact keeps the same +2px hover pill and softens only the press, to +3/\u22123, "so the compact switch keeps the same feel".',
       "When checked, the extra press/hover width grows leftward (thumbX subtracts extraWidth) so the thumb's outer edge stays pinned to the track end.",
-      "All thumb motion rides spring.moderate (0.16s, critically damped); initial mount sets position with duration 0 so a pre-checked switch never animates on load.",
-      "Track colors: checked is the accent (`var(--fluid-accent, #6B97FF)`), mixing in 8% black on hover; unchecked uses `--accent`, hovered mixing in 10% overlay via color-mix in oklab. Geometry per ladder step: 34\u00d720 track / 16px thumb default, 28\u00d716 / 12px compact, constant 2px inset.",
-      "Hover state is only set for mouse pointers (pointerType check), so touch never leaves the switch stuck in its pill-extended hover shape.",
-      "The whole row is the pointer target (touch-none stops scroll fighting the drag); the label shifts muted-foreground \u2192 foreground over 80ms when on, with text-box trim recentering letterforms against the taller track without changing layout.",
+      'All thumb motion rides spring.moderate (0.16s, critically damped); initial mount sets position with duration 0 so a pre-checked switch never animates on load.',
+      'Track colors: checked is the accent (`var(--fluid-accent, #6B97FF)`), mixing in 8% black on hover; unchecked uses `--accent`, hovered mixing in 10% overlay via color-mix in oklab. Geometry per ladder step: 34\u00d720 track / 16px thumb default, 28\u00d716 / 12px compact, constant 2px inset.',
+      'Hover state is only set for mouse pointers (pointerType check), so touch never leaves the switch stuck in its pill-extended hover shape.',
+      'The whole row is the pointer target (touch-none stops scroll fighting the drag); the label shifts muted-foreground \u2192 foreground over 80ms when on, with text-box trim recentering letterforms against the taller track without changing layout.',
     ],
     usage: `import { useState } from "react";
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "#components/ui/switch";
 
 const [checked, setChecked] = useState(false);
 
@@ -1454,33 +1458,33 @@ const [checked, setChecked] = useState(false);
   onToggle={() => setChecked((prev) => !prev)}
 />`,
     props: [
-      "label: string. Text label displayed next to the switch.",
-      "checked: boolean. Whether the switch is on.",
-      "onToggle: () => void. Called when the switch is toggled.",
-      "disabled: boolean (default false). Disables the switch.",
-      "size: \"default\" | \"compact\" (default from SizeProvider). Pins the switch to one step of the size ladder.",
+      'label: string. Text label displayed next to the switch.',
+      'checked: boolean. Whether the switch is on.',
+      'onToggle: () => void. Called when the switch is toggled.',
+      'disabled: boolean (default false). Disables the switch.',
+      'size: "default" | "compact" (default from SizeProvider). Pins the switch to one step of the size ladder.',
     ],
   },
-  "table": {
+  table: {
     craft: [
-      "Row hover is the shared fluid-hover highlight drawn once behind the whole `<table>`, rounded by the shape setting (`shape.bg`) like the selection under it; body rows opt in by passing `index`, header rows omit it.",
+      'Row hover is the shared fluid-hover highlight drawn once behind the whole `<table>`, rounded by the shape setting (`shape.bg`) like the selection under it; body rows opt in by passing `index`, header rows omit it.',
       "Row borders hide where the highlight's fill is, not where it's headed: the highlight reports its live box every frame (FluidHoverHighlight `onFrame`) and Table sets `data-under-highlight` on each row (the header row included) whose bottom border it covers, straight on the DOM, reads before writes. A rule goes at once as the fill reaches it and fades back in over 80ms after; hiding on the hover change itself dropped a rule before a gliding fill got there. The rows' rule positions are measured once (layout offsets) and kept until the rows can have moved (new children, a resize, rows added or removed); nothing is read per frame, since any read right after the fill moves forces a layout mid-frame and the attribute write a second one.",
       "Table takes two hooks for what rides the highlight: `hoverMarker(index)` renders a mark inside the fill (DataTable's grip and empty box), and `onHighlightFrame(box)` reports the fill's live `y`, `height` and opacity on every frame it moves, to draw along with it (write to the DOM there, don't set state). A row can claim the highlight by dispatching the bubbling `TABLE_HIGHLIGHT_EVENT`; the keyboard owns it until the pointer moves.",
-      "Borders never pop: they transition border-color from `border-accent/40` to `border-transparent` with `transition-[border-color] duration-80`.",
-      "Cell text lifts from `text-muted-foreground` to `text-foreground` when its row is active, via an `is-active` class on the row and `group-[.is-active]/row:text-foreground` on cells, over the same `duration-80`.",
-      "Header rows render semibold and body rows normal through `fontVariationSettings` (variable-font axis, not a font-weight class).",
-      "Rows sit on the size ladder \u2014 36px default, 28px compact \u2014 via cell padding (`px-3 py-2` vs `px-2.5 py-[5px]`); the comment states \"py + line box lands the row on the ladder (36px / 28px)\".",
-      "A `size` prop pins every cell to one ladder step by wrapping the table in a SizeProvider (\"cells read the context\"); omitted, cells follow the surrounding provider.",
+      'Borders never pop: they transition border-color from `border-accent/40` to `border-transparent` with `transition-[border-color] duration-80`.',
+      'Cell text lifts from `text-muted-foreground` to `text-foreground` when its row is active, via an `is-active` class on the row and `group-[.is-active]/row:text-foreground` on cells, over the same `duration-80`.',
+      'Header rows render semibold and body rows normal through `fontVariationSettings` (variable-font axis, not a font-weight class).',
+      'Rows sit on the size ladder \u2014 36px default, 28px compact \u2014 via cell padding (`px-3 py-2` vs `px-2.5 py-[5px]`); the comment states "py + line box lands the row on the ladder (36px / 28px)".',
+      'A `size` prop pins every cell to one ladder step by wrapping the table in a SizeProvider ("cells read the context"); omitted, cells follow the surrounding provider.',
       "`selectedIndices` draws CheckboxGroup's selection: contiguous selected rows share one merged `bg-active` block (use-merge-split, with its merge/split animation) under the hover highlight, and a selected row and the row above it hide their rules.",
-      "Keyboard focus moves the highlight too: when a row (or a control in it) takes `:focus-visible` focus, the highlight goes to that row, so the fill is the focus mark. Keyboard focus then owns the highlight until the pointer really moves: mouse moves and leaves that arrive at the same client point (rows scrolling under a still pointer) are ignored.",
-      "While an arrow key auto-repeats inside the table, the highlight snaps row to row (`transition={false}`) and stays on the focused row instead of trailing its spring; a single press, and the pointer, still glide.",
-      "`snapKey`: change it in the render that moves rows without animating them (sub-rows opened or closed above). For that commit the selection fill and the highlight jump with the rows: the selection layer remounts so a block that leaves goes at once, and the rows are measured before paint. The next frame hands the fills back to their springs.",
-      "Header cells can join their own fluid hover scope: TableHead `hoverIndex` registers the cell in a second, x-axis scope (the cell under the pointer only), whose fill glides along the header row the way the row highlight runs down the body. `hideHeadHighlight` puts it away, e.g. while a header is dragged.",
+      'Keyboard focus moves the highlight too: when a row (or a control in it) takes `:focus-visible` focus, the highlight goes to that row, so the fill is the focus mark. Keyboard focus then owns the highlight until the pointer really moves: mouse moves and leaves that arrive at the same client point (rows scrolling under a still pointer) are ignored.',
+      'While an arrow key auto-repeats inside the table, the highlight snaps row to row (`transition={false}`) and stays on the focused row instead of trailing its spring; a single press, and the pointer, still glide.',
+      '`snapKey`: change it in the render that moves rows without animating them (sub-rows opened or closed above). For that commit the selection fill and the highlight jump with the rows: the selection layer remounts so a block that leaves goes at once, and the rows are measured before paint. The next frame hands the fills back to their springs.',
+      'Header cells can join their own fluid hover scope: TableHead `hoverIndex` registers the cell in a second, x-axis scope (the cell under the pointer only), whose fill glides along the header row the way the row highlight runs down the body. `hideHeadHighlight` puts it away, e.g. while a header is dragged.',
     ],
     usage: `import {
   Table, TableHeader, TableBody,
   TableRow, TableHead, TableCell,
-} from "@/components/ui/table";
+} from "#components/ui/table";
 
 <Table>
   <TableHeader>
@@ -1501,25 +1505,25 @@ const [checked, setChecked] = useState(false);
   </TableBody>
 </Table>`,
     props: [
-      "children: ReactNode. TableHeader and TableBody children.",
-      "size: \"default\" | \"compact\" (default from SizeProvider). Pins the rows to one step of the size ladder.",
-      "selectedIndices: number[]. Selected body rows; contiguous ones share one merged background like CheckboxGroup.",
-      "TableRow.index: number. Row index for fluid hover; omit for header rows.",
-      "TableRow.children: ReactNode. TableCell or TableHead children.",
+      'children: ReactNode. TableHeader and TableBody children.',
+      'size: "default" | "compact" (default from SizeProvider). Pins the rows to one step of the size ladder.',
+      'selectedIndices: number[]. Selected body rows; contiguous ones share one merged background like CheckboxGroup.',
+      'TableRow.index: number. Row index for fluid hover; omit for header rows.',
+      'TableRow.children: ReactNode. TableCell or TableHead children.',
     ],
   },
-  "tabs": {
+  tabs: {
     craft: [
-      "The hover pill fades in on the hovered tab at opacity 0.4, glides between unselected tabs on `spring.fast`, and fades out where it is on mouse exit. It hides over the selected tab and never crosses it: past the selected tab a new pill fades in. The selected pill keeps its full opacity while another tab is hovered.",
-      "`activeLabel` mode collapses every non-selected tab to its icon; the label expands/collapses by animating width to a MEASURED `offsetWidth`, never `\"auto\"` \u2014 framer resolves an \"auto\" target from the element's visual (transformed) size, so under a scaled ancestor the spring overshoots and snaps.",
-      "Until the first measurement lands, width stays plain CSS `auto` instead of handing framer \"auto\": under the /demo card's ~1.76x scale framer would write back a too-wide width and spring back down, making the selected tab visibly pulse on arrival.",
+      'The hover pill fades in on the hovered tab at opacity 0.4, glides between unselected tabs on `spring.fast`, and fades out where it is on mouse exit. It hides over the selected tab and never crosses it: past the selected tab a new pill fades in. The selected pill keeps its full opacity while another tab is hovered.',
+      '`activeLabel` mode collapses every non-selected tab to its icon; the label expands/collapses by animating width to a MEASURED `offsetWidth`, never `"auto"` \u2014 framer resolves an "auto" target from the element\'s visual (transformed) size, so under a scaled ancestor the spring overshoots and snaps.',
+      'Until the first measurement lands, width stays plain CSS `auto` instead of handing framer "auto": under the /demo card\'s ~1.76x scale framer would write back a too-wide width and spring back down, making the selected tab visibly pulse on arrival.',
       "The expanding label animates `marginLeft` to 8px, 6px compact: the default matches the ladder's `gap-2`, while the compact value is its own, 2px wider than the ladder's `gap-1`.",
-      "One ResizeObserver on the root watches every registered tab button, and each item runs a second one on its label span, so pill rects re-measure when a label expands/collapses in activeLabel mode; a collapsed tab keeps its name for AT via `aria-label`.",
+      'One ResizeObserver on the root watches every registered tab button, and each item runs a second one on its label span, so pill rects re-measure when a label expands/collapses in activeLabel mode; a collapsed tab keeps its name for AT via `aria-label`.',
       "The list wears `-mx-1 px-1 / -my-1 py-1` so the 2px-outset focus ring can draw inside `overflow-x-auto` without clipping, and `max-w-[calc(100%_+_8px)]` because fit-content parents size against the margin box \u2014 a plain max-w-full would clamp the list 8px too small and clip the first/last tab's ring.",
-      "Activation is manual, `activationMode=\"manual\"` on Radix and `activateOnFocus={false}` on Base UI: arrows move focus, Enter/Space selects. The primitive owns role=\"tablist\", roving tabindex, and Arrow/Home/End.",
+      'Activation is manual, `activationMode="manual"` on Radix and `activateOnFocus={false}` on Base UI: arrows move focus, Enter/Space selects. The primitive owns role="tablist", roving tabindex, and Arrow/Home/End.',
     ],
     usage: `import { useState } from "react";
-import { Tabs, TabsItem, TabsPanel } from "@/components/ui/tabs";
+import { Tabs, TabsItem, TabsPanel } from "#components/ui/tabs";
 
 const tabs = ["Teamspaces", "Recents", "Favorites"];
 const [selected, setSelected] = useState(0);
@@ -1535,73 +1539,73 @@ const [selected, setSelected] = useState(0);
   </TabsPanel>
 ))}`,
     props: [
-      "selectedIndex: number. Index of the currently selected tab.",
-      "onSelect: (index: number) => void. Called when a tab is selected.",
-      "idPrefix: string. Prefix for ARIA IDs linking tabs to panels.",
-      "activeLabel: boolean (default false). Only the selected tab shows its text label. Requires icons on tabs.",
-      "size: \"default\" | \"compact\" (default from SizeProvider). Pins the tabs to one step of the size ladder.",
-      "TabsItem.index: number. Position index within the tab list.",
-      "TabsItem.label: string. Text label for the tab.",
-      "TabsItem.icon: IconComponent. Icon displayed in the tab.",
-      "TabsPanel.index: number. Index of this panel; rendered only when it matches selectedIndex.",
-      "TabsPanel.idPrefix: string. Must match the Tabs idPrefix.",
+      'selectedIndex: number. Index of the currently selected tab.',
+      'onSelect: (index: number) => void. Called when a tab is selected.',
+      'idPrefix: string. Prefix for ARIA IDs linking tabs to panels.',
+      'activeLabel: boolean (default false). Only the selected tab shows its text label. Requires icons on tabs.',
+      'size: "default" | "compact" (default from SizeProvider). Pins the tabs to one step of the size ladder.',
+      'TabsItem.index: number. Position index within the tab list.',
+      'TabsItem.label: string. Text label for the tab.',
+      'TabsItem.icon: IconComponent. Icon displayed in the tab.',
+      'TabsPanel.index: number. Index of this panel; rendered only when it matches selectedIndex.',
+      'TabsPanel.idPrefix: string. Must match the Tabs idPrefix.',
     ],
   },
   textarea: {
     craft: [
       "The Input's hairline on a multi-line box: fixed --border at rest, bg-hover on hover, neutral foreground/40 on focus that wins over aria-invalid's red.",
-      "It grows with field-sizing-content from three lines (76px, 64px compact) to ten (216px, 190px), then scrolls, with resize-none, so a long paste never pushes the form off screen; browsers without field-sizing keep the minimum and scroll.",
+      'It grows with field-sizing-content from three lines (76px, 64px compact) to ten (216px, 190px), then scrolls, with resize-none, so a long paste never pushes the form off screen; browsers without field-sizing keep the minimum and scroll.',
       "Vertical padding puts the first line exactly where an Input's text sits: (36 - 2 - 20) / 2 = 7px, (28 - 2 - 18) / 2 = 4px compact, so a Textarea under an Input starts on the same baseline offset.",
-      "A pill shape steps down to its merged radius, because a full pill radius on a tall box reads as a blob.",
+      'A pill shape steps down to its merged radius, because a full pill radius on a tall box reads as a blob.',
     ],
-    usage: `import { Textarea } from "@/components/ui/textarea";
-import { Field, FieldLabel } from "@/components/ui/field";
+    usage: `import { Textarea } from "#components/ui/textarea";
+import { Field, FieldLabel } from "#components/ui/field";
 
 <Field>
   <FieldLabel htmlFor="notes">Anything else we should know?</FieldLabel>
   <Textarea id="notes" />
 </Field>`,
     props: [
-      "size: \"default\" | \"compact\". Pins the text and padding to one ladder step.",
-      "aria-invalid: boolean. Tints the hairline red until the field is focused.",
-      "disabled: boolean (default false). Dims the field and drops pointer events.",
-      "Every native textarea attribute passes through: value, placeholder, rows, onChange.",
+      'size: "default" | "compact". Pins the text and padding to one ladder step.',
+      'aria-invalid: boolean. Tints the hairline red until the field is focused.',
+      'disabled: boolean (default false). Dims the field and drops pointer events.',
+      'Every native textarea attribute passes through: value, placeholder, rows, onChange.',
     ],
   },
-  "thinking-indicator": {
+  'thinking-indicator': {
     craft: [
-      "The glyph is one SVG path morphing circle \u2192 infinity \u2192 reversed circle \u2192 infinity \u2192 circle in equal quarters (`times: [0,.25,.5,.75, 1]`) over 6s easeInOut, repeating forever; the two circle paths trace opposite winding directions so the loop keeps flowing.",
-      "The label cycles \"Thinking / Moonwalking / Planning / Refining\" every 4000ms; the incoming word slides up from y 80% (0.24s), the outgoing word exits to y -80% slightly faster (0.16s), both on cubic-bezier(0.4, 0, 0.2, 1) with popLayout so they overlap.",
-      "An invisible copy of the longest word sits in the same grid cell to reserve width, so the word cycle never shifts layout.",
-      "The shimmer is a shared `.shimmer-text` utility: transparent text over a 300%-wide gradient clipped to the glyphs, animating background-position 0\u2192100%; colors are `light-dark()` pairs so the sweep inverts correctly per theme.",
-      "Screen readers hear one static sr-only \"Thinking\u2026\" under role=\"status\"; the cycling display is aria-hidden so it doesn't re-announce every 4 seconds.",
-      "Reduced motion drops both the infinite morph and the word cycling \u2014 a static infinity glyph and the first word \"carry the same meaning without the movement\".",
+      'The glyph is one SVG path morphing circle \u2192 infinity \u2192 reversed circle \u2192 infinity \u2192 circle in equal quarters (`times: [0,.25,.5,.75, 1]`) over 6s easeInOut, repeating forever; the two circle paths trace opposite winding directions so the loop keeps flowing.',
+      'The label cycles "Thinking / Moonwalking / Planning / Refining" every 4000ms; the incoming word slides up from y 80% (0.24s), the outgoing word exits to y -80% slightly faster (0.16s), both on cubic-bezier(0.4, 0, 0.2, 1) with popLayout so they overlap.',
+      'An invisible copy of the longest word sits in the same grid cell to reserve width, so the word cycle never shifts layout.',
+      'The shimmer is a shared `.shimmer-text` utility: transparent text over a 300%-wide gradient clipped to the glyphs, animating background-position 0\u2192100%; colors are `light-dark()` pairs so the sweep inverts correctly per theme.',
+      'Screen readers hear one static sr-only "Thinking\u2026" under role="status"; the cycling display is aria-hidden so it doesn\'t re-announce every 4 seconds.',
+      'Reduced motion drops both the infinite morph and the word cycling \u2014 a static infinity glyph and the first word "carry the same meaning without the movement".',
     ],
-    usage: `import { ThinkingIndicator } from "@/components/ui/thinking-indicator";
+    usage: `import { ThinkingIndicator } from "#components/ui/thinking-indicator";
 
 <ThinkingIndicator />
 
 // Text only, inline before a streamed reply
 <ThinkingIndicator showIcon={false} />`,
     props: [
-      "showIcon: boolean (default true). Show the morphing circle to infinity glyph before the label. Set false for a text-only indicator.",
-      "size: \"default\" | \"compact\" (default from SizeProvider). Step on the size ladder. Wins over the surrounding SizeProvider.",
+      'showIcon: boolean (default true). Show the morphing circle to infinity glyph before the label. Set false for a text-only indicator.',
+      'size: "default" | "compact" (default from SizeProvider). Step on the size ladder. Wins over the surrounding SizeProvider.',
     ],
   },
-  "thinking-steps": {
+  'thinking-steps': {
     craft: [
-      "Each step enters in two phases: an outer wrapper opens height on spring.slow (to a measured pixel height, never \"auto\") while the inner content fades in after a default 0.08s delay \u2014 space opens first, then content appears. Pixel targets are used because framer resolves an \"auto\" height from the element's visual (transformed) size, so under a scaled ancestor the whole list would overshoot and snap back.",
-      "Steps with `status=\"pending\"` render nothing at all; flipping them to active/complete is what streams the list in. The active step's label gets `.shimmer-text` plus an appended \"\u2026\".",
-      "The header trigger stacks an invisible semibold label layer to reserve bold width, animates weight normal\u2192semibold when open, recolors muted\u2192foreground on hover/open, thickens the chevron stroke 1.5\u21922, and rotates the chevron 0\u219290\u00b0 on spring.fast.",
-      "The collapse panel keeps content force-mounted: Radix/Base UI would apply `hidden` (display:none) the moment it closes, freezing the exit mid-flight, so the component applies `hidden` itself only after the framer exit completes, preserving the trigger\u2194panel aria-controls contract.",
-      "A panel that is already open at mount SNAPs (duration 0) to its first measured pixel target instead of springing \u2014 the auto\u2192pixel hand-off would otherwise animate on load; later opens spring normally with `bounce: 0` because \"pure height looks better without overshoot\".",
+      'Each step enters in two phases: an outer wrapper opens height on spring.slow (to a measured pixel height, never "auto") while the inner content fades in after a default 0.08s delay \u2014 space opens first, then content appears. Pixel targets are used because framer resolves an "auto" height from the element\'s visual (transformed) size, so under a scaled ancestor the whole list would overshoot and snap back.',
+      'Steps with `status="pending"` render nothing at all; flipping them to active/complete is what streams the list in. The active step\'s label gets `.shimmer-text` plus an appended "\u2026".',
+      'The header trigger stacks an invisible semibold label layer to reserve bold width, animates weight normal\u2192semibold when open, recolors muted\u2192foreground on hover/open, thickens the chevron stroke 1.5\u21922, and rotates the chevron 0\u219290\u00b0 on spring.fast.',
+      'The collapse panel keeps content force-mounted: Radix/Base UI would apply `hidden` (display:none) the moment it closes, freezing the exit mid-flight, so the component applies `hidden` itself only after the framer exit completes, preserving the trigger\u2194panel aria-controls contract.',
+      'A panel that is already open at mount SNAPs (duration 0) to its first measured pixel target instead of springing \u2014 the auto\u2192pixel hand-off would otherwise animate on load; later opens spring normally with `bounce: 0` because "pure height looks better without overshoot".',
       "Each step's icon column is a fixed 14px cell with a 1px connector line stretching from below the icon to the step's bottom; `isLast` hides the line so the rail terminates cleanly.",
-      "Source badges enter with a blur(4px)\u21920 + scale 0.85\u21921 + fade on spring.moderate, staggerable via per-badge `delay` (docs use 0.05s increments); step images use the same blur-in without the scale, plus a 1px inset pure-black/pure-white 10% outline so screenshots keep a visible edge on either theme.",
+      'Source badges enter with a blur(4px)\u21920 + scale 0.85\u21921 + fade on spring.moderate, staggerable via per-badge `delay` (docs use 0.05s increments); step images use the same blur-in without the scale, plus a 1px inset pure-black/pure-white 10% outline so screenshots keep a visible edge on either theme.',
     ],
     usage: `import {
   ThinkingSteps, ThinkingStepsHeader, ThinkingStepsContent,
   ThinkingStep, ThinkingStepDetails,
-} from "@/components/ui/thinking-steps";
+} from "#components/ui/thinking-steps";
 
 <ThinkingSteps>
   <ThinkingStepsHeader />
@@ -1614,33 +1618,33 @@ import { Field, FieldLabel } from "@/components/ui/field";
   </ThinkingStepsContent>
 </ThinkingSteps>`,
     props: [
-      "defaultOpen: boolean (default true). Whether the accordion starts expanded (uncontrolled).",
-      "open: boolean. Controlled open state. Use with onOpenChange.",
-      "onOpenChange: (open: boolean) => void. Callback when the open state changes.",
-      "size: \"default\" | \"compact\" (default from SizeProvider). Step on the size ladder.",
-      "ThinkingStepsHeader.children: ReactNode (default \"Thinking\"). Header label text.",
-      "ThinkingStep.label: string. Step label text.",
-      "ThinkingStep.icon: IconName (default \"dot\"). Icon name from the icon library.",
-      "ThinkingStep.status: \"complete\" | \"active\" | \"pending\" (default \"complete\"). Pending steps are hidden; active steps show shimmer text.",
-      "ThinkingStep.isLast: boolean (default false). Hides the connector line below this step.",
-      "ThinkingStepDetails.summary / details: string / string[]. Collapsed label and the detail lines rendered inside the nested accordion.",
+      'defaultOpen: boolean (default true). Whether the accordion starts expanded (uncontrolled).',
+      'open: boolean. Controlled open state. Use with onOpenChange.',
+      'onOpenChange: (open: boolean) => void. Callback when the open state changes.',
+      'size: "default" | "compact" (default from SizeProvider). Step on the size ladder.',
+      'ThinkingStepsHeader.children: ReactNode (default "Thinking"). Header label text.',
+      'ThinkingStep.label: string. Step label text.',
+      'ThinkingStep.icon: IconName (default "dot"). Icon name from the icon library.',
+      'ThinkingStep.status: "complete" | "active" | "pending" (default "complete"). Pending steps are hidden; active steps show shimmer text.',
+      'ThinkingStep.isLast: boolean (default false). Hides the connector line below this step.',
+      'ThinkingStepDetails.summary / details: string / string[]. Collapsed label and the detail lines rendered inside the nested accordion.',
     ],
   },
-  "tooltip": {
+  tooltip: {
     craft: [
-      "Enters on the fast tier (0.08s spring) with a 4px slide toward the trigger from the chosen side (top\u2192y:4, bottom\u2192y:-4, left\u2192x:4, right\u2192x:-4) and fades out on the quicker 0.06s exit tween; default `sideOffset` is 8.",
-      "Hover delay defaults to 200ms; an app-level `TooltipProvider` adds skip-delay grouping (300ms window) so moving between adjacent triggers shows the next tooltip instantly. Each bare Tooltip falls back to a per-instance provider only when no ambient one exists \u2014 a per-instance provider everywhere would defeat the grouping and re-wait the full delay between neighbors.",
-      "A row of icon buttons shares one bubble: wrap the row in `TooltipGroup` and write the Tooltips inside as usual. The first opens after the delay with the normal entrance; moving to a neighbor (pointer or Tab) glides the same bubble there on the fast tier (0.08s), its width following the new label, while the labels ride its center and crossfade (old out on the 0.06s exit). The group is not tied to a row: a column with `side=\"right\"` or a grid glides the same way, on both axes. Every bubble of a group sits on the same side of its trigger, always: a glide from above one button to below the next crosses the buttons. Write one `side` for the whole group (tests/tooltip-group-sides fails a group that mixes them), and the group holds it at runtime: a tooltip opens on the side its neighbors were placed on, over its own `side`, so once a taller bubble (a label with a key cap) has no room and flips, the rest follow it there until the page scrolls or resizes. The one time two neighbors still land on opposite sides, they swap with a fade, never a glide. Without the group, neighbors skip the delay but each bubble still fades out and a new one fades in.",
+      'Enters on the fast tier (0.08s spring) with a 4px slide toward the trigger from the chosen side (top\u2192y:4, bottom\u2192y:-4, left\u2192x:4, right\u2192x:-4) and fades out on the quicker 0.06s exit tween; default `sideOffset` is 8.',
+      'Hover delay defaults to 200ms; an app-level `TooltipProvider` adds skip-delay grouping (300ms window) so moving between adjacent triggers shows the next tooltip instantly. Each bare Tooltip falls back to a per-instance provider only when no ambient one exists \u2014 a per-instance provider everywhere would defeat the grouping and re-wait the full delay between neighbors.',
+      'A row of icon buttons shares one bubble: wrap the row in `TooltipGroup` and write the Tooltips inside as usual. The first opens after the delay with the normal entrance; moving to a neighbor (pointer or Tab) glides the same bubble there on the fast tier (0.08s), its width following the new label, while the labels ride its center and crossfade (old out on the 0.06s exit). The group is not tied to a row: a column with `side="right"` or a grid glides the same way, on both axes. Every bubble of a group sits on the same side of its trigger, always: a glide from above one button to below the next crosses the buttons. Write one `side` for the whole group (tests/tooltip-group-sides fails a group that mixes them), and the group holds it at runtime: a tooltip opens on the side its neighbors were placed on, over its own `side`, so once a taller bubble (a label with a key cap) has no room and flips, the rest follow it there until the page scrolls or resizes. The one time two neighbors still land on opposite sides, they swap with a fade, never a glide. Without the group, neighbors skip the delay but each bubble still fades out and a new one fades in.',
       "Inside a group a closed tooltip holds for 150ms before its exit fade, so the pointer can cross the gap between two buttons without the bubble blinking out; a neighbor that opens during the hold takes over, one that opens after it enters on its own. Grouped bubbles are not hoverable (a hoverable bubble keeps the triggers in the pointer's path from opening) and take no pointer events, the Radix popper wrapper included: in a grid, the tooltip of a lower button sits over the button above it and would block it. Two groups never share a bubble: crossing from one to the other waits the delay again.",
       "How the glide is built, to keep when changing it: every tooltip keeps its own primitive popup, so placement, collision, Escape and `aria-describedby` stay per trigger. Only the dark shape and the label are handed over: the opening bubble waits one frame for the primitive to place it, reads the outgoing shape's client rect (mid-flight included, so a fast sweep stays continuous), hides the outgoing one at once, and springs its own shape from that rect by animating `left/right/top/bottom` insets to 0. Insets, not a scale (corners would bend) and never width `auto` (the popup keeps its natural size for the positioner); rect deltas are divided by the ancestor scale. Under reduced motion the shape snaps to the new trigger, the entrance loses its slide, and the fades stay.",
-      "`followCursor=\"x\" | \"y\"` tracks the pointer along one axis for tall or wide triggers (the Sidebar rail) where a centered tooltip sits far from the pointer; the other axis stays anchored by `side`. The offset is a framer motion value, so per-move updates skip React re-renders; a force-opened follow tooltip rests centered until a real pointer takes over.",
-      "The bubble is an inverted surface (`bg-foreground text-background`), 12px at regular weight (`fontVariationSettings`); `text-box: trim-both cap alphabetic` recenters the label, with the padding bump applied only where text-box is supported so overall height stays ~24px on untrimmed browsers.",
-      "Every one-line tooltip is the same height, with a keystroke or without. Pass the keystroke as `shortcut` (`<Tooltip content=\"Collapse\" shortcut=\"Esc\">`, a combo like `\"⇧⌘O\"` draws one cap per key), never a hand-built row in `content`: a flex row escapes the bubble's text-box trim and comes out about 7px taller, which also makes it flip sides sooner than its neighbors. The prop trims the label again and draws the caps 8px after it with `-my-[5px]`, so they add no height. A tooltip with its own layout (the Sidebar rail's two lines) uses `TooltipShortcut` for the caps and trims each label itself.",
-      "A keystroke looks the same everywhere, in a tooltip, a menu row, a button, a field or a sentence: `KeyCap` from `@/lib/key-cap`, an 18px filled cap with no outline (2px corners, `bg-foreground/8` under muted text, mono 11px, 4px side padding; glyph keys like ⌘ and ← in the sans face, which draws them at letter size). On a dark surface (tooltip, toast, primary button) it is `tone=\"inverted\"`: `bg-background/15` under `text-background`. `KeyCaps` splits a combo into one cap per key, 2px apart. Nothing else draws a `<kbd>` (tests/key-cap fails one), and a shortcut is never bare text.",
+      '`followCursor="x" | "y"` tracks the pointer along one axis for tall or wide triggers (the Sidebar rail) where a centered tooltip sits far from the pointer; the other axis stays anchored by `side`. The offset is a framer motion value, so per-move updates skip React re-renders; a force-opened follow tooltip rests centered until a real pointer takes over.',
+      'The bubble is an inverted surface (`bg-foreground text-background`), 12px at regular weight (`fontVariationSettings`); `text-box: trim-both cap alphabetic` recenters the label, with the padding bump applied only where text-box is supported so overall height stays ~24px on untrimmed browsers.',
+      'Every one-line tooltip is the same height, with a keystroke or without. Pass the keystroke as `shortcut` (`<Tooltip content="Collapse" shortcut="Esc">`, a combo like `"⇧⌘O"` draws one cap per key), never a hand-built row in `content`: a flex row escapes the bubble\'s text-box trim and comes out about 7px taller, which also makes it flip sides sooner than its neighbors. The prop trims the label again and draws the caps 8px after it with `-my-[5px]`, so they add no height. A tooltip with its own layout (the Sidebar rail\'s two lines) uses `TooltipShortcut` for the caps and trims each label itself.',
+      'A keystroke looks the same everywhere, in a tooltip, a menu row, a button, a field or a sentence: `KeyCap` from `@/lib/key-cap`, an 18px filled cap with no outline (2px corners, `bg-foreground/8` under muted text, mono 11px, 4px side padding; glyph keys like ⌘ and ← in the sans face, which draws them at letter size). On a dark surface (tooltip, toast, primary button) it is `tone="inverted"`: `bg-background/15` under `text-background`. `KeyCaps` splits a combo into one cap per key, 2px apart. Nothing else draws a `<kbd>` (tests/key-cap fails one), and a shortcut is never bare text.',
       "`contentClassName` exists because Radix copies the content's z-index onto its popper wrapper: pass a z utility there to lift the whole tooltip above other fixed layers (default: the `--z-tooltip` step, 70); on Base UI the same prop lands on the Positioner instead. `className` styles the bubble itself.",
-      "`forceOpen` pins the tooltip open (or closed) over the hover/focus behavior \u2014 `onOpenChange` still reports the internal state before forceOpen is applied.",
+      '`forceOpen` pins the tooltip open (or closed) over the hover/focus behavior \u2014 `onOpenChange` still reports the internal state before forceOpen is applied.',
     ],
-    usage: `import { Tooltip } from "@/components/ui/tooltip";
+    usage: `import { Tooltip } from "#components/ui/tooltip";
 
 <Tooltip content="Save your changes">
   <button>Hover me</button>
@@ -1656,40 +1660,40 @@ import { Field, FieldLabel } from "@/components/ui/field";
 </Tooltip>
 
 // A row of icon buttons: one bubble glides from trigger to trigger.
-import { Tooltip, TooltipGroup } from "@/components/ui/tooltip";
+import { Tooltip, TooltipGroup } from "#components/ui/tooltip";
 
 <TooltipGroup>
   <Tooltip content="Filter"><button aria-label="Filter">…</button></Tooltip>
   <Tooltip content="Columns"><button aria-label="Columns">…</button></Tooltip>
 </TooltipGroup>`,
     props: [
-      "content: ReactNode. The content displayed inside the tooltip.",
-      "children: ReactElement. The trigger element. Must accept a ref.",
-      "shortcut: string | string[]. A keystroke shown after the label, one key cap per key. The tooltip keeps the height of one without it.",
-      "side: \"top\" | \"right\" | \"bottom\" | \"left\" (default \"top\"). Preferred side of the trigger to render the tooltip.",
-      "sideOffset: number (default 8). Distance in pixels between the tooltip and the trigger.",
-      "delayDuration: number (default 200). Milliseconds to wait before showing the tooltip on hover.",
-      "followCursor: \"x\" | \"y\". Track the cursor along one axis while hovering; the other axis stays anchored by side.",
-      "forceOpen: boolean. True forces the tooltip open, false forces it closed, undefined uses hover and focus.",
-      "onOpenChange: (open: boolean) => void. Called when the internal open state changes.",
-      "className: string. Additional classes applied to the tooltip content container.",
-      "contentClassName: string. Classes for the portalled element; pass a z-index utility to lift the tooltip above other fixed layers (default: the --z-tooltip step, 70).",
-      "TooltipGroup.children: ReactNode. The row of triggers, each in its own Tooltip, all on the same side. They share one bubble.",
-      "TooltipGroup.delayDuration: number (default 200). Milliseconds to wait before the first tooltip of the group opens.",
-      "TooltipGroup.skipDelayDuration: number (default 300). After a tooltip closes, the others in the group open without the delay for this many milliseconds.",
+      'content: ReactNode. The content displayed inside the tooltip.',
+      'children: ReactElement. The trigger element. Must accept a ref.',
+      'shortcut: string | string[]. A keystroke shown after the label, one key cap per key. The tooltip keeps the height of one without it.',
+      'side: "top" | "right" | "bottom" | "left" (default "top"). Preferred side of the trigger to render the tooltip.',
+      'sideOffset: number (default 8). Distance in pixels between the tooltip and the trigger.',
+      'delayDuration: number (default 200). Milliseconds to wait before showing the tooltip on hover.',
+      'followCursor: "x" | "y". Track the cursor along one axis while hovering; the other axis stays anchored by side.',
+      'forceOpen: boolean. True forces the tooltip open, false forces it closed, undefined uses hover and focus.',
+      'onOpenChange: (open: boolean) => void. Called when the internal open state changes.',
+      'className: string. Additional classes applied to the tooltip content container.',
+      'contentClassName: string. Classes for the portalled element; pass a z-index utility to lift the tooltip above other fixed layers (default: the --z-tooltip step, 70).',
+      'TooltipGroup.children: ReactNode. The row of triggers, each in its own Tooltip, all on the same side. They share one bubble.',
+      'TooltipGroup.delayDuration: number (default 200). Milliseconds to wait before the first tooltip of the group opens.',
+      'TooltipGroup.skipDelayDuration: number (default 300). After a tooltip closes, the others in the group open without the delay for this many milliseconds.',
     ],
   },
-  "context-menu": {
+  'context-menu': {
     craft: [
       "ContextMenu is the Dropdown opened at the pointer, not a second menu: a zero-size trigger is portalled to the body at the click point (fixed, so a scaled or scrolled ancestor can't offset it) and the flavored DropdownMenu opens from it. Items, fluid hover, typeahead, submenus and motion are the Dropdown's own in both flavors, with nothing duplicated.",
       "The menu opens down and to the right of the pointer, 2px off it, and flips at the window's edges like any Dropdown.",
       "Only what `filter` accepts opens the menu; everything else keeps the browser's. Text fields always keep the browser's menu (paste, spelling), and a nested trigger that already opened claims the event through defaultPrevented, so the outer one stays shut.",
-      "Shift + F10 or the Menu key opens it under the focused element (8px in from its left edge, at its bottom). On close, focus goes back to what held it when the menu opened, never to the hidden trigger.",
+      'Shift + F10 or the Menu key opens it under the focused element (8px in from its left edge, at its bottom). On close, focus goes back to what held it when the menu opened, never to the hidden trigger.',
       "While the menu is open, what was right-clicked stays lit and nothing else on the page hovers: a clear fixed layer sits just under the menu, and a press on it closes the menu. The pointer has left the item for the menu, so :hover can't hold it; light it from state (the item recorded in onContextMenu, while onOpenChange says open) or, for a single-element trigger, from its data-open attribute.",
       "In DataTable, rowActionsColumn's items are the right-click menu too (meta.rowMenu), so a row's actions are written once; the right-clicked row holds the hover fill in its own cells while its menu is open, rounded at its ends, and the selection is left alone.",
     ],
-    usage: `import { ContextMenu, ContextMenuTrigger, ContextMenuContent } from "@/components/ui/context-menu";
-import { MenuItem } from "@/components/ui/menu-item";
+    usage: `import { ContextMenu, ContextMenuTrigger, ContextMenuContent } from "#components/ui/context-menu";
+import { MenuItem } from "#components/ui/menu-item";
 
 <ContextMenu>
   <ContextMenuTrigger className="h-40 rounded-lg border border-dashed">
@@ -1702,26 +1706,26 @@ import { MenuItem } from "@/components/ui/menu-item";
 </ContextMenu>`,
     props: [
       "ContextMenu: onOpenChange (open) => void; disabled keeps the browser's menu; size pins the rows to one ladder step.",
-      "ContextMenuTrigger: filter (target: Element) => boolean picks which elements open it; render swaps the default div for your element (its handlers run first); onContextMenu runs first, so record what was clicked there.",
+      'ContextMenuTrigger: filter (target: Element) => boolean picks which elements open it; render swaps the default div for your element (its handlers run first); onContextMenu runs first, so record what was clicked there.',
       "ContextMenuContent: DropdownContent's props (checkedIndex, checkedIndices, collisionBoundary, className), side and align fixed; sideOffset defaults to 2.",
     ],
   },
-  "command-menu": {
+  'command-menu': {
     craft: [
       "The input keeps DOM focus the whole time and points at the highlighted row through `aria-activedescendant`; there is no list primitive \u2014 the one thing a primitive would add, the modal shell, comes from the library's own Dialog. Row mousedown is `preventDefault`ed so a click never blurs the field.",
-      "The highlight is the fluid hover fill and nothing else \u2014 no focus ring in the list, like the dropdown and combobox popups; the pointer moves it through useFluidHover, the keyboard through setActiveIndex, and Enter runs whatever it sits on.",
-      "The panel's frame springs to its rows' measured height on the moderate tier (0.16s) \u2014 measured via `offsetHeight` (transform-immune), never `height: \"auto\"`, because framer would read the visual size under a scaled ancestor; reduced motion snaps. A max-height on the shell inherits down and the list scrolls past it.",
-      "CommandMenuDialog opens centered at its cap min(440px, 76dvh) and keeps that top edge \u2014 `top-[max(12dvh,calc(50dvh-220px))]` \u2014 so the field stays put while the rows under it filter down. It closes on Escape and on a pick (`closeOnSelect`), so no \u2715 button is rendered.",
-      "Keyboard scrolling is done at the moment a move is decided, not in an effect: a keyboard move keeps its row at the CENTER of the viewport (as the ends allow) and the viewport travels on the same fast spring as the highlight so row and fill move together; a move that lands on the first row snaps to the top instead, as a query reset does, heading included. Offsets, never `scrollIntoView`, which would also scroll the page.",
+      'The highlight is the fluid hover fill and nothing else \u2014 no focus ring in the list, like the dropdown and combobox popups; the pointer moves it through useFluidHover, the keyboard through setActiveIndex, and Enter runs whatever it sits on.',
+      'The panel\'s frame springs to its rows\' measured height on the moderate tier (0.16s) \u2014 measured via `offsetHeight` (transform-immune), never `height: "auto"`, because framer would read the visual size under a scaled ancestor; reduced motion snaps. A max-height on the shell inherits down and the list scrolls past it.',
+      'CommandMenuDialog opens centered at its cap min(440px, 76dvh) and keeps that top edge \u2014 `top-[max(12dvh,calc(50dvh-220px))]` \u2014 so the field stays put while the rows under it filter down. It closes on Escape and on a pick (`closeOnSelect`), so no \u2715 button is rendered.',
+      'Keyboard scrolling is done at the moment a move is decided, not in an effect: a keyboard move keeps its row at the CENTER of the viewport (as the ends allow) and the viewport travels on the same fast spring as the highlight so row and fill move together; a move that lands on the first row snaps to the top instead, as a query reset does, heading included. Offsets, never `scrollIntoView`, which would also scroll the page.',
       "Arrows wrap at both ends \u2014 the list is the whole keyboard space, no field stop (unlike the combobox) \u2014 and skip disabled rows; the first enabled row is re-highlighted whenever the row set changes (detected by a NUL-joined values key, so an inline items literal doesn't reset it), so Enter always has a target as the query filters. Pointer leaving the list keeps the highlight where it was.",
       "With CommandMenuTabs mounted, \u2190 and \u2192 in the field switch tabs (wrapping) instead of moving the caret; presses modified with Shift, Alt, Ctrl or Meta keep their editing meaning, so Shift+Arrow still extends the selection. IME composition keys are left to the composer (including Safari's keyCode 229 commit). Escape closes the dialog shell, but inline it clears the query.",
-      "Shortcut system: `\"mod+k\"` is \u2318K on a Mac, Ctrl+K elsewhere (\"mod\" matches either while listening); physical-key (`code`) fallback applies when `key` isn't a Latin letter/digit or when \u2325 is held, so an unmodified Dvorak \"t\" is never read as physical K; a bare key stays out of editable fields. Among mounted dialogs sharing a combo, an open one answers first (the press closes it), else the most recently mounted one whose `shortcutScope` holds focus.",
-      "The footer's Enter hint names the highlighted row's `action` (default: its label) so it reads as the thing Enter does (\"Open Showcase\") rather than a generic \"Run\"; it sits at the trailing edge so its changing width never moves the other hints, which follow the menu (tabs add \u2190 \u2192, a dialog adds Esc).",
+      'Shortcut system: `"mod+k"` is \u2318K on a Mac, Ctrl+K elsewhere ("mod" matches either while listening); physical-key (`code`) fallback applies when `key` isn\'t a Latin letter/digit or when \u2325 is held, so an unmodified Dvorak "t" is never read as physical K; a bare key stays out of editable fields. Among mounted dialogs sharing a combo, an open one answers first (the press closes it), else the most recently mounted one whose `shortcutScope` holds focus.',
+      'The footer\'s Enter hint names the highlighted row\'s `action` (default: its label) so it reads as the thing Enter does ("Open Showcase") rather than a generic "Run"; it sits at the trailing edge so its changing width never moves the other hints, which follow the menu (tabs add \u2190 \u2192, a dialog adds Esc).',
       "Suggested rows lead under their own heading while nothing is typed, and leave their original group so nothing is listed twice; the default filter matches every query word against label + description + keywords and never re-sorts, so rows don't move under the cursor as the query grows.",
     ],
     usage: `import {
   CommandMenu, CommandMenuInput, CommandMenuList, CommandMenuEmpty,
-} from "@/components/ui/command-menu";
+} from "#components/ui/command-menu";
 import { Plus, Home } from "lucide-react";
 
 const items = [
@@ -1737,30 +1741,30 @@ const items = [
 </CommandMenu>
 // Wrap in CommandMenuDialog for the ⌘K modal shell.`,
     props: [
-      "items: readonly CommandMenuItemData[] (required). The actions. A new array identity is safe: the highlight resets to the first row only when the row values themselves change, so an inline literal costs nothing.",
+      'items: readonly CommandMenuItemData[] (required). The actions. A new array identity is safe: the highlight resets to the first row only when the row values themselves change, so an inline literal costs nothing.',
       "onSelect: (item: CommandMenuItemData) => void. Runs when a row is picked, after the item's own onSelect.",
-      "filter: (item, query) => boolean (default defaultCommandMenuFilter). Default: every query word matches label, description, or keywords.",
-      "query / defaultQuery / onQueryChange. Controlled or uncontrolled query (defaultQuery defaults to an empty string).",
-      "suggestions: readonly string[]. Values listed first under suggestionsLabel while nothing is typed; a suggested row leaves its own group so it is listed once.",
+      'filter: (item, query) => boolean (default defaultCommandMenuFilter). Default: every query word matches label, description, or keywords.',
+      'query / defaultQuery / onQueryChange. Controlled or uncontrolled query (defaultQuery defaults to an empty string).',
+      'suggestions: readonly string[]. Values listed first under suggestionsLabel while nothing is typed; a suggested row leaves its own group so it is listed once.',
       "suggestionsLabel: string (default 'Suggestions'). Heading of the suggestions section.",
-      "closeOnSelect: boolean (default true). Inside CommandMenuDialog: picking a row closes the dialog.",
+      'closeOnSelect: boolean (default true). Inside CommandMenuDialog: picking a row closes the dialog.',
       "size: 'default' | 'compact'. Pins field and rows to one step of the size ladder; omitted, both follow the surrounding SizeProvider.",
-      "children (required): CommandMenuInput, optional CommandMenuTabs/Filters, CommandMenuList, optional CommandMenuFooter.",
+      'children (required): CommandMenuInput, optional CommandMenuTabs/Filters, CommandMenuList, optional CommandMenuFooter.',
     ],
   },
-  "queued-stack": {
+  'queued-stack': {
     craft: [
-      "At rest only the front card plus at most 2 peeks show: each deeper card rises 12px and scales down 0.05 per step (transform-origin bottom center); anything past peek 2 sits at opacity 0. Card height rides the size ladder (44px default, 38px compact), and collapsedStackHeight() is exported so the transcript can reserve exactly that much padding.",
-      "Hover fans the stack out (container animates to count*cardH + 8px gaps, cards spring to slots on spring.moderate, bounce 0 on the height). Touch is detected via (hover: none): a tap expands and PINS the stack open, a chevron button collapses it, and the pinned state resets when the queue empties.",
-      "Once the collapsed pile hits its peek cap, a new message lands out of sight \u2014 so every growth recoils the whole stack: snap to y -7, spring-settle back (0.42s, bounce 0.5). Skipped while expanded and on the first fill, where the stack appearing is its own feedback.",
+      'At rest only the front card plus at most 2 peeks show: each deeper card rises 12px and scales down 0.05 per step (transform-origin bottom center); anything past peek 2 sits at opacity 0. Card height rides the size ladder (44px default, 38px compact), and collapsedStackHeight() is exported so the transcript can reserve exactly that much padding.',
+      'Hover fans the stack out (container animates to count*cardH + 8px gaps, cards spring to slots on spring.moderate, bounce 0 on the height). Touch is detected via (hover: none): a tap expands and PINS the stack open, a chevron button collapses it, and the pinned state resets when the queue empties.',
+      'Once the collapsed pile hits its peek cap, a new message lands out of sight \u2014 so every growth recoils the whole stack: snap to y -7, spring-settle back (0.42s, bounce 0.5). Skipped while expanded and on the first fill, where the stack appearing is its own feedback.',
       "A corner-arrow sits in the 40px left gutter with an 'N queued messages' tooltip; the count fades/scales in beside it only once cards overflow the visible peeks, pinned so the number appearing never nudges the arrow.",
-      "Drag-to-reorder works only while expanded: a 4px dead zone arms the drag, the card follows the pointer at duration 0 (scale 1.03, z-index 200) while the rest spring to their slots; listeners are on window so release works anywhere, and touchAction none claims the vertical gesture so a touch drag reorders instead of scrolling the transcript.",
+      'Drag-to-reorder works only while expanded: a 4px dead zone arms the drag, the card follows the pointer at duration 0 (scale 1.03, z-index 200) while the rest spring to their slots; listeners are on window so release works anywhere, and touchAction none claims the vertical gesture so a touch drag reorders instead of scrolling the transcript.',
       "morphLayoutId shares a framer layoutId between a dispatching card and its sent bubble \u2014 but only for text-only cards (attachment layouts differ too much; those fade) and only while no drag is in progress (layout projection fights the animated y transform). The consumer clears the morph props ~450ms after dispatch so later transcript reflows don't re-fire it.",
-      "Edit (pencil, same as double-click) and remove buttons are hidden until hover — out of layout so the text gets the full card width — and always visible on touch; both stopPropagation on pointer-down so they never start a drag. Their tooltips share one TooltipGroup, so the bubble glides from Edit to Remove.",
+      'Edit (pencil, same as double-click) and remove buttons are hidden until hover — out of layout so the text gets the full card width — and always visible on touch; both stopPropagation on pointer-down so they never start a drag. Their tooltips share one TooltipGroup, so the bubble glides from Edit to Remove.',
       "Attachment thumbnails and the +N tile derive their radius from the queue card's radius minus the actual 8px inset (~7px compact), so the leading nested corner remains concentric in both rounded and pill modes.",
     ],
-    usage: `import { InputMessage, type QueuedMessage } from "@/components/ui/input-message";
-import { QueuedStack, collapsedStackHeight, useQueueCardHeight } from "@/components/queued-stack";
+    usage: `import { InputMessage, type QueuedMessage } from "#components/ui/input-message";
+import { QueuedStack, collapsedStackHeight, useQueueCardHeight } from "#components/queued-stack";
 
 const [queue, setQueue] = useState<QueuedMessage[]>([]);
 const cardH = useQueueCardHeight();
@@ -1778,19 +1782,19 @@ const cardH = useQueueCardHeight();
     onSend={(text, files, meta) => {/* meta?.queuedId tags queue dispatches */}} />
 </div>`,
     props: [
-      "queue: QueuedMessage[] (required). The controlled queue; the front card is queue[0]. Items are { id, text, files }.",
-      "onQueueChange: (queue) => void (required). Fired with the reordered queue while dragging a card between slots.",
-      "onEdit: (item) => void (required). Pull a card back into the composer (pencil button / double-click).",
-      "onRemove: (item) => void (required). Remove a card.",
+      'queue: QueuedMessage[] (required). The controlled queue; the front card is queue[0]. Items are { id, text, files }.',
+      'onQueueChange: (queue) => void (required). Fired with the reordered queue while dragging a card between slots.',
+      'onEdit: (item) => void (required). Pull a card back into the composer (pencil button / double-click).',
+      'onRemove: (item) => void (required). Remove a card.',
       "bottom: number (required). Distance from the container's bottom edge, usually composer height + 8.",
-      "morphLayoutId?: (item) => string. Shared-layout id per card so a dispatching card morphs into its sent bubble; applied only to text-only cards while no drag is in progress.",
-      "Also exported: QUEUE_CARD_H (44), QUEUE_CARD_H_COMPACT (38), useQueueCardHeight(), collapsedStackHeight(count, cardH).",
+      'morphLayoutId?: (item) => string. Shared-layout id per card so a dispatching card morphs into its sent bubble; applied only to text-only cards while no drag is in progress.',
+      'Also exported: QUEUE_CARD_H (44), QUEUE_CARD_H_COMPACT (38), useQueueCardHeight(), collapsedStackHeight(count, cardH).',
     ],
   },
-  "sidebar-app": {
+  'sidebar-app': {
     craft: [
       "While the sidebar is only peeked, the floating overlay covers the pointer's one way to pin it \u2014 so a SidebarTrigger takes the workspace tile's slot, positioned as a sibling over the row (never a button inside the row button). Trigger and tile cross-fade in place (opacity only, 80ms, nothing moves) and the row's constant padding keeps the name pinned on the rows' 32px text axis through the swap.",
-      "The overlaid trigger deliberately drops its hover fill (its box is off-axis from the tile slot; a background would read as a second, non-concentric rectangle) and pins its glyph to 16px. A container query hides the dropdown chevron once the row is too narrow to show a useful slice of the name.",
+      'The overlaid trigger deliberately drops its hover fill (its box is off-axis from the tile slot; a background would read as a second, non-concentric rectangle) and pins its glyph to 16px. A container query hides the dropdown chevron once the row is too narrow to show a useful slice of the name.',
       "Search sits on the menu rows' own rhythm: leading icon on the rows' 16px icon axis, text starting on the 32px text axis, and the field is composed with the 'New' action row as one block so it reads as the list's first row.",
       "Shortcut chips wait invisible at the trailing edge (the search field's command-K, the New row's kbd chip) and fade in over 80ms on hover or focus-within, so the placeholder and label own the row at rest.",
       "The user footer rides the shared axes: 20px avatar pulled onto the rows' leading icon axis, trailing glyph on the action axis, and its menu opens upward on the shared popup grid \u2014 sized to the trigger +10px and shifted onto the row's edge so the popup's labels line up with the trigger row exactly.",
@@ -1799,9 +1803,9 @@ const cardH = useQueueCardHeight();
     ],
     usage: `"use client";
 
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidebar-app/app-sidebar";
-import { SidebarInsetTopbar } from "@/components/sidebar-app/inset-topbar";
+import { SidebarProvider, SidebarInset } from "#components/ui/sidebar";
+import { AppSidebar } from "#components/sidebar-app/app-sidebar";
+import { SidebarInsetTopbar } from "#components/sidebar-app/inset-topbar";
 
 export default function Page() {
   return (
@@ -1818,27 +1822,27 @@ export default function Page() {
 // Flicker-free default: read the sidebar_state cookie in a server layout and pass defaultOpen.`,
     props: [
       "AppSidebar: no props of its own beyond Omit<SidebarProps, 'children'> (side, collapsible, rail, bordered; it pins variant='inset'). Content is edited in place; seed data lives in nav-data.ts.",
-      "SidebarWorkspaceHeader: name (required), tile (required, a 20px mark - see WorkspaceTile), menu? (dropdown rows; omit for a non-interactive lockup), checkedIndex?.",
-      "SidebarUserFooter: name (required), avatar (required, 20px), menu (required, opens upward), className?.",
+      'SidebarWorkspaceHeader: name (required), tile (required, a 20px mark - see WorkspaceTile), menu? (dropdown rows; omit for a non-interactive lockup), checkedIndex?.',
+      'SidebarUserFooter: name (required), avatar (required, 20px), menu (required, opens upward), className?.',
       "SidebarSearchField: shortcut? (default '\\u2318K', null drops the chip), placeholder?, plus SidebarInput props.",
-      "SidebarInsetTopbar: children? (content after the trigger), className?.",
+      'SidebarInsetTopbar: children? (content after the trigger), className?.',
     ],
   },
-  "dialog-sidebar": {
+  'dialog-sidebar': {
     craft: [
-      "The xl Dialog (880px; 800 compact) becomes a layout canvas: p-0, flex, and a FIXED height (min(640px, 100dvh - 4rem)) so the panel scrolls inside it rather than the dialog growing.",
+      'The xl Dialog (880px; 800 compact) becomes a layout canvas: p-0, flex, and a FIXED height (min(640px, 100dvh - 4rem)) so the panel scrolls inside it rather than the dialog growing.',
       "The left column is the same composable Sidebar the app shell uses, in a bounded frame: collapsible='none' drops the rail and drawer, the provider gets persist={false} and shortcut={null}, width 13rem, and a faint overlay tint sets the column apart from the panel.",
       "Below the sm breakpoint the sidebar column hides and a Select at the top of the panel \u2014 same sections, same icons \u2014 takes over navigation under a visible 'Settings' h2.",
       "The one DialogTitle lives in the sidebar header at NORMAL weight \u2014 headings here are labels, not a headline; the dialog's own title weight would out-shout the nav beneath it \u2014 with an sr-only DialogDescription. A referenced title names the dialog even while hidden, so the narrow layout only needs the h2 duplicate.",
-      "The section list renders SidebarMenu focusRing={false}: rows are the whole surface, so keyboard focus moves the highlight instead of drawing a ring around it.",
+      'The section list renders SidebarMenu focusRing={false}: rows are the whole surface, so keyboard focus moves the highlight instead of drawing a ring around it.',
       "Switches carry their required accessible label but the row already shows it, so the switch's own copy is visually hidden (sr-only) rather than doubled.",
-      "Every setting is a SettingRow: 13px label + 12px muted description left, control right, hairline border-b between rows; a per-row Select uses the borderless trigger variant so it sits quietly inside the row.",
+      'Every setting is a SettingRow: 13px label + 12px muted description left, control right, hairline border-b between rows; a per-row Select uses the borderless trigger variant so it sits quietly inside the row.',
     ],
     usage: `"use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { SettingsDialog } from "@/components/dialog-sidebar/settings-dialog";
+import { Button } from "#components/ui/button";
+import { SettingsDialog } from "#components/dialog-sidebar/settings-dialog";
 
 export function Settings() {
   const [open, setOpen] = useState(false);
@@ -1853,9 +1857,9 @@ export function Settings() {
 }
 // Swap SECTIONS and the *Panel components in settings-dialog.tsx for your own settings.`,
     props: [
-      "open?: boolean. Controlled open state, forwarded to Dialog.",
-      "defaultOpen?: boolean. Uncontrolled initial open state.",
-      "onOpenChange?: (open: boolean) => void. Called when the dialog opens or closes.",
+      'open?: boolean. Controlled open state, forwarded to Dialog.',
+      'defaultOpen?: boolean. Uncontrolled initial open state.',
+      'onOpenChange?: (open: boolean) => void. Called when the dialog opens or closes.',
       "defaultSection?: string (default 'general'). The section shown first - one of the ids in SECTIONS as shipped: general | notifications | appearance | security | members.",
     ],
   },

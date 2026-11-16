@@ -1,1 +1,1 @@
-export { useTouchPrimary } from "@/registry/default/hooks/use-touch-primary";
+export { useTouchPrimary } from '#registry/default/hooks/use-touch-primary';

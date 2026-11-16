@@ -3,10 +3,7 @@
   "name": "key-cap",
   "title": "Key Cap",
   "description": "The one look for a keystroke: an 18px filled cap with no outline, in a default and an inverted tone. KeyCaps splits a combo into one cap per key.",
-  "registryDependencies": [
-    "utils",
-    "https://www.fluidfunctionalism.com/r/type-scale.json"
-  ],
+  "registryDependencies": ["utils", "https://www.fluidfunctionalism.com/r/type-scale.json"],
   "files": [
     {
       "path": "registry/default/lib/key-cap.tsx",
@@ -15,8 +12,6 @@
     }
   ],
   "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "lib"
-  ],
+  "categories": ["lib"],
   "type": "registry:lib"
 }

@@ -1,1 +1,1 @@
-export * from "@/components/flavored/date-picker";
+export * from '#components/flavored/date-picker';

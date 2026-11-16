@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { type ReactNode } from "react";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { MARKDOWN_SAMPLE, TypesetEditor } from "@/lib/docs/typeset-sample";
-import { TYPESET_SPACE } from "@/lib/typeset/generate";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { cn } from "@/lib/utils";
+import { type ReactNode } from 'react';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { MARKDOWN_SAMPLE, TypesetEditor } from '#lib/docs/typeset-sample';
+import { TYPESET_SPACE } from '#lib/typeset/generate';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { cn } from '#lib/utils';
 import {
   BalanceDemo,
   HeadingFontDemo,
@@ -14,7 +14,7 @@ import {
   TrimDemo,
   TypeScaleSpecimen,
   WeightOpszDemo,
-} from "./demos";
+} from './demos';
 
 /** Inline code chip used throughout the prose. */
 function Code({ children }: { children: ReactNode }) {
@@ -38,7 +38,7 @@ function Rule({ children }: { children: ReactNode }) {
 function H3({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <h3
-      className={cn("-mb-2 text-site-subtitle text-foreground", className)}
+      className={cn('-mb-2 text-site-subtitle text-foreground', className)}
       style={{ fontVariationSettings: fontWeights.semibold }}
     >
       {children}
@@ -63,24 +63,24 @@ function ExternalLink({ href, children }: { href: string; children: ReactNode })
 /** The sheet's gaps, named by the styles they sit around. A caption takes
  *  the same room as the space under a heading. */
 const GAPS: Array<[gap: keyof typeof TYPESET_SPACE, label: string]> = [
-  ["section", "Above display and title"],
-  ["subsection", "Above subtitle"],
-  ["heading", "Below display, title, and subtitle"],
-  ["block", "Between body blocks"],
-  ["heading", "Above caption"],
-  ["item", "Between list items"],
-  ["rule", "Around a divider"],
+  ['section', 'Above display and title'],
+  ['subsection', 'Above subtitle'],
+  ['heading', 'Below display, title, and subtitle'],
+  ['block', 'Between body blocks'],
+  ['heading', 'Above caption'],
+  ['item', 'Between list items'],
+  ['rule', 'Around a divider'],
 ];
 
 /** Read from the sheet's own values, so it can't drift from them. Styled
  *  like PropsTable. */
 function GapTable() {
-  const th = "px-3 py-2 text-left text-foreground";
+  const th = 'px-3 py-2 text-left text-foreground';
   return (
     <table className="w-full border-collapse text-site-body tabular-nums [&_th:first-child]:pl-0 [&_td:first-child]:pl-0">
       <thead>
         <tr className="border-b border-border">
-          {["Gap", "Default", "Compact"].map((label) => (
+          {['Gap', 'Default', 'Compact'].map((label) => (
             <th key={label} className={th} style={{ fontVariationSettings: fontWeights.semibold }}>
               {label}
             </th>
@@ -111,14 +111,16 @@ export default function TypographyDoc() {
       <DocSection title="5 rules">
         <ul className="flex list-disc flex-col gap-1.5 pl-5 marker:text-muted-foreground">
           <Rule>5 styles for the whole site, from page titles to captions.</Rule>
-          <Rule>3 weights: regular for text, semibold for headings and selected items, bold for page titles.</Rule>
+          <Rule>
+            3 weights: regular for text, semibold for headings and selected items, bold for page
+            titles.
+          </Rule>
           <Rule>2 text colors: foreground and muted.</Rule>
           <Rule>
-            1 font family:{" "}
+            1 font family:{' '}
             <ExternalLink href="https://rsms.me/inter/">Inter Variable 4.0</ExternalLink>. Headings
-            can switch to{" "}
-            <ExternalLink href="https://vercel.com/font">Geist Serif</ExternalLink> or any Google Fonts
-            family.
+            can switch to <ExternalLink href="https://vercel.com/font">Geist Serif</ExternalLink> or
+            any Google Fonts family.
           </Rule>
           <Rule>1 paragraph style.</Rule>
         </ul>
@@ -129,8 +131,12 @@ export default function TypographyDoc() {
           <Rule>No uppercase: hierarchy comes from size and weight.</Rule>
           <Rule>No letter-spacing: handled with Inter&apos;s optical sizing.</Rule>
           <Rule>No eyebrows: a section starts with its title.</Rule>
-          <Rule>No difference with markdown: it uses the same styles and colors as everything else.</Rule>
-          <Rule>No opacity for text: it&apos;s foreground or muted, never a faded step of them.</Rule>
+          <Rule>
+            No difference with markdown: it uses the same styles and colors as everything else.
+          </Rule>
+          <Rule>
+            No opacity for text: it&apos;s foreground or muted, never a faded step of them.
+          </Rule>
         </ul>
       </DocSection>
 
@@ -164,8 +170,7 @@ export default function TypographyDoc() {
 
         <H3 className="mt-2">Weight without reflow</H3>
         <P>
-          Each weight carries its own optical size, so semibold labels keep their width.
-          Idea from{" "}
+          Each weight carries its own optical size, so semibold labels keep their width. Idea from{' '}
           <ExternalLink href="https://x.com/lochieaxon/status/2061631101999968701">
             @lochieaxon
           </ExternalLink>
@@ -183,7 +188,7 @@ export default function TypographyDoc() {
         <H3 className="mt-6">Trimmed labels</H3>
         <P>
           Labels use<Code>text-box: trim-both cap alphabetic</Code>so the padding you set is the
-          space you see. Idea from{" "}
+          space you see. Idea from{' '}
           <ExternalLink href="https://interfaces.dev/magazine/issues/working-with-type">
             @jakubkrehel
           </ExternalLink>

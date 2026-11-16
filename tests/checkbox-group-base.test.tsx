@@ -6,10 +6,10 @@
  * see it. With a functional updater the two toggles cancel out and the
  * square looks dead; a closure updater would hide the bug.
  */
-import { afterEach, expect, it } from "vitest";
-import { cleanup, fireEvent, render } from "@testing-library/react";
-import { useState } from "react";
-import { CheckboxGroup, CheckboxItem } from "@/registry/base/checkbox-group";
+import { afterEach, expect, it } from 'vitest';
+import { cleanup, fireEvent, render } from '@testing-library/react';
+import { useState } from 'react';
+import { CheckboxGroup, CheckboxItem } from '#registry/base/checkbox-group';
 
 afterEach(cleanup);
 
@@ -21,7 +21,7 @@ class ResizeObserverStub {
 }
 globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObserver;
 
-const labels = ["Email", "Push", "SMS"];
+const labels = ['Email', 'Push', 'SMS'];
 
 function Settings() {
   const [checked, setChecked] = useState<Set<number>>(new Set());
@@ -50,24 +50,24 @@ function Settings() {
 function setup() {
   const view = render(<Settings />);
   // The row is the accessible checkbox; the primitive inside it is aria-hidden.
-  const row = view.getByRole("checkbox", { name: "Push" });
+  const row = view.getByRole('checkbox', { name: 'Push' });
   const square = row.querySelector<HTMLElement>('span[role="checkbox"]')!;
   return { row, square };
 }
 
-it("checks and unchecks the item from the square", () => {
+it('checks and unchecks the item from the square', () => {
   const { row, square } = setup();
   expect(square).not.toBeNull();
 
   fireEvent.click(square);
-  expect(row.getAttribute("aria-checked")).toBe("true");
+  expect(row.getAttribute('aria-checked')).toBe('true');
 
   fireEvent.click(square);
-  expect(row.getAttribute("aria-checked")).toBe("false");
+  expect(row.getAttribute('aria-checked')).toBe('false');
 });
 
-it("checks the item from the row, as before", () => {
+it('checks the item from the row, as before', () => {
   const { row } = setup();
   fireEvent.click(row);
-  expect(row.getAttribute("aria-checked")).toBe("true");
+  expect(row.getAttribute('aria-checked')).toBe('true');
 });

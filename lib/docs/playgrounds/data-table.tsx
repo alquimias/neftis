@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { demoToday } from "@/lib/demo-today";
-import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { spring } from "@/lib/springs";
+import { demoToday } from '#lib/demo-today';
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { spring } from '#lib/springs';
 import {
   useDataTable,
   DataTable,
@@ -20,14 +20,14 @@ import {
   rowHandleColumn,
   useUndoableRows,
   type ColumnDef,
-} from "@/registry/default/data-table";
-import type { Row, TableState } from "@tanstack/react-table";
-import { TooltipGroup } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { MenuItem } from "@/registry/default/menu-item";
-import { showUndoToast } from "@/lib/docs/settings-toast";
-import { Badge } from "@/registry/default/badge";
-import { Switch } from "@/registry/radix/switch";
+} from '#registry/default/data-table';
+import type { Row, TableState } from '@tanstack/react-table';
+import { TooltipGroup } from '#components/ui/tooltip';
+import { Button } from '#components/ui/button';
+import { MenuItem } from '#registry/default/menu-item';
+import { showUndoToast } from '#lib/docs/settings-toast';
+import { Badge } from '#registry/default/badge';
+import { Switch } from '#registry/radix/switch';
 import {
   PLAY_SWITCH,
   PlayDivider,
@@ -35,14 +35,14 @@ import {
   PlayField,
   PlaySelect,
   PlaygroundPanel,
-} from "@/lib/docs/playground";
-import { buildRows, type ComponentRow } from "./data-table-rows";
-import { useIcons } from "@/lib/icon-context";
-import { cn } from "@/lib/utils";
-import { useShape } from "@/lib/shape-context";
-import { useSize, typeClass } from "@/lib/size-context";
-import type { PlaygroundProps } from "./types";
-import { RowReveal, ViewTabs } from "./view-tabs";
+} from '#lib/docs/playground';
+import { buildRows, type ComponentRow } from './data-table-rows';
+import { useIcons } from '#lib/icon-context';
+import { cn } from '#lib/utils';
+import { useShape } from '#lib/shape-context';
+import { useSize, typeClass } from '#lib/size-context';
+import type { PlaygroundProps } from './types';
+import { RowReveal, ViewTabs } from './view-tabs';
 import {
   DATA_TABLE_DEFAULT_CODE,
   DATA_TABLE_PAGE_SIZES,
@@ -56,11 +56,11 @@ import {
   type DataTableLines,
   type DataTablePlayState,
   type DataTableSearchMode,
-} from "@/lib/preset/data-table-options";
-import { GetCodeDialog, usePresetGlobals, usePresetUrlSync } from "@/lib/docs/preset-ui";
-import { PRESET_GLOBAL_KEYS } from "@/lib/preset/sidebar-options";
-import { omit } from "@/lib/omit";
-import type { BadgeColor } from "@/registry/default/badge";
+} from '#lib/preset/data-table-options';
+import { GetCodeDialog, usePresetGlobals, usePresetUrlSync } from '#lib/docs/preset-ui';
+import { PRESET_GLOBAL_KEYS } from '#lib/preset/sidebar-options';
+import { omit } from '#lib/omit';
+import type { BadgeColor } from '#registry/default/badge';
 
 // ── DataTable playground ─────────────────────────────────
 // The library describing itself: one row per component, with its props
@@ -74,46 +74,46 @@ export { buildRows, type ComponentRow };
 // local Date can land on the previous day and break hydration. The date
 // editor's own format (Wed Nov 4, the year only outside this one), so a
 // date reads the same whether its cell can be edited or not.
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 export function formatDay(iso: string) {
-  if (!iso) return "";
-  const [y, m, d] = iso.split("-").map(Number);
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-').map(Number);
   const day = DAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()];
-  const year = y === demoToday().getFullYear() ? "" : `, ${y}`;
+  const year = y === demoToday().getFullYear() ? '' : `, ${y}`;
   return `${day} ${MONTHS[m - 1]} ${d}${year}`;
 }
 
-export const PRIMITIVE_COLOR = { "Radix + Base UI": "blue", None: "gray" } as const;
+export const PRIMITIVE_COLOR = { 'Radix + Base UI': 'blue', None: 'gray' } as const;
 
-const CHIP_RADIUS = { pill: "rounded-full", rounded: "rounded-md", sharp: "rounded-[1px]" };
+const CHIP_RADIUS = { pill: 'rounded-full', rounded: 'rounded-md', sharp: 'rounded-[1px]' };
 
 /** A row's tags as chips that only read: the tags editor's chips, less the
  *  ✕. They sit where the editor's do, so switching editing on moves none. */
 function TagChips({ tags, wrap }: { tags: string[]; wrap: boolean }) {
   const shape = useShape();
-  const compact = useSize().variant === "compact";
+  const compact = useSize().variant === 'compact';
   return (
     <span
       className={cn(
-        "flex min-w-0 items-center gap-1",
+        'flex min-w-0 items-center gap-1',
         wrap
           ? // Wrapped, the chips stack; 2px back so the first sits where the
             // editor's does in its taller field.
-            "-my-0.5 flex-wrap"
+            '-my-0.5 flex-wrap'
           : // One line: the 24px chips overhang the line box, and one cut at
             // the cell's edge fades out, as the editor's do.
-            "h-[1lh] overflow-x-clip [mask-image:linear-gradient(to_right,black_calc(100%-16px),transparent)]"
+            'h-[1lh] overflow-x-clip [mask-image:linear-gradient(to_right,black_calc(100%-16px),transparent)]',
       )}
     >
       {tags.map((tag) => (
         <span
           key={tag}
           className={cn(
-            "inline-flex shrink-0 items-center bg-hover px-2 text-foreground",
+            'inline-flex shrink-0 items-center bg-hover px-2 text-foreground',
             CHIP_RADIUS[shape.variant],
-            compact ? "h-5" : "h-6",
-            typeClass("caption", compact ? "compact" : "default")
+            compact ? 'h-5' : 'h-6',
+            typeClass('caption', compact ? 'compact' : 'default'),
           )}
         >
           {tag}
@@ -123,7 +123,7 @@ function TagChips({ tags, wrap }: { tags: string[]; wrap: boolean }) {
   );
 }
 
-const INSTALL_URL = "https://www.fluidfunctionalism.com/r";
+const INSTALL_URL = 'https://www.fluidfunctionalism.com/r';
 
 type Lines = DataTableLines;
 
@@ -140,32 +140,44 @@ type SampleRow = {
 /** One column of the table, by what it holds. */
 type SampleColumn =
   /** The row's main text: sorts, never hides, edits as text. */
-  | { id: "name"; kind: "title"; label: string; icon: string }
+  | { id: 'name'; kind: 'title'; label: string; icon: string }
   /** One of a few, as a badge: sorts, filters, edits from a menu. */
-  | { id: string; kind: "badge"; label: string; icon: string; options: Record<string, BadgeColor> }
-  | { id: string; kind: "bool"; label: string; icon: string }
+  | { id: string; kind: 'badge'; label: string; icon: string; options: Record<string, BadgeColor> }
+  | { id: string; kind: 'bool'; label: string; icon: string }
   /** A number: sorts, edits from a list or by typing. */
-  | { id: string; kind: "number"; label: string; icon: string; options: readonly number[] }
-  | { id: string; kind: "date"; label: string; icon: string }
-  | { id: string; kind: "tags"; label: string; icon: string; options: readonly string[] }
+  | { id: string; kind: 'number'; label: string; icon: string; options: readonly number[] }
+  | { id: string; kind: 'date'; label: string; icon: string }
+  | { id: string; kind: 'tags'; label: string; icon: string; options: readonly string[] }
   /** A docs path shown as a link; beside the text, the cell edits. */
-  | { id: string; kind: "link"; label: string; icon: string }
+  | { id: string; kind: 'link'; label: string; icon: string }
   /** Plain text. `grow` takes the width that is left (the last column). */
-  | { id: string; kind: "text"; label: string; icon: string; grow?: boolean };
+  | { id: string; kind: 'text'; label: string; icon: string; grow?: boolean };
 
 /** The playground's table: the library describing itself. */
 const COLUMNS: readonly SampleColumn[] = [
-  { id: "name", kind: "title", label: "Component", icon: "square-library" },
-  { id: "primitives", kind: "badge", label: "Primitives", icon: "folder", options: PRIMITIVE_COLOR },
-  { id: "fluidHover", kind: "bool", label: "Fluid hover", icon: "star" },
-  { id: "props", kind: "number", label: "Props", icon: "sliders-horizontal", options: DATA_TABLE_PROPS_OPTIONS },
-  { id: "added", kind: "date", label: "Added", icon: "calendar" },
-  { id: "tags", kind: "tags", label: "Tags", icon: "tag", options: DATA_TABLE_TAG_OPTIONS },
-  { id: "website", kind: "link", label: "Website", icon: "link" },
-  { id: "summary", kind: "text", label: "Summary", icon: "file", grow: true },
+  { id: 'name', kind: 'title', label: 'Component', icon: 'square-library' },
+  {
+    id: 'primitives',
+    kind: 'badge',
+    label: 'Primitives',
+    icon: 'folder',
+    options: PRIMITIVE_COLOR,
+  },
+  { id: 'fluidHover', kind: 'bool', label: 'Fluid hover', icon: 'star' },
+  {
+    id: 'props',
+    kind: 'number',
+    label: 'Props',
+    icon: 'sliders-horizontal',
+    options: DATA_TABLE_PROPS_OPTIONS,
+  },
+  { id: 'added', kind: 'date', label: 'Added', icon: 'calendar' },
+  { id: 'tags', kind: 'tags', label: 'Tags', icon: 'tag', options: DATA_TABLE_TAG_OPTIONS },
+  { id: 'website', kind: 'link', label: 'Website', icon: 'link' },
+  { id: 'summary', kind: 'text', label: 'Summary', icon: 'file', grow: true },
 ];
 /** How it starts: newest first, the Fluid hover column in the Columns menu. */
-const START_SORT = { id: "added", desc: true };
+const START_SORT = { id: 'added', desc: true };
 const START_HIDDEN: Record<string, boolean> = { fluidHover: false };
 
 function buildColumns(o: {
@@ -182,21 +194,26 @@ function buildColumns(o: {
 }): ColumnDef<SampleRow>[] {
   const icon = (name: string) => (o.icons ? o.icons[name as keyof Icons] : undefined);
   // Text wrap on wraps every text column; off, they keep one line.
-  const wrap = o.lines === "wrap";
-  const lines = wrap ? "wrap" : 1;
+  const wrap = o.lines === 'wrap';
+  const lines = wrap ? 'wrap' : 1;
   const data = COLUMNS.map((c): ColumnDef<SampleRow> => {
-    const sortable: ColumnDef<SampleRow>["header"] = ({ column }) => (
+    const sortable: ColumnDef<SampleRow>['header'] = ({ column }) => (
       <DataTableColumnHeader column={column} title={c.label} />
     );
     switch (c.kind) {
-      case "title":
+      case 'title':
         return {
           accessorKey: c.id,
           header: sortable,
-          meta: { label: c.label, lines, icon: icon(c.icon), editor: o.editable ? "text" : undefined },
+          meta: {
+            label: c.label,
+            lines,
+            icon: icon(c.icon),
+            editor: o.editable ? 'text' : undefined,
+          },
           enableHiding: false,
         };
-      case "badge": {
+      case 'badge': {
         // The select editor's options carry the badge colors, so its menu
         // (and the filter's) shows each option's dot.
         const options = Object.entries(c.options).map(([value, color]) => ({ value, color }));
@@ -204,11 +221,11 @@ function buildColumns(o: {
           accessorKey: c.id,
           header: sortable,
           cell: ({ row }) => {
-            const value = String(row.original[c.id] ?? "");
+            const value = String(row.original[c.id] ?? '');
             return (
               // The 24px badge overhangs the line box instead of growing the row.
               <span className="flex h-[1lh] min-w-0 items-center">
-                <Badge variant="ghost" color={c.options[value] ?? "gray"}>
+                <Badge variant="ghost" color={c.options[value] ?? 'gray'}>
                   {value}
                 </Badge>
               </span>
@@ -217,82 +234,84 @@ function buildColumns(o: {
           meta: {
             label: c.label,
             icon: icon(c.icon),
-            editor: o.editable ? { type: "select", options } : undefined,
-            filter: { type: "options", options },
+            editor: o.editable ? { type: 'select', options } : undefined,
+            filter: { type: 'options', options },
           },
         };
       }
-      case "bool":
+      case 'bool':
         return {
           accessorKey: c.id,
           header: c.label,
-          cell: ({ row }) => (row.original[c.id] ? "Yes" : "No"),
+          cell: ({ row }) => (row.original[c.id] ? 'Yes' : 'No'),
           meta: { label: c.label, icon: icon(c.icon) },
         };
-      case "number":
+      case 'number':
         return {
           accessorKey: c.id,
           header: sortable,
           meta: {
             label: c.label,
-            className: "tabular-nums",
+            className: 'tabular-nums',
             icon: icon(c.icon),
-            editor: o.editable ? { type: "number", options: c.options } : undefined,
+            editor: o.editable ? { type: 'number', options: c.options } : undefined,
           },
         };
-      case "date":
+      case 'date':
         return {
           accessorKey: c.id,
           header: sortable,
-          cell: ({ row }) => formatDay(String(row.original[c.id] ?? "")),
+          cell: ({ row }) => formatDay(String(row.original[c.id] ?? '')),
           meta: {
             label: c.label,
             // A floor of 112px: short of room a column gives up width
             // down to its header, and "Added" is narrower than a date,
             // which was then cut to "Nov 4, …".
-            className: "min-w-28 tabular-nums whitespace-nowrap",
+            className: 'min-w-28 tabular-nums whitespace-nowrap',
             icon: icon(c.icon),
-            editor: o.editable ? "date" : undefined,
+            editor: o.editable ? 'date' : undefined,
           },
         };
-      case "tags":
+      case 'tags':
         return {
           accessorKey: c.id,
           header: c.label,
           enableSorting: false,
           // Read only, the same chips without their ✕. Editing swaps in the
           // tags editor, which draws its own.
-          cell: ({ row }) => <TagChips tags={(row.original[c.id] as string[] | undefined) ?? []} wrap={wrap} />,
+          cell: ({ row }) => (
+            <TagChips tags={(row.original[c.id] as string[] | undefined) ?? []} wrap={wrap} />
+          ),
           meta: {
             label: c.label,
-            className: "min-w-56",
+            className: 'min-w-56',
             icon: icon(c.icon),
             // Text wrap wraps the chips too, so none is cut at the edge.
-            lines: wrap ? "wrap" : undefined,
-            editor: o.editable ? { type: "tags", options: c.options, creatable: true } : undefined,
+            lines: wrap ? 'wrap' : undefined,
+            editor: o.editable ? { type: 'tags', options: c.options, creatable: true } : undefined,
           },
         };
-      case "link":
+      case 'link':
         return {
           accessorKey: c.id,
           header: c.label,
           cell: ({ row }) => {
-            const text = String(row.original[c.id] ?? "");
+            const text = String(row.original[c.id] ?? '');
             return (
               <a
                 // The path after the domain: every link stays in the docs.
                 // Text edited into something with no path goes to the docs' front.
-                href={text.includes("/") ? `/${text.replace(/^[^/]*\//, "")}` : "/docs"}
+                href={text.includes('/') ? `/${text.replace(/^[^/]*\//, '')}` : '/docs'}
                 // A new tab: the table keeps its state (selection, filters, edits).
                 target="_blank"
                 rel="noreferrer"
                 className={cn(
-                  "underline decoration-foreground/30 underline-offset-2 transition-colors duration-80 hover:decoration-foreground",
+                  'underline decoration-foreground/30 underline-offset-2 transition-colors duration-80 hover:decoration-foreground',
                   // The cell cuts what runs past it, a focus ring included:
                   // the link cuts its own text short (so its box ends where
                   // the cell does) and draws its ring inside that box.
-                  "focus-visible:outline-offset-[-1px]",
-                  !wrap && "inline-block max-w-full truncate align-bottom"
+                  'focus-visible:outline-offset-[-1px]',
+                  !wrap && 'inline-block max-w-full truncate align-bottom',
                 )}
               >
                 {text}
@@ -303,13 +322,13 @@ function buildColumns(o: {
           meta: {
             label: c.label,
             lines,
-            className: "min-w-60",
+            className: 'min-w-60',
             icon: icon(c.icon),
             // The text follows the link; beside it, the cell edits.
-            editor: o.editable ? { type: "text", link: true } : undefined,
+            editor: o.editable ? { type: 'text', link: true } : undefined,
           },
         };
-      case "text":
+      case 'text':
         return {
           accessorKey: c.id,
           header: c.label,
@@ -317,10 +336,10 @@ function buildColumns(o: {
             label: c.label,
             // The last of the data columns takes whatever width is left,
             // and at least 256px of it: past that the table scrolls sideways.
-            className: c.grow ? "w-full min-w-64" : undefined,
+            className: c.grow ? 'w-full min-w-64' : undefined,
             lines,
             icon: icon(c.icon),
-            editor: o.editable ? "text" : undefined,
+            editor: o.editable ? 'text' : undefined,
           },
         };
     }
@@ -344,11 +363,16 @@ function buildColumns(o: {
                 onSelect={() =>
                   navigator.clipboard?.writeText(
                     // A part (a sub-row) installs with its component.
-                    `npx shadcn@latest add ${INSTALL_URL}/${row.original.slug.split("/")[0]}.json`
+                    `npx shadcn@latest add ${INSTALL_URL}/${row.original.slug.split('/')[0]}.json`,
                   )
                 }
               />
-              <MenuItem index={2} label="Delete" destructive onSelect={() => o.onDelete(row.original)} />
+              <MenuItem
+                index={2}
+                label="Delete"
+                destructive
+                onSelect={() => o.onDelete(row.original)}
+              />
             </>
           )),
         ]
@@ -366,19 +390,30 @@ function removeRows(list: SampleRow[], slugs: readonly string[]): SampleRow[] {
 
 /** The top-level rows with these slugs moved before or after another. By
  *  slug: with sub-rows off the table holds copies of the rows. */
-function moveBySlug(list: SampleRow[], slugs: readonly string[], target: string, place: "before" | "after"): SampleRow[] {
+function moveBySlug(
+  list: SampleRow[],
+  slugs: readonly string[],
+  target: string,
+  place: 'before' | 'after',
+): SampleRow[] {
   const moved = list.filter((r) => slugs.includes(r.slug));
   const rest = list.filter((r) => !slugs.includes(r.slug));
   const at = rest.findIndex((r) => r.slug === target);
   if (at < 0) return list;
-  const index = place === "before" ? at : at + 1;
+  const index = place === 'before' ? at : at + 1;
   return [...rest.slice(0, index), ...moved, ...rest.slice(index)];
 }
 
 /** The leading columns' gutter: the tabs start where the first data
  *  column's text does, past the handles and the boxes. */
 function gutterClass(o: { rowReorder: boolean; selection: boolean }) {
-  return o.rowReorder && o.selection ? "pl-12" : o.selection ? "pl-7" : o.rowReorder ? "pl-5" : undefined;
+  return o.rowReorder && o.selection
+    ? 'pl-12'
+    : o.selection
+      ? 'pl-7'
+      : o.rowReorder
+        ? 'pl-5'
+        : undefined;
 }
 
 function updateRow(list: SampleRow[], slug: string, key: string, value: unknown): SampleRow[] {
@@ -387,7 +422,7 @@ function updateRow(list: SampleRow[], slug: string, key: string, value: unknown)
       ? { ...r, [key]: value }
       : r.subRows
         ? { ...r, subRows: updateRow(r.subRows, slug, key, value) }
-        : r
+        : r,
   );
 }
 
@@ -405,27 +440,31 @@ function pick<T>(options: readonly T[]): T {
 
 /** The pins a one-sided setting keeps, as code: the boxes and the first
  *  column on the left, the row menus on the right. */
-export function pinningCode(o: Pick<PlayState, "pinning" | "pinRight" | "selection" | "rowActions" | "rowReorder">) {
-  const left = o.pinning ? [...(o.rowReorder ? [`"drag"`] : []), ...(o.selection ? [`"select"`] : []), `"name"`] : [];
+export function pinningCode(
+  o: Pick<PlayState, 'pinning' | 'pinRight' | 'selection' | 'rowActions' | 'rowReorder'>,
+) {
+  const left = o.pinning
+    ? [...(o.rowReorder ? [`"drag"`] : []), ...(o.selection ? [`"select"`] : []), `"name"`]
+    : [];
   const right = o.pinRight && o.rowActions ? [`"actions"`] : [];
-  return `{ left: [${left.join(", ")}], right: [${right.join(", ")}] }`;
+  return `{ left: [${left.join(', ')}], right: [${right.join(', ')}] }`;
 }
 
 export function buildDataTablePlaygroundCode(o: PlayState): string {
   const parts = [
-    "useDataTable",
-    "DataTable",
-    "DataTableColumnHeader",
-    ...(o.title ? ["DataTableTitle"] : []),
-    ...(o.filter !== "none" ? ["DataTableSearch"] : []),
-    ...(o.filters ? ["DataTableFilters", "DataTableFilterChips"] : []),
-    ...(o.viewMenu ? ["DataTableViewOptions"] : []),
-    ...(o.rowActions ? ["rowActionsColumn"] : []),
-    ...(o.pagination ? ["DataTablePagination"] : []),
-    ...(o.selection ? ["DataTableSelectionBar"] : []),
-    ...(o.selection ? ["selectColumn"] : []),
-    ...(o.rowReorder ? ["rowHandleColumn", "moveRows"] : []),
-    "type ColumnDef",
+    'useDataTable',
+    'DataTable',
+    'DataTableColumnHeader',
+    ...(o.title ? ['DataTableTitle'] : []),
+    ...(o.filter !== 'none' ? ['DataTableSearch'] : []),
+    ...(o.filters ? ['DataTableFilters', 'DataTableFilterChips'] : []),
+    ...(o.viewMenu ? ['DataTableViewOptions'] : []),
+    ...(o.rowActions ? ['rowActionsColumn'] : []),
+    ...(o.pagination ? ['DataTablePagination'] : []),
+    ...(o.selection ? ['DataTableSelectionBar'] : []),
+    ...(o.selection ? ['selectColumn'] : []),
+    ...(o.rowReorder ? ['rowHandleColumn', 'moveRows'] : []),
+    'type ColumnDef',
   ];
   // Saved views come with filters: they save what the filters set.
   const views = o.views && o.filters;
@@ -433,7 +472,7 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
   const held = o.editable || o.rowReorder;
   // Rows moved by hand start unsorted: under a sort, a move first asks to
   // remove it.
-  const sorting = o.rowReorder ? "[]" : `[{ id: "added", desc: true }]`;
+  const sorting = o.rowReorder ? '[]' : `[{ id: "added", desc: true }]`;
   const gutter = gutterClass(o);
   const viewTabsCode = [
     `    <Tabs selectedIndex={viewIndex} onSelect={openView} aria-label="Views">`,
@@ -442,22 +481,26 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
     `      ))}`,
     `    </Tabs>`,
   ];
-  const toolbar = o.filter !== "none" || o.filters || o.viewMenu || views;
+  const toolbar = o.filter !== 'none' || o.filters || o.viewMenu || views;
   // Two icons or more on the row share one gliding tooltip bubble.
-  const grouped = [o.filters, o.viewMenu, o.filter !== "none"].filter(Boolean).length > 1;
+  const grouped = [o.filters, o.viewMenu, o.filter !== 'none'].filter(Boolean).length > 1;
   const filter =
-    o.filter === "column"
+    o.filter === 'column'
       ? `    <DataTableSearch table={table} column="name" placeholder="Search components…" />`
       : `    <DataTableSearch table={table} placeholder="Search all columns…" />`;
   return [
     `import {`,
-    `  ${parts.join(", ")},`,
+    `  ${parts.join(', ')},`,
     `} from "./components";`,
-    ...(o.rowActions ? [`import { MenuItem, Badge } from "./components";`] : [`import { Badge } from "./components";`]),
+    ...(o.rowActions
+      ? [`import { MenuItem, Badge } from "./components";`]
+      : [`import { Badge } from "./components";`]),
     ...(views ? [`import { Button, Tabs, TabsItem, type TableState } from "./components";`] : []),
     ...(grouped ? [`import { TooltipGroup } from "./components";`] : []),
     ...(o.headerIcons
-      ? [`import { SquareLibrary, Folder, Star, SlidersHorizontal, Calendar, Tag, Link, File } from "lucide-react";`]
+      ? [
+          `import { SquareLibrary, Folder, Star, SlidersHorizontal, Calendar, Tag, Link, File } from "lucide-react";`,
+        ]
       : []),
     ``,
     `const columns: ColumnDef<ComponentRow>[] = [`,
@@ -468,8 +511,10 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
     `    header: ({ column }) => <DataTableColumnHeader column={column} title="Component" />,`,
     `    enableHiding: false,`,
     ...(o.headerIcons || o.editable
-      ? [`    meta: { ${[`lines: ${o.lines === "wrap" ? `"wrap"` : 1}`, o.headerIcons && "icon: SquareLibrary", o.editable && `editor: "text"`].filter(Boolean).join(", ")} },`]
-      : [`    meta: { lines: ${o.lines === "wrap" ? `"wrap"` : 1} },`]),
+      ? [
+          `    meta: { ${[`lines: ${o.lines === 'wrap' ? `"wrap"` : 1}`, o.headerIcons && 'icon: SquareLibrary', o.editable && `editor: "text"`].filter(Boolean).join(', ')} },`,
+        ]
+      : [`    meta: { lines: ${o.lines === 'wrap' ? `"wrap"` : 1} },`]),
     `  },`,
     `  {`,
     `    accessorKey: "primitives",`,
@@ -477,18 +522,23 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
     `    cell: ({ row }) => <Badge variant="ghost" color="blue">{row.original.primitives}</Badge>,`,
     ...(o.headerIcons || o.editable
       ? [
-          `    meta: { ${[o.headerIcons && "icon: Folder", o.editable &&
-              `editor: { type: "select", options: [{ value: "Radix + Base UI", color: "blue" }, { value: "None", color: "gray" }] }`].filter(Boolean).join(", ")} },`,
+          `    meta: { ${[
+            o.headerIcons && 'icon: Folder',
+            o.editable &&
+              `editor: { type: "select", options: [{ value: "Radix + Base UI", color: "blue" }, { value: "None", color: "gray" }] }`,
+          ]
+            .filter(Boolean)
+            .join(', ')} },`,
         ]
       : []),
     `  },`,
-    `  { accessorKey: "fluidHover", header: "Fluid hover"${o.headerIcons ? ", meta: { icon: Star }" : ""} },`,
+    `  { accessorKey: "fluidHover", header: "Fluid hover"${o.headerIcons ? ', meta: { icon: Star }' : ''} },`,
     `  {`,
     `    accessorKey: "props",`,
     `    header: ({ column }) => <DataTableColumnHeader column={column} title="Props" />,`,
     ...(o.headerIcons || o.editable
       ? [
-          `    meta: { ${[o.headerIcons && "icon: SlidersHorizontal", o.editable && `editor: { type: "number", options: [${DATA_TABLE_PROPS_OPTIONS.join(", ")}] }`].filter(Boolean).join(", ")} },`,
+          `    meta: { ${[o.headerIcons && 'icon: SlidersHorizontal', o.editable && `editor: { type: "number", options: [${DATA_TABLE_PROPS_OPTIONS.join(', ')}] }`].filter(Boolean).join(', ')} },`,
         ]
       : []),
     `  },`,
@@ -496,25 +546,25 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
     `    accessorKey: "added",`,
     `    header: ({ column }) => <DataTableColumnHeader column={column} title="Added" />,`,
     // min-w-28: the column never gets narrower than a whole date.
-    `    meta: { ${[`className: "min-w-28 tabular-nums whitespace-nowrap"`, o.headerIcons && "icon: Calendar", o.editable && `editor: "date"`].filter(Boolean).join(", ")} },`,
+    `    meta: { ${[`className: "min-w-28 tabular-nums whitespace-nowrap"`, o.headerIcons && 'icon: Calendar', o.editable && `editor: "date"`].filter(Boolean).join(', ')} },`,
     `  },`,
     `  {`,
     `    accessorKey: "tags",`,
     `    header: "Tags",`,
     `    enableSorting: false,`,
     `    cell: ({ row }) => <TagChips tags={row.original.tags} />,`,
-    `    meta: { className: "min-w-56"${o.headerIcons ? ", icon: Tag" : ""}${o.lines === "wrap" ? ', lines: "wrap"' : ""}${o.editable ? `, editor: { type: "tags", options: [${DATA_TABLE_TAG_OPTIONS.map((t) => `"${t}"`).join(", ")}], creatable: true }` : ""} },`,
+    `    meta: { className: "min-w-56"${o.headerIcons ? ', icon: Tag' : ''}${o.lines === 'wrap' ? ', lines: "wrap"' : ''}${o.editable ? `, editor: { type: "tags", options: [${DATA_TABLE_TAG_OPTIONS.map((t) => `"${t}"`).join(', ')}], creatable: true }` : ''} },`,
     `  },`,
     `  {`,
     `    accessorKey: "website",`,
     `    header: "Website",`,
     `    cell: ({ row }) => <a href={row.original.href}>{row.original.website}</a>,`,
-    `    meta: { className: "min-w-60", lines: ${o.lines === "wrap" ? `"wrap"` : 1}${o.headerIcons ? ", icon: Link" : ""}${o.editable ? `, editor: { type: "text", link: true }` : ""} },`,
+    `    meta: { className: "min-w-60", lines: ${o.lines === 'wrap' ? `"wrap"` : 1}${o.headerIcons ? ', icon: Link' : ''}${o.editable ? `, editor: { type: "text", link: true }` : ''} },`,
     `  },`,
     `  {`,
     `    accessorKey: "summary",`,
     `    header: "Summary",`,
-    `    meta: { className: "w-full min-w-64", lines: ${o.lines === "wrap" ? `"wrap"` : 1}${o.headerIcons ? ", icon: File" : ""}${o.editable ? `, editor: "text"` : ""} },`,
+    `    meta: { className: "w-full min-w-64", lines: ${o.lines === 'wrap' ? `"wrap"` : 1}${o.headerIcons ? ', icon: File' : ''}${o.editable ? `, editor: "text"` : ''} },`,
     `  },`,
     ...(o.rowActions
       ? [
@@ -530,17 +580,24 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
     ``,
     ...(held ? [`const [rows, setRows] = useState(components);`, ``] : []),
     `const table = useDataTable({`,
-    `  data: ${held ? "rows" : "components"},`,
+    `  data: ${held ? 'rows' : 'components'},`,
     `  columns,`,
-    `  pageSize: ${o.pagination ? o.pageSize : "components.length"},`,
-    ...(o.expandable ? [`  // A row with parts opens into them.`, `  getSubRows: (row) => row.subRows,`] : []),
+    `  pageSize: ${o.pagination ? o.pageSize : 'components.length'},`,
+    ...(o.expandable
+      ? [`  // A row with parts opens into them.`, `  getSubRows: (row) => row.subRows,`]
+      : []),
     ...(!o.pinning
-      ? [`  // No sticky left columns, and no Freeze item in the header menus.`, `  enableColumnPinning: false,`]
+      ? [
+          `  // No sticky left columns, and no Freeze item in the header menus.`,
+          `  enableColumnPinning: false,`,
+        ]
       : []),
     `  initialState: {`,
     ...(o.rowReorder ? [] : [`    sorting: ${sorting},`]),
     `    columnVisibility: { fluidHover: false },`,
-    ...(o.pinning !== o.pinRight ? [`    // Sticky on one side only.`, `    columnPinning: ${pinningCode(o)},`] : []),
+    ...(o.pinning !== o.pinRight
+      ? [`    // Sticky on one side only.`, `    columnPinning: ${pinningCode(o)},`]
+      : []),
     `  },`,
     `});`,
     ``,
@@ -570,12 +627,12 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
     `<div className="flex flex-col gap-2">`,
     ...(toolbar || o.title
       ? [
-          `  <div className="${o.title ? "mb-1 " : ""}flex flex-wrap items-center gap-1">`,
+          `  <div className="${o.title ? 'mb-1 ' : ''}flex flex-wrap items-center gap-1">`,
           ...(o.title ? [`    <DataTableTitle table={table}>Components</DataTableTitle>`] : []),
           // Without a title the saved views share the tools' row.
           ...(views && !o.title
             ? [
-                `    <div className="min-w-0 flex-1${gutter ? ` ${gutter}` : ""}">`,
+                `    <div className="min-w-0 flex-1${gutter ? ` ${gutter}` : ''}">`,
                 `      {views.length > 0 && (`,
                 ...viewTabsCode.map((line) => `    ${line}`),
                 `      )}`,
@@ -586,7 +643,7 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
           ...[
             ...(o.filters ? [`    <DataTableFilters table={table} />`] : []),
             ...(o.viewMenu ? [`    <DataTableViewOptions table={table} />`] : []),
-            ...(o.filter !== "none" ? [filter] : []),
+            ...(o.filter !== 'none' ? [filter] : []),
           ].map((line) => (grouped ? `  ${line}` : line)),
           ...(grouped ? [`    </TooltipGroup>`] : []),
           `  </div>`,
@@ -614,7 +671,7 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
     ...(held
       ? [
           `  <DataTable`,
-          `    table={table}${o.resize ? " resizeColumns" : ""}${o.reorder ? " reorderColumns" : ""}${o.align !== "auto" ? ` cellAlign="${o.align}"` : ""}${o.rowHover === "on" ? " rowHover" : o.rowHover === "off" ? " rowHover={false}" : ""}`,
+          `    table={table}${o.resize ? ' resizeColumns' : ''}${o.reorder ? ' reorderColumns' : ''}${o.align !== 'auto' ? ` cellAlign="${o.align}"` : ''}${o.rowHover === 'on' ? ' rowHover' : o.rowHover === 'off' ? ' rowHover={false}' : ''}`,
           ...(o.editable
             ? [
                 `    // Each edit writes back to your data; the table shows what it holds.`,
@@ -632,9 +689,13 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
           `  />`,
         ]
       : [
-          `  <DataTable table={table}${o.resize ? " resizeColumns" : ""}${o.reorder ? " reorderColumns" : ""}${o.align !== "auto" ? ` cellAlign="${o.align}"` : ""}${o.rowHover === "on" ? " rowHover" : o.rowHover === "off" ? " rowHover={false}" : ""} />`,
+          `  <DataTable table={table}${o.resize ? ' resizeColumns' : ''}${o.reorder ? ' reorderColumns' : ''}${o.align !== 'auto' ? ` cellAlign="${o.align}"` : ''}${o.rowHover === 'on' ? ' rowHover' : o.rowHover === 'off' ? ' rowHover={false}' : ''} />`,
         ]),
-    ...(o.pagination ? [`  <DataTablePagination table={table} pageSizes={[${DATA_TABLE_PAGE_SIZES.join(", ")}]} />`] : []),
+    ...(o.pagination
+      ? [
+          `  <DataTablePagination table={table} pageSizes={[${DATA_TABLE_PAGE_SIZES.join(', ')}]} />`,
+        ]
+      : []),
     ...(o.selection
       ? [
           `  <DataTableSelectionBar`,
@@ -647,38 +708,38 @@ export function buildDataTablePlaygroundCode(o: PlayState): string {
         ]
       : []),
     `</div>`,
-  ].join("\n");
+  ].join('\n');
 }
 
 /** The selection bar's actions, for the selected rows. */
 function selectionActions(
   rows: Row<SampleRow>[],
   icons: Icons,
-  onDelete: (rows: Row<SampleRow>[]) => void
+  onDelete: (rows: Row<SampleRow>[]) => void,
 ) {
   return [
     {
-      value: "delete",
-      label: rows.length === 1 ? "Delete" : `Delete ${rows.length} rows`,
+      value: 'delete',
+      label: rows.length === 1 ? 'Delete' : `Delete ${rows.length} rows`,
       icon: icons.x,
       destructive: true,
       onSelect: () => onDelete(rows),
     },
     {
-      value: "install",
-      label: "Copy install command",
+      value: 'install',
+      label: 'Copy install command',
       icon: icons.copy,
       onSelect: () =>
         navigator.clipboard?.writeText(
           // Each component once: parts (sub-rows) install with theirs.
-          `npx shadcn@latest add ${[...new Set(rows.map((r) => r.original.slug.split("/")[0]))].map((slug) => `${INSTALL_URL}/${slug}.json`).join(" ")}`
+          `npx shadcn@latest add ${[...new Set(rows.map((r) => r.original.slug.split('/')[0]))].map((slug) => `${INSTALL_URL}/${slug}.json`).join(' ')}`,
         ),
     },
     {
-      value: "names",
-      label: "Copy names",
+      value: 'names',
+      label: 'Copy names',
       icon: icons.file,
-      onSelect: () => navigator.clipboard?.writeText(rows.map((r) => r.original.name).join("\n")),
+      onSelect: () => navigator.clipboard?.writeText(rows.map((r) => r.original.name).join('\n')),
     },
   ];
 }
@@ -690,23 +751,27 @@ type SavedView = {
    *  (and its focus) moves with its view. */
   id: number;
   name: string;
-  state: Pick<TableState, "columnFilters" | "globalFilter" | "sorting" | "columnOrder" | "columnVisibility">;
+  state: Pick<
+    TableState,
+    'columnFilters' | 'globalFilter' | 'sorting' | 'columnOrder' | 'columnVisibility'
+  >;
 };
 
 /** JSON with sorted keys, so two states compare by their values. */
 function stableJson(value: unknown): string {
   return JSON.stringify(value, (_, v) =>
-    v && typeof v === "object" && !Array.isArray(v)
+    v && typeof v === 'object' && !Array.isArray(v)
       ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => a.localeCompare(b)))
-      : v
+      : v,
   );
 }
 
 /** Only the hidden columns: an empty visibility and one listing every
  *  column as shown say the same thing. */
 const visibleOnly = (visibility: Record<string, boolean> | undefined) =>
-  Object.keys(visibility ?? {}).filter((id) => visibility?.[id] === false).sort();
-
+  Object.keys(visibility ?? {})
+    .filter((id) => visibility?.[id] === false)
+    .sort();
 
 /** The rows-per-page choices, as the footer's select takes them. */
 const PAGE_SIZES: number[] = [...DATA_TABLE_PAGE_SIZES];
@@ -717,9 +782,9 @@ const PAGE_SIZES: number[] = [...DATA_TABLE_PAGE_SIZES];
 const EVERY_ROW = 10_000;
 
 /** The "All" view: how the table starts. */
-const START_VIEW: SavedView["state"] = {
+const START_VIEW: SavedView['state'] = {
   columnFilters: [],
-  globalFilter: "",
+  globalFilter: '',
   sorting: [START_SORT],
   columnOrder: [],
   columnVisibility: START_HIDDEN,
@@ -755,7 +820,8 @@ export function DataTablePlayground({
   useEffect(() => {
     let live = true;
     const land = () => {
-      if (live && !loadingHeld.current && !reloadTimer.current) startTransition(() => setLoading(false));
+      if (live && !loadingHeld.current && !reloadTimer.current)
+        startTransition(() => setLoading(false));
     };
     if (document.fonts) document.fonts.ready.then(land, land);
     else land();
@@ -791,7 +857,7 @@ export function DataTablePlayground({
       applyStep(label, (old) => removeRows(old, slugs));
       showUndoToast(label, () => undoTo(before));
     },
-    [applyStep, undoTo]
+    [applyStep, undoTo],
   );
   // Sub-rows on, the rows carry their parts; off, they're left out (a new
   // array, so the table builds its rows again).
@@ -807,7 +873,7 @@ export function DataTablePlayground({
             if (!flat) flatRows.current.set(r, (flat = { ...r, subRows: undefined }));
             return flat;
           }),
-    [data, state.expandable]
+    [data, state.expandable],
   );
   const icons = useIcons();
   const columns = useMemo(
@@ -821,7 +887,16 @@ export function DataTablePlayground({
         editable: state.editable,
         onDelete: (row) => deleteRows([row.slug], `Deleted ${row.name}`),
       }),
-    [state.rowReorder, state.selection, state.rowActions, state.lines, state.headerIcons, state.editable, icons, deleteRows]
+    [
+      state.rowReorder,
+      state.selection,
+      state.rowActions,
+      state.lines,
+      state.headerIcons,
+      state.editable,
+      icons,
+      deleteRows,
+    ],
   );
 
   const table = useDataTable({
@@ -833,11 +908,11 @@ export function DataTablePlayground({
     // Off with the sticky left columns: the header menus drop Freeze.
     enableColumnPinning: state.pinning,
     initialState: {
-      sorting: [{ id: "added", desc: true }],
+      sorting: [{ id: 'added', desc: true }],
       columnVisibility: { fluidHover: false },
       // Set by hand rather than left to useDataTable, which pins nothing
       // when the table starts with pinning off.
-      columnPinning: { left: ["drag", "select", "name"], right: ["actions"] },
+      columnPinning: { left: ['drag', 'select', 'name'], right: ['actions'] },
     },
   });
 
@@ -857,13 +932,17 @@ export function DataTablePlayground({
     if (animate && next.headerIcons === prev.headerIcons) table.captureLayout();
     if (next.filter !== prev.filter) {
       table.resetColumnFilters();
-      table.setGlobalFilter("");
+      table.setGlobalFilter('');
     }
     if (!next.selection) table.resetRowSelection();
     if (!next.viewMenu) table.resetColumnVisibility();
     // Header icons widen the headers: the widths are read again too.
     // Sub-rows widen the first column to fit their names: read again too.
-    if (!next.resize || next.headerIcons !== prev.headerIcons || next.expandable !== prev.expandable)
+    if (
+      !next.resize ||
+      next.headerIcons !== prev.headerIcons ||
+      next.expandable !== prev.expandable
+    )
       table.resetColumnSizing();
     if (!next.expandable) table.resetExpanded();
     if (!next.reorder) table.resetColumnOrder();
@@ -883,7 +962,8 @@ export function DataTablePlayground({
     // Columns menu would otherwise sit on top of it.
     if (next.lines !== prev.lines)
       for (const c of COLUMNS)
-        if (c.kind === "title" || c.kind === "link" || c.kind === "text") table.setColumnLines(c.id, undefined, animate);
+        if (c.kind === 'title' || c.kind === 'link' || c.kind === 'text')
+          table.setColumnLines(c.id, undefined, animate);
     // Only a change to the paging starts over on the first page: a switch
     // flipped from the table's own menu (Wrap text) must not send the
     // reader back there from page 3.
@@ -901,7 +981,7 @@ export function DataTablePlayground({
   const tablePageSize = table.getState().pagination.pageSize;
   useEffect(() => {
     const now = stateRef.current;
-    const size = String(tablePageSize) as PlayState["pageSize"];
+    const size = String(tablePageSize) as PlayState['pageSize'];
     if (!now.pagination || size === now.pageSize || !PAGE_SIZES.includes(tablePageSize)) return;
     const next = { ...now, pageSize: size };
     stateRef.current = next;
@@ -919,15 +999,20 @@ export function DataTablePlayground({
     // their own.
     const text = table
       .getAllLeafColumns()
-      .filter((column) => column.accessorFn !== undefined && column.getCanHide() && column.columnDef.meta?.lines !== undefined);
+      .filter(
+        (column) =>
+          column.accessorFn !== undefined &&
+          column.getCanHide() &&
+          column.columnDef.meta?.lines !== undefined,
+      );
     const set = text.map((column) => lineOverrides[column.id]);
     // One column set on its own is not the switch.
     if (set.length === 0 || set.some((lines) => lines === undefined)) return;
-    const wrap = set.every((lines) => lines === "wrap");
-    if (wrap === (now.lines === "wrap") || (!wrap && set.some((lines) => lines === "wrap"))) return;
+    const wrap = set.every((lines) => lines === 'wrap');
+    if (wrap === (now.lines === 'wrap') || (!wrap && set.some((lines) => lines === 'wrap'))) return;
     // The menu already animated the change; this only moves where it lives.
     for (const id of Object.keys(lineOverrides)) table.setColumnLines(id, undefined, false);
-    apply({ ...now, lines: wrap ? "wrap" : "2" }, { animate: false });
+    apply({ ...now, lines: wrap ? 'wrap' : '2' }, { animate: false });
   }, [lineOverrides]);
 
   // ── Get code (presets) ─────────────────────────────────
@@ -935,7 +1020,9 @@ export function DataTablePlayground({
   const presetCode = encodeDataTablePreset({ ...state, ...globals });
   // No ?preset= while the settings are the ones this page starts from.
   const [startCode] = useState(() =>
-    initial ? encodeDataTablePreset({ ...DEFAULT_DATA_TABLE_PRESET, ...initial }) : DATA_TABLE_DEFAULT_CODE
+    initial
+      ? encodeDataTablePreset({ ...DEFAULT_DATA_TABLE_PRESET, ...initial })
+      : DATA_TABLE_DEFAULT_CODE,
   );
   usePresetUrlSync(presetCode, startCode, (raw) => {
     const res = decodeDataTablePreset(raw);
@@ -945,16 +1032,16 @@ export function DataTablePlayground({
 
   const randomize = () =>
     apply({
-      filter: pick(["column", "column", "all", "none"] as const),
+      filter: pick(['column', 'column', 'all', 'none'] as const),
       viewMenu: Math.random() > 0.3,
       selection: Math.random() > 0.3,
       rowActions: Math.random() > 0.3,
       pagination: Math.random() > 0.2,
-      pageSize: pick(["5", "10", "20"] as const),
+      pageSize: pick(['5', '10', '20'] as const),
       resize: Math.random() > 0.3,
       reorder: Math.random() > 0.3,
-      lines: pick(["2", "wrap"] as const),
-      align: pick(["auto", "auto", "center", "top"] as const),
+      lines: pick(['2', 'wrap'] as const),
+      align: pick(['auto', 'auto', 'center', 'top'] as const),
       headerIcons: Math.random() > 0.3,
       editable: Math.random() > 0.5,
       expandable: Math.random() > 0.5,
@@ -964,7 +1051,7 @@ export function DataTablePlayground({
       title: Math.random() > 0.3,
       views: Math.random() > 0.3,
       rowReorder: Math.random() > 0.7,
-      rowHover: pick(["auto", "auto", "auto", "on", "off"] as const),
+      rowHover: pick(['auto', 'auto', 'auto', 'on', 'off'] as const),
     });
 
   // ── Saved views ────────────────────────────────────────
@@ -992,15 +1079,23 @@ export function DataTablePlayground({
     // Its way back: the view returns to its place, open.
     showUndoToast(`Deleted ${view.name}`, () => {
       setViews((old) => [...old.slice(0, at), view, ...old.slice(at)]);
-      table.setState((old) => ({ ...old, ...view.state, pagination: { ...old.pagination, pageIndex: 0 } }));
+      table.setState((old) => ({
+        ...old,
+        ...view.state,
+        pagination: { ...old.pagination, pageIndex: 0 },
+      }));
       setViewIndex(at + 1);
     });
   };
   const saveView = () => {
-    const { columnFilters, globalFilter, sorting, columnOrder, columnVisibility } = table.getState();
+    const { columnFilters, globalFilter, sorting, columnOrder, columnVisibility } =
+      table.getState();
     const name = `View ${views.length + 1}`;
     const id = (views.reduce((max, v) => Math.max(max, v.id), 0) || 0) + 1;
-    setViews((old) => [...old, { id, name, state: { columnFilters, globalFilter, sorting, columnOrder, columnVisibility } }]);
+    setViews((old) => [
+      ...old,
+      { id, name, state: { columnFilters, globalFilter, sorting, columnOrder, columnVisibility } },
+    ]);
     setViewIndex(views.length + 1);
     // Ask for its name in place, on the new tab.
     setNameNext(views.length + 1);
@@ -1017,7 +1112,7 @@ export function DataTablePlayground({
     const same = (a: unknown, b: unknown) => stableJson(a) === stableJson(b);
     return !(
       same(now.columnFilters, open.columnFilters) &&
-      same(now.globalFilter ?? "", open.globalFilter ?? "") &&
+      same(now.globalFilter ?? '', open.globalFilter ?? '') &&
       same(now.sorting, open.sorting) &&
       same(now.columnOrder, open.columnOrder) &&
       same(visibleOnly(now.columnVisibility), visibleOnly(open.columnVisibility))
@@ -1034,7 +1129,11 @@ export function DataTablePlayground({
       return next;
     });
     setViewIndex((cur) =>
-      cur === from ? to : cur > Math.min(from, to) && cur <= Math.max(from, to) ? cur + (from < to ? -1 : 1) : cur
+      cur === from
+        ? to
+        : cur > Math.min(from, to) && cur <= Math.max(from, to)
+          ? cur + (from < to ? -1 : 1)
+          : cur,
     );
   };
   // The views as subtle tabs. A lone "All" tab says nothing, so they wait
@@ -1056,7 +1155,7 @@ export function DataTablePlayground({
       className={gutterClass(state)}
     />
   );
-  const tools = state.filter !== "none" || state.filters || state.viewMenu || showViews;
+  const tools = state.filter !== 'none' || state.filters || state.viewMenu || showViews;
   // One row: the title on the left (or, without one, the saved views); the
   // Filter button, the Columns button and the search at the right end.
   // Added filters sit on their own row under it, above the table.
@@ -1064,7 +1163,7 @@ export function DataTablePlayground({
     // 12px under the title (the stack's 8px plus 4): the heading stands a
     // step off the table, while the tabs, chips and table keep 8px between
     // them as one unit.
-    <div className={cn("flex flex-wrap items-center gap-1", state.title && "mb-1")}>
+    <div className={cn('flex flex-wrap items-center gap-1', state.title && 'mb-1')}>
       {/* font-heading-display: the site's Heading font setting reaches the
           title (a site class, so the generated code leaves it out). */}
       {state.title && (
@@ -1099,14 +1198,14 @@ export function DataTablePlayground({
       <TooltipGroup>
         {state.filters && <DataTableFilters table={table} />}
         {state.viewMenu && <DataTableViewOptions table={table} />}
-        {state.filter !== "none" && (
+        {state.filter !== 'none' && (
           <DataTableSearch
             // Remounts the field when the mode (or the table) flips, so it
             // starts empty.
             key={state.filter}
             table={table}
-            column={state.filter === "column" ? "name" : undefined}
-            placeholder={state.filter === "column" ? "Search components…" : "Search all columns…"}
+            column={state.filter === 'column' ? 'name' : undefined}
+            placeholder={state.filter === 'column' ? 'Search components…' : 'Search all columns…'}
           />
         )}
       </TooltipGroup>
@@ -1116,7 +1215,7 @@ export function DataTablePlayground({
   const filterCount = table.getState().columnFilters.length;
 
   const body = (
-    <div className={cn("flex w-full flex-col gap-2", expanded && "h-full")}>
+    <div className={cn('flex w-full flex-col gap-2', expanded && 'h-full')}>
       {toolbar}
       {/* Under a title the views get a row of their own; without one they
           sit on the tools' row (see the toolbar). */}
@@ -1138,7 +1237,7 @@ export function DataTablePlayground({
         resizeColumns={state.resize}
         reorderColumns={state.reorder}
         cellAlign={state.align}
-        rowHover={state.rowHover === "auto" ? undefined : state.rowHover === "on"}
+        rowHover={state.rowHover === 'auto' ? undefined : state.rowHover === 'on'}
         fill={expanded}
         loading={loading}
         // A screenful of skeletons, not one per row of a long page: a
@@ -1151,8 +1250,8 @@ export function DataTablePlayground({
         empty={
           data.length === 0
             ? {
-                title: "No components left",
-                description: "Undo brings back what you deleted.",
+                title: 'No components left',
+                description: 'Undo brings back what you deleted.',
                 action: history.canUndo ? (
                   <Button variant="ghost" size="compact" onClick={history.undo}>
                     Undo
@@ -1160,8 +1259,8 @@ export function DataTablePlayground({
                 ) : undefined,
               }
             : filterCount > 0
-              ? { title: "No components match" }
-              : { title: "No components match", description: "Try a name like Dialog or Tabs." }
+              ? { title: 'No components match' }
+              : { title: 'No components match', description: 'Try a name like Dialog or Tabs.' }
         }
         onCellEdit={
           state.editable
@@ -1169,7 +1268,7 @@ export function DataTablePlayground({
                 history.apply(
                   `Edited ${row.original.name}`,
                   (old) => updateRow(old, row.original.slug, columnId, value),
-                  `${row.original.slug}:${columnId}`
+                  `${row.original.slug}:${columnId}`,
                 )
             : undefined
         }
@@ -1177,8 +1276,16 @@ export function DataTablePlayground({
           state.rowReorder
             ? (move) =>
                 history.apply(
-                  move.rows.length === 1 ? `Moved ${move.rows[0].original.name}` : `Moved ${move.rows.length} rows`,
-                  (old) => moveBySlug(old, move.rows.map((r) => r.original.slug), move.target.original.slug, move.place)
+                  move.rows.length === 1
+                    ? `Moved ${move.rows[0].original.name}`
+                    : `Moved ${move.rows.length} rows`,
+                  (old) =>
+                    moveBySlug(
+                      old,
+                      move.rows.map((r) => r.original.slug),
+                      move.target.original.slug,
+                      move.place,
+                    ),
                 )
             : undefined
         }
@@ -1190,17 +1297,15 @@ export function DataTablePlayground({
         <DataTableSelectionBar
           table={table}
           actions={(rows) =>
-            selectionActions(
-              rows,
-              icons,
-              (picked) => {
-                deleteRows(
-                  picked.map((r) => r.original.slug),
-                  picked.length === 1 ? `Deleted ${picked[0].original.name}` : `Deleted ${picked.length} rows`
-                );
-                table.resetRowSelection();
-              }
-            )
+            selectionActions(rows, icons, (picked) => {
+              deleteRows(
+                picked.map((r) => r.original.slug),
+                picked.length === 1
+                  ? `Deleted ${picked[0].original.name}`
+                  : `Deleted ${picked.length} rows`,
+              );
+              table.resetRowSelection();
+            })
           }
         />
       )}
@@ -1217,24 +1322,24 @@ export function DataTablePlayground({
         <Switch
           label="Title"
           checked={state.title}
-          onToggle={() => set("title", !state.title)}
+          onToggle={() => set('title', !state.title)}
           className={PLAY_SWITCH}
         />
         <PlayField label="Search">
           <PlaySelect
             value={state.filter}
-            onChange={(v) => set("filter", v as FilterMode)}
+            onChange={(v) => set('filter', v as FilterMode)}
             options={[
-              { value: "column", label: "By name" },
-              { value: "all", label: "Every column" },
-              { value: "none", label: "None" },
+              { value: 'column', label: 'By name' },
+              { value: 'all', label: 'Every column' },
+              { value: 'none', label: 'None' },
             ]}
           />
         </PlayField>
         <Switch
           label="Filters"
           checked={state.filters}
-          onToggle={() => set("filters", !state.filters)}
+          onToggle={() => set('filters', !state.filters)}
           className={PLAY_SWITCH}
         />
         {/* Saved views save what the filters set: off without them. */}
@@ -1242,13 +1347,13 @@ export function DataTablePlayground({
           label="Saved views"
           checked={state.views && state.filters}
           disabled={!state.filters}
-          onToggle={() => set("views", !state.views)}
+          onToggle={() => set('views', !state.views)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Columns menu"
           checked={state.viewMenu}
-          onToggle={() => set("viewMenu", !state.viewMenu)}
+          onToggle={() => set('viewMenu', !state.viewMenu)}
           className={PLAY_SWITCH}
         />
         <PlayDivider />
@@ -1256,31 +1361,31 @@ export function DataTablePlayground({
         <Switch
           label="Header icons"
           checked={state.headerIcons}
-          onToggle={() => set("headerIcons", !state.headerIcons)}
+          onToggle={() => set('headerIcons', !state.headerIcons)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Resize columns"
           checked={state.resize}
-          onToggle={() => set("resize", !state.resize)}
+          onToggle={() => set('resize', !state.resize)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Reorder columns"
           checked={state.reorder}
-          onToggle={() => set("reorder", !state.reorder)}
+          onToggle={() => set('reorder', !state.reorder)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Sticky left columns"
           checked={state.pinning}
-          onToggle={() => set("pinning", !state.pinning)}
+          onToggle={() => set('pinning', !state.pinning)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Sticky right column"
           checked={state.pinRight}
-          onToggle={() => set("pinRight", !state.pinRight)}
+          onToggle={() => set('pinRight', !state.pinRight)}
           className={PLAY_SWITCH}
         />
         <PlayDivider />
@@ -1288,71 +1393,71 @@ export function DataTablePlayground({
         <Switch
           label="Row selection"
           checked={state.selection}
-          onToggle={() => set("selection", !state.selection)}
+          onToggle={() => set('selection', !state.selection)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Row actions"
           checked={state.rowActions}
-          onToggle={() => set("rowActions", !state.rowActions)}
+          onToggle={() => set('rowActions', !state.rowActions)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Reorder rows"
           checked={state.rowReorder}
-          onToggle={() => set("rowReorder", !state.rowReorder)}
+          onToggle={() => set('rowReorder', !state.rowReorder)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Sub-rows"
           checked={state.expandable}
-          onToggle={() => set("expandable", !state.expandable)}
+          onToggle={() => set('expandable', !state.expandable)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Editable cells"
           checked={state.editable}
-          onToggle={() => set("editable", !state.editable)}
+          onToggle={() => set('editable', !state.editable)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Text wrap"
-          checked={state.lines === "wrap"}
-          onToggle={() => set("lines", state.lines === "wrap" ? "2" : "wrap")}
+          checked={state.lines === 'wrap'}
+          onToggle={() => set('lines', state.lines === 'wrap' ? '2' : 'wrap')}
           className={PLAY_SWITCH}
         />
         <PlayField label="Cell alignment">
           <PlaySelect
             value={state.align}
-            onChange={(v) => set("align", v as PlayState["align"])}
+            onChange={(v) => set('align', v as PlayState['align'])}
             options={[
-              { value: "auto", label: "Auto" },
-              { value: "center", label: "Center" },
-              { value: "top", label: "Top" },
+              { value: 'auto', label: 'Auto' },
+              { value: 'center', label: 'Center' },
+              { value: 'top', label: 'Top' },
             ]}
           />
         </PlayField>
         <PlayField label="Row hover">
           <PlaySelect
             value={state.rowHover}
-            onChange={(v) => set("rowHover", v as PlayState["rowHover"])}
+            onChange={(v) => set('rowHover', v as PlayState['rowHover'])}
             options={[
-              { value: "auto", label: "Auto" },
-              { value: "on", label: "On" },
-              { value: "off", label: "Off" },
+              { value: 'auto', label: 'Auto' },
+              { value: 'on', label: 'On' },
+              { value: 'off', label: 'Off' },
             ]}
           />
         </PlayField>
         <Switch
           label="Pagination"
           checked={state.pagination}
-          onToggle={() => set("pagination", !state.pagination)}
+          onToggle={() => set('pagination', !state.pagination)}
           className={PLAY_SWITCH}
         />
         <PlayField label="Rows per page" disabled={!state.pagination}>
           <PlaySelect
             value={state.pageSize}
-            onChange={(v) => set("pageSize", v as PlayState["pageSize"])}
+            onChange={(v) => set('pageSize', v as PlayState['pageSize'])}
             options={PAGE_SIZES.map((n) => ({ value: String(n), label: String(n) }))}
           />
         </PlayField>
@@ -1372,7 +1477,7 @@ export function DataTablePlayground({
         <GetCodeDialog def={DATA_TABLE_PRESET_DEF} code={presetCode} />
       </PlaygroundPanel>
     ),
-    [state, loading, presetCode]
+    [state, loading, presetCode],
   );
 
   // Expanded, the table has the window's height: 10 rows a page becomes
@@ -1386,14 +1491,14 @@ export function DataTablePlayground({
     // The page follows: the first row in view stays in view (a change of
     // size otherwise starts over on page 1).
     const first = table.getState().pagination.pageIndex * Number(now.pageSize);
-    if (next && now.pageSize === "10") {
+    if (next && now.pageSize === '10') {
       grewPage.current = true;
-      set("pageSize", "20");
+      set('pageSize', '20');
       table.setPageIndex(Math.floor(first / 20));
     } else if (!next && grewPage.current) {
       grewPage.current = false;
-      if (now.pageSize === "20") {
-        set("pageSize", "10");
+      if (now.pageSize === '20') {
+        set('pageSize', '10');
         table.setPageIndex(Math.floor(first / 10));
       }
     }
@@ -1402,7 +1507,7 @@ export function DataTablePlayground({
   return children({
     onExpandedChange,
     onReplay: reload,
-    preview: <div className={cn("w-full px-4 py-8 sm:px-6", expanded && "h-full")}>{body}</div>,
+    preview: <div className={cn('w-full px-4 py-8 sm:px-6', expanded && 'h-full')}>{body}</div>,
     demoPreview: <div className="w-full">{body}</div>,
     demoMaxWidth: 640,
     controls,

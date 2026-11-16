@@ -12,12 +12,12 @@
 // the array.
 // ---------------------------------------------------------------------------
 
-import type { Theme } from "@/registry/default/lib/theme-context";
-import type { ShapeVariant } from "@/registry/default/lib/shape-context";
-import type { SizeVariant } from "@/registry/default/lib/size-context";
-import type { IconLibrary } from "@/lib/docs/icon-map";
-import type { Base } from "@/lib/base-context";
-import { ACCENT_ORDER, isAccentHex, type AccentPreset } from "@/lib/accent";
+import type { Theme } from '#registry/default/lib/theme-context';
+import type { ShapeVariant } from '#registry/default/lib/shape-context';
+import type { SizeVariant } from '#registry/default/lib/size-context';
+import type { IconLibrary } from '#lib/docs/icon-map';
+import type { Base } from '#lib/base-context';
+import { ACCENT_ORDER, isAccentHex, type AccentPreset } from '#lib/accent';
 
 export interface SiteSettings {
   theme: Theme;
@@ -30,31 +30,31 @@ export interface SiteSettings {
 
 /** What a first visit sees. */
 export const DEFAULT_SETTINGS: SiteSettings = {
-  theme: "system",
-  shape: "sharp",
-  size: "default",
-  icons: "untitledui",
-  base: "base",
-  accent: "blue",
+  theme: 'system',
+  shape: 'sharp',
+  size: 'default',
+  icons: 'untitledui',
+  base: 'base',
+  accent: 'blue',
 };
 
 /** Every value each setting accepts, in the order the site lists them. */
 export const SETTING_VALUES = {
-  theme: ["system", "light", "dark"],
-  shape: ["sharp", "rounded", "pill"],
-  size: ["default", "compact"],
-  icons: ["lucide", "tabler", "phosphor", "hugeicons", "untitledui"],
-  base: ["radix", "base"],
+  theme: ['system', 'light', 'dark'],
+  shape: ['sharp', 'rounded', 'pill'],
+  size: ['default', 'compact'],
+  icons: ['lucide', 'tabler', 'phosphor', 'hugeicons', 'untitledui'],
+  base: ['radix', 'base'],
   accent: ACCENT_ORDER,
 } as const satisfies { [K in keyof SiteSettings]: readonly SiteSettings[K][] };
 
 export const SETTINGS_COOKIES: Record<keyof SiteSettings, string> = {
-  theme: "ff_theme",
-  shape: "ff_shape",
-  size: "ff_size",
-  icons: "ff_icons",
-  base: "ff_base",
-  accent: "ff_accent",
+  theme: 'ff_theme',
+  shape: 'ff_shape',
+  size: 'ff_size',
+  icons: 'ff_icons',
+  base: 'ff_base',
+  accent: 'ff_accent',
 };
 
 /** One year: a preference, not a session. */
@@ -69,17 +69,20 @@ export function readSettings(get: (name: string) => string | undefined): SiteSet
     return (raw && allowed.includes(raw) ? raw : DEFAULT_SETTINGS[key]) as SiteSettings[K];
   };
   return {
-    theme: pick("theme"),
-    shape: pick("shape"),
-    size: pick("size"),
-    icons: pick("icons"),
-    base: pick("base"),
-    accent: pick("accent"),
+    theme: pick('theme'),
+    shape: pick('shape'),
+    size: pick('size'),
+    icons: pick('icons'),
+    base: pick('base'),
+    accent: pick('accent'),
   };
 }
 
 /** The `document.cookie` assignment that stores one setting. */
-export function settingCookie<K extends keyof SiteSettings>(key: K, value: SiteSettings[K]): string {
+export function settingCookie<K extends keyof SiteSettings>(
+  key: K,
+  value: SiteSettings[K],
+): string {
   return `${SETTINGS_COOKIES[key]}=${value}; path=/; max-age=${MAX_AGE}; samesite=lax`;
 }
 
@@ -89,7 +92,7 @@ export function settingCookie<K extends keyof SiteSettings>(key: K, value: SiteS
 // travels to installs through the copied prompt.
 // ---------------------------------------------------------------------------
 
-export const CUSTOM_ACCENT_COOKIE = "ff_accent_custom";
+export const CUSTOM_ACCENT_COOKIE = 'ff_accent_custom';
 
 /** The saved custom accent, a 6-digit hex, or null. */
 export function readCustomAccent(get: (name: string) => string | undefined): string | null {
@@ -116,20 +119,24 @@ export function customAccentCookie(hex: string | null): string {
 // <html data-font> so a saved serif paints on the first frame.
 // ---------------------------------------------------------------------------
 
-export type HeadingFont = "inter" | "geist-serif" | "custom";
+export type HeadingFont = 'inter' | 'geist-serif' | 'custom';
 
-export const HEADING_FONTS = ["inter", "geist-serif", "custom"] as const satisfies readonly HeadingFont[];
+export const HEADING_FONTS = [
+  'inter',
+  'geist-serif',
+  'custom',
+] as const satisfies readonly HeadingFont[];
 
-export const DEFAULT_HEADING_FONT: HeadingFont = "inter";
+export const DEFAULT_HEADING_FONT: HeadingFont = 'inter';
 
-export const HEADING_FONT_COOKIE = "ff_font";
+export const HEADING_FONT_COOKIE = 'ff_font';
 
 /** The Google Fonts family behind "custom", URI-encoded. */
-export const CUSTOM_FONT_COOKIE = "ff_font_custom";
+export const CUSTOM_FONT_COOKIE = 'ff_font_custom';
 
 /** The weight every heading takes in the custom family, when the visitor
  *  picked one over Auto (the role weights). */
-export const CUSTOM_WEIGHT_COOKIE = "ff_font_weight";
+export const CUSTOM_WEIGHT_COOKIE = 'ff_font_weight';
 
 /** The saved heading font, custom family name and custom weight. The caller
  *  checks family and weight against the catalog, falling back to Inter and
@@ -140,7 +147,9 @@ export function readHeadingFont(get: (name: string) => string | undefined): {
   customWeight: number | null;
 } {
   const raw = get(HEADING_FONT_COOKIE);
-  const font = (HEADING_FONTS as readonly string[]).includes(raw ?? "") ? (raw as HeadingFont) : DEFAULT_HEADING_FONT;
+  const font = (HEADING_FONTS as readonly string[]).includes(raw ?? '')
+    ? (raw as HeadingFont)
+    : DEFAULT_HEADING_FONT;
   let customFamily: string | null = null;
   try {
     const encoded = get(CUSTOM_FONT_COOKIE);
@@ -175,15 +184,15 @@ export function customWeightCookie(weight: number | null): string {
 // starter slug.
 // ---------------------------------------------------------------------------
 
-export type HoverMode = "fluid" | "standard";
+export type HoverMode = 'fluid' | 'standard';
 
-export const HOVER_MODES = ["fluid", "standard"] as const satisfies readonly HoverMode[];
+export const HOVER_MODES = ['fluid', 'standard'] as const satisfies readonly HoverMode[];
 
-export const HOVER_COOKIE = "ff_hover";
+export const HOVER_COOKIE = 'ff_hover';
 
 /** The saved hover mode, fluid when missing or unknown. */
 export function readHoverMode(get: (name: string) => string | undefined): HoverMode {
-  return get(HOVER_COOKIE) === "standard" ? "standard" : "fluid";
+  return get(HOVER_COOKIE) === 'standard' ? 'standard' : 'fluid';
 }
 
 export function hoverModeCookie(value: HoverMode): string {
@@ -196,5 +205,5 @@ export function hoverModeCookie(value: HoverMode): string {
  *  from the first frame. */
 export function readMacPlatform(platformHint: string | null, userAgent: string | null): boolean {
   if (platformHint) return /mac|ios/i.test(platformHint);
-  return /mac|iphone|ipad|ipod/i.test(userAgent ?? "");
+  return /mac|iphone|ipad|ipod/i.test(userAgent ?? '');
 }

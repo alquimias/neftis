@@ -46,8 +46,6 @@
     }
   },
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/typography.",
-  "categories": [
-    "theme"
-  ],
+  "categories": ["theme"],
   "type": "registry:item"
 }

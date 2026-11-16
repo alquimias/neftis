@@ -1,1 +1,1 @@
-export * from "@/registry/default/menu-item";
+export * from '#registry/default/menu-item';

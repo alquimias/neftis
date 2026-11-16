@@ -3,10 +3,7 @@
   "name": "ask-user-questions",
   "title": "Ask User Questions",
   "description": "Stepped question flow with numbered options, keyboard shortcuts (1–9), single or multi-select, inline 'other' text input, optional skip, fluid hover, and multi-question navigation. Auto-advances on selection in single-select.",
-  "dependencies": [
-    "motion",
-    "@base-ui/react@^1.9.0"
-  ],
+  "dependencies": ["motion", "@base-ui/react@^1.9.0"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -29,8 +26,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/ask-user-questions. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#ask-user-questions.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

@@ -1,1 +1,1 @@
-export { Elevated } from "@/registry/default/lib/elevated";
+export { Elevated } from '#registry/default/lib/elevated';

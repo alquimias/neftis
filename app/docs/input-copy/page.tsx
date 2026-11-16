@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { InputCopy } from "@/registry/default/input-copy";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { inputCopyProps } from "@/lib/docs/api/input-copy";
+import { useState } from 'react';
+import { InputCopy } from '#registry/default/input-copy';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { inputCopyProps } from '#lib/docs/api/input-copy';
 
 const basicCode = `import { InputCopy } from "./components";
 
@@ -116,11 +116,7 @@ export default function InputCopyDoc() {
       <DocSection title="Disabled">
         <ComponentPreview code={disabledCode}>
           <div className="w-72">
-            <InputCopy
-              label="Invite code"
-              value="ABCD-1234-EFGH"
-              disabled
-            />
+            <InputCopy label="Invite code" value="ABCD-1234-EFGH" disabled />
           </div>
         </ComponentPreview>
       </DocSection>
@@ -134,7 +130,7 @@ export default function InputCopyDoc() {
               onCopy={() => setCopyCount((count) => count + 1)}
             />
             <p className="text-site-caption text-muted-foreground px-1">
-              Copied {copyCount} {copyCount === 1 ? "time" : "times"}
+              Copied {copyCount} {copyCount === 1 ? 'time' : 'times'}
             </p>
           </div>
         </ComponentPreview>

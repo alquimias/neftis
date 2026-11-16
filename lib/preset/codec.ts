@@ -47,12 +47,11 @@ export interface PresetComponentDef {
   installable: boolean;
 }
 
-const BASE62 =
-  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const BASE62 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 export function toBase62(num: number): string {
-  if (num === 0) return "0";
-  let out = "";
+  if (num === 0) return '0';
+  let out = '';
   let n = num;
   while (n > 0) {
     out = BASE62[n % 62] + out;
@@ -96,10 +95,7 @@ export function totalBits(fields: readonly PresetField[]): number {
 /** Encode a (possibly partial) config for a registered component. Missing
  *  fields take their defaults, so {} encodes the canonical default code.
  *  Uses multiplication, not bitwise ops — JS bitwise truncates to 32 bits. */
-export function encodePreset(
-  def: PresetComponentDef,
-  config: Record<string, unknown>
-): string {
+export function encodePreset(def: PresetComponentDef, config: Record<string, unknown>): string {
   const merged = { ...def.defaults, ...config };
   const fields = def.versions[def.currentVersion];
   let bits = 0;
@@ -125,7 +121,7 @@ export type DecodeResult =
  *  unknown tags/versions fail loudly with a useful message. */
 export function decodePreset(code: string): DecodeResult {
   const trimmed = code.trim();
-  if (trimmed.length < 3) return { ok: false, error: "Preset code is too short." };
+  if (trimmed.length < 3) return { ok: false, error: 'Preset code is too short.' };
   const tag = trimmed[0];
   const version = trimmed[1];
   const body = trimmed.slice(2);
@@ -142,7 +138,7 @@ export function decodePreset(code: string): DecodeResult {
   }
   const bits = fromBase62(body);
   if (bits < 0 || bits >= 2 ** totalBits(fields)) {
-    return { ok: false, error: "Preset code is not valid base62 or out of range." };
+    return { ok: false, error: 'Preset code is not valid base62 or out of range.' };
   }
   const preset = { ...def.defaults, ...def.versionDefaults?.[version] };
   let remaining = bits;

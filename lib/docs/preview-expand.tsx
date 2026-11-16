@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, type ReactNode } from 'react';
 
 // Site-only: a playground that can lift its preview into a full-window layer
 // (PlaygroundLayout's `expandable`). The layout owns the state and the

@@ -3,10 +3,7 @@
   "name": "use-fluid-hover",
   "title": "useFluidHover + FluidHoverHighlight (standard hover)",
   "description": "Standard hover: the same API as fluid hover, without the glide. The item under the pointer lights with a plain fill; nothing travels between items. Served as r/standard/use-fluid-hover.json.",
-  "registryDependencies": [
-    "utils",
-    "https://www.fluidfunctionalism.com/r/tokens.json"
-  ],
+  "registryDependencies": ["utils", "https://www.fluidfunctionalism.com/r/tokens.json"],
   "files": [
     {
       "path": "registry/standard/hooks/use-fluid-hover.ts",
@@ -20,8 +17,6 @@
     }
   ],
   "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "hook"
-  ],
+  "categories": ["hook"],
   "type": "registry:hook"
 }

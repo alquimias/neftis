@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { ColorPicker, ColorPickerPopover } from "@/registry/default/color-picker";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { colorPickerProps, popoverProps } from "@/lib/docs/api/color-picker";
+import { useState } from 'react';
+import { ColorPicker, ColorPickerPopover } from '#registry/default/color-picker';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { colorPickerProps, popoverProps } from '#lib/docs/api/color-picker';
 
 const basicCode = `import { ColorPicker } from "./components";
 
@@ -64,8 +64,8 @@ color
   : <button onClick={() => setColor("#6B97FF")}>+ Add fill</button>`;
 
 export default function ColorPickerDoc() {
-  const [color, setColor] = useState("#6B97FF");
-  const [removableColor, setRemovableColor] = useState<string | null>("#6B97FF");
+  const [color, setColor] = useState('#6B97FF');
+  const [removableColor, setRemovableColor] = useState<string | null>('#6B97FF');
 
   return (
     <DocPage
@@ -90,13 +90,13 @@ export default function ColorPickerDoc() {
           <ColorPicker
             defaultValue="#6B97FF"
             swatches={[
-              "#000000",
-              "#FFFFFF",
-              "#FF3B30",
-              "#F0F0F0",
-              "#E5E5E5",
-              "#D0D0D0",
-              "rgba(0,0,0,0.5)",
+              '#000000',
+              '#FFFFFF',
+              '#FF3B30',
+              '#F0F0F0',
+              '#E5E5E5',
+              '#D0D0D0',
+              'rgba(0,0,0,0.5)',
             ]}
           />
         </ComponentPreview>
@@ -132,7 +132,7 @@ export default function ColorPickerDoc() {
           ) : (
             <button
               type="button"
-              onClick={() => setRemovableColor("#6B97FF")}
+              onClick={() => setRemovableColor('#6B97FF')}
               className="text-site-body text-muted-foreground hover:text-foreground border border-dashed border-border px-3 h-9 rounded-lg cursor-pointer"
             >
               + Add fill
@@ -143,10 +143,9 @@ export default function ColorPickerDoc() {
 
       <DocSection title="Eyedropper Support">
         <p className="text-site-body text-muted-foreground">
-          The eyedropper uses the native{" "}
-          <code className="font-mono text-site-caption">window.EyeDropper</code> API
-          (Chromium-based browsers). It is automatically hidden in browsers
-          that do not support it.
+          The eyedropper uses the native{' '}
+          <code className="font-mono text-site-caption">window.EyeDropper</code> API (Chromium-based
+          browsers). It is automatically hidden in browsers that do not support it.
         </p>
       </DocSection>
 

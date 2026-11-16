@@ -7,8 +7,8 @@
 // tsconfig.
 // ---------------------------------------------------------------------------
 
-import type { PresetFile } from "./sidebar-install";
-import type { PresetGenerator } from "./light-generators";
+import type { PresetFile } from './sidebar-install';
+import type { PresetGenerator } from './light-generators';
 import {
   type CommandMenuPreset,
   COMMAND_MENU_ITEMS,
@@ -17,7 +17,7 @@ import {
   COMMAND_MENU_SORTS,
   COMMAND_MENU_SUGGESTIONS,
   COMMAND_MENU_COPY,
-} from "./command-menu-options";
+} from './command-menu-options';
 
 function commandMenuDemoFile(p: CommandMenuPreset): string {
   const l: string[] = [];
@@ -27,25 +27,27 @@ function commandMenuDemoFile(p: CommandMenuPreset): string {
   l.push(``);
   l.push(`import { useMemo, useState } from "react";`);
   const parts = [
-    "CommandMenu",
-    "CommandMenuDialog",
-    "CommandMenuInput",
-    ...(p.tabs ? ["CommandMenuTabs"] : []),
-    ...(p.filters ? ["CommandMenuFilters"] : []),
-    "CommandMenuList",
-    "CommandMenuEmpty",
-    ...(p.footer ? ["CommandMenuFooter"] : []),
-    "CommandMenuShortcut",
-    "type CommandMenuItemData",
+    'CommandMenu',
+    'CommandMenuDialog',
+    'CommandMenuInput',
+    ...(p.tabs ? ['CommandMenuTabs'] : []),
+    ...(p.filters ? ['CommandMenuFilters'] : []),
+    'CommandMenuList',
+    'CommandMenuEmpty',
+    ...(p.footer ? ['CommandMenuFooter'] : []),
+    'CommandMenuShortcut',
+    'type CommandMenuItemData',
   ];
   l.push(`import {`);
-  l.push(`  ${parts.join(",\n  ")},`);
-  l.push(`} from "@/components/ui/command-menu";`);
-  l.push(`import { Button } from "@/components/ui/button";`);
+  l.push(`  ${parts.join(',\n  ')},`);
+  l.push(`} from "#components/ui/command-menu";`);
+  l.push(`import { Button } from "#components/ui/button";`);
   if (p.filters) {
-    l.push(`import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";`);
+    l.push(
+      `import { Select, SelectTrigger, SelectContent, SelectItem } from "#components/ui/select";`,
+    );
   }
-  l.push(`import { useIcons, type IconName } from "@/lib/icon-context";`);
+  l.push(`import { useIcons, type IconName } from "#lib/icon-context";`);
   l.push(``);
 
   // ── Demo content ──
@@ -68,14 +70,16 @@ function commandMenuDemoFile(p: CommandMenuPreset): string {
       `value: ${JSON.stringify(item.value)}`,
       `label: ${JSON.stringify(item.label)}`,
       ...(item.action ? [`action: ${JSON.stringify(item.action)}`] : []),
-      ...(p.descriptions && item.description ? [`description: ${JSON.stringify(item.description)}`] : []),
+      ...(p.descriptions && item.description
+        ? [`description: ${JSON.stringify(item.description)}`]
+        : []),
       `icon: ${JSON.stringify(item.icon)}`,
       ...(p.shortcuts && item.shortcut ? [`shortcut: ${JSON.stringify(item.shortcut)}`] : []),
       ...(item.keywords ? [`keywords: ${JSON.stringify(item.keywords)}`] : []),
       `group: ${JSON.stringify(item.group)}`,
-      ...(item.disabled ? ["disabled: true"] : []),
+      ...(item.disabled ? ['disabled: true'] : []),
     ];
-    l.push(`  { ${fields.join(", ")} },`);
+    l.push(`  { ${fields.join(', ')} },`);
   }
   l.push(`];`);
   l.push(``);
@@ -121,17 +125,20 @@ function commandMenuDemoFile(p: CommandMenuPreset): string {
   if (scoped) {
     l.push(`    // The header controls are state; the rows derive from them.`);
     l.push(`    let visible = all;`);
-    if (p.tabs) l.push(`    if (tab !== "all") visible = visible.filter((item) => item.group === tab);`);
+    if (p.tabs)
+      l.push(`    if (tab !== "all") visible = visible.filter((item) => item.group === tab);`);
     if (p.filters) {
       l.push(`    if (type !== "all") visible = visible.filter((item) => item.group === type);`);
-      l.push(`    if (sort === "az") visible = [...visible].sort((a, b) => a.label.localeCompare(b.label));`);
+      l.push(
+        `    if (sort === "az") visible = [...visible].sort((a, b) => a.label.localeCompare(b.label));`,
+      );
     }
     l.push(`    return visible;`);
   } else {
     l.push(`    return all;`);
   }
-  const deps = ["icons", ...(p.tabs ? ["tab"] : []), ...(p.filters ? ["type", "sort"] : [])];
-  l.push(`  }, [${deps.join(", ")}]);`);
+  const deps = ['icons', ...(p.tabs ? ['tab'] : []), ...(p.filters ? ['type', 'sort'] : [])];
+  l.push(`  }, [${deps.join(', ')}]);`);
   l.push(``);
   l.push(`  const run = (item: CommandMenuItemData) => {`);
   l.push(`    // Your action here.`);
@@ -172,14 +179,18 @@ function commandMenuDemoFile(p: CommandMenuPreset): string {
   l.push(`        <CommandMenuShortcut keys=${JSON.stringify(p.shortcut)} className="ml-1" />`);
   l.push(`      </Button>`);
   l.push(`      {/* shortcut: mod is ⌘ on a Mac, Ctrl elsewhere. A pick closes the dialog. */}`);
-  l.push(`      <CommandMenuDialog open={open} onOpenChange={setOpen} shortcut=${JSON.stringify(p.shortcut)}>`);
+  l.push(
+    `      <CommandMenuDialog open={open} onOpenChange={setOpen} shortcut=${JSON.stringify(p.shortcut)}>`,
+  );
   const rootProps = [
-    "items={items}",
-    ...(p.suggestions ? ["suggestions={SUGGESTIONS}"] : []),
-    "onSelect={run}",
+    'items={items}',
+    ...(p.suggestions ? ['suggestions={SUGGESTIONS}'] : []),
+    'onSelect={run}',
   ];
-  l.push(`        <CommandMenu ${rootProps.join(" ")}>`);
-  l.push(`          <CommandMenuInput placeholder=${JSON.stringify(COMMAND_MENU_COPY.placeholder)} />`);
+  l.push(`        <CommandMenu ${rootProps.join(' ')}>`);
+  l.push(
+    `          <CommandMenuInput placeholder=${JSON.stringify(COMMAND_MENU_COPY.placeholder)} />`,
+  );
   if (p.tabs) {
     if (p.filters) {
       l.push(`          {/* Filters inside the tabs share the row, hugging their controls. */}`);
@@ -201,15 +212,15 @@ function commandMenuDemoFile(p: CommandMenuPreset): string {
   l.push(`    </>`);
   l.push(`  );`);
   l.push(`}`);
-  return l.join("\n") + "\n";
+  return l.join('\n') + '\n';
 }
 
 export function generateCommandMenuPresetFiles(p: CommandMenuPreset): PresetFile[] {
   return [
     {
-      path: "components/command-menu-demo.tsx",
-      type: "registry:component",
-      target: "components/command-menu-demo.tsx",
+      path: 'components/command-menu-demo.tsx',
+      type: 'registry:component',
+      target: 'components/command-menu-demo.tsx',
       content: commandMenuDemoFile(p),
     },
   ];
@@ -218,8 +229,8 @@ export function generateCommandMenuPresetFiles(p: CommandMenuPreset): PresetFile
 /** Registry dependencies the generated file needs, as plain names — the
  *  route flavors them with the same helpers postbuild uses. */
 export function commandMenuPresetRegistryDeps(p: CommandMenuPreset): string[] {
-  const deps = new Set<string>(["utils", "command-menu", "button", "icon-context"]);
-  if (p.filters) deps.add("select");
+  const deps = new Set<string>(['utils', 'command-menu', 'button', 'icon-context']);
+  if (p.filters) deps.add('select');
   return [...deps];
 }
 
@@ -229,9 +240,9 @@ export function commandMenuPresetNpmDeps(_p: CommandMenuPreset): string[] {
 }
 
 export const COMMAND_MENU_PRESET_GENERATOR: PresetGenerator = {
-  title: "Command menu (playground preset)",
+  title: 'Command menu (playground preset)',
   description:
-    "A command menu generated from a fluidfunctionalism.com playground configuration: the exact variant you built, installable.",
+    'A command menu generated from a fluidfunctionalism.com playground configuration: the exact variant you built, installable.',
   files: (p) => generateCommandMenuPresetFiles(p as unknown as CommandMenuPreset),
   registryDeps: (p) => commandMenuPresetRegistryDeps(p as unknown as CommandMenuPreset),
   npmDeps: (p) => commandMenuPresetNpmDeps(p as unknown as CommandMenuPreset),

@@ -19,14 +19,14 @@ Checklist and conventions for documenting every new component in this project. F
 - [ ] A list, menu, strip, or grid with hover uses `useFluidHover` **and renders `<FluidHoverHighlight hover={hover} />`** from `@/components/ui/fluid-hover-highlight` — never a hand-rolled `motion.div` fill (`tests/registry-consistency.test.mjs` fails on one). Rows join with `useRegisterFluidHoverItem`, and nothing re-measures on `children` changes (see [motion-guidelines.md](motion-guidelines.md#fluid-hover-registrydefaulthooksuse-fluid-hoverts))
 - [ ] Uses `@/` path aliases for all internal imports:
   ```ts
-  import { cn } from "@/lib/utils";
-  import { springs } from "@/lib/springs";
-  import { fontWeights } from "@/lib/font-weight";
-  import { useShape } from "@/lib/shape-context";
-  import { useIcons } from "@/lib/icon-context";
-  import type { IconComponent } from "@/lib/icon-context";
-  import { useFluidHover } from "@/hooks/use-fluid-hover";
-  import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
+  import { cn } from '@/lib/utils';
+  import { springs } from '@/lib/springs';
+  import { fontWeights } from '@/lib/font-weight';
+  import { useShape } from '@/lib/shape-context';
+  import { useIcons } from '@/lib/icon-context';
+  import type { IconComponent } from '@/lib/icon-context';
+  import { useFluidHover } from '@/hooks/use-fluid-hover';
+  import { FluidHoverHighlight } from '@/components/ui/fluid-hover-highlight';
   ```
   The `@/components/ui/fluid-hover-highlight` import is for registry sources only, through the in-repo shim. The file ships as `registry:component`, so it installs at `components/fluid-hover-highlight.tsx` and the shadcn CLI rewrites the import to match. Snippets people copy (doc pages, Copy prompts, the skill) use `@/components/fluid-hover-highlight`; `tests/docs-snippets.test.mjs` checks every documented import against where registry.json installs the file.
 
@@ -36,20 +36,21 @@ Add an item to the `items` array:
 
 ```jsonc
 {
-  "name": "component-name",            // kebab-case, unique
-  "type": "registry:ui",               // or registry:lib / registry:hook
-  "title": "Component Name",           // human-readable
+  "name": "component-name", // kebab-case, unique
+  "type": "registry:ui", // or registry:lib / registry:hook
+  "title": "Component Name", // human-readable
   "description": "One-two sentence description of what it does and key features.",
-  "dependencies": ["motion"],   // npm packages (only those not already in the project)
-  "registryDependencies": ["utils"],   // other registry items this depends on
+  "dependencies": ["motion"], // npm packages (only those not already in the project)
+  "registryDependencies": ["utils"], // other registry items this depends on
   "files": [
-    { "path": "registry/default/component-name.tsx", "type": "registry:ui" }
+    { "path": "registry/default/component-name.tsx", "type": "registry:ui" },
     // add sub-component files here if any (e.g., menu-item.tsx for dropdown)
-  ]
+  ],
 }
 ```
 
 **Field rules:**
+
 - `dependencies` = external npm packages (motion, @radix-ui/*, lucide-react, class-variance-authority)
 - `registryDependencies` = other items in this registry (utils, springs, font-weight, shape-context, icon-context, use-fluid-hover, or other components like button)
 - Components that render icons depend on `icon-context` only — never add icon packages beyond `lucide-react` as `dependencies` (consumers bring their own via IconProvider)
@@ -58,11 +59,12 @@ Add an item to the `items` array:
 ### 3. Generated Registry JSON (`public/r/<component-name>.json`)
 
 Run the registry build script (`npm run registry:build`) to generate the JSON file. It must contain:
+
 - `$schema: "https://ui.shadcn.com/schema/registry-item.json"`
 - Full source code embedded in `files[].content`
 - All metadata matching `registry.json`
 
-> **Rebuild on every source edit, not just new components.** The JSONs in `public/r/` embed a *copy* of the source, so editing any registry file — a component **or** a shared lib like `lib/font-weight.ts` — leaves the published registry stale until you re-run `npm run registry:build`. Editing a shared lib only regenerates that lib's JSON (e.g. `font-weight.json`); consumers reference it by `registryDependencies`, so they don't need rebuilding, but the lib does. Commit the regenerated JSONs alongside the source, and rebuild before any `vercel --prod` deploy.
+> **Rebuild on every source edit, not just new components.** The JSONs in `public/r/` embed a _copy_ of the source, so editing any registry file — a component **or** a shared lib like `lib/font-weight.ts` — leaves the published registry stale until you re-run `npm run registry:build`. Editing a shared lib only regenerates that lib's JSON (e.g. `font-weight.json`); consumers reference it by `registryDependencies`, so they don't need rebuilding, but the lib does. Commit the regenerated JSONs alongside the source, and rebuild before any `vercel --prod` deploy.
 
 ### 4. Component List Entry (`lib/docs/components.ts`)
 
@@ -80,13 +82,13 @@ Add an entry to `componentList`:
 This is the main deliverable. Structure:
 
 ```tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import { ComponentName } from "@/registry/default/component-name";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable, type PropDef } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
+import { useState } from 'react';
+import { ComponentName } from '@/registry/default/component-name';
+import { ComponentPreview } from '@/lib/docs/ComponentPreview';
+import { PropsTable, type PropDef } from '@/lib/docs/PropsTable';
+import { DocPage, DocSection } from '@/lib/docs/DocPage';
 
 // --- Code snippets as string constants ---
 const basicCode = `import { ComponentName } from "./components";
@@ -95,7 +97,7 @@ const basicCode = `import { ComponentName } from "./components";
 
 // --- Props table data ---
 const componentProps: PropDef[] = [
-  { name: "variant", type: '"a" | "b"', default: '"a"', description: "Visual style." },
+  { name: 'variant', type: '"a" | "b"', default: '"a"', description: 'Visual style.' },
   // ...
 ];
 
@@ -171,9 +173,7 @@ When text gets heavier on an interactive state (selected, checked, active, open,
   <span
     className="col-start-1 row-start-1 transition-[color,font-variation-settings] duration-80"
     style={{
-      fontVariationSettings: isSelected
-        ? fontWeights.semibold
-        : fontWeights.normal,
+      fontVariationSettings: isSelected ? fontWeights.semibold : fontWeights.normal,
     }}
   >
     {label}
@@ -182,11 +182,12 @@ When text gets heavier on an interactive state (selected, checked, active, open,
 ```
 
 **Rules:**
+
 - Weight comes from `fontVariationSettings` + the `fontWeights` tokens (`@/lib/font-weight`), **never** `font-weight` / `fontWeight` — the design uses Inter's variable `wght` axis.
 - Each `fontWeights` token also pairs in an optical-size (`opsz`) value (e.g. `"'wght' 550, 'opsz' 20"`). This is intentional, **not** a stray axis: a heavier `wght` widens the text and a tighter (higher) `opsz` pulls it back, so animating between weights keeps the advance width nearly constant — the closed→bold delta drops from ~3px to ~0.6px (≈±0.5%), centered on zero. A sub-pixel residual remains because a single opsz value can't zero every string (glyph mixes scale differently); the ghost span still pins the container, so nothing reflows regardless. `font-variation-settings` interpolates `opsz` alongside `wght` during the transition. The explicit `opsz` overrides `font-optical-sizing: auto` on purpose — weight, not font-size, drives optical size here. Always read these from the tokens; never hand-write a bare `'wght' N` string.
 - The ghost span is always set to the **heaviest** weight the visible span can reach, carries `invisible` + `aria-hidden="true"`, and renders the identical content.
 - Both spans share the cell via `col-start-1 row-start-1` inside an `inline-grid` (or `grid`/`inline-grid flex-1` when it must fill a row).
-- The transition **must** include `font-variation-settings` in its property list (e.g. `transition-[color,font-variation-settings] duration-80`). Plain `transition-colors` / `transition-opacity` will *not* animate weight — it snaps. Use `duration-80` (the slider's value readout is the one intentional exception at `duration-100`).
+- The transition **must** include `font-variation-settings` in its property list (e.g. `transition-[color,font-variation-settings] duration-80`). Plain `transition-colors` / `transition-opacity` will _not_ animate weight — it snaps. Use `duration-80` (the slider's value readout is the one intentional exception at `duration-100`).
 - Skip the ghost span only when the weight is **static** for the lifetime of the node (e.g. table header vs body rows never change) or the element is already a **fixed-size box** (e.g. a `w-5 h-5` chip holding a single digit) — there is nothing to reflow.
 - **One weight pair:** resting `normal` → active `semibold` (400 → 550) for selected/checked/active/open states; `bold` (700) is only for the display style. Don't invent new pairs, so the whole system animates at consistent magnitudes.
 - **If you change the weight tokens or introduce much larger text,** re-measure and re-tune the paired `opsz` values. Method: render the label in an offscreen `<span style="font-optical-sizing:none">`, measure `getBoundingClientRect().width` at the resting `wght/opsz` vs each candidate bold `opsz`, and pick the `opsz` that centers the closed→bold width delta on zero across representative labels (longer strings dominate the perceived shift). The current values were tuned this way against real component labels.
@@ -212,7 +213,7 @@ keypress. The established pattern (source: `ask-user-questions.tsx`
      instances can NEST (an app-shell provider wrapping doc previews), only
      the **innermost** containing instance (skip if another registered root
      inside yours also contains the target);
-   - if focus is inside a *different* instance → return (that one answers);
+   - if focus is inside a _different_ instance → return (that one answers);
    - if focus is outside every instance → when instances can nest, the
      **outermost** registered instance answers (the one not contained by any
      other) — do NOT use mount order for this: a persistent app-shell
@@ -275,6 +276,7 @@ Every doc page must include these sections (in order):
 2. **API Reference** - Final section with `<PropsTable>` listing all public props
 
 Typical section breakdown by component type:
+
 - **Components with variants**: Variants, Sizes, With Icons, States (loading/disabled)
 - **Group components**: Basic, Controlled, With descriptions/icons
 - **Layout components**: Basic, Responsive, Custom content
@@ -283,9 +285,9 @@ Typical section breakdown by component type:
 
 ```ts
 interface PropDef {
-  name: string;        // prop name
-  type: string;        // TypeScript type as a string (use quotes for union literals)
-  default?: string;    // default value as string, omit if required
+  name: string; // prop name
+  type: string; // TypeScript type as a string (use quotes for union literals)
+  default?: string; // default value as string, omit if required
   description: string; // one sentence
 }
 ```
@@ -304,15 +306,15 @@ interface PropDef {
 
 ## Naming Conventions
 
-| Item | Format | Example |
-|---|---|---|
-| Component file | kebab-case | `radio-group.tsx` |
-| Component export | PascalCase | `RadioGroup` |
-| Registry name | kebab-case | `radio-group` |
-| Doc page folder | kebab-case | `app/docs/radio-group/` |
-| Doc page file | `page.tsx` | `app/docs/radio-group/page.tsx` |
-| Doc component list slug | kebab-case | `radio-group` |
-| Props type | PascalCase + Props | `RadioGroupProps` |
+| Item                    | Format             | Example                         |
+| ----------------------- | ------------------ | ------------------------------- |
+| Component file          | kebab-case         | `radio-group.tsx`               |
+| Component export        | PascalCase         | `RadioGroup`                    |
+| Registry name           | kebab-case         | `radio-group`                   |
+| Doc page folder         | kebab-case         | `app/docs/radio-group/`         |
+| Doc page file           | `page.tsx`         | `app/docs/radio-group/page.tsx` |
+| Doc component list slug | kebab-case         | `radio-group`                   |
+| Props type              | PascalCase + Props | `RadioGroupProps`               |
 
 ---
 

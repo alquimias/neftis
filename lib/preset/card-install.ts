@@ -7,24 +7,19 @@
 // space through a real ts.createProgram over the project tsconfig.
 // ---------------------------------------------------------------------------
 
-import type { PresetFile } from "./sidebar-install";
-import type { PresetGenerator } from "./light-generators";
-import {
-  type CardPreset,
-  CARD_ITEMS,
-  CARD_BANNER,
-  CARD_THUMB,
-} from "./card-options";
+import type { PresetFile } from './sidebar-install';
+import type { PresetGenerator } from './light-generators';
+import { type CardPreset, CARD_ITEMS, CARD_BANNER, CARD_THUMB } from './card-options';
 
 /** The playground's derived layout facts, shared by every emitter below. */
 function derive(p: CardPreset) {
-  const isInline = p.orientation === "inline";
+  const isInline = p.orientation === 'inline';
   // Inline cards are a full-width list — force a single column (playground
   // rule), and 3 columns fills two even rows (6 items); everything else 4.
   const cols = isInline ? 1 : p.columns;
   const count = cols === 3 ? 6 : 4;
-  const isImage = p.media === "image";
-  const isSmall = p.media === "icon" || p.media === "logo";
+  const isImage = p.media === 'image';
+  const isSmall = p.media === 'icon' || p.media === 'logo';
   // The prominent image needs per-card clipping — separated is forced on.
   const separated = isImage || p.separated;
   const anyButton = p.primaryBtn || p.secondaryBtn || p.ghostBtn;
@@ -39,21 +34,21 @@ function cardSectionFile(p: CardPreset): string {
   l.push(``);
   if (p.selected) l.push(`import { useState } from "react";`);
   const parts = [
-    "Card",
-    "CardGroup",
-    "CardHeader",
-    "CardTitle",
-    ...(p.description ? ["CardDescription"] : []),
-    ...(d.anyButton ? ["CardFooter"] : []),
-    ...(d.isSmall ? ["CardMedia"] : []),
-    ...(d.isImage ? ["CardImage"] : []),
-    ...(d.anyButton ? ["CardButton"] : []),
+    'Card',
+    'CardGroup',
+    'CardHeader',
+    'CardTitle',
+    ...(p.description ? ['CardDescription'] : []),
+    ...(d.anyButton ? ['CardFooter'] : []),
+    ...(d.isSmall ? ['CardMedia'] : []),
+    ...(d.isImage ? ['CardImage'] : []),
+    ...(d.anyButton ? ['CardButton'] : []),
   ];
   l.push(`import {`);
-  l.push(`  ${parts.join(",\n  ")},`);
-  l.push(`} from "@/components/ui/card";`);
-  if (p.media === "icon") {
-    l.push(`import { useIcons, type IconName } from "@/lib/icon-context";`);
+  l.push(`  ${parts.join(',\n  ')},`);
+  l.push(`} from "#components/ui/card";`);
+  if (p.media === 'icon') {
+    l.push(`import { useIcons, type IconName } from "#lib/icon-context";`);
   }
   l.push(``);
 
@@ -61,15 +56,15 @@ function cardSectionFile(p: CardPreset): string {
   l.push(`// Seed content for the generated card group — replace with your own.`);
   const itemFields = (item: (typeof CARD_ITEMS)[number]) =>
     [
-      ...(p.media === "icon" ? [`icon: ${JSON.stringify(item.icon)}`] : []),
+      ...(p.media === 'icon' ? [`icon: ${JSON.stringify(item.icon)}`] : []),
       `title: ${JSON.stringify(item.title)}`,
       ...(p.description ? [`description: ${JSON.stringify(item.description)}`] : []),
-    ].join(", ");
+    ].join(', ');
   const itemType = [
-    ...(p.media === "icon" ? ["icon: IconName"] : []),
-    "title: string",
-    ...(p.description ? ["description: string"] : []),
-  ].join("; ");
+    ...(p.media === 'icon' ? ['icon: IconName'] : []),
+    'title: string',
+    ...(p.description ? ['description: string'] : []),
+  ].join('; ');
   l.push(`const ITEMS: { ${itemType} }[] = [`);
   for (const item of CARD_ITEMS.slice(0, d.count)) {
     l.push(`  { ${itemFields(item)} },`);
@@ -82,7 +77,7 @@ function cardSectionFile(p: CardPreset): string {
     l.push(`  ${JSON.stringify(CARD_BANNER)};`);
     l.push(``);
   }
-  if (p.media === "logo") {
+  if (p.media === 'logo') {
     l.push(`// Inline data-URI brand tile so the demo needs no asset files — swap for your logo.`);
     l.push(`const THUMB =`);
     l.push(`  ${JSON.stringify(CARD_THUMB)};`);
@@ -92,19 +87,19 @@ function cardSectionFile(p: CardPreset): string {
   // ── Component ──
   l.push(`export function CardSection() {`);
   if (p.selected) l.push(`  const [selected, setSelected] = useState(0);`);
-  if (p.media === "icon") l.push(`  const icons = useIcons();`);
+  if (p.media === 'icon') l.push(`  const icons = useIcons();`);
   l.push(`  return (`);
   l.push(`    <div className="w-full max-w-[560px]">`);
 
   const groupProps: string[] = [];
-  if (p.orientation !== "card") groupProps.push(`orientation="${p.orientation}"`);
+  if (p.orientation !== 'card') groupProps.push(`orientation="${p.orientation}"`);
   if (d.cols !== 1) groupProps.push(`columns={${d.cols}}`);
-  if (p.border !== "none") groupProps.push(`border="${p.border}"`);
+  if (p.border !== 'none') groupProps.push(`border="${p.border}"`);
   if (d.separated) groupProps.push(`separated`);
   if (!p.fluidHover) groupProps.push(`fluidHover={false}`);
-  l.push(`      <CardGroup${groupProps.length ? " " + groupProps.join(" ") : ""}>`);
+  l.push(`      <CardGroup${groupProps.length ? ' ' + groupProps.join(' ') : ''}>`);
 
-  l.push(`        {ITEMS.map((item${p.selected ? ", i" : ""}) => (`);
+  l.push(`        {ITEMS.map((item${p.selected ? ', i' : ''}) => (`);
   if (p.selected) {
     l.push(`          <Card`);
     l.push(`            key={item.title}`);
@@ -124,9 +119,9 @@ function cardSectionFile(p: CardPreset): string {
   }
 
   const mediaLine =
-    p.media === "icon"
+    p.media === 'icon'
       ? `<CardMedia icon={icons[item.icon]} />`
-      : p.media === "logo"
+      : p.media === 'logo'
         ? `<CardMedia logo={THUMB} size={32} />`
         : null;
   if (d.isImage) l.push(`            <CardImage src={BANNER} />`);
@@ -157,15 +152,15 @@ function cardSectionFile(p: CardPreset): string {
   l.push(`    </div>`);
   l.push(`  );`);
   l.push(`}`);
-  return l.join("\n") + "\n";
+  return l.join('\n') + '\n';
 }
 
 export function generateCardPresetFiles(p: CardPreset): PresetFile[] {
   return [
     {
-      path: "components/card-section.tsx",
-      type: "registry:component",
-      target: "components/card-section.tsx",
+      path: 'components/card-section.tsx',
+      type: 'registry:component',
+      target: 'components/card-section.tsx',
       content: cardSectionFile(p),
     },
   ];
@@ -174,22 +169,22 @@ export function generateCardPresetFiles(p: CardPreset): PresetFile[] {
 /** Registry dependencies the generated file needs, as plain names — the
  *  route flavors them with the same helpers postbuild uses. */
 export function cardPresetRegistryDeps(p: CardPreset): string[] {
-  const deps = new Set<string>(["utils", "card"]);
-  if (p.media === "icon") deps.add("icon-context");
+  const deps = new Set<string>(['utils', 'card']);
+  if (p.media === 'icon') deps.add('icon-context');
   return [...deps];
 }
 
 /** npm dependencies beyond what registryDependencies pull transitively. */
 export function cardPresetNpmDeps(_p: CardPreset): string[] {
-  return ["lucide-react"];
+  return ['lucide-react'];
 }
 
 export const CARD_PRESET_GENERATOR: PresetGenerator = {
-  title: "Card (playground preset)",
+  title: 'Card (playground preset)',
   description:
-    "A card group generated from a fluidfunctionalism.com playground configuration — the exact variant you built, installable.",
+    'A card group generated from a fluidfunctionalism.com playground configuration — the exact variant you built, installable.',
   files: (p) => generateCardPresetFiles(p as unknown as CardPreset),
   registryDeps: (p) => cardPresetRegistryDeps(p as unknown as CardPreset),
-  npmDeps: (p) => cardPresetNpmDeps(p as unknown as CardPreset),  note:
-    "Each card is a click target with an empty onClick so the hover has something to light: give each card its click, or drop onClick and label where a card does nothing.",
+  npmDeps: (p) => cardPresetNpmDeps(p as unknown as CardPreset),
+  note: 'Each card is a click target with an empty onClick so the hover has something to light: give each card its click, or drop onClick and label where a card does nothing.',
 };

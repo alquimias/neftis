@@ -3,9 +3,7 @@
   "name": "use-keyboard-nav-gate",
   "title": "useKeyboardNavGate",
   "description": "Gates a popup's keyboard focus ring on keyboard use: seeded at open from the focused element's :focus-visible state, then earned by navigation keys inside the popup.",
-  "registryDependencies": [
-    "https://www.fluidfunctionalism.com/r/popup.json"
-  ],
+  "registryDependencies": ["https://www.fluidfunctionalism.com/r/popup.json"],
   "files": [
     {
       "path": "registry/default/hooks/use-keyboard-nav-gate.ts",
@@ -14,8 +12,6 @@
     }
   ],
   "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "hook"
-  ],
+  "categories": ["hook"],
   "type": "registry:hook"
 }

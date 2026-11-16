@@ -1,16 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence } from "motion/react";
-import {
-  InputMessage,
-  type QueuedMessage,
-} from "@/registry/default/input-message";
-import { ChatMessage } from "@/registry/default/chat-message";
-import { Button } from "@/registry/radix/button";
-import { Switch } from "@/registry/radix/switch";
-import { Tooltip } from "@/registry/radix/tooltip";
-import { useIcon } from "@/lib/icon-context";
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence } from 'motion/react';
+import { InputMessage, type QueuedMessage } from '#registry/default/input-message';
+import { ChatMessage } from '#registry/default/chat-message';
+import { Button } from '#registry/radix/button';
+import { Switch } from '#registry/radix/switch';
+import { Tooltip } from '#registry/radix/tooltip';
+import { useIcon } from '#lib/icon-context';
 import {
   PLAY_SWITCH,
   PlayDivider,
@@ -18,12 +15,8 @@ import {
   PlaySection,
   PlaySelect,
   PlaygroundPanel,
-} from "@/lib/docs/playground";
-import {
-  QueuedStack,
-  collapsedStackHeight,
-  useQueueCardHeight,
-} from "./queued-stack";
+} from '#lib/docs/playground';
+import { QueuedStack, collapsedStackHeight, useQueueCardHeight } from './queued-stack';
 import {
   encodeInputMessagePreset,
   decodeInputMessagePreset,
@@ -31,13 +24,9 @@ import {
   INPUT_MESSAGE_PRESET_DEF,
   IM_SUGGESTIONS,
   IM_PLACEHOLDER_PROMPT,
-} from "@/lib/preset/input-message-options";
-import {
-  usePresetGlobals,
-  usePresetUrlSync,
-  GetCodeDialog,
-} from "@/lib/docs/preset-ui";
-import type { PlaygroundProps } from "./types";
+} from '#lib/preset/input-message-options';
+import { usePresetGlobals, usePresetUrlSync, GetCodeDialog } from '#lib/docs/preset-ui';
+import type { PlaygroundProps } from './types';
 
 // ── InputMessage playground ──────────────────────────────
 // A live sandbox: the controls drive a real InputMessage (floating over a
@@ -50,7 +39,7 @@ import type { PlaygroundProps } from "./types";
 export const SUGGESTIONS = IM_SUGGESTIONS;
 export const PLACEHOLDER_PROMPT = IM_PLACEHOLDER_PROMPT;
 
-type PlayStatus = "off" | "idle" | "streaming";
+type PlayStatus = 'off' | 'idle' | 'streaming';
 
 function buildImPlaygroundCode(o: {
   suggestion: boolean;
@@ -63,19 +52,18 @@ function buildImPlaygroundCode(o: {
   disabled: boolean;
   status: PlayStatus;
 }) {
-  const queueOn = o.status !== "off";
+  const queueOn = o.status !== 'off';
   const filesOn = o.leftSlot || o.attachments;
-  const imports = ["InputMessage", "ChatMessage"];
-  if (o.leftSlot || o.rightSlot) imports.push("Button");
-  if (o.leftSlot) imports.push("Tooltip");
-  if (queueOn) imports.push("type QueuedMessage");
+  const imports = ['InputMessage', 'ChatMessage'];
+  if (o.leftSlot || o.rightSlot) imports.push('Button');
+  if (o.leftSlot) imports.push('Tooltip');
+  if (queueOn) imports.push('type QueuedMessage');
 
   const l: string[] = [];
   l.push(`import { useEffect, useRef, useState } from "react";`);
   l.push(`import { AnimatePresence } from "motion/react";`);
-  l.push(`import { ${imports.join(", ")} } from "./components";`);
-  if (o.leftSlot || o.rightSlot)
-    l.push(`import { useIcons } from "@/lib/icon-context";`);
+  l.push(`import { ${imports.join(', ')} } from "./components";`);
+  if (o.leftSlot || o.rightSlot) l.push(`import { useIcons } from "#lib/icon-context";`);
   l.push(``);
   if (o.suggestionsOn) {
     l.push(`const SUGGESTIONS = [`);
@@ -90,7 +78,9 @@ function buildImPlaygroundCode(o: {
   if (filesOn) l.push(`const [files, setFiles] = useState<File[]>([]);`);
   if (queueOn) {
     l.push(`const [queue, setQueue] = useState<QueuedMessage[]>([]);`);
-    l.push(`const [status, setStatus] = useState<"idle" | "streaming">(${JSON.stringify(o.status)});`);
+    l.push(
+      `const [status, setStatus] = useState<"idle" | "streaming">(${JSON.stringify(o.status)});`,
+    );
   }
   if (o.leftSlot || o.rightSlot) l.push(`const icons = useIcons();`);
   if (o.leftSlot) l.push(`const PlusIcon = icons.plus;`);
@@ -106,7 +96,9 @@ function buildImPlaygroundCode(o: {
     l.push(`      .then((b) => new File([b], "micka.png", { type: "image/png" })),`);
     l.push(`    fetch("/Receipt-2581-4039-8265.pdf")`);
     l.push(`      .then((r) => r.blob())`);
-    l.push(`      .then((b) => new File([b], "Receipt-2581-4039-8265.pdf", { type: "application/pdf" })),`);
+    l.push(
+      `      .then((b) => new File([b], "Receipt-2581-4039-8265.pdf", { type: "application/pdf" })),`,
+    );
     l.push(`  ]).then(setFiles);`);
     l.push(`}, []);`);
   }
@@ -115,7 +107,7 @@ function buildImPlaygroundCode(o: {
   l.push(
     queueOn
       ? `// padding (plus the collapsed queue stack) and to position the stack, and`
-      : `// padding, and keep the transcript pinned to the latest message.`
+      : `// padding, and keep the transcript pinned to the latest message.`,
   );
   if (queueOn) l.push(`// keep the transcript pinned to the latest message.`);
   l.push(`const inputRef = useRef<HTMLDivElement>(null);`);
@@ -135,7 +127,7 @@ function buildImPlaygroundCode(o: {
   l.push(`  if (el) el.scrollTop = el.scrollHeight;`);
   // The queue is a dep: enqueuing grows the transcript's reserved bottom
   // padding, which must re-pin the scroll too.
-  l.push(`}, [messages, inputH${queueOn ? ", queue" : ""}]);`);
+  l.push(`}, [messages, inputH${queueOn ? ', queue' : ''}]);`);
   if (queueOn) {
     l.push(``);
     l.push(`// Height of the collapsed queue stack (44px front card + 12px per peek,`);
@@ -150,7 +142,7 @@ function buildImPlaygroundCode(o: {
   l.push(
     queueOn
       ? `      style={{ paddingBottom: inputH + 8 + (queue.length > 0 ? collapsedStackH + 8 : 0) }}`
-      : `      style={{ paddingBottom: inputH + 8 }}`
+      : `      style={{ paddingBottom: inputH + 8 }}`,
   );
   l.push(`    >`);
   l.push(`      {/* initial={false}: messages already sent skip the entrance. */}`);
@@ -179,8 +171,7 @@ function buildImPlaygroundCode(o: {
   l.push(`      setValue("");`);
   if (filesOn) l.push(`      setFiles([]);`);
   l.push(`    }}`);
-  if (o.suggestion)
-    l.push(`    placeholderSuggestion=${JSON.stringify(PLACEHOLDER_PROMPT)}`);
+  if (o.suggestion) l.push(`    placeholderSuggestion=${JSON.stringify(PLACEHOLDER_PROMPT)}`);
   if (o.suggestionsOn) l.push(`    suggestions={SUGGESTIONS}`);
   if (o.historyOn)
     l.push(`    // ArrowUp recalls sent messages, ArrowDown walks back to the draft.`);
@@ -194,7 +185,9 @@ function buildImPlaygroundCode(o: {
   if (o.leftSlot) {
     l.push(`    leftSlot={({ openFilePicker }) => (`);
     l.push(`      <Tooltip content="Attach" side="top">`);
-    l.push(`        <Button variant="ghost" size="icon-sm" aria-label="Attach files" onClick={() => openFilePicker()}>`);
+    l.push(
+      `        <Button variant="ghost" size="icon-sm" aria-label="Attach files" onClick={() => openFilePicker()}>`,
+    );
     l.push(`          <PlusIcon />`);
     l.push(`        </Button>`);
     l.push(`      </Tooltip>`);
@@ -221,24 +214,24 @@ function buildImPlaygroundCode(o: {
   }
   l.push(`  />`);
   l.push(`</div>`);
-  return l.join("\n");
+  return l.join('\n');
 }
 
 export function InputMessagePlayground({ children }: PlaygroundProps) {
-  const PlusIcon = useIcon("plus");
-  const ChevronDownIcon = useIcon("chevron-down");
+  const PlusIcon = useIcon('plus');
+  const ChevronDownIcon = useIcon('chevron-down');
 
   const [suggestion, setSuggestion] = useState(true);
   const [suggestionsOn, setSuggestionsOn] = useState(true);
   const [historyOn, setHistoryOn] = useState(true);
-  const [minRows, setMinRows] = useState("1");
+  const [minRows, setMinRows] = useState('1');
   const [disabled, setDisabled] = useState(false);
   const [leftSlotOn, setLeftSlotOn] = useState(true);
   const [rightSlotOn, setRightSlotOn] = useState(false);
   const [attachments, setAttachments] = useState(false);
-  const [status, setStatus] = useState<PlayStatus>("off");
+  const [status, setStatus] = useState<PlayStatus>('off');
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const filesOn = leftSlotOn || attachments;
 
@@ -254,16 +247,16 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
     (async () => {
       if (!sampleFilesRef.current) {
         sampleFilesRef.current = await Promise.all([
-          fetch("/micka.png")
+          fetch('/micka.png')
             .then((r) => r.blob())
-            .then((b) => new File([b], "micka.png", { type: b.type || "image/png" })),
-          fetch("/Receipt-2581-4039-8265.pdf")
+            .then((b) => new File([b], 'micka.png', { type: b.type || 'image/png' })),
+          fetch('/Receipt-2581-4039-8265.pdf')
             .then((r) => r.blob())
             .then(
               (b) =>
-                new File([b], "Receipt-2581-4039-8265.pdf", {
-                  type: b.type || "application/pdf",
-                })
+                new File([b], 'Receipt-2581-4039-8265.pdf', {
+                  type: b.type || 'application/pdf',
+                }),
             ),
         ]);
       }
@@ -277,10 +270,10 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
   // Seed one sent message so the transcript (and ArrowUp history recall)
   // reads at a glance.
   const [messages, setMessages] = useState<{ text: string; files: File[] }[]>([
-    { text: "Make my input box feel less stiff", files: [] },
+    { text: 'Make my input box feel less stiff', files: [] },
   ]);
 
-  const queueOn = status !== "off";
+  const queueOn = status !== 'off';
   const cardH = useQueueCardHeight();
 
   // Float the composer over the transcript (same treatment as the demos
@@ -309,7 +302,7 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
     if (filesOn) setFiles(item.files);
     setQueue((q) => q.filter((x) => x.id !== item.id));
     requestAnimationFrame(() => {
-      const el = inputRef.current?.querySelector("textarea");
+      const el = inputRef.current?.querySelector('textarea');
       if (el) {
         el.focus();
         el.setSelectionRange(el.value.length, el.value.length);
@@ -363,17 +356,16 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
   });
 
   const randomize = () => {
-    const pick = <T,>(arr: readonly T[]) =>
-      arr[Math.floor(Math.random() * arr.length)];
+    const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
     setSuggestion(Math.random() > 0.3);
     setSuggestionsOn(Math.random() > 0.3);
     setHistoryOn(Math.random() > 0.4);
-    setMinRows(pick(["1", "1", "2", "3"] as const));
+    setMinRows(pick(['1', '1', '2', '3'] as const));
     setDisabled(false);
     setLeftSlotOn(Math.random() > 0.4);
     setRightSlotOn(Math.random() > 0.5);
     setAttachments(Math.random() > 0.7);
-    setStatus(pick(["off", "off", "idle", "streaming"] as const));
+    setStatus(pick(['off', 'off', 'idle', 'streaming'] as const));
   };
 
   const controls = (
@@ -409,9 +401,9 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
             value={minRows}
             onChange={setMinRows}
             options={[
-              { value: "1", label: "1" },
-              { value: "2", label: "2" },
-              { value: "3", label: "3" },
+              { value: '1', label: '1' },
+              { value: '2', label: '2' },
+              { value: '3', label: '3' },
             ]}
           />
         </PlayField>
@@ -422,7 +414,6 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
           className={PLAY_SWITCH}
         />
       </div>
-
 
       <PlayDivider />
       <PlaySection label="Slots" />
@@ -441,7 +432,6 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
         />
       </div>
 
-
       <PlayDivider />
       <PlaySection label="Queue" />
       <div>
@@ -450,9 +440,9 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
             value={status}
             onChange={(v) => setStatus(v as PlayStatus)}
             options={[
-              { value: "off", label: "Off" },
-              { value: "idle", label: "Idle" },
-              { value: "streaming", label: "Streaming" },
+              { value: 'off', label: 'Off' },
+              { value: 'idle', label: 'Idle' },
+              { value: 'streaming', label: 'Streaming' },
             ]}
           />
         </PlayField>
@@ -471,16 +461,13 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
     value,
     onValueChange: setValue,
     onSend: (text: string, sent: File[]) => {
-      if (text || sent.length)
-        setMessages((m) => [...m, { text, files: sent }]);
-      setValue("");
+      if (text || sent.length) setMessages((m) => [...m, { text, files: sent }]);
+      setValue('');
       if (filesOn) setFiles([]);
     },
     placeholderSuggestion: suggestion ? PLACEHOLDER_PROMPT : undefined,
     suggestions: suggestionsOn ? SUGGESTIONS : undefined,
-    history: historyOn
-      ? messages.map((m) => m.text).filter(Boolean)
-      : undefined,
+    history: historyOn ? messages.map((m) => m.text).filter(Boolean) : undefined,
     minRows: Number(minRows),
     disabled,
     files: filesOn ? files : undefined,
@@ -504,20 +491,16 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
         Sonnet 5
       </Button>
     ) : undefined,
-    status: queueOn ? (status as "idle" | "streaming") : undefined,
+    status: queueOn ? (status as 'idle' | 'streaming') : undefined,
     queue: queueOn ? queue : undefined,
     onQueueChange: queueOn ? setQueue : undefined,
-    onStop: queueOn ? () => setStatus("idle") : undefined,
+    onStop: queueOn ? () => setStatus('idle') : undefined,
   } as const;
 
   // Space the transcript has to leave free at the bottom: the composer, plus
   // the collapsed queue stack when it's showing.
   const reservedBottom =
-    inputH +
-    8 +
-    (queueOn && queue.length > 0
-      ? collapsedStackHeight(queue.length, cardH) + 8
-      : 0);
+    inputH + 8 + (queueOn && queue.length > 0 ? collapsedStackHeight(queue.length, cardH) + 8 : 0);
 
   // The seeded message is already sent: initial={false} skips its entrance,
   // and messages sent from the composer still animate in.
@@ -538,10 +521,7 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
   const composerStage = (scroll: boolean) => (
     <div className="relative w-full self-stretch">
       {scroll ? (
-        <div
-          ref={scrollRef}
-          className="absolute inset-0 overflow-y-auto scrollbar-hide"
-        >
+        <div ref={scrollRef} className="absolute inset-0 overflow-y-auto scrollbar-hide">
           <div
             className="flex min-h-full flex-col justify-start gap-2"
             style={{ paddingBottom: reservedBottom }}
@@ -554,18 +534,14 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
         // stage and grows down toward the composer, so it reads as a real
         // conversation rather than a bubble hovering just above the input. No
         // scroll box, so nothing is cropped when the composer grows tall.
-        <div className="absolute inset-x-0 top-0 flex flex-col gap-2">
-          {transcript}
-        </div>
+        <div className="absolute inset-x-0 top-0 flex flex-col gap-2">{transcript}</div>
       )}
       {queueOn && (
         <QueuedStack
           queue={queue}
           onQueueChange={setQueue}
           onEdit={editQueued}
-          onRemove={(item) =>
-            setQueue((q) => q.filter((x) => x.id !== item.id))
-          }
+          onRemove={(item) => setQueue((q) => q.filter((x) => x.id !== item.id))}
           bottom={inputH + 8}
         />
       )}
@@ -589,9 +565,7 @@ export function InputMessagePlayground({ children }: PlaygroundProps) {
   // sits comfortably inside the demo card at 1:1 while giving the transcript
   // real room above the composer.
   const demoPreview = (
-    <div className="flex h-[480px] w-full max-w-[440px]">
-      {composerStage(false)}
-    </div>
+    <div className="flex h-[480px] w-full max-w-[440px]">{composerStage(false)}</div>
   );
 
   return children({ preview, demoPreview, controls, code });

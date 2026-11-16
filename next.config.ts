@@ -1,15 +1,17 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 // A request that asks for Markdown first (coding agents send
 // `Accept: text/markdown`) gets the page's Markdown at the same URL.
-const acceptsMarkdown = [{ type: "header" as const, key: "accept", value: "(.*)text/markdown(.*)" }];
+const acceptsMarkdown = [
+  { type: 'header' as const, key: 'accept', value: '(.*)text/markdown(.*)' },
+];
 
 const nextConfig: NextConfig = {
   // The root layout reads content/changelog/ on every route (the site's New
   // and Updated markers, lib/changelog/load.ts). File tracing only finds
   // those files for /changelog itself, so every route ships them explicitly.
   outputFileTracingIncludes: {
-    "/**": ["./content/changelog/**/*"],
+    '/**': ['./content/changelog/**/*'],
   },
   // The docs render on demand (the root layout reads the settings cookies),
   // and Next then streams <title> and <link rel="alternate"> to the end of
@@ -23,10 +25,10 @@ const nextConfig: NextConfig = {
     // versions win over the HTML pages at the same paths.
     return {
       beforeFiles: [
-        { source: "/docs.md", destination: "/md/index" },
-        { source: "/docs/:slug.md", destination: "/md/:slug" },
-        { source: "/docs", has: acceptsMarkdown, destination: "/md/index" },
-        { source: "/docs/:slug", has: acceptsMarkdown, destination: "/md/:slug" },
+        { source: '/docs.md', destination: '/md/index' },
+        { source: '/docs/:slug.md', destination: '/md/:slug' },
+        { source: '/docs', has: acceptsMarkdown, destination: '/md/index' },
+        { source: '/docs/:slug', has: acceptsMarkdown, destination: '/md/:slug' },
       ],
       afterFiles: [],
       fallback: [],
@@ -43,24 +45,24 @@ const nextConfig: NextConfig = {
       // 2026-09-07. Installed components still list it as a registry
       // dependency, so the old URL must keep resolving.
       {
-        source: "/r/use-proximity-hover.json",
-        destination: "/r/use-fluid-hover.json",
+        source: '/r/use-proximity-hover.json',
+        destination: '/r/use-fluid-hover.json',
         permanent: true,
       },
       // TabsSubtle was renamed Tabs on 2026-10-28 (the segmented Tabs it
       // replaced was removed). Old install URLs, registry dependencies and
       // doc links keep resolving.
-      ...["", "base/", "radix/"].map((dir) => ({
+      ...['', 'base/', 'radix/'].map((dir) => ({
         source: `/r/${dir}tabs-subtle.json`,
         destination: `/r/${dir}tabs.json`,
         permanent: true,
       })),
-      { source: "/docs/tabs-subtle", destination: "/docs/tabs", permanent: true },
-      { source: "/docs/tabs-subtle.md", destination: "/docs/tabs.md", permanent: true },
+      { source: '/docs/tabs-subtle', destination: '/docs/tabs', permanent: true },
+      { source: '/docs/tabs-subtle.md', destination: '/docs/tabs.md', permanent: true },
       // Short link to the agent skill page, for sharing.
       {
-        source: "/skill",
-        destination: "/docs/skill",
+        source: '/skill',
+        destination: '/docs/skill',
         permanent: false,
       },
     ];

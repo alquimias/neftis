@@ -3,10 +3,7 @@
   "name": "radio-group",
   "title": "Radio Group (Base UI)",
   "description": "Animated radio group with fluid hover, spring-animated selection dot. Base UI flavor.",
-  "dependencies": [
-    "motion",
-    "@base-ui/react@^1.9.0"
-  ],
+  "dependencies": ["motion", "@base-ui/react@^1.9.0"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -25,8 +22,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/radio-group. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#radio-group.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

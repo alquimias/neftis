@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 /**
  * Fluid Functionalism preview overrides used only on /compare. Each entry
@@ -7,15 +7,11 @@
  * (matched button heights, two badge variants, etc).
  */
 
-import { useState } from "react";
-import { Badge } from "@/registry/default/badge";
-import { Button } from "@/registry/radix/button";
-import { InputGroup, InputField } from "@/registry/default/input-group";
-import {
-  BADGE_ITEMS,
-  BUTTON_ITEMS,
-  INPUT_FIELDS,
-} from "@/app/components/demo-data";
+import { useState } from 'react';
+import { Badge } from '#registry/default/badge';
+import { Button } from '#registry/radix/button';
+import { InputGroup, InputField } from '#registry/default/input-group';
+import { BADGE_ITEMS, BUTTON_ITEMS, INPUT_FIELDS } from '#app/components/demo-data';
 
 function ButtonPreview() {
   // Default ladder step is h-9 like shadcn's size="sm"; the text-site-subtitle
@@ -35,7 +31,7 @@ function ButtonPreview() {
 function BadgePreview() {
   return (
     <div className="flex flex-col items-center gap-3">
-      {(["solid", "dot"] as const).map((variant) => (
+      {(['solid', 'dot'] as const).map((variant) => (
         <div key={variant} className="flex flex-wrap gap-1.5 items-center justify-center">
           {BADGE_ITEMS.map((item) => (
             <Badge key={item.label} variant={variant} color={item.color}>
@@ -59,7 +55,7 @@ function InputGroupPreview() {
             index={i}
             label={field.label}
             placeholder={field.placeholder}
-            value={values[field.key] ?? ""}
+            value={values[field.key] ?? ''}
             onChange={(v) => setValues((prev) => ({ ...prev, [field.key]: v }))}
           />
         ))}
@@ -71,5 +67,5 @@ function InputGroupPreview() {
 export const compareFluidPreviewMap: Record<string, React.FC> = {
   button: ButtonPreview,
   badge: BadgePreview,
-  "input-group": InputGroupPreview,
+  'input-group': InputGroupPreview,
 };

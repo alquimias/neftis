@@ -4,15 +4,15 @@
  * app/globals.css and the `reveal` item in registry.json. This fails when a
  * copy is stale.
  */
-import { describe, expect, it } from "vitest";
-import { generate } from "../scripts/generate-reveal.mjs";
+import { describe, expect, it } from 'vitest';
+import { generate } from '../scripts/generate-reveal.mjs';
 
-describe("reveal CSS generation", () => {
-  it("globals.css and registry.json are up to date", async () => {
+describe('reveal CSS generation', () => {
+  it('globals.css and registry.json are up to date', async () => {
     const files = await generate();
     const stale = Object.entries(files)
       .filter(([, [before, after]]) => before !== after)
       .map(([path]) => path);
-    expect(stale, "run `npm run reveal-css`").toEqual([]);
+    expect(stale, 'run `npm run reveal-css`').toEqual([]);
   });
 });

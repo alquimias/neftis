@@ -11,8 +11,6 @@
     }
   ],
   "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "lib"
-  ],
+  "categories": ["lib"],
   "type": "registry:lib"
 }

@@ -1,77 +1,77 @@
 // Every doc page's API reference, keyed by page slug. One module per page
 // (lib/docs/api/<slug>.ts); tests/docs-markdown.test.ts checks that every
 // page with a PropsTable is listed here.
-import type { ApiTable } from "@/lib/docs/api/types";
-import { apiReference as accordionApi } from "@/lib/docs/api/accordion";
-import { apiReference as askUserQuestionsApi } from "@/lib/docs/api/ask-user-questions";
-import { apiReference as badgeApi } from "@/lib/docs/api/badge";
-import { apiReference as bannerApi } from "@/lib/docs/api/banner";
-import { apiReference as breadcrumbApi } from "@/lib/docs/api/breadcrumb";
-import { apiReference as buttonApi } from "@/lib/docs/api/button";
-import { apiReference as calendarApi } from "@/lib/docs/api/calendar";
-import { apiReference as cardApi } from "@/lib/docs/api/card";
-import { apiReference as carouselDotsApi } from "@/lib/docs/api/carousel-dots";
-import { apiReference as chatMessageApi } from "@/lib/docs/api/chat-message";
-import { apiReference as checkboxGroupApi } from "@/lib/docs/api/checkbox-group";
-import { apiReference as colorPickerApi } from "@/lib/docs/api/color-picker";
-import { apiReference as comboboxApi } from "@/lib/docs/api/combobox";
-import { apiReference as commandMenuApi } from "@/lib/docs/api/command-menu";
-import { apiReference as contextMenuApi } from "@/lib/docs/api/context-menu";
-import { apiReference as dataTableApi } from "@/lib/docs/api/data-table";
-import { apiReference as datePickerApi } from "@/lib/docs/api/date-picker";
-import { apiReference as dialogApi } from "@/lib/docs/api/dialog";
-import { apiReference as dropdownApi } from "@/lib/docs/api/dropdown";
-import { apiReference as checkboxApi } from "@/lib/docs/api/checkbox";
-import { apiReference as inputApi } from "@/lib/docs/api/input";
-import { apiReference as textareaApi } from "@/lib/docs/api/textarea";
-import { apiReference as fieldApi } from "@/lib/docs/api/field";
-import { apiReference as fluidHoverApi } from "@/lib/docs/api/fluid-hover";
-import { apiReference as inputCopyApi } from "@/lib/docs/api/input-copy";
-import { apiReference as inputGroupApi } from "@/lib/docs/api/input-group";
-import { apiReference as inputMessageApi } from "@/lib/docs/api/input-message";
-import { apiReference as radioGroupApi } from "@/lib/docs/api/radio-group";
-import { apiReference as revealApi } from "@/lib/docs/api/reveal";
-import { apiReference as scrollbarsApi } from "@/lib/docs/api/scrollbars";
-import { apiReference as selectApi } from "@/lib/docs/api/select";
-import { apiReference as sidebarApi } from "@/lib/docs/api/sidebar";
-import { apiReference as sizesApi } from "@/lib/docs/api/sizes";
-import { apiReference as sliderApi } from "@/lib/docs/api/slider";
-import { apiReference as switchApi } from "@/lib/docs/api/switch";
-import { apiReference as tableApi } from "@/lib/docs/api/table";
-import { apiReference as tabsApi } from "@/lib/docs/api/tabs";
-import { apiReference as thinkingIndicatorApi } from "@/lib/docs/api/thinking-indicator";
-import { apiReference as thinkingStepsApi } from "@/lib/docs/api/thinking-steps";
-import { apiReference as tooltipApi } from "@/lib/docs/api/tooltip";
+import type { ApiTable } from '#lib/docs/api/types';
+import { apiReference as accordionApi } from '#lib/docs/api/accordion';
+import { apiReference as askUserQuestionsApi } from '#lib/docs/api/ask-user-questions';
+import { apiReference as badgeApi } from '#lib/docs/api/badge';
+import { apiReference as bannerApi } from '#lib/docs/api/banner';
+import { apiReference as breadcrumbApi } from '#lib/docs/api/breadcrumb';
+import { apiReference as buttonApi } from '#lib/docs/api/button';
+import { apiReference as calendarApi } from '#lib/docs/api/calendar';
+import { apiReference as cardApi } from '#lib/docs/api/card';
+import { apiReference as carouselDotsApi } from '#lib/docs/api/carousel-dots';
+import { apiReference as chatMessageApi } from '#lib/docs/api/chat-message';
+import { apiReference as checkboxGroupApi } from '#lib/docs/api/checkbox-group';
+import { apiReference as colorPickerApi } from '#lib/docs/api/color-picker';
+import { apiReference as comboboxApi } from '#lib/docs/api/combobox';
+import { apiReference as commandMenuApi } from '#lib/docs/api/command-menu';
+import { apiReference as contextMenuApi } from '#lib/docs/api/context-menu';
+import { apiReference as dataTableApi } from '#lib/docs/api/data-table';
+import { apiReference as datePickerApi } from '#lib/docs/api/date-picker';
+import { apiReference as dialogApi } from '#lib/docs/api/dialog';
+import { apiReference as dropdownApi } from '#lib/docs/api/dropdown';
+import { apiReference as checkboxApi } from '#lib/docs/api/checkbox';
+import { apiReference as inputApi } from '#lib/docs/api/input';
+import { apiReference as textareaApi } from '#lib/docs/api/textarea';
+import { apiReference as fieldApi } from '#lib/docs/api/field';
+import { apiReference as fluidHoverApi } from '#lib/docs/api/fluid-hover';
+import { apiReference as inputCopyApi } from '#lib/docs/api/input-copy';
+import { apiReference as inputGroupApi } from '#lib/docs/api/input-group';
+import { apiReference as inputMessageApi } from '#lib/docs/api/input-message';
+import { apiReference as radioGroupApi } from '#lib/docs/api/radio-group';
+import { apiReference as revealApi } from '#lib/docs/api/reveal';
+import { apiReference as scrollbarsApi } from '#lib/docs/api/scrollbars';
+import { apiReference as selectApi } from '#lib/docs/api/select';
+import { apiReference as sidebarApi } from '#lib/docs/api/sidebar';
+import { apiReference as sizesApi } from '#lib/docs/api/sizes';
+import { apiReference as sliderApi } from '#lib/docs/api/slider';
+import { apiReference as switchApi } from '#lib/docs/api/switch';
+import { apiReference as tableApi } from '#lib/docs/api/table';
+import { apiReference as tabsApi } from '#lib/docs/api/tabs';
+import { apiReference as thinkingIndicatorApi } from '#lib/docs/api/thinking-indicator';
+import { apiReference as thinkingStepsApi } from '#lib/docs/api/thinking-steps';
+import { apiReference as tooltipApi } from '#lib/docs/api/tooltip';
 
 export const API_REFERENCE: Record<string, ApiTable[]> = {
   accordion: accordionApi,
-  "ask-user-questions": askUserQuestionsApi,
+  'ask-user-questions': askUserQuestionsApi,
   badge: badgeApi,
   banner: bannerApi,
   breadcrumb: breadcrumbApi,
   button: buttonApi,
   calendar: calendarApi,
   card: cardApi,
-  "carousel-dots": carouselDotsApi,
-  "chat-message": chatMessageApi,
-  "checkbox-group": checkboxGroupApi,
-  "color-picker": colorPickerApi,
+  'carousel-dots': carouselDotsApi,
+  'chat-message': chatMessageApi,
+  'checkbox-group': checkboxGroupApi,
+  'color-picker': colorPickerApi,
   combobox: comboboxApi,
-  "command-menu": commandMenuApi,
-  "context-menu": contextMenuApi,
-  "data-table": dataTableApi,
-  "date-picker": datePickerApi,
+  'command-menu': commandMenuApi,
+  'context-menu': contextMenuApi,
+  'data-table': dataTableApi,
+  'date-picker': datePickerApi,
   dialog: dialogApi,
   dropdown: dropdownApi,
   field: fieldApi,
   textarea: textareaApi,
   input: inputApi,
   checkbox: checkboxApi,
-  "fluid-hover": fluidHoverApi,
-  "input-copy": inputCopyApi,
-  "input-group": inputGroupApi,
-  "input-message": inputMessageApi,
-  "radio-group": radioGroupApi,
+  'fluid-hover': fluidHoverApi,
+  'input-copy': inputCopyApi,
+  'input-group': inputGroupApi,
+  'input-message': inputMessageApi,
+  'radio-group': radioGroupApi,
   reveal: revealApi,
   scrollbars: scrollbarsApi,
   select: selectApi,
@@ -80,8 +80,8 @@ export const API_REFERENCE: Record<string, ApiTable[]> = {
   slider: sliderApi,
   switch: switchApi,
   table: tableApi,
-  "tabs": tabsApi,
-  "thinking-indicator": thinkingIndicatorApi,
-  "thinking-steps": thinkingStepsApi,
+  tabs: tabsApi,
+  'thinking-indicator': thinkingIndicatorApi,
+  'thinking-steps': thinkingStepsApi,
   tooltip: tooltipApi,
 };

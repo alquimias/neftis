@@ -191,7 +191,7 @@ describe("card preset install generator", () => {
       const p = { ...DEFAULT_CARD_PRESET, ...randomPreset(rand) };
       for (const file of generateCardPresetFiles(p)) {
         expect(file.content).not.toContain("@/lib/docs");
-        expect(file.content).not.toContain('from "@/registry/');
+        expect(file.content).not.toContain('from "#registry/');
       }
     }
   });

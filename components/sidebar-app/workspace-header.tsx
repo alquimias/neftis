@@ -1,1 +1,1 @@
-export * from "@/registry/blocks/sidebar-workspace-header";
+export * from '#registry/blocks/sidebar-workspace-header';

@@ -7,14 +7,20 @@ type Reply = { id: number; html?: string; error?: string };
 
 let worker: Worker | null | undefined;
 let nextId = 0;
-const waiting = new Map<number, { code: string; resolve: (html: string) => void; reject: (error: unknown) => void }>();
+const waiting = new Map<
+  number,
+  { code: string; resolve: (html: string) => void; reject: (error: unknown) => void }
+>();
 
-const onMainThread = (code: string) => import("./highlight").then(({ highlight }) => highlight(code));
+const onMainThread = (code: string) =>
+  import('./highlight').then(({ highlight }) => highlight(code));
 
 function start(): Worker | null {
-  if (typeof Worker === "undefined") return null;
+  if (typeof Worker === 'undefined') return null;
   try {
-    const started = new Worker(new URL("./highlight.worker.ts", import.meta.url), { type: "module" });
+    const started = new Worker(new URL('./highlight.worker.ts', import.meta.url), {
+      type: 'module',
+    });
     started.onmessage = (event: MessageEvent<Reply>) => {
       const job = waiting.get(event.data.id);
       if (!job) return;

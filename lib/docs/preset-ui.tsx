@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // ---------------------------------------------------------------------------
 // Shared "Get code" UI for playground presets: the site-global knobs that
@@ -6,11 +6,11 @@
 // playground supplies its own encode/apply; everything else is uniform.
 // ---------------------------------------------------------------------------
 
-import { useEffect, useRef } from "react";
-import { useShape } from "@/lib/shape-context";
-import { useSizeVariant } from "@/lib/size-context";
-import { useBase } from "@/lib/base-context";
-import { Button } from "@/registry/radix/button";
+import { useEffect, useRef } from 'react';
+import { useShape } from '#lib/shape-context';
+import { useSizeVariant } from '#lib/size-context';
+import { useBase } from '#lib/base-context';
+import { Button } from '#registry/radix/button';
 import {
   Dialog,
   DialogTrigger,
@@ -18,15 +18,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/registry/radix/dialog";
-import { InputCopy } from "@/registry/default/input-copy";
-import { CopyPromptButton } from "@/lib/docs/copy-prompt-button";
-import { buildPresetPrompt } from "@/lib/docs/install-prompt";
-import { useHoverMode } from "@/lib/docs/hover-mode";
-import type { PresetGlobals } from "@/lib/preset/sidebar-options";
-import type { PresetComponentDef } from "@/lib/preset/codec";
+} from '#registry/radix/dialog';
+import { InputCopy } from '#registry/default/input-copy';
+import { CopyPromptButton } from '#lib/docs/copy-prompt-button';
+import { buildPresetPrompt } from '#lib/docs/install-prompt';
+import { useHoverMode } from '#lib/docs/hover-mode';
+import type { PresetGlobals } from '#lib/preset/sidebar-options';
+import type { PresetComponentDef } from '#lib/preset/codec';
 
-const SITE = "https://www.fluidfunctionalism.com";
+const SITE = 'https://www.fluidfunctionalism.com';
 
 /** The site-level knobs every preset encodes: the primitive flavor picks
  *  the payload namespace, shape/size pin the providers in the emitted page. */
@@ -35,9 +35,9 @@ export function usePresetGlobals(): PresetGlobals {
   const shape = useShape();
   const sizeVariant = useSizeVariant();
   return {
-    flavor: base === "base" ? "base" : "radix",
+    flavor: base === 'base' ? 'base' : 'radix',
     shape: shape.variant,
-    size: sizeVariant === "compact" ? "compact" : "default",
+    size: sizeVariant === 'compact' ? 'compact' : 'default',
   };
 }
 
@@ -47,7 +47,7 @@ export function usePresetGlobals(): PresetGlobals {
 export function usePresetUrlSync(
   code: string,
   defaultCode: string,
-  onLoad: (raw: string) => void
+  onLoad: (raw: string) => void,
 ): void {
   // A pasted ?preset= is the ONLY copy of the shared state, and the tracker
   // effect below runs in the same commit as the mount-read — before the
@@ -61,7 +61,7 @@ export function usePresetUrlSync(
   const pendingRef = useRef<string | null>(null);
   const initialCodeRef = useRef(code);
   useEffect(() => {
-    const raw = new URLSearchParams(window.location.search).get("preset");
+    const raw = new URLSearchParams(window.location.search).get('preset');
     if (raw) {
       pendingRef.current = raw;
       onLoad(raw);
@@ -75,9 +75,9 @@ export function usePresetUrlSync(
       pendingRef.current = null;
     }
     const url = new URL(window.location.href);
-    if (code === defaultCode) url.searchParams.delete("preset");
-    else url.searchParams.set("preset", code);
-    window.history.replaceState(window.history.state, "", url);
+    if (code === defaultCode) url.searchParams.delete('preset');
+    else url.searchParams.set('preset', code);
+    window.history.replaceState(window.history.state, '', url);
   }, [code, defaultCode]);
 }
 
@@ -85,13 +85,7 @@ export function usePresetUrlSync(
  *  button (same brief as the doc page's Installation block, pointed at the
  *  preset block); share-only components get a modal with the playground
  *  link instead. */
-export function GetCodeDialog({
-  def,
-  code,
-}: {
-  def: PresetComponentDef;
-  code: string;
-}) {
+export function GetCodeDialog({ def, code }: { def: PresetComponentDef; code: string }) {
   const { base } = useBase();
   const hover = useHoverMode();
   if (def.installable) {

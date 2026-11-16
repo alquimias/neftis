@@ -1,10 +1,18 @@
-"use client";
+'use client';
 
-import { Fragment, createElement, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { createPortal } from "react-dom";
-import Image from "next/image";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
-import { spring } from "@/lib/springs";
+import {
+  Fragment,
+  createElement,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
+import { createPortal } from 'react-dom';
+import Image from 'next/image';
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
+import { spring } from '#lib/springs';
 import {
   SidebarProvider,
   Sidebar,
@@ -25,33 +33,26 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
-} from "@/components/flavored/sidebar";
-import { Button } from "@/registry/radix/button";
-import { Tooltip, TooltipGroup, TooltipPortalContainer } from "@/registry/radix/tooltip";
-import { KeyCaps } from "@/lib/key-cap";
-import {
-  DropdownMenu,
-  DropdownTrigger,
-  DropdownContent,
-} from "@/components/flavored/dropdown";
-import { MenuItem } from "@/registry/default/menu-item";
-import { useIcons, useIcon, type IconName } from "@/lib/icon-context";
-import { useShape } from "@/lib/shape-context";
-import { fontWeights } from "@/lib/font-weight";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { useNarrowFrame } from "@/lib/use-narrow-frame";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import { SidebarPlayground, FooterCalloutStack } from "@/lib/docs/playgrounds/sidebar";
-import { WorkspaceMenuItems, SIDEBAR_MENU_POPUP } from "@/lib/docs/workspace-demo";
-import {
-  SidebarWorkspaceHeader,
-  WorkspaceTile,
-} from "@/components/sidebar-app/workspace-header";
-import { SidebarSearchField } from "@/components/sidebar-app/search-field";
-import { SidebarInsetTopbar } from "@/components/sidebar-app/inset-topbar";
-import { SettingsDialog } from "@/components/dialog-sidebar/settings-dialog";
+} from '#components/flavored/sidebar';
+import { Button } from '#registry/radix/button';
+import { Tooltip, TooltipGroup, TooltipPortalContainer } from '#registry/radix/tooltip';
+import { KeyCaps } from '#lib/key-cap';
+import { DropdownMenu, DropdownTrigger, DropdownContent } from '#components/flavored/dropdown';
+import { MenuItem } from '#registry/default/menu-item';
+import { useIcons, useIcon, type IconName } from '#lib/icon-context';
+import { useShape } from '#lib/shape-context';
+import { fontWeights } from '#lib/font-weight';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { useNarrowFrame } from '#lib/use-narrow-frame';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { SidebarPlayground, FooterCalloutStack } from '#lib/docs/playgrounds/sidebar';
+import { WorkspaceMenuItems, SIDEBAR_MENU_POPUP } from '#lib/docs/workspace-demo';
+import { SidebarWorkspaceHeader, WorkspaceTile } from '#components/sidebar-app/workspace-header';
+import { SidebarSearchField } from '#components/sidebar-app/search-field';
+import { SidebarInsetTopbar } from '#components/sidebar-app/inset-topbar';
+import { SettingsDialog } from '#components/dialog-sidebar/settings-dialog';
 import {
   Card,
   CardDescription,
@@ -60,11 +61,11 @@ import {
   CardImage,
   CardMedia,
   CardTitle,
-} from "@/registry/default/card";
-import { BANNER } from "@/lib/docs/playgrounds/card";
-import { SIDEBAR_THREADS } from "@/app/components/demo-data";
-import { useSurface } from "@/lib/surface-context";
-import { surfaceClasses, surfaceHoverClasses } from "@/lib/surface-classes";
+} from '#registry/default/card';
+import { BANNER } from '#lib/docs/playgrounds/card';
+import { SIDEBAR_THREADS } from '#app/components/demo-data';
+import { useSurface } from '#lib/surface-context';
+import { surfaceClasses, surfaceHoverClasses } from '#lib/surface-classes';
 import {
   AI_CALLOUT,
   AI_NAV,
@@ -73,8 +74,14 @@ import {
   WIKI_PRIVATE,
   WIKI_RECENT,
   WIKI_SHARED,
-} from "./example-data";
-import { providerProps, sidebarProps, sectionProps, level1Props, level2Props } from "@/lib/docs/api/sidebar";
+} from './example-data';
+import {
+  providerProps,
+  sidebarProps,
+  sectionProps,
+  level1Props,
+  level2Props,
+} from '#lib/docs/api/sidebar';
 
 // ── Code snippets ────────────────────────────────────────
 
@@ -241,7 +248,7 @@ const alignmentCode = `// One rhythm everywhere: 24px icon buttons, gap-1, insid
  *  On a phone the previews are rail-only, and the rails run 300–580px of
  *  content, so 560 shows almost all of it without scrolling — the stage is
  *  the point on a page where the prose is deliberately short. */
-const SHELL_HEIGHT = "h-[560px] md:h-[640px]";
+const SHELL_HEIGHT = 'h-[560px] md:h-[640px]';
 
 /** Bounded app-shell frame every preview runs inside — the provider fills it
  *  instead of the viewport. Full-bleed shells don't want Inspect's rulers
@@ -256,9 +263,7 @@ function SidebarShellFrame({
   heightClass?: string;
 }) {
   return (
-    <div
-      className={`relative flex w-full overflow-hidden bg-background ${heightClass}`}
-    >
+    <div className={`relative flex w-full overflow-hidden bg-background ${heightClass}`}>
       {children}
     </div>
   );
@@ -277,7 +282,7 @@ function DemoHeaderRow() {
   );
 }
 
-const SEARCH_SHORTCUT = "⌘K";
+const SEARCH_SHORTCUT = '⌘K';
 
 /** The header's search row — the sidebar-search-field block with its default
  *  placeholder and shortcut chip. */
@@ -288,9 +293,9 @@ function DemoSearch() {
 /** Workspace menu + search — the header block every example shares.
  *  `search="inline"` swaps the full bar for a round icon button beside the
  *  workspace row. */
-function DemoHeader({ search = "below" }: { search?: "below" | "inline" }) {
-  const SearchIcon = useIcon("search");
-  if (search === "inline") {
+function DemoHeader({ search = 'below' }: { search?: 'below' | 'inline' }) {
+  const SearchIcon = useIcon('search');
+  if (search === 'inline') {
     return (
       <SidebarHeader>
         {/* 24px buttons, row inset pr-1.5: centres land on the section
@@ -324,7 +329,7 @@ function DemoHeader({ search = "below" }: { search?: "below" | "inline" }) {
 // Local twin of the sidebar-user-footer block — carries the alignment demo's
 // data-guide hooks; keep its classes in lockstep with the block.
 function DemoFooterUser() {
-  const ChevronsUpDown = useIcon("chevrons-up-down");
+  const ChevronsUpDown = useIcon('chevrons-up-down');
   const icons = useIcons();
   return (
     <SidebarMenu aria-label="User">
@@ -345,8 +350,13 @@ function DemoFooterUser() {
                   data-guide-img
                   className="-ml-0.5 -mr-0.5 size-5 shrink-0 rounded-full outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10"
                 />
-                <span className="min-w-0 truncate text-[13px] text-foreground">Micka Touillaud</span>
-                <span data-guide className="ml-auto -mr-0.5 flex size-6 shrink-0 items-center justify-center">
+                <span className="min-w-0 truncate text-[13px] text-foreground">
+                  Micka Touillaud
+                </span>
+                <span
+                  data-guide
+                  className="ml-auto -mr-0.5 flex size-6 shrink-0 items-center justify-center"
+                >
                   <ChevronsUpDown size={16} strokeWidth={1.5} className="text-muted-foreground" />
                 </span>
               </SidebarMenuButton>
@@ -355,7 +365,7 @@ function DemoFooterUser() {
           <DropdownContent className={SIDEBAR_MENU_POPUP} side="top" align="start" sideOffset={6}>
             <MenuItem index={0} icon={icons.user} label="Profile" onSelect={() => {}} />
             <MenuItem index={1} icon={icons.settings} label="Settings" onSelect={() => {}} />
-            <MenuItem index={2} icon={icons["arrow-left"]} label="Log out" onSelect={() => {}} />
+            <MenuItem index={2} icon={icons['arrow-left']} label="Log out" onSelect={() => {}} />
           </DropdownContent>
         </DropdownMenu>
       </SidebarMenuItem>
@@ -373,9 +383,7 @@ function DemoFooterUser() {
 function DemoMenu({ nested = true }: { nested?: boolean }) {
   const icons = useIcons();
   const [open, setOpen] = useState<Record<string, boolean>>({ Chat: true });
-  const [current, setCurrent] = useState(
-    nested ? AI_NAV[0].children[0].label : AI_NAV[0].label
-  );
+  const [current, setCurrent] = useState(nested ? AI_NAV[0].children[0].label : AI_NAV[0].label);
 
   return (
     <SidebarGroup collapsible>
@@ -405,7 +413,7 @@ function DemoMenu({ nested = true }: { nested?: boolean }) {
                 icon={icons[item.icon]}
                 onClick={() => setOpen((prev) => ({ ...prev, [item.label]: !prev[item.label] }))}
                 aria-expanded={isOpen}
-                style={{ "--row-gutter": "var(--row-gutter-hover)" } as CSSProperties}
+                style={{ '--row-gutter': 'var(--row-gutter-hover)' } as CSSProperties}
               >
                 {item.label}
                 {/* The chevron rides the label's trailing edge: at rest it
@@ -418,13 +426,13 @@ function DemoMenu({ nested = true }: { nested?: boolean }) {
                     animate={{ rotate: isOpen ? 90 : 0 }}
                     transition={spring.fast}
                   >
-                    {createElement(icons["chevron-right"], {
+                    {createElement(icons['chevron-right'], {
                       size: 16,
                       strokeWidth: 1.5,
                       className: `text-muted-foreground transition-opacity duration-80 ${
                         isOpen
-                          ? "opacity-0 group-hover/parent-row:opacity-100 group-focus-within/parent-row:opacity-100"
-                          : "opacity-100"
+                          ? 'opacity-0 group-hover/parent-row:opacity-100 group-focus-within/parent-row:opacity-100'
+                          : 'opacity-100'
                       }`,
                     })}
                   </motion.span>
@@ -482,7 +490,7 @@ function DemoProvider({
   children: ReactNode;
   /** Rail width once the frame is too narrow for a 16rem rail. */
   narrowWidth?: string;
-} & Omit<React.ComponentProps<typeof SidebarProvider>, "children">) {
+} & Omit<React.ComponentProps<typeof SidebarProvider>, 'children'>) {
   const narrow = useNarrowFrame();
   return (
     <SidebarProvider
@@ -532,7 +540,7 @@ function DemoShell({
   variant,
   insetTitle,
 }: {
-  variant?: "sidebar" | "floating" | "inset";
+  variant?: 'sidebar' | 'floating' | 'inset';
   insetTitle?: ReactNode;
 }) {
   return (
@@ -550,7 +558,7 @@ function DemoShell({
         {/* The floating card sits in a p-2 gutter — pad the main region's
             top so its header lines up with the card's. The inset variant's
             main is itself the card (own m-2), so it needs no extra padding. */}
-        <SidebarInset className={variant === "floating" ? "min-h-0 pt-2" : "min-h-0"}>
+        <SidebarInset className={variant === 'floating' ? 'min-h-0 pt-2' : 'min-h-0'}>
           <DemoInsetContent title={insetTitle} />
         </SidebarInset>
       </DemoProvider>
@@ -564,7 +572,7 @@ function DemoShell({
  *  inline pile out, dismissing the front card promotes the next, and each
  *  card keeps its own step of the brand-blue ladder. Emptying the pile
  *  brings it back a beat later so the demo stays stocked. */
-function StackedCalloutPreview({ variant }: { variant: "inline" | "banner" }) {
+function StackedCalloutPreview({ variant }: { variant: 'inline' | 'banner' }) {
   const [restockKey, setRestockKey] = useState(0);
   const [hidden, setHidden] = useState(false);
   const onEmpty = () => {
@@ -591,9 +599,7 @@ function StackedCalloutPreview({ variant }: { variant: "inline" | "banner" }) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        {!hidden && (
-          <FooterCalloutStack key={restockKey} variant={variant} onEmpty={onEmpty} />
-        )}
+        {!hidden && <FooterCalloutStack key={restockKey} variant={variant} onEmpty={onEmpty} />}
         <DemoFooterUser />
       </SidebarFooter>
     </DemoRailShell>
@@ -606,10 +612,10 @@ function StackedCalloutPreview({ variant }: { variant: "inline" | "banner" }) {
  *  along the handle), and it pins again once the pointer leaves the preview.
  *  Inset layout, simple thread rows: nothing competes with the rail. */
 function CollapsePreview({
-  peek = "hover",
+  peek = 'hover',
   defaultOpen = true,
 }: {
-  peek?: "hover" | "click";
+  peek?: 'hover' | 'click';
   defaultOpen?: boolean;
 }) {
   const [cursorInside, setCursorInside] = useState(false);
@@ -637,35 +643,35 @@ function CollapsePreview({
       onMouseLeave={() => setCursorInside(false)}
     >
       <TooltipPortalContainer value={frameEl}>
-      <SidebarShellFrame heightClass="aspect-square">
-        <DemoProvider narrowWidth="11rem" peek={peek} open={open} onOpenChange={setOpen}>
-          <Sidebar
-            variant="inset"
-            // Pinned only while the rail exists to anchor it — never while
-            // collapsed, and never against the visitor's own hover.
-            railTooltipOpen={inView && !cursorInside && open ? true : undefined}
-            className="h-full"
-          >
-            <DemoHeader />
-            <SidebarContent>
-              <SidebarGroup>
-                <SidebarGroupLabel>Threads</SidebarGroupLabel>
-                <SidebarMenu>
-                  {AI_THREADS.slice(0, 5).map((thread) => (
-                    <SidebarMenuItem key={thread.label}>
-                      <SidebarMenuButton status={thread.status}>{thread.label}</SidebarMenuButton>
-                      <SidebarMenuBadge>{thread.badge}</SidebarMenuBadge>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroup>
-            </SidebarContent>
-          </Sidebar>
-          <SidebarInset className="min-h-0">
-            <DemoInsetContent />
-          </SidebarInset>
-        </DemoProvider>
-      </SidebarShellFrame>
+        <SidebarShellFrame heightClass="aspect-square">
+          <DemoProvider narrowWidth="11rem" peek={peek} open={open} onOpenChange={setOpen}>
+            <Sidebar
+              variant="inset"
+              // Pinned only while the rail exists to anchor it — never while
+              // collapsed, and never against the visitor's own hover.
+              railTooltipOpen={inView && !cursorInside && open ? true : undefined}
+              className="h-full"
+            >
+              <DemoHeader />
+              <SidebarContent>
+                <SidebarGroup>
+                  <SidebarGroupLabel>Threads</SidebarGroupLabel>
+                  <SidebarMenu>
+                    {AI_THREADS.slice(0, 5).map((thread) => (
+                      <SidebarMenuItem key={thread.label}>
+                        <SidebarMenuButton status={thread.status}>{thread.label}</SidebarMenuButton>
+                        <SidebarMenuBadge>{thread.badge}</SidebarMenuBadge>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroup>
+              </SidebarContent>
+            </Sidebar>
+            <SidebarInset className="min-h-0">
+              <DemoInsetContent />
+            </SidebarInset>
+          </DemoProvider>
+        </SidebarShellFrame>
       </TooltipPortalContainer>
     </div>
   );
@@ -676,14 +682,14 @@ function CollapsePreview({
 /** One clock drives both panels so the contrast is the point: while the left
  *  cursor is still quizzing tooltips one icon at a time, the right cursor's
  *  single hover already brought the whole sidebar back. */
-const RAIL_PHASES = ["rest", "hover-0", "hover-1", "hover-2", "hover-3", "away"] as const;
+const RAIL_PHASES = ['rest', 'hover-0', 'hover-1', 'hover-2', 'hover-3', 'away'] as const;
 type RailPhase = (typeof RAIL_PHASES)[number];
 const RAIL_PHASE_MS: Record<RailPhase, number> = {
   rest: 900,
-  "hover-0": 1600,
-  "hover-1": 1600,
-  "hover-2": 1600,
-  "hover-3": 1600,
+  'hover-0': 1600,
+  'hover-1': 1600,
+  'hover-2': 1600,
+  'hover-3': 1600,
   away: 1500,
 };
 
@@ -695,19 +701,19 @@ const RAIL_GROUPS: readonly {
   items: readonly { icon: IconName; label: string }[];
 }[] = [
   {
-    label: "Workspace",
+    label: 'Workspace',
     items: [
-      { icon: "message-circle", label: "Chat" },
-      { icon: "brain", label: "Agents" },
-      { icon: "square-library", label: "Knowledge" },
+      { icon: 'message-circle', label: 'Chat' },
+      { icon: 'brain', label: 'Agents' },
+      { icon: 'square-library', label: 'Knowledge' },
     ],
   },
   {
-    label: "Operations",
+    label: 'Operations',
     items: [
-      { icon: "play", label: "Runs" },
-      { icon: "star", label: "Evals" },
-      { icon: "settings", label: "Settings" },
+      { icon: 'play', label: 'Runs' },
+      { icon: 'star', label: 'Evals' },
+      { icon: 'settings', label: 'Settings' },
     ],
   },
 ];
@@ -722,8 +728,7 @@ const RAIL_HOVER_TARGETS = [0, 1, 2, 3] as const;
    apart, first at y=56); the divider between groups (my-1 h-px, plus the
    column gap on both sides) pushes the second group down 13px. The peek
    trigger is size-7 inset pl-3.5 pt-3.5 into the corner (center at 28,28). */
-const railIconCenterY = (index: number) =>
-  index < 3 ? 56 + 36 * index : 177 + 36 * (index - 3);
+const railIconCenterY = (index: number) => (index < 3 ? 56 + 36 * index : 177 + 36 * (index - 3));
 
 function FakeCursor({ x, y }: { x: number; y: number }) {
   return (
@@ -747,11 +752,7 @@ function FakeCursor({ x, y }: { x: number; y: number }) {
 }
 
 function CompareLabel({ children }: { children: ReactNode }) {
-  return (
-    <span className="text-site-caption text-muted-foreground text-center">
-      {children}
-    </span>
-  );
+  return <span className="text-site-caption text-muted-foreground text-center">{children}</span>;
 }
 
 function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
@@ -764,10 +765,10 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(containerRef, { amount: 0.35 });
   const reduced = useReducedMotion();
-  const [phase, setPhase] = useState<RailPhase>("rest");
+  const [phase, setPhase] = useState<RailPhase>('rest');
   // Pausing clears the timer and freezes the current phase in place; resuming
   // picks the loop back up from that phase.
-  const phaseRef = useRef<RailPhase>("rest");
+  const phaseRef = useRef<RailPhase>('rest');
   phaseRef.current = phase;
 
   useEffect(() => {
@@ -788,14 +789,14 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
 
   // Reduced motion holds the frame that tells the story — a tooltip mid-quiz
   // on the left, the peek open on the right — with no cursors and no loop.
-  const effective: RailPhase = reduced ? "hover-1" : phase;
-  const hoverStep = effective.startsWith("hover-")
-    ? Number(effective.slice("hover-".length))
+  const effective: RailPhase = reduced ? 'hover-1' : phase;
+  const hoverStep = effective.startsWith('hover-')
+    ? Number(effective.slice('hover-'.length))
     : null;
   const hoverIndex = hoverStep === null ? null : RAIL_HOVER_TARGETS[hoverStep];
   const engaged = hoverIndex !== null;
   const railItems = RAIL_GROUPS.flatMap((group) => group.items);
-  const PanelLeftIcon = icons["panel-left"];
+  const PanelLeftIcon = icons['panel-left'];
 
   return (
     <div
@@ -810,7 +811,9 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
             <span
               aria-hidden
               className={`mb-1 flex size-6 shrink-0 items-center justify-center bg-foreground text-[11px] leading-3.5 text-background ${
-                { pill: "rounded-full", rounded: "rounded-md", sharp: "rounded-[1px]" }[shape.variant]
+                { pill: 'rounded-full', rounded: 'rounded-md', sharp: 'rounded-[1px]' }[
+                  shape.variant
+                ]
               }`}
               style={{ fontVariationSettings: fontWeights.semibold }}
             >
@@ -827,9 +830,7 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
                     <span
                       key={item.label}
                       className={`flex size-8 items-center justify-center rounded-lg transition-colors duration-80 ${
-                        hoverIndex === index
-                          ? "bg-hover text-foreground"
-                          : "text-muted-foreground"
+                        hoverIndex === index ? 'bg-hover text-foreground' : 'text-muted-foreground'
                       }`}
                     >
                       {createElement(icons[item.icon], { size: 16, strokeWidth: 1.5 })}
@@ -866,8 +867,7 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
           )}
         </div>
         <CompareLabel>
-          <span aria-hidden="true">❌</span> Icon rail: six glyphs, one tooltip
-          at a time
+          <span aria-hidden="true">❌</span> Icon rail: six glyphs, one tooltip at a time
         </CompareLabel>
       </div>
 
@@ -882,7 +882,7 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
           <div className="flex items-start pl-3.5 pt-3.5">
             <span
               className={`flex size-7 items-center justify-center rounded-md transition-colors duration-80 ${
-                effective === "hover-0" ? "bg-hover text-foreground" : "text-muted-foreground"
+                effective === 'hover-0' ? 'bg-hover text-foreground' : 'text-muted-foreground'
               }`}
             >
               <PanelLeftIcon size={16} strokeWidth={1.5} />
@@ -895,14 +895,16 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
             {engaged && (
               <motion.div
                 className={`absolute inset-y-2 left-2 z-10 flex w-44 flex-col overflow-hidden p-2 ${shape.container} ${surfaceClasses(floatingLevel, 3)}`}
-                initial={{ x: "-108%" }}
+                initial={{ x: '-108%' }}
                 animate={{ x: 0, transition: spring.moderate }}
-                exit={{ x: "-108%", transition: spring.moderate.exit }}
+                exit={{ x: '-108%', transition: spring.moderate.exit }}
               >
                 <div className="flex items-center gap-2 px-1 pb-1 pt-0.5">
                   <span
                     className={`flex size-5 items-center justify-center bg-foreground text-[10px] text-background ${
-                      { pill: "rounded-full", rounded: "rounded-md", sharp: "rounded-[1px]" }[shape.variant]
+                      { pill: 'rounded-full', rounded: 'rounded-md', sharp: 'rounded-[1px]' }[
+                        shape.variant
+                      ]
                     }`}
                     style={{ fontVariationSettings: fontWeights.semibold }}
                   >
@@ -929,7 +931,7 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
                         <div
                           key={item.label}
                           className={`flex h-7 shrink-0 items-center gap-2 rounded-lg px-2 ${
-                            isActive ? "bg-active" : ""
+                            isActive ? 'bg-active' : ''
                           }`}
                         >
                           <span className="text-muted-foreground">
@@ -940,7 +942,7 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
                               one more thing the rail has no room for. */}
                           {isActive && (
                             <span className="ml-auto text-muted-foreground">
-                              {createElement(icons["more-vertical"], {
+                              {createElement(icons['more-vertical'], {
                                 size: 14,
                                 strokeWidth: 1.5,
                               })}
@@ -959,14 +961,13 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
               waiting on tooltips. */}
           {!reduced && (
             <FakeCursor
-              x={effective === "hover-0" ? 26 : engaged ? 72 : 210}
-              y={effective === "hover-0" ? 26 : engaged ? 90 : 260}
+              x={effective === 'hover-0' ? 26 : engaged ? 72 : 210}
+              y={effective === 'hover-0' ? 26 : engaged ? 90 : 260}
             />
           )}
         </div>
         <CompareLabel>
-          <span aria-hidden="true">✅</span> Peek on hover: the whole sidebar,
-          one hover
+          <span aria-hidden="true">✅</span> Peek on hover: the whole sidebar, one hover
         </CompareLabel>
       </div>
     </div>
@@ -978,8 +979,8 @@ function IconRailVsPeekPreview({ paused }: { paused: boolean }) {
  *  frame. */
 function IconRailVsPeekDemo() {
   const [paused, setPaused] = useState(false);
-  const PauseIcon = useIcon("pause");
-  const PlayIcon = useIcon("play");
+  const PauseIcon = useIcon('pause');
+  const PlayIcon = useIcon('play');
   return (
     <ComponentPreview
       code={noIconRailCode}
@@ -991,7 +992,7 @@ function IconRailVsPeekDemo() {
         ) : (
           <PauseIcon size={16} strokeWidth={1.5} />
         ),
-        tooltip: paused ? "Play" : "Pause",
+        tooltip: paused ? 'Play' : 'Pause',
         onClick: () => setPaused((v) => !v),
       }}
     >
@@ -1006,14 +1007,14 @@ function IconRailVsPeekDemo() {
 // shows (SIDEBAR_THREADS from demo-data).
 
 const ALIGN_HEADER_ICONS: readonly { icon: IconName; label: string }[] = [
-  { icon: "search", label: "Search" },
-  { icon: "plus", label: "New thread" },
-  { icon: "sliders-horizontal", label: "Filters" },
+  { icon: 'search', label: 'Search' },
+  { icon: 'plus', label: 'New thread' },
+  { icon: 'sliders-horizontal', label: 'Filters' },
 ];
 
 const ALIGN_FOOTER_ICONS: readonly { icon: IconName; label: string }[] = [
-  { icon: "settings", label: "Settings" },
-  { icon: "inbox", label: "Inbox" },
+  { icon: 'settings', label: 'Settings' },
+  { icon: 'inbox', label: 'Inbox' },
 ];
 
 /** Icon alignment: header buttons, row action clusters and footer buttons
@@ -1024,7 +1025,7 @@ const ALIGN_FOOTER_ICONS: readonly { icon: IconName; label: string }[] = [
  *  guides visibly thread header, row and footer at once. */
 function AlignmentPreview() {
   const icons = useIcons();
-  const MoreIcon = useIcon("more-vertical");
+  const MoreIcon = useIcon('more-vertical');
   const [cursorInside, setCursorInside] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
   const inView = useInView(frameRef, { amount: 0.5 });
@@ -1033,13 +1034,17 @@ function AlignmentPreview() {
   // (body-portaled, z-50) dropdown popups too — the menus sit below the
   // lines, which then vouch for the popup icons as well. Document-space
   // coordinates keep them glued to the frame while the page scrolls.
-  const [frameBox, setFrameBox] = useState<{ left: number; top: number; height: number } | null>(null);
+  const [frameBox, setFrameBox] = useState<{ left: number; top: number; height: number } | null>(
+    null,
+  );
 
   useEffect(() => {
     const root = frameRef.current;
     if (!root) return;
-    const sameBox = (a: { left: number; top: number; height: number } | null, b: { left: number; top: number; height: number }) =>
-      !!a && a.left === b.left && a.top === b.top && a.height === b.height;
+    const sameBox = (
+      a: { left: number; top: number; height: number } | null,
+      b: { left: number; top: number; height: number },
+    ) => !!a && a.left === b.left && a.top === b.top && a.height === b.height;
     // Body-resize events only shift the frame's document offset — the guide
     // xs are frame-relative and unchanged — so that path refreshes just the
     // portal anchor instead of re-running the selector sweep.
@@ -1063,7 +1068,7 @@ function AlignmentPreview() {
       // chevron that would draw near-miss lines.
       root
         .querySelectorAll(
-          '[data-guide] svg, [data-guide-img], [data-sidebar="menu-action"] svg, [data-sidebar="group-action"] svg, [data-guide-rows] [data-sidebar="menu-button"] svg, [data-guide-rows] [data-sidebar="menu-button"] .size-2'
+          '[data-guide] svg, [data-guide-img], [data-sidebar="menu-action"] svg, [data-sidebar="group-action"] svg, [data-guide-rows] [data-sidebar="menu-button"] svg, [data-guide-rows] [data-sidebar="menu-button"] .size-2',
         )
         .forEach((el) => {
           const rect = el.getBoundingClientRect();
@@ -1074,7 +1079,7 @@ function AlignmentPreview() {
       // for the header's workspace name, one for the Threads group label.
       root
         .querySelectorAll(
-          '[data-guide-text], [data-guide-rows] [data-sidebar="group-label"] span.truncate'
+          '[data-guide-text], [data-guide-rows] [data-sidebar="group-label"] span.truncate',
         )
         .forEach((el) => {
           xs.push(el.getBoundingClientRect().left - rootRect.left);
@@ -1086,9 +1091,7 @@ function AlignmentPreview() {
         if (!merged.length || x - merged[merged.length - 1] > 2) merged.push(x);
       }
       setGuides((prev) =>
-        prev.length === merged.length && prev.every((v, i) => v === merged[i])
-          ? prev
-          : merged
+        prev.length === merged.length && prev.every((v, i) => v === merged[i]) ? prev : merged,
       );
     };
     measure();
@@ -1148,10 +1151,10 @@ function AlignmentPreview() {
                             data-guide
                             className="ml-auto -mr-0.5 flex size-6 shrink-0 items-center justify-center"
                           >
-                            {createElement(icons["chevron-down"], {
+                            {createElement(icons['chevron-down'], {
                               size: 16,
                               strokeWidth: 1.5,
-                              className: "text-muted-foreground",
+                              className: 'text-muted-foreground',
                             })}
                           </span>
                         </SidebarMenuButton>
@@ -1194,10 +1197,10 @@ function AlignmentPreview() {
                 {createElement(icons.plus, {})}
               </SidebarGroupAction>
               <SidebarGroupAction aria-label="Filter threads">
-                {createElement(icons["sliders-horizontal"], {})}
+                {createElement(icons['sliders-horizontal'], {})}
               </SidebarGroupAction>
               <SidebarGroupAction aria-label="More options">
-                {createElement(icons["more-horizontal"], {})}
+                {createElement(icons['more-horizontal'], {})}
               </SidebarGroupAction>
             </SidebarGroupActions>
             <SidebarMenu>
@@ -1211,23 +1214,20 @@ function AlignmentPreview() {
                         "unread" (same filled dot) so no page reads as
                         selected here. */}
                     <SidebarMenuButton
-                      status={thread.status === "active" ? "unread" : thread.status}
-                      className={pinned ? "bg-hover" : undefined}
+                      status={thread.status === 'active' ? 'unread' : thread.status}
+                      className={pinned ? 'bg-hover' : undefined}
                       style={
                         pinned
-                          ? ({ "--row-gutter": "var(--row-gutter-hover)" } as CSSProperties)
+                          ? ({ '--row-gutter': 'var(--row-gutter-hover)' } as CSSProperties)
                           : undefined
                       }
                     >
                       {thread.label}
                     </SidebarMenuButton>
                     {thread.badge && <SidebarMenuBadge>{thread.badge}</SidebarMenuBadge>}
-                    <SidebarMenuActions
-                      showOnHover
-                      className={pinned ? "opacity-100" : undefined}
-                    >
+                    <SidebarMenuActions showOnHover className={pinned ? 'opacity-100' : undefined}>
                       <SidebarMenuAction aria-label="Branch thread">
-                        {createElement(icons["corner-down-right"], {})}
+                        {createElement(icons['corner-down-right'], {})}
                       </SidebarMenuAction>
                       <SidebarMenuAction aria-label="Share thread">
                         {createElement(icons.link, {})}
@@ -1282,11 +1282,11 @@ function AlignmentPreview() {
                 left: frameBox.left + x - 0.5,
                 top: frameBox.top,
                 height: frameBox.height,
-                backgroundColor: "var(--focus-ring, #6B97FF)",
+                backgroundColor: 'var(--focus-ring, #6B97FF)',
               }}
             />
           )),
-          document.body
+          document.body,
         )}
     </div>
   );
@@ -1303,7 +1303,7 @@ function NestingPreview() {
     Today: true,
     Yesterday: true,
   });
-  const [current, setCurrent] = useState("");
+  const [current, setCurrent] = useState('');
 
   // One branch renderer for both sections — a parent row that folds its
   // children under it, chevron sprung 90° while open. Archive branches start
@@ -1317,11 +1317,9 @@ function NestingPreview() {
         <SidebarMenuButton
           className="group/parent-row"
           icon={icons[branch.icon]}
-          onClick={() =>
-            setOpen((prev) => ({ ...prev, [branch.label]: !prev[branch.label] }))
-          }
+          onClick={() => setOpen((prev) => ({ ...prev, [branch.label]: !prev[branch.label] }))}
           aria-expanded={isOpen}
-          style={{ "--row-gutter": "var(--row-gutter-hover)" } as CSSProperties}
+          style={{ '--row-gutter': 'var(--row-gutter-hover)' } as CSSProperties}
         >
           {branch.label}
           <span className="ml-auto -mr-0.5 flex size-6 shrink-0 items-center justify-center">
@@ -1330,13 +1328,13 @@ function NestingPreview() {
               animate={{ rotate: isOpen ? 90 : 0 }}
               transition={spring.fast}
             >
-              {createElement(icons["chevron-right"], {
+              {createElement(icons['chevron-right'], {
                 size: 16,
                 strokeWidth: 1.5,
                 className: `text-muted-foreground transition-opacity duration-80 ${
                   isOpen
-                    ? "opacity-0 group-hover/parent-row:opacity-100 group-focus-within/parent-row:opacity-100"
-                    : "opacity-100"
+                    ? 'opacity-0 group-hover/parent-row:opacity-100 group-focus-within/parent-row:opacity-100'
+                    : 'opacity-100'
                 }`,
               })}
             </motion.span>
@@ -1373,21 +1371,15 @@ function NestingPreview() {
             down to level 2 — the whole accordion range in one sidebar. */}
         <SidebarGroup collapsible defaultOpen={false}>
           <SidebarGroupLabel>Private</SidebarGroupLabel>
-          <SidebarMenu>
-            {WIKI_PRIVATE.map(renderBranch)}
-          </SidebarMenu>
+          <SidebarMenu>{WIKI_PRIVATE.map(renderBranch)}</SidebarMenu>
         </SidebarGroup>
         <SidebarGroup collapsible>
           <SidebarGroupLabel>Shared</SidebarGroupLabel>
-          <SidebarMenu>
-            {WIKI_SHARED.map(renderBranch)}
-          </SidebarMenu>
+          <SidebarMenu>{WIKI_SHARED.map(renderBranch)}</SidebarMenu>
         </SidebarGroup>
         <SidebarGroup collapsible>
           <SidebarGroupLabel>Recent</SidebarGroupLabel>
-          <SidebarMenu>
-            {WIKI_RECENT.map(renderBranch)}
-          </SidebarMenu>
+          <SidebarMenu>{WIKI_RECENT.map(renderBranch)}</SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
     </DemoRailShell>
@@ -1401,7 +1393,7 @@ function NestingPreview() {
  *  examples. */
 function ActionsPreview() {
   const icons = useIcons();
-  const MoreIcon = useIcon("more-vertical");
+  const MoreIcon = useIcon('more-vertical');
   // Until the visitor's own cursor takes over, one row wears the hovered
   // state as the section's subject: hover bg, action cluster visible, and
   // the Branch tooltip pinned open — same hand-off the collapse demo uses
@@ -1443,95 +1435,91 @@ function ActionsPreview() {
       onMouseLeave={() => setCursorInside(false)}
     >
       <TooltipPortalContainer value={frameEl}>
-      <DemoRailShell>
-        <DemoHeader />
-        <SidebarContent>
-          {/* A section label that collapses its rows and carries its own actions */}
-          <SidebarGroup collapsible>
-            <SidebarGroupLabel>Threads</SidebarGroupLabel>
-            <SidebarGroupActions>
-              <Tooltip content="New thread" side="top">
-                <SidebarGroupAction aria-label="New thread">
-                  {createElement(icons.plus, {})}
-                </SidebarGroupAction>
-              </Tooltip>
-              <Tooltip content="Filter threads" side="top">
-                <SidebarGroupAction aria-label="Filter threads">
-                  {createElement(icons["sliders-horizontal"], {})}
-                </SidebarGroupAction>
-              </Tooltip>
-            </SidebarGroupActions>
-            <SidebarMenu>
-              {/* Every thread carries the full cluster: branch, share, and the
+        <DemoRailShell>
+          <DemoHeader />
+          <SidebarContent>
+            {/* A section label that collapses its rows and carries its own actions */}
+            <SidebarGroup collapsible>
+              <SidebarGroupLabel>Threads</SidebarGroupLabel>
+              <SidebarGroupActions>
+                <Tooltip content="New thread" side="top">
+                  <SidebarGroupAction aria-label="New thread">
+                    {createElement(icons.plus, {})}
+                  </SidebarGroupAction>
+                </Tooltip>
+                <Tooltip content="Filter threads" side="top">
+                  <SidebarGroupAction aria-label="Filter threads">
+                    {createElement(icons['sliders-horizontal'], {})}
+                  </SidebarGroupAction>
+                </Tooltip>
+              </SidebarGroupActions>
+              <SidebarMenu>
+                {/* Every thread carries the full cluster: branch, share, and the
                   overflow menu — the badge keeps the rightmost slot beside it.
                   The dropdown trigger goes without a tooltip, like every other
                   dropdown trigger in the sidebar. */}
-              {AI_THREADS.map((thread, i) => {
-                const pinned = inView && !cursorInside && i === SPOTLIGHT_INDEX;
-                return (
-                  <SidebarMenuItem key={thread.label}>
-                    {/* "active" implies the row-active treatment — mapped to
+                {AI_THREADS.map((thread, i) => {
+                  const pinned = inView && !cursorInside && i === SPOTLIGHT_INDEX;
+                  return (
+                    <SidebarMenuItem key={thread.label}>
+                      {/* "active" implies the row-active treatment — mapped to
                         "unread" here (same filled dot) so no page reads as
                         selected in this example. */}
-                    <SidebarMenuButton
-                      status={thread.status === "active" ? "unread" : thread.status}
-                      className={pinned ? "bg-hover" : undefined}
-                      // The wide gutter normally arrives with :hover — the
-                      // pinned row opts in statically so the label truncates
-                      // clear of the visible cluster instead of under it.
-                      style={
-                        pinned
-                          ? ({ "--row-gutter": "var(--row-gutter-hover)" } as CSSProperties)
-                          : undefined
-                      }
-                    >
-                      {thread.label}
-                    </SidebarMenuButton>
-                    <SidebarMenuBadge>{thread.badge}</SidebarMenuBadge>
-                    <SidebarMenuActions
-                      showOnHover
-                      className={pinned ? "opacity-100" : undefined}
-                    >
-                      <Tooltip
-                        content="Branch thread"
-                        side="top"
-                        forceOpen={pinned || undefined}
+                      <SidebarMenuButton
+                        status={thread.status === 'active' ? 'unread' : thread.status}
+                        className={pinned ? 'bg-hover' : undefined}
+                        // The wide gutter normally arrives with :hover — the
+                        // pinned row opts in statically so the label truncates
+                        // clear of the visible cluster instead of under it.
+                        style={
+                          pinned
+                            ? ({ '--row-gutter': 'var(--row-gutter-hover)' } as CSSProperties)
+                            : undefined
+                        }
                       >
-                        {/* The tooltip's anchor also wears its own hover
+                        {thread.label}
+                      </SidebarMenuButton>
+                      <SidebarMenuBadge>{thread.badge}</SidebarMenuBadge>
+                      <SidebarMenuActions
+                        showOnHover
+                        className={pinned ? 'opacity-100' : undefined}
+                      >
+                        <Tooltip content="Branch thread" side="top" forceOpen={pinned || undefined}>
+                          {/* The tooltip's anchor also wears its own hover
                             treatment while pinned. */}
-                        <SidebarMenuAction
-                          aria-label="Branch thread"
-                          className={pinned ? "bg-hover text-foreground" : undefined}
-                        >
-                          {createElement(icons["corner-down-right"], {})}
-                        </SidebarMenuAction>
-                      </Tooltip>
-                      <Tooltip content="Share thread" side="top">
-                        <SidebarMenuAction aria-label="Share thread">
-                          {createElement(icons.link, {})}
-                        </SidebarMenuAction>
-                      </Tooltip>
-                      <DropdownMenu>
-                        <DropdownTrigger
-                          render={
-                            <SidebarMenuAction aria-label="More options">
-                              <MoreIcon />
-                            </SidebarMenuAction>
-                          }
-                        />
-                        {threadMenu}
-                      </DropdownMenu>
-                    </SidebarMenuActions>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarFooter>
-          <DemoFooterUser />
-        </SidebarFooter>
-      </DemoRailShell>
+                          <SidebarMenuAction
+                            aria-label="Branch thread"
+                            className={pinned ? 'bg-hover text-foreground' : undefined}
+                          >
+                            {createElement(icons['corner-down-right'], {})}
+                          </SidebarMenuAction>
+                        </Tooltip>
+                        <Tooltip content="Share thread" side="top">
+                          <SidebarMenuAction aria-label="Share thread">
+                            {createElement(icons.link, {})}
+                          </SidebarMenuAction>
+                        </Tooltip>
+                        <DropdownMenu>
+                          <DropdownTrigger
+                            render={
+                              <SidebarMenuAction aria-label="More options">
+                                <MoreIcon />
+                              </SidebarMenuAction>
+                            }
+                          />
+                          {threadMenu}
+                        </DropdownMenu>
+                      </SidebarMenuActions>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroup>
+          </SidebarContent>
+          <SidebarFooter>
+            <DemoFooterUser />
+          </SidebarFooter>
+        </DemoRailShell>
       </TooltipPortalContainer>
     </div>
   );
@@ -1540,7 +1528,7 @@ function ActionsPreview() {
 /** The anchored callout — a Card on a surface one step above the rail.
  *  CardImage / CardMedia stay DIRECT children: Card finds the media by
  *  scanning its own children, and a fragment wrapper would hide it. */
-function DemoCallout({ variant }: { variant: "banner" | "inline" }) {
+function DemoCallout({ variant }: { variant: 'banner' | 'inline' }) {
   const substrate = useSurface();
   const shape = useShape();
   const icons = useIcons();
@@ -1556,10 +1544,10 @@ function DemoCallout({ variant }: { variant: "banner" | "inline" }) {
   const level = Math.min(substrate + 1, 8);
   const surface = `${shape.container} overflow-hidden transition-[background-color,box-shadow] duration-80 ${surfaceClasses(
     level,
-    2
+    2,
   )} ${surfaceHoverClasses(
     level + 1,
-    3
+    3,
   )} shadow-[var(--shadow-2-inset)] hover:shadow-[var(--shadow-3-inset)]`;
 
   if (dismissed) return null;
@@ -1571,27 +1559,25 @@ function DemoCallout({ variant }: { variant: "banner" | "inline" }) {
       onDismiss={dismiss}
       href="/docs/sidebar"
       label={`${AI_CALLOUT.title} — ${AI_CALLOUT.media}`}
-      className={`${surface}${variant === "inline" ? " min-h-0 pl-2.5" : ""}`}
+      className={`${surface}${variant === 'inline' ? ' min-h-0 pl-2.5' : ''}`}
     >
-      {variant === "banner" ? (
+      {variant === 'banner' ? (
         <CardImage src={BANNER} className="aspect-[2/1] max-h-28" />
       ) : (
         <CardMedia icon={icons.brain} size={18} />
       )}
       {/* The dismiss clearance is hover-only (Card pads the header while the
           ✕ is revealed), so the resting title keeps the full row. */}
-      <CardHeader
-        className={variant === "banner" ? "gap-0 pt-3" : "gap-[2px] py-3"}
-      >
+      <CardHeader className={variant === 'banner' ? 'gap-0 pt-3' : 'gap-[2px] py-3'}>
         <CardTitle className="truncate">{AI_CALLOUT.title}</CardTitle>
         <CardDescription className="truncate text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)]">
-          {variant === "banner" ? AI_CALLOUT.media : AI_CALLOUT.icon}
+          {variant === 'banner' ? AI_CALLOUT.media : AI_CALLOUT.icon}
         </CardDescription>
       </CardHeader>
     </Card>
   );
 
-  return variant === "inline" ? (
+  return variant === 'inline' ? (
     <CardGroup orientation="inline" fluidHover={false}>
       {card}
     </CardGroup>
@@ -1603,9 +1589,9 @@ function DemoCallout({ variant }: { variant: "banner" | "inline" }) {
 /** Header, footer & callout: the two ends of the rail, stacked vertically —
  *  every element on its own full-width row — against the horizontal packing
  *  that collapses the same pieces into icon buttons. */
-function HeaderFooterPreview({ stack }: { stack: "vertical" | "horizontal" }) {
+function HeaderFooterPreview({ stack }: { stack: 'vertical' | 'horizontal' }) {
   const icons = useIcons();
-  const vertical = stack === "vertical";
+  const vertical = stack === 'vertical';
   return (
     <DemoRailShell heightClass="aspect-square">
       <SidebarHeader>
@@ -1638,12 +1624,22 @@ function HeaderFooterPreview({ stack }: { stack: "vertical" | "horizontal" }) {
             </div>
             <TooltipGroup>
               <Tooltip content="Search" shortcut={SEARCH_SHORTCUT} side="bottom">
-                <Button variant="ghost" size="icon-compact" aria-label="Search" className="size-6 shrink-0">
+                <Button
+                  variant="ghost"
+                  size="icon-compact"
+                  aria-label="Search"
+                  className="size-6 shrink-0"
+                >
                   {createElement(icons.search, {})}
                 </Button>
               </Tooltip>
               <Tooltip content="New thread" shortcut="⇧⌘O" side="bottom">
-                <Button variant="ghost" size="icon-compact" aria-label="New thread" className="size-6 shrink-0">
+                <Button
+                  variant="ghost"
+                  size="icon-compact"
+                  aria-label="New thread"
+                  className="size-6 shrink-0"
+                >
                   {createElement(icons.plus, {})}
                 </Button>
               </Tooltip>
@@ -1686,7 +1682,12 @@ function HeaderFooterPreview({ stack }: { stack: "vertical" | "horizontal" }) {
             <div className="min-w-0 flex-1">
               <DemoFooterUser />
             </div>
-            <Button variant="ghost" size="icon-compact" aria-label="Settings" className="size-6 shrink-0">
+            <Button
+              variant="ghost"
+              size="icon-compact"
+              aria-label="Settings"
+              className="size-6 shrink-0"
+            >
               {createElement(icons.settings, {})}
             </Button>
           </div>
@@ -1705,7 +1706,12 @@ function SidebarPlaygroundSection() {
         <PlaygroundLayout
           controls={controls}
           preview={
-            <ComponentPreview code={code} padding="none" minHeightClass={SHELL_HEIGHT} inspectRulers={false}>
+            <ComponentPreview
+              code={code}
+              padding="none"
+              minHeightClass={SHELL_HEIGHT}
+              inspectRulers={false}
+            >
               {preview}
             </ComponentPreview>
           }
@@ -1778,14 +1784,18 @@ export default function SidebarDoc() {
 
       <DocSection title="Layouts">
         <p className="text-site-body text-muted-foreground">
-          3 layout options: <code>sidebar</code> default,{" "}
-          <code>floating</code> to elevate the sidebar in a higher surface,{" "}
-          <code>inset</code> to make your content stand out.
+          3 layout options: <code>sidebar</code> default, <code>floating</code> to elevate the
+          sidebar in a higher surface, <code>inset</code> to make your content stand out.
         </p>
         <ComponentPreview padding="none" minHeightClass={SHELL_HEIGHT} hideHeader caption="Sidebar">
           <DemoShell />
         </ComponentPreview>
-        <ComponentPreview padding="none" minHeightClass={SHELL_HEIGHT} hideHeader caption="Floating">
+        <ComponentPreview
+          padding="none"
+          minHeightClass={SHELL_HEIGHT}
+          hideHeader
+          caption="Floating"
+        >
           <DemoShell variant="floating" />
         </ComponentPreview>
         <ComponentPreview padding="none" minHeightClass={SHELL_HEIGHT} hideHeader caption="Inset">
@@ -1797,25 +1807,34 @@ export default function SidebarDoc() {
         <p className="text-site-body text-muted-foreground">
           2 levels of nesting, one section level and one parent level.
         </p>
-        <ComponentPreview code={nestingCode} padding="none" minHeightClass={SHELL_HEIGHT} inspectRulers={false}>
+        <ComponentPreview
+          code={nestingCode}
+          padding="none"
+          minHeightClass={SHELL_HEIGHT}
+          inspectRulers={false}
+        >
           <NestingPreview />
         </ComponentPreview>
       </DocSection>
 
       <DocSection title="Actions & badges">
         <p className="text-site-body text-muted-foreground">
-          Add badge indicator and up to 3 actions. Actions show on hover so
-          the label keeps maximum readability.
+          Add badge indicator and up to 3 actions. Actions show on hover so the label keeps maximum
+          readability.
         </p>
-        <ComponentPreview code={actionsCode} padding="none" minHeightClass={SHELL_HEIGHT} inspectRulers={false}>
+        <ComponentPreview
+          code={actionsCode}
+          padding="none"
+          minHeightClass={SHELL_HEIGHT}
+          inspectRulers={false}
+        >
           <ActionsPreview />
         </ComponentPreview>
       </DocSection>
 
       <DocSection title="Header & footer">
         <p className="text-site-body text-muted-foreground">
-          Stack the header and footer content <code>vertically</code> or{" "}
-          <code>horizontally</code>.
+          Stack the header and footer content <code>vertically</code> or <code>horizontally</code>.
         </p>
         <ComponentPreview padding="none" hideHeader caption="Vertical stacking">
           <HeaderFooterPreview stack="vertical" />
@@ -1827,8 +1846,8 @@ export default function SidebarDoc() {
 
       <DocSection title="Callouts">
         <p className="text-site-body text-muted-foreground">
-          Elevate &amp; promote news using the callout with stackable{" "}
-          <code>Banners</code> or <code>Inlines</code>.
+          Elevate &amp; promote news using the callout with stackable <code>Banners</code> or{' '}
+          <code>Inlines</code>.
         </p>
         <ComponentPreview padding="none" hideHeader caption="Stacked inlines">
           <StackedCalloutPreview variant="inline" />
@@ -1840,8 +1859,8 @@ export default function SidebarDoc() {
 
       <DocSection title="Resize, collapse & peek">
         <p className="text-site-body text-muted-foreground">
-          Drag to resize, click to collapse, or press <code>[</code> key.
-          Open sidebar on <code>click</code> or <code>hover</code>.
+          Drag to resize, click to collapse, or press <code>[</code> key. Open sidebar on{' '}
+          <code>click</code> or <code>hover</code>.
         </p>
         <ComponentPreview padding="none" hideHeader caption="On hover">
           <CollapsePreview />
@@ -1853,11 +1872,10 @@ export default function SidebarDoc() {
 
       <DocSection title="Inside a dialog">
         <p className="text-site-body text-muted-foreground">
-          A settings dialog with the sidebar inside. 3 props make it fit:{" "}
-          <code>collapsible=&quot;none&quot;</code> drops the rail and the
-          drawer, <code>persist={"{false}"}</code> skips the cookie, and{" "}
-          <code>h-full</code> pins it to the dialog&apos;s height. Below{" "}
-          <code>sm</code> a Select takes over.
+          A settings dialog with the sidebar inside. 3 props make it fit:{' '}
+          <code>collapsible=&quot;none&quot;</code> drops the rail and the drawer,{' '}
+          <code>persist={'{false}'}</code> skips the cookie, and <code>h-full</code> pins it to the
+          dialog&apos;s height. Below <code>sm</code> a Select takes over.
         </p>
         <ComponentPreview code={settingsDialogCode}>
           <SettingsDialogDemo />
@@ -1866,18 +1884,15 @@ export default function SidebarDoc() {
 
       <DocSection title="No icon rail version?">
         <p className="text-site-body text-muted-foreground">
-          Hot take baked into this component: there&apos;s no icon-only
-          collapsed mode. On purpose.
+          Hot take baked into this component: there&apos;s no icon-only collapsed mode. On purpose.
         </p>
         <p className="text-site-body text-muted-foreground">
-          Icon rails look tidy in screenshots but fail in use. Six ambiguous
-          glyphs, and you suddenly need to tooltip most of them until
-          you&apos;ve found the right one.
+          Icon rails look tidy in screenshots but fail in use. Six ambiguous glyphs, and you
+          suddenly need to tooltip most of them until you&apos;ve found the right one.
         </p>
         <p className="text-site-body text-muted-foreground">
-          Nesting, section labels and complementary actions are impossible to
-          reflect. It only benefits power users on simple sidebars — and
-          it&apos;s your worst way to educate users.
+          Nesting, section labels and complementary actions are impossible to reflect. It only
+          benefits power users on simple sidebars — and it&apos;s your worst way to educate users.
         </p>
         <p className="text-site-body text-muted-foreground">
           Half a sidebar is confusing for everybody. Convert yours now.
@@ -1887,8 +1902,7 @@ export default function SidebarDoc() {
 
       <DocSection title="Functional and perfectly aligned">
         <p className="text-site-body text-muted-foreground">
-          One rhythm everywhere: 24px icon buttons with 16px icons from
-          header to footer.
+          One rhythm everywhere: 24px icon buttons with 16px icons from header to footer.
         </p>
         <ComponentPreview
           code={alignmentCode}

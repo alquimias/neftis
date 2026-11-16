@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Slider } from "@/registry/radix/slider";
-import { fontWeights } from "@/registry/default/lib/font-weight";
+import { useState } from 'react';
+import { Slider } from '#registry/radix/slider';
+import { fontWeights } from '#registry/default/lib/font-weight';
 
 // ---------------------------------------------------------------------------
 // Data
 // ---------------------------------------------------------------------------
 
-const qualityLabels = ["Off", "Low", "Medium", "High", "Ultra"];
-const reverbTypes = ["Room", "Hall", "Plate", "Spring", "Chamber"];
-const filterModes = ["LP", "BP", "HP", "Notch"];
+const qualityLabels = ['Off', 'Low', 'Medium', 'High', 'Ultra'];
+const reverbTypes = ['Room', 'Hall', 'Plate', 'Spring', 'Chamber'];
+const filterModes = ['LP', 'BP', 'HP', 'Notch'];
 
 // ---------------------------------------------------------------------------
 // Page
@@ -155,7 +155,7 @@ export default function SliderPage() {
             valuePosition="right"
             formatValue={(v) => {
               const db = ((v - 50) / 50) * 12;
-              return `${db >= 0 ? "+" : ""}${db.toFixed(1)} dB`;
+              return `${db >= 0 ? '+' : ''}${db.toFixed(1)} dB`;
             }}
           />
           <Slider
@@ -166,7 +166,7 @@ export default function SliderPage() {
             step={100}
             label="Mid Freq"
             valuePosition="right"
-            formatValue={(v) => v >= 1000 ? `${(v / 1000).toFixed(1)} kHz` : `${v} Hz`}
+            formatValue={(v) => (v >= 1000 ? `${(v / 1000).toFixed(1)} kHz` : `${v} Hz`)}
           />
           <Slider
             value={midGain}
@@ -175,7 +175,7 @@ export default function SliderPage() {
             valuePosition="right"
             formatValue={(v) => {
               const db = ((v - 50) / 50) * 12;
-              return `${db >= 0 ? "+" : ""}${db.toFixed(1)} dB`;
+              return `${db >= 0 ? '+' : ''}${db.toFixed(1)} dB`;
             }}
           />
           <Slider
@@ -185,7 +185,7 @@ export default function SliderPage() {
             valuePosition="right"
             formatValue={(v) => {
               const db = ((v - 50) / 50) * 12;
-              return `${db >= 0 ? "+" : ""}${db.toFixed(1)} dB`;
+              return `${db >= 0 ? '+' : ''}${db.toFixed(1)} dB`;
             }}
           />
           <Slider
@@ -196,7 +196,7 @@ export default function SliderPage() {
             step={500}
             label="High Cut"
             valuePosition="right"
-            formatValue={(v) => v >= 1000 ? `${(v / 1000).toFixed(1)} kHz` : `${v} Hz`}
+            formatValue={(v) => (v >= 1000 ? `${(v / 1000).toFixed(1)} kHz` : `${v} Hz`)}
           />
         </div>
       </section>
@@ -221,7 +221,7 @@ export default function SliderPage() {
             step={100}
             label="Freq Band"
             valuePosition="right"
-            formatValue={(v) => v >= 1000 ? `${(v / 1000).toFixed(1)}k` : `${v}`}
+            formatValue={(v) => (v >= 1000 ? `${(v / 1000).toFixed(1)}k` : `${v}`)}
           />
           <Slider
             value={dynamicRange}
@@ -413,7 +413,7 @@ export default function SliderPage() {
             min={0}
             max={100}
             formatValue={(v) => {
-              if (v === 50) return "C";
+              if (v === 50) return 'C';
               return v < 50 ? `L${50 - v}` : `R${v - 50}`;
             }}
           />

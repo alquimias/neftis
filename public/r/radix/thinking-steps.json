@@ -3,11 +3,7 @@
   "name": "thinking-steps",
   "title": "Thinking Steps",
   "description": "Collapsible AI reasoning steps with animated expand/collapse, per-step icons, sources, and nested details. Radix flavor.",
-  "dependencies": [
-    "@radix-ui/react-collapsible",
-    "motion",
-    "lucide-react"
-  ],
+  "dependencies": ["@radix-ui/react-collapsible", "motion", "lucide-react"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -46,8 +42,6 @@
     }
   },
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/thinking-steps. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#thinking-steps.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

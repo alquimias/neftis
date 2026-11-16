@@ -1,1 +1,1 @@
-export * from "@/registry/blocks/sidebar-user-footer";
+export * from '#registry/blocks/sidebar-user-footer';

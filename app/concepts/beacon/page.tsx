@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useMemo, useRef, useEffect, useCallback } from "react";
-import { useIcon } from "@/lib/icon-context";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { surfaceClasses } from "@/lib/surface-classes";
-import { cn } from "@/lib/utils";
-import { ConceptFrame } from "@/app/concepts/_components/concept-frame";
-import { Button } from "@/registry/radix/button";
-import { Badge, type BadgeColor } from "@/registry/default/badge";
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useIcon } from '#lib/icon-context';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { surfaceClasses } from '#lib/surface-classes';
+import { cn } from '#lib/utils';
+import { ConceptFrame } from '#app/concepts/_components/concept-frame';
+import { Button } from '#registry/radix/button';
+import { Badge, type BadgeColor } from '#registry/default/badge';
 import {
   Table,
   TableHeader,
@@ -15,29 +15,20 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@/registry/default/table";
-import {
-  Tabs,
-  TabsItem,
-  TabsPanel,
-} from "@/components/flavored/tabs";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/flavored/select";
-import { InputGroup, InputField } from "@/registry/default/input-group";
-import { Dropdown, DropdownLabel, DropdownSeparator } from "@/components/flavored/dropdown";
-import { MenuItem } from "@/registry/default/menu-item";
-import { Switch } from "@/registry/radix/switch";
-import { ThinkingIndicator } from "@/registry/default/thinking-indicator";
-import { AskUserQuestions } from "@/registry/default/ask-user-questions";
+} from '#registry/default/table';
+import { Tabs, TabsItem, TabsPanel } from '#components/flavored/tabs';
+import { Select, SelectTrigger, SelectContent, SelectItem } from '#components/flavored/select';
+import { InputGroup, InputField } from '#registry/default/input-group';
+import { Dropdown, DropdownLabel, DropdownSeparator } from '#components/flavored/dropdown';
+import { MenuItem } from '#registry/default/menu-item';
+import { Switch } from '#registry/radix/switch';
+import { ThinkingIndicator } from '#registry/default/thinking-indicator';
+import { AskUserQuestions } from '#registry/default/ask-user-questions';
 
 // ── Fixtures ────────────────────────────────────────────────────────────────
 
-type StatusKey = "todo" | "progress" | "review" | "done";
-type PriorityKey = "urgent" | "high" | "medium" | "low" | "none";
+type StatusKey = 'todo' | 'progress' | 'review' | 'done';
+type PriorityKey = 'urgent' | 'high' | 'medium' | 'low' | 'none';
 
 interface Issue {
   key: string;
@@ -48,58 +39,172 @@ interface Issue {
 }
 
 const STATUS: Record<StatusKey, { label: string; color: BadgeColor }> = {
-  todo: { label: "Todo", color: "gray" },
-  progress: { label: "In Progress", color: "amber" },
-  review: { label: "In Review", color: "violet" },
-  done: { label: "Done", color: "green" },
+  todo: { label: 'Todo', color: 'gray' },
+  progress: { label: 'In Progress', color: 'amber' },
+  review: { label: 'In Review', color: 'violet' },
+  done: { label: 'Done', color: 'green' },
 };
 
 const PRIORITY: Record<PriorityKey, { label: string; color: BadgeColor }> = {
-  urgent: { label: "Urgent", color: "red" },
-  high: { label: "High", color: "orange" },
-  medium: { label: "Medium", color: "yellow" },
-  low: { label: "Low", color: "blue" },
-  none: { label: "None", color: "gray" },
+  urgent: { label: 'Urgent', color: 'red' },
+  high: { label: 'High', color: 'orange' },
+  medium: { label: 'Medium', color: 'yellow' },
+  low: { label: 'Low', color: 'blue' },
+  none: { label: 'None', color: 'gray' },
 };
 
 const ACTIVE: Issue[] = [
-  { key: "ENG-128", title: "Auth token refresh fails for ~4% of sessions", status: "progress", priority: "urgent", assignee: "DK" },
-  { key: "ENG-131", title: "Flaky CI on the e2e shard", status: "todo", priority: "high", assignee: "MR" },
-  { key: "ENG-124", title: "Virtualize the issues table for >1k rows", status: "review", priority: "medium", assignee: "AJ" },
-  { key: "ENG-140", title: "Dark-mode contrast on status pills", status: "todo", priority: "low", assignee: "SL" },
-  { key: "ENG-118", title: "Command palette: fuzzy match on labels", status: "progress", priority: "medium", assignee: "DK" },
-  { key: "ENG-142", title: "Webhook retries should be idempotent", status: "todo", priority: "high", assignee: "MR" },
-  { key: "ENG-109", title: "Migrate avatars to signed URLs", status: "review", priority: "low", assignee: "AJ" },
-  { key: "ENG-145", title: "Rate-limit the public search endpoint", status: "progress", priority: "high", assignee: "DK" },
-  { key: "ENG-133", title: "Empty states for the board columns", status: "todo", priority: "low", assignee: "SL" },
-  { key: "ENG-126", title: "Persist column widths across sessions", status: "review", priority: "medium", assignee: "AJ" },
-  { key: "ENG-147", title: "Audit log for permission changes", status: "todo", priority: "urgent", assignee: "MR" },
-  { key: "ENG-121", title: "Debounce the live filter input", status: "progress", priority: "low", assignee: "SL" },
-  { key: "ENG-138", title: "Keyboard shortcut to assign issues", status: "todo", priority: "medium", assignee: "DK" },
-  { key: "ENG-156", title: "Surface SLA breaches in the inbox", status: "review", priority: "high", assignee: "AJ" },
+  {
+    key: 'ENG-128',
+    title: 'Auth token refresh fails for ~4% of sessions',
+    status: 'progress',
+    priority: 'urgent',
+    assignee: 'DK',
+  },
+  {
+    key: 'ENG-131',
+    title: 'Flaky CI on the e2e shard',
+    status: 'todo',
+    priority: 'high',
+    assignee: 'MR',
+  },
+  {
+    key: 'ENG-124',
+    title: 'Virtualize the issues table for >1k rows',
+    status: 'review',
+    priority: 'medium',
+    assignee: 'AJ',
+  },
+  {
+    key: 'ENG-140',
+    title: 'Dark-mode contrast on status pills',
+    status: 'todo',
+    priority: 'low',
+    assignee: 'SL',
+  },
+  {
+    key: 'ENG-118',
+    title: 'Command palette: fuzzy match on labels',
+    status: 'progress',
+    priority: 'medium',
+    assignee: 'DK',
+  },
+  {
+    key: 'ENG-142',
+    title: 'Webhook retries should be idempotent',
+    status: 'todo',
+    priority: 'high',
+    assignee: 'MR',
+  },
+  {
+    key: 'ENG-109',
+    title: 'Migrate avatars to signed URLs',
+    status: 'review',
+    priority: 'low',
+    assignee: 'AJ',
+  },
+  {
+    key: 'ENG-145',
+    title: 'Rate-limit the public search endpoint',
+    status: 'progress',
+    priority: 'high',
+    assignee: 'DK',
+  },
+  {
+    key: 'ENG-133',
+    title: 'Empty states for the board columns',
+    status: 'todo',
+    priority: 'low',
+    assignee: 'SL',
+  },
+  {
+    key: 'ENG-126',
+    title: 'Persist column widths across sessions',
+    status: 'review',
+    priority: 'medium',
+    assignee: 'AJ',
+  },
+  {
+    key: 'ENG-147',
+    title: 'Audit log for permission changes',
+    status: 'todo',
+    priority: 'urgent',
+    assignee: 'MR',
+  },
+  {
+    key: 'ENG-121',
+    title: 'Debounce the live filter input',
+    status: 'progress',
+    priority: 'low',
+    assignee: 'SL',
+  },
+  {
+    key: 'ENG-138',
+    title: 'Keyboard shortcut to assign issues',
+    status: 'todo',
+    priority: 'medium',
+    assignee: 'DK',
+  },
+  {
+    key: 'ENG-156',
+    title: 'Surface SLA breaches in the inbox',
+    status: 'review',
+    priority: 'high',
+    assignee: 'AJ',
+  },
 ];
 
 const BACKLOG: Issue[] = [
-  { key: "ENG-150", title: "Offline draft sync for the composer", status: "todo", priority: "medium", assignee: "SL" },
-  { key: "ENG-151", title: "Per-team notification digests", status: "todo", priority: "low", assignee: "MR" },
-  { key: "ENG-152", title: "Docs polish for the public API", status: "todo", priority: "none", assignee: "AJ" },
-  { key: "ENG-153", title: "Investigate p99 latency on search", status: "todo", priority: "high", assignee: "DK" },
-  { key: "ENG-154", title: "Keyboard-only triage flow", status: "todo", priority: "medium", assignee: "SL" },
+  {
+    key: 'ENG-150',
+    title: 'Offline draft sync for the composer',
+    status: 'todo',
+    priority: 'medium',
+    assignee: 'SL',
+  },
+  {
+    key: 'ENG-151',
+    title: 'Per-team notification digests',
+    status: 'todo',
+    priority: 'low',
+    assignee: 'MR',
+  },
+  {
+    key: 'ENG-152',
+    title: 'Docs polish for the public API',
+    status: 'todo',
+    priority: 'none',
+    assignee: 'AJ',
+  },
+  {
+    key: 'ENG-153',
+    title: 'Investigate p99 latency on search',
+    status: 'todo',
+    priority: 'high',
+    assignee: 'DK',
+  },
+  {
+    key: 'ENG-154',
+    title: 'Keyboard-only triage flow',
+    status: 'todo',
+    priority: 'medium',
+    assignee: 'SL',
+  },
 ];
 
 const ASSIGNEE_COLOR: Record<string, string> = {
-  DK: "bg-blue-500",
-  MR: "bg-violet-500",
-  AJ: "bg-emerald-500",
-  SL: "bg-rose-500",
+  DK: 'bg-blue-500',
+  MR: 'bg-violet-500',
+  AJ: 'bg-emerald-500',
+  SL: 'bg-rose-500',
 };
 
 const PRIORITY_FILTER = [
-  { value: "all", label: "All priorities" },
-  { value: "urgent", label: "Urgent" },
-  { value: "high", label: "High" },
-  { value: "medium", label: "Medium" },
-  { value: "low", label: "Low" },
+  { value: 'all', label: 'All priorities' },
+  { value: 'urgent', label: 'Urgent' },
+  { value: 'high', label: 'High' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'low', label: 'Low' },
 ];
 
 // ── Small pieces ────────────────────────────────────────────────────────────
@@ -108,7 +213,7 @@ function Avatar({ initials }: { initials: string }) {
   return (
     <span
       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] text-background ${
-        ASSIGNEE_COLOR[initials] ?? "bg-neutral-500"
+        ASSIGNEE_COLOR[initials] ?? 'bg-neutral-500'
       }`}
       style={{ fontVariationSettings: fontWeights.semibold }}
     >
@@ -160,9 +265,9 @@ function IssueTable({ rows }: { rows: Issue[] }) {
 
 function Board({ rows }: { rows: Issue[] }) {
   const cols: { key: StatusKey; label: string }[] = [
-    { key: "todo", label: "Todo" },
-    { key: "progress", label: "In Progress" },
-    { key: "review", label: "In Review" },
+    { key: 'todo', label: 'Todo' },
+    { key: 'progress', label: 'In Progress' },
+    { key: 'review', label: 'In Review' },
   ];
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -181,7 +286,7 @@ function Board({ rows }: { rows: Issue[] }) {
             {items.map((issue) => (
               <div
                 key={issue.key}
-                className={cn("flex flex-col gap-2 rounded-xl p-3", surfaceClasses(2, 2))}
+                className={cn('flex flex-col gap-2 rounded-xl p-3', surfaceClasses(2, 2))}
               >
                 <span className="text-site-body text-foreground">{issue.title}</span>
                 <div className="flex items-center justify-between">
@@ -207,21 +312,21 @@ function Board({ rows }: { rows: Issue[] }) {
 // ── Display popover (Dropdown showcase) ─────────────────────────────────────
 
 function DisplayMenu() {
-  const Sliders = useIcon("settings");
-  const Chevron = useIcon("chevron-down");
+  const Sliders = useIcon('settings');
+  const Chevron = useIcon('chevron-down');
   const [open, setOpen] = useState(false);
   const [ordering, setOrdering] = useState(0);
   const [subIssues, setSubIssues] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
-  const orderings = ["Status", "Priority", "Created"];
+  const orderings = ['Status', 'Priority', 'Created'];
 
   useEffect(() => {
     if (!open) return;
     const onDown = (e: MouseEvent) => {
       if (!ref.current?.contains(e.target as Node)) setOpen(false);
     };
-    document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
   }, [open]);
 
   return (
@@ -266,7 +371,7 @@ function DisplayMenu() {
 
 // ── AI triage panel ─────────────────────────────────────────────────────────
 
-type TriageState = "idle" | "analyzing" | "asking" | "done";
+type TriageState = 'idle' | 'analyzing' | 'asking' | 'done';
 
 function TriagePanel({
   state,
@@ -277,13 +382,13 @@ function TriagePanel({
   onAdvance: (next: TriageState) => void;
   onClose: () => void;
 }) {
-  const Sparkle = useIcon("brain");
-  const Check = useIcon("check");
+  const Sparkle = useIcon('brain');
+  const Check = useIcon('check');
 
-  if (state === "idle") return null;
+  if (state === 'idle') return null;
 
   return (
-    <div className={cn("flex flex-col gap-3 rounded-2xl p-4", surfaceClasses(2, 2))}>
+    <div className={cn('flex flex-col gap-3 rounded-2xl p-4', surfaceClasses(2, 2))}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Sparkle size={16} className="text-foreground" />
@@ -299,44 +404,42 @@ function TriagePanel({
         </Button>
       </div>
 
-      {state === "analyzing" && (
-        <ThinkingIndicator className="!px-0" />
-      )}
+      {state === 'analyzing' && <ThinkingIndicator className="!px-0" />}
 
-      {state === "asking" && (
+      {state === 'asking' && (
         <AskUserQuestions
           questions={[
             {
-              id: "triage",
-              title: "3 active issues look mis-prioritized. Apply these?",
+              id: 'triage',
+              title: '3 active issues look mis-prioritized. Apply these?',
               multiSelect: true,
               allowOther: true,
-              nextLabel: "Apply changes",
-              layout: "stacked",
+              nextLabel: 'Apply changes',
+              layout: 'stacked',
               options: [
                 {
-                  id: "bump",
-                  title: "Bump ENG-128 to Urgent",
-                  description: "Auth refresh is failing for ~4% of sessions",
+                  id: 'bump',
+                  title: 'Bump ENG-128 to Urgent',
+                  description: 'Auth refresh is failing for ~4% of sessions',
                 },
                 {
-                  id: "assign",
-                  title: "Assign ENG-131 to @dane",
-                  description: "He owns the CI pipeline",
+                  id: 'assign',
+                  title: 'Assign ENG-131 to @dane',
+                  description: 'He owns the CI pipeline',
                 },
                 {
-                  id: "defer",
-                  title: "Move ENG-152 to Backlog",
-                  description: "Docs polish has no deadline",
+                  id: 'defer',
+                  title: 'Move ENG-152 to Backlog',
+                  description: 'Docs polish has no deadline',
                 },
               ],
             },
           ]}
-          onComplete={() => onAdvance("done")}
+          onComplete={() => onAdvance('done')}
         />
       )}
 
-      {state === "done" && (
+      {state === 'done' && (
         <div className="flex items-center gap-2 text-site-body text-foreground">
           <Check size={16} className="text-emerald-500" />
           Applied 3 changes · re-ranked the Active view.
@@ -349,32 +452,32 @@ function TriagePanel({
 // ── Page ────────────────────────────────────────────────────────────────────
 
 export default function BeaconPage() {
-  const Search = useIcon("search");
-  const Sparkle = useIcon("brain");
+  const Search = useIcon('search');
+  const Sparkle = useIcon('brain');
 
   const [view, setView] = useState(0); // 0 Active, 1 Backlog, 2 Board
-  const [priority, setPriority] = useState(""); // "" / "all" → no filter
-  const [query, setQuery] = useState("");
-  const [triage, setTriage] = useState<TriageState>("idle");
+  const [priority, setPriority] = useState(''); // "" / "all" → no filter
+  const [query, setQuery] = useState('');
+  const [triage, setTriage] = useState<TriageState>('idle');
 
   const filterRows = useCallback(
     (rows: Issue[]) =>
       rows.filter(
         (r) =>
-          (priority === "all" || priority === "" || r.priority === priority) &&
-          (query.trim() === "" ||
+          (priority === 'all' || priority === '' || r.priority === priority) &&
+          (query.trim() === '' ||
             r.title.toLowerCase().includes(query.toLowerCase()) ||
-            r.key.toLowerCase().includes(query.toLowerCase()))
+            r.key.toLowerCase().includes(query.toLowerCase())),
       ),
-    [priority, query]
+    [priority, query],
   );
 
   const activeRows = useMemo(() => filterRows(ACTIVE), [filterRows]);
   const backlogRows = useMemo(() => filterRows(BACKLOG), [filterRows]);
 
   const startTriage = useCallback(() => {
-    setTriage("analyzing");
-    setTimeout(() => setTriage("asking"), 1500);
+    setTriage('analyzing');
+    setTimeout(() => setTriage('asking'), 1500);
   }, []);
 
   return (
@@ -394,7 +497,7 @@ export default function BeaconPage() {
               size="sm"
               leadingIcon={Sparkle}
               onClick={startTriage}
-              disabled={triage !== "idle"}
+              disabled={triage !== 'idle'}
             >
               Triage with AI
             </Button>
@@ -429,12 +532,8 @@ export default function BeaconPage() {
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
           <div className="flex flex-col gap-4">
-            {triage !== "idle" && (
-              <TriagePanel
-                state={triage}
-                onAdvance={setTriage}
-                onClose={() => setTriage("idle")}
-              />
+            {triage !== 'idle' && (
+              <TriagePanel state={triage} onAdvance={setTriage} onClose={() => setTriage('idle')} />
             )}
 
             <TabsPanel index={0} selectedIndex={view} idPrefix="beacon-view">

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useIcon } from "@/lib/icon-context";
-import { InputGroup, InputField } from "@/registry/default/input-group";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { groupProps, fieldProps } from "@/lib/docs/api/input-group";
+import { useState } from 'react';
+import { useIcon } from '#lib/icon-context';
+import { InputGroup, InputField } from '#registry/default/input-group';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { groupProps, fieldProps } from '#lib/docs/api/input-group';
 
 const basicCode = `import { InputGroup, InputField } from "./components";
 import { Search } from "lucide-react";
@@ -59,13 +59,13 @@ const errorCode = `<InputGroup>
 </InputGroup>`;
 
 export default function InputGroupDoc() {
-  const Search = useIcon("search");
-  const Mail = useIcon("mail");
+  const Search = useIcon('search');
+  const Mail = useIcon('mail');
 
-  const [search, setSearch] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [errorEmail, setErrorEmail] = useState("bad@");
+  const [search, setSearch] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [errorEmail, setErrorEmail] = useState('bad@');
 
   return (
     <DocPage

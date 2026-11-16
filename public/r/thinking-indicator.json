@@ -3,9 +3,7 @@
   "name": "thinking-indicator",
   "title": "Thinking Indicator",
   "description": "Animated loading indicator with morphing SVG path (circle to infinity loop) and shimmer text rotation. Cycles through customizable status words.",
-  "dependencies": [
-    "motion"
-  ],
+  "dependencies": ["motion"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/font-weight.json",
@@ -38,8 +36,6 @@
     }
   },
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/thinking-indicator. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#thinking-indicator.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

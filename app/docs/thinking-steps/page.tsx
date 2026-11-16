@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback, useRef, type ReactNode } from "react";
-import { fontWeights } from "@/registry/default/lib/font-weight";
+import { useState, useEffect, useCallback, useRef, type ReactNode } from 'react';
+import { fontWeights } from '#registry/default/lib/font-weight';
 import {
   ThinkingSteps,
   ThinkingStepsHeader,
@@ -12,12 +12,19 @@ import {
   ThinkingStepSource,
   ThinkingStepImage,
   type StepStatus,
-} from "@/components/flavored/thinking-steps";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { useIcon } from "@/registry/default/lib/icon-context";
-import { rootProps, headerProps, stepProps, detailsProps, sourceProps, imageProps } from "@/lib/docs/api/thinking-steps";
+} from '#components/flavored/thinking-steps';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { useIcon } from '#registry/default/lib/icon-context';
+import {
+  rootProps,
+  headerProps,
+  stepProps,
+  detailsProps,
+  sourceProps,
+  imageProps,
+} from '#lib/docs/api/thinking-steps';
 
 // ─── Code Snippets ──────────────────────────────────────────────────────────
 
@@ -231,14 +238,10 @@ const fullCode = `// Kitchen sink: sources, details, descriptions, images, custo
  * `delays` is an array of absolute ms from start (e.g. [400, 1800, 3200]).
  * Returns the current "step" index (how many have fired).
  */
-function useSequencedSteps(
-  delays: number[],
-  playing: boolean,
-  onFinished?: () => void,
-) {
+function useSequencedSteps(delays: number[], playing: boolean, onFinished?: () => void) {
   const [fired, setFired] = useState(0);
   const elapsedRef = useRef(0); // total elapsed ms when paused
-  const startRef = useRef(0);   // Date.now() when last resumed
+  const startRef = useRef(0); // Date.now() when last resumed
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const total = delays.length;
@@ -308,8 +311,8 @@ function StreamingDemo({ playing, onFinished, onResetRef }: DemoProps) {
   const allComplete = fired >= TOTAL;
 
   const getStatus = (i: number): StepStatus => {
-    if (allComplete) return "complete";
-    return i < fired - 1 ? "complete" : i === fired - 1 ? "active" : "pending";
+    if (allComplete) return 'complete';
+    return i < fired - 1 ? 'complete' : i === fired - 1 ? 'active' : 'pending';
   };
 
   return (
@@ -342,23 +345,18 @@ function StreamingDemo({ playing, onFinished, onResetRef }: DemoProps) {
           status={getStatus(2)}
           isLast={visibleSteps <= 3}
         />
-        <ThinkingStep
-          icon="check"
-          label="Complete"
-          status={getStatus(3)}
-          isLast
-        />
+        <ThinkingStep icon="check" label="Complete" status={getStatus(3)} isLast />
       </ThinkingStepsContent>
     </ThinkingSteps>
   );
 }
 
 const STREAMING_TEXT_DESCRIPTIONS = [
-  "Establishing a connection to the data warehouse and streaming 2.4 million rows across 47 columns into a memory-mapped buffer. The source table spans three partitions dated from January through March, each containing roughly 800K records with nested JSON fields that need to be flattened before downstream processing can begin.",
-  "Running a full schema validation pass against the canonical type definitions. Checking that all 47 columns match their expected types, verifying nullability constraints on the 12 required fields, confirming foreign key references resolve correctly against the dimension tables, and flagging any new columns that appeared since the last successful run on March 15th.",
-  "Applying the full normalization pipeline: flattening nested address objects into discrete columns, deduplicating records that share the same composite key across partitions, converting all timestamps from mixed UTC and local offsets into a canonical ISO 8601 format, and running the currency conversion step for the 14 non-USD transaction currencies using the daily exchange rate snapshot.",
+  'Establishing a connection to the data warehouse and streaming 2.4 million rows across 47 columns into a memory-mapped buffer. The source table spans three partitions dated from January through March, each containing roughly 800K records with nested JSON fields that need to be flattened before downstream processing can begin.',
+  'Running a full schema validation pass against the canonical type definitions. Checking that all 47 columns match their expected types, verifying nullability constraints on the 12 required fields, confirming foreign key references resolve correctly against the dimension tables, and flagging any new columns that appeared since the last successful run on March 15th.',
+  'Applying the full normalization pipeline: flattening nested address objects into discrete columns, deduplicating records that share the same composite key across partitions, converting all timestamps from mixed UTC and local offsets into a canonical ISO 8601 format, and running the currency conversion step for the 14 non-USD transaction currencies using the daily exchange rate snapshot.',
   "Executing 23 data quality assertions: verifying that output row counts fall within the expected 2% tolerance of the source, checking that the revenue distribution skew hasn't shifted beyond 1.5 standard deviations from the trailing 30-day average, confirming referential integrity against all five dimension tables, and ensuring that no single partition exceeds 40% of total volume which would indicate an upstream ingestion anomaly.",
-  "Compressing the validated dataset into 847 Snappy-encoded Parquet files partitioned by region and date, uploading each file to the staging bucket with server-side encryption enabled, registering the new partition metadata in the Hive metastore, and triggering the downstream Airflow DAG that handles incremental merges into the production fact table.",
+  'Compressing the validated dataset into 847 Snappy-encoded Parquet files partitioned by region and date, uploading each file to the staging bucket with server-side encryption enabled, registering the new partition metadata in the Hive metastore, and triggering the downstream Airflow DAG that handles incremental merges into the production fact table.',
 ];
 
 function useStreamingText(text: string, active: boolean, charsPerTick = 3, tickMs = 16) {
@@ -380,15 +378,19 @@ function useStreamingText(text: string, active: boolean, charsPerTick = 3, tickM
   return text.slice(0, count);
 }
 
-function StreamingDescription({ text, active, done }: { text: string; active: boolean; done: boolean }) {
+function StreamingDescription({
+  text,
+  active,
+  done,
+}: {
+  text: string;
+  active: boolean;
+  done: boolean;
+}) {
   const displayed = useStreamingText(text, active);
   const show = done ? text : displayed;
   if (!show) return null;
-  return (
-    <span className="text-site-body text-muted-foreground leading-4.5">
-      {show}
-    </span>
-  );
+  return <span className="text-site-body text-muted-foreground leading-4.5">{show}</span>;
 }
 
 function StreamingTextDemo({ playing, onFinished, onResetRef }: DemoProps) {
@@ -408,22 +410,34 @@ function StreamingTextDemo({ playing, onFinished, onResetRef }: DemoProps) {
   const allComplete = fired >= TOTAL;
 
   const getStatus = (i: number): StepStatus => {
-    if (allComplete) return "complete";
-    return i < fired - 1 ? "complete" : i === fired - 1 ? "active" : "pending";
+    if (allComplete) return 'complete';
+    return i < fired - 1 ? 'complete' : i === fired - 1 ? 'active' : 'pending';
   };
 
-  const labels = ["Loading dataset", "Validating schema", "Transforming records", "Running quality checks", "Writing output"];
+  const labels = [
+    'Loading dataset',
+    'Validating schema',
+    'Transforming records',
+    'Running quality checks',
+    'Writing output',
+  ];
 
   return (
     <ThinkingSteps key={key} open={open} onOpenChange={setOpen} className="w-full px-8">
       <ThinkingStepsHeader />
       <ThinkingStepsContent>
         {labels.map((label, i) => (
-          <ThinkingStep key={i} showIcon={false} label={label} status={getStatus(i)} isLast={visibleSteps <= i + 1}>
+          <ThinkingStep
+            key={i}
+            showIcon={false}
+            label={label}
+            status={getStatus(i)}
+            isLast={visibleSteps <= i + 1}
+          >
             <StreamingDescription
               text={STREAMING_TEXT_DESCRIPTIONS[i]}
-              active={getStatus(i) === "active"}
-              done={getStatus(i) === "complete"}
+              active={getStatus(i) === 'active'}
+              done={getStatus(i) === 'complete'}
             />
           </ThinkingStep>
         ))}
@@ -450,8 +464,8 @@ function WithImagesDemo({ playing, onFinished, onResetRef }: DemoProps) {
   const allComplete = fired >= TOTAL;
 
   const getStatus = (i: number): StepStatus => {
-    if (allComplete) return "complete";
-    return i < fired - 1 ? "complete" : i === fired - 1 ? "active" : "pending";
+    if (allComplete) return 'complete';
+    return i < fired - 1 ? 'complete' : i === fired - 1 ? 'active' : 'pending';
   };
 
   return (
@@ -470,9 +484,7 @@ function WithImagesDemo({ playing, onFinished, onResetRef }: DemoProps) {
           status={getStatus(1)}
           isLast={visibleSteps <= 2}
         >
-          {fired > 2 && (
-            <ThinkingStepImage src="/og.png" caption="Homepage screenshot" />
-          )}
+          {fired > 2 && <ThinkingStepImage src="/og.png" caption="Homepage screenshot" />}
         </ThinkingStep>
         <ThinkingStep
           icon="brain"
@@ -481,12 +493,7 @@ function WithImagesDemo({ playing, onFinished, onResetRef }: DemoProps) {
           status={getStatus(2)}
           isLast={visibleSteps <= 3}
         />
-        <ThinkingStep
-          icon="check"
-          label="Analysis complete"
-          status={getStatus(3)}
-          isLast
-        />
+        <ThinkingStep icon="check" label="Analysis complete" status={getStatus(3)} isLast />
       </ThinkingStepsContent>
     </ThinkingSteps>
   );
@@ -509,8 +516,8 @@ function FullDemo({ playing, onFinished, onResetRef }: DemoProps) {
   const allComplete = fired >= TOTAL;
 
   const getStatus = (i: number): StepStatus => {
-    if (allComplete) return "complete";
-    return i < fired - 1 ? "complete" : i === fired - 1 ? "active" : "pending";
+    if (allComplete) return 'complete';
+    return i < fired - 1 ? 'complete' : i === fired - 1 ? 'active' : 'pending';
   };
 
   return (
@@ -538,9 +545,7 @@ function FullDemo({ playing, onFinished, onResetRef }: DemoProps) {
           status={getStatus(1)}
           isLast={visibleSteps <= 2}
         >
-          {fired > 2 && (
-            <ThinkingStepImage src="/og.png" caption="Profile card" />
-          )}
+          {fired > 2 && <ThinkingStepImage src="/og.png" caption="Profile card" />}
         </ThinkingStep>
         <ThinkingStep
           icon="globe"
@@ -552,10 +557,10 @@ function FullDemo({ playing, onFinished, onResetRef }: DemoProps) {
             <ThinkingStepDetails
               summary="Explored 4 pages"
               details={[
-                "Read about.html",
-                "Read projects.html",
-                "Read resume.pdf",
-                "Read contact.html",
+                'Read about.html',
+                'Read projects.html',
+                'Read resume.pdf',
+                'Read contact.html',
               ]}
             />
           )}
@@ -581,12 +586,7 @@ function FullDemo({ playing, onFinished, onResetRef }: DemoProps) {
           status={getStatus(4)}
           isLast={visibleSteps <= 5}
         />
-        <ThinkingStep
-          icon="check"
-          label="Research complete"
-          status={getStatus(5)}
-          isLast
-        />
+        <ThinkingStep icon="check" label="Research complete" status={getStatus(5)} isLast />
       </ThinkingStepsContent>
     </ThinkingSteps>
   );
@@ -594,7 +594,7 @@ function FullDemo({ playing, onFinished, onResetRef }: DemoProps) {
 
 // ─── Animated preview wrapper ───────────────────────────────────────────────
 
-type PlaybackState = "playing" | "paused" | "finished";
+type PlaybackState = 'playing' | 'paused' | 'finished';
 
 function AnimatedPreview({
   code,
@@ -603,7 +603,7 @@ function AnimatedPreview({
   code: string;
   children: (props: DemoProps) => ReactNode;
 }) {
-  const [playback, setPlayback] = useState<PlaybackState>("paused");
+  const [playback, setPlayback] = useState<PlaybackState>('paused');
   const wrapperRef = useRef<HTMLDivElement>(null);
   const manualPauseRef = useRef(false);
   const resetRef = useRef<(() => void) | null>(null);
@@ -617,14 +617,14 @@ function AnimatedPreview({
       ([entry]) => {
         if (entry.intersectionRatio >= 0.5) {
           if (!manualPauseRef.current) {
-            setPlayback((prev) => (prev === "finished" ? "finished" : "playing"));
+            setPlayback((prev) => (prev === 'finished' ? 'finished' : 'playing'));
           }
         } else if (entry.intersectionRatio < 0.1) {
           manualPauseRef.current = false;
-          setPlayback((prev) => (prev === "finished" ? "finished" : "paused"));
+          setPlayback((prev) => (prev === 'finished' ? 'finished' : 'paused'));
         }
       },
-      { threshold: [0.1, 0.5] }
+      { threshold: [0.1, 0.5] },
     );
 
     observer.observe(el);
@@ -632,45 +632,45 @@ function AnimatedPreview({
   }, []);
 
   const handleFinished = useCallback(() => {
-    setPlayback("finished");
+    setPlayback('finished');
   }, []);
 
   const handleButtonClick = useCallback(() => {
     setPlayback((prev) => {
-      if (prev === "playing") {
+      if (prev === 'playing') {
         manualPauseRef.current = true;
-        return "paused";
+        return 'paused';
       }
-      if (prev === "paused") {
+      if (prev === 'paused') {
         manualPauseRef.current = false;
-        return "playing";
+        return 'playing';
       }
       // finished → replay
       manualPauseRef.current = false;
       resetRef.current?.();
-      return "playing";
+      return 'playing';
     });
   }, []);
 
-  const playing = playback === "playing";
+  const playing = playback === 'playing';
 
   // Resolve icons via the icon system so they follow the selected library
-  const PauseIcon = useIcon("pause");
-  const PlayIcon = useIcon("play");
-  const RotateIcon = useIcon("rotate-ccw");
+  const PauseIcon = useIcon('pause');
+  const PlayIcon = useIcon('play');
+  const RotateIcon = useIcon('rotate-ccw');
 
   // Button icon/tooltip based on state
   let buttonIcon: ReactNode;
   let buttonTooltip: string;
-  if (playback === "playing") {
+  if (playback === 'playing') {
     buttonIcon = <PauseIcon size={16} strokeWidth={1.5} />;
-    buttonTooltip = "Pause";
-  } else if (playback === "paused") {
+    buttonTooltip = 'Pause';
+  } else if (playback === 'paused') {
     buttonIcon = <PlayIcon size={16} strokeWidth={1.5} />;
-    buttonTooltip = "Play";
+    buttonTooltip = 'Play';
   } else {
     buttonIcon = <RotateIcon size={16} strokeWidth={1.5} />;
-    buttonTooltip = "Replay";
+    buttonTooltip = 'Replay';
   }
 
   return (
@@ -709,12 +709,12 @@ export default function ThinkingStepsDoc() {
                 <ThinkingStepDetails
                   summary="Explored 6 files"
                   details={[
-                    "Read accordion.tsx",
-                    "Read icon-context.tsx",
-                    "Read badge.tsx",
-                    "Read use-fluid-hover.ts",
-                    "Read components.ts",
-                    "Read postbuild-registry.mjs",
+                    'Read accordion.tsx',
+                    'Read icon-context.tsx',
+                    'Read badge.tsx',
+                    'Read use-fluid-hover.ts',
+                    'Read components.ts',
+                    'Read postbuild-registry.mjs',
                   ]}
                 />
               </ThinkingStep>
@@ -773,30 +773,59 @@ export default function ThinkingStepsDoc() {
       {/* 6. Full Example — kitchen sink */}
       <DocSection title="Full Example">
         <p className="text-site-body text-muted-foreground mb-3">
-          A 6-step research agent combining sources, details, descriptions, images, and a custom header.
+          A 6-step research agent combining sources, details, descriptions, images, and a custom
+          header.
         </p>
-        <AnimatedPreview code={fullCode}>
-          {(props) => <FullDemo {...props} />}
-        </AnimatedPreview>
+        <AnimatedPreview code={fullCode}>{(props) => <FullDemo {...props} />}</AnimatedPreview>
       </DocSection>
 
       <DocSection title="API Reference">
-        <h3 className="text-site-subtitle text-foreground mb-2 mt-4" style={{ fontVariationSettings: fontWeights.semibold }}>ThinkingSteps</h3>
+        <h3
+          className="text-site-subtitle text-foreground mb-2 mt-4"
+          style={{ fontVariationSettings: fontWeights.semibold }}
+        >
+          ThinkingSteps
+        </h3>
         <PropsTable props={rootProps} />
 
-        <h3 className="text-site-subtitle text-foreground mb-2 mt-6" style={{ fontVariationSettings: fontWeights.semibold }}>ThinkingStepsHeader</h3>
+        <h3
+          className="text-site-subtitle text-foreground mb-2 mt-6"
+          style={{ fontVariationSettings: fontWeights.semibold }}
+        >
+          ThinkingStepsHeader
+        </h3>
         <PropsTable props={headerProps} />
 
-        <h3 className="text-site-subtitle text-foreground mb-2 mt-6" style={{ fontVariationSettings: fontWeights.semibold }}>ThinkingStep</h3>
+        <h3
+          className="text-site-subtitle text-foreground mb-2 mt-6"
+          style={{ fontVariationSettings: fontWeights.semibold }}
+        >
+          ThinkingStep
+        </h3>
         <PropsTable props={stepProps} />
 
-        <h3 className="text-site-subtitle text-foreground mb-2 mt-6" style={{ fontVariationSettings: fontWeights.semibold }}>ThinkingStepDetails</h3>
+        <h3
+          className="text-site-subtitle text-foreground mb-2 mt-6"
+          style={{ fontVariationSettings: fontWeights.semibold }}
+        >
+          ThinkingStepDetails
+        </h3>
         <PropsTable props={detailsProps} />
 
-        <h3 className="text-site-subtitle text-foreground mb-2 mt-6" style={{ fontVariationSettings: fontWeights.semibold }}>ThinkingStepSource</h3>
+        <h3
+          className="text-site-subtitle text-foreground mb-2 mt-6"
+          style={{ fontVariationSettings: fontWeights.semibold }}
+        >
+          ThinkingStepSource
+        </h3>
         <PropsTable props={sourceProps} />
 
-        <h3 className="text-site-subtitle text-foreground mb-2 mt-6" style={{ fontVariationSettings: fontWeights.semibold }}>ThinkingStepImage</h3>
+        <h3
+          className="text-site-subtitle text-foreground mb-2 mt-6"
+          style={{ fontVariationSettings: fontWeights.semibold }}
+        >
+          ThinkingStepImage
+        </h3>
         <PropsTable props={imageProps} />
       </DocSection>
     </DocPage>

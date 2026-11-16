@@ -1,38 +1,38 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import type { ReactNode } from "react";
-import { motion } from "motion/react";
+import { useState } from 'react';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import type { ReactNode } from 'react';
+import { motion } from 'motion/react';
 
-import { cn } from "@/lib/utils";
-import { useBase, type Base } from "@/lib/base-context";
-import { spring } from "@/registry/default/lib/springs";
+import { cn } from '#lib/utils';
+import { useBase, type Base } from '#lib/base-context';
+import { spring } from '#registry/default/lib/springs';
 
-import { Button as RadixButton } from "@/registry/radix/button";
-import { Button as BaseButton } from "@/registry/base/button";
+import { Button as RadixButton } from '#registry/radix/button';
+import { Button as BaseButton } from '#registry/base/button';
 
-import { Switch as RadixSwitch } from "@/registry/radix/switch";
-import { Switch as BaseSwitch } from "@/registry/base/switch";
+import { Switch as RadixSwitch } from '#registry/radix/switch';
+import { Switch as BaseSwitch } from '#registry/base/switch';
 
-import { Tooltip as RadixTooltip } from "@/registry/radix/tooltip";
-import { Tooltip as BaseTooltip } from "@/registry/base/tooltip";
+import { Tooltip as RadixTooltip } from '#registry/radix/tooltip';
+import { Tooltip as BaseTooltip } from '#registry/base/tooltip';
 
-import { ScrollArea as RadixScrollArea } from "@/registry/radix/scroll-area";
-import { ScrollArea as BaseScrollArea } from "@/registry/base/scroll-area";
+import { ScrollArea as RadixScrollArea } from '#registry/radix/scroll-area';
+import { ScrollArea as BaseScrollArea } from '#registry/base/scroll-area';
 
 import {
   Accordion as RadixAccordion,
   AccordionItem as RadixAccordionItem,
   AccordionTrigger as RadixAccordionTrigger,
   AccordionContent as RadixAccordionContent,
-} from "@/registry/radix/accordion";
+} from '#registry/radix/accordion';
 import {
   Accordion as BaseAccordion,
   AccordionItem as BaseAccordionItem,
   AccordionTrigger as BaseAccordionTrigger,
   AccordionContent as BaseAccordionContent,
-} from "@/registry/base/accordion";
+} from '#registry/base/accordion';
 
 import {
   Dialog as RadixDialog,
@@ -41,7 +41,7 @@ import {
   DialogTitle as RadixDialogTitle,
   DialogDescription as RadixDialogDescription,
   DialogTrigger as RadixDialogTrigger,
-} from "@/registry/radix/dialog";
+} from '#registry/radix/dialog';
 import {
   Dialog as BaseDialog,
   DialogContent as BaseDialogContent,
@@ -49,87 +49,81 @@ import {
   DialogTitle as BaseDialogTitle,
   DialogDescription as BaseDialogDescription,
   DialogTrigger as BaseDialogTrigger,
-} from "@/registry/base/dialog";
+} from '#registry/base/dialog';
 
-import { Slider as RadixSlider } from "@/registry/radix/slider";
-import { Slider as BaseSlider } from "@/registry/base/slider";
+import { Slider as RadixSlider } from '#registry/radix/slider';
+import { Slider as BaseSlider } from '#registry/base/slider';
 
 import {
   CheckboxGroup as RadixCheckboxGroup,
   CheckboxItem as RadixCheckboxItem,
-} from "@/registry/radix/checkbox-group";
+} from '#registry/radix/checkbox-group';
 import {
   CheckboxGroup as BaseCheckboxGroup,
   CheckboxItem as BaseCheckboxItem,
-} from "@/registry/base/checkbox-group";
+} from '#registry/base/checkbox-group';
 
 import {
   RadioGroup as RadixRadioGroup,
   RadioItem as RadixRadioItem,
-} from "@/registry/radix/radio-group";
+} from '#registry/radix/radio-group';
 import {
   RadioGroup as BaseRadioGroup,
   RadioItem as BaseRadioItem,
-} from "@/registry/base/radio-group";
+} from '#registry/base/radio-group';
 
 import {
   Select as RadixSelect,
   SelectTrigger as RadixSelectTrigger,
   SelectContent as RadixSelectContent,
   SelectItem as RadixSelectItem,
-} from "@/registry/radix/select";
+} from '#registry/radix/select';
 import {
   Select as BaseSelect,
   SelectTrigger as BaseSelectTrigger,
   SelectContent as BaseSelectContent,
   SelectItem as BaseSelectItem,
-} from "@/registry/base/select";
+} from '#registry/base/select';
 
 // Single-source components built on Base UI primitives — no Radix flavor,
 // shown once, spanning both columns.
-import { ColorPickerPopover } from "@/registry/default/color-picker";
+import { ColorPickerPopover } from '#registry/default/color-picker';
 import {
   DropdownMenu as RadixDropdownMenu,
   DropdownTrigger as RadixDropdownTrigger,
   DropdownContent as RadixDropdownContent,
-} from "@/registry/radix/dropdown";
+} from '#registry/radix/dropdown';
 import {
   DropdownMenu as BaseDropdownMenu,
   DropdownTrigger as BaseDropdownTrigger,
   DropdownContent as BaseDropdownContent,
-} from "@/registry/base/dropdown";
+} from '#registry/base/dropdown';
 // MenuItem is shared by both dropdown flavors (it renders through the
 // context-provided renderMenuItem), so a single import serves both columns.
-import { MenuItem } from "@/registry/default/menu-item";
-import {
-  Tabs as RadixTabs,
-  TabsItem as RadixTabsItem,
-} from "@/registry/radix/tabs";
-import {
-  Tabs as BaseTabs,
-  TabsItem as BaseTabsItem,
-} from "@/registry/base/tabs";
+import { MenuItem } from '#registry/default/menu-item';
+import { Tabs as RadixTabs, TabsItem as RadixTabsItem } from '#registry/radix/tabs';
+import { Tabs as BaseTabs, TabsItem as BaseTabsItem } from '#registry/base/tabs';
 import {
   ThinkingSteps as RadixThinkingSteps,
   ThinkingStepsHeader as RadixThinkingStepsHeader,
   ThinkingStepsContent as RadixThinkingStepsContent,
   ThinkingStep as RadixThinkingStep,
-} from "@/registry/radix/thinking-steps";
+} from '#registry/radix/thinking-steps';
 import {
   ThinkingSteps as BaseThinkingSteps,
   ThinkingStepsHeader as BaseThinkingStepsHeader,
   ThinkingStepsContent as BaseThinkingStepsContent,
   ThinkingStep as BaseThinkingStep,
-} from "@/registry/base/thinking-steps";
-import { InputGroup, InputField } from "@/registry/default/input-group";
-import { AskUserQuestions } from "@/registry/default/ask-user-questions";
-import { Search, Mail, SquareLibrary, Clock, Star } from "lucide-react";
+} from '#registry/base/thinking-steps';
+import { InputGroup, InputField } from '#registry/default/input-group';
+import { AskUserQuestions } from '#registry/default/ask-user-questions';
+import { Search, Mail, SquareLibrary, Clock, Star } from 'lucide-react';
 
 function PrimitiveToggle() {
   const { base, setBase } = useBase();
   const options: { value: Base; label: string }[] = [
-    { value: "radix", label: "Radix" },
-    { value: "base", label: "Base UI" },
+    { value: 'radix', label: 'Radix' },
+    { value: 'base', label: 'Base UI' },
   ];
   return (
     <div className="relative inline-flex items-center gap-1 p-1 rounded-full bg-muted">
@@ -140,9 +134,9 @@ function PrimitiveToggle() {
             key={o.value}
             onClick={() => setBase(o.value)}
             className={cn(
-              "relative px-5 py-2 text-site-body rounded-full outline-none transition-colors duration-150",
-              "focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-              selected ? "text-background" : "text-muted-foreground hover:text-foreground"
+              'relative px-5 py-2 text-site-body rounded-full outline-none transition-colors duration-150',
+              'focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+              selected ? 'text-background' : 'text-muted-foreground hover:text-foreground',
             )}
             style={{ fontVariationSettings: fontWeights.normal }}
             aria-pressed={selected}
@@ -151,7 +145,7 @@ function PrimitiveToggle() {
               <motion.span
                 layoutId="primitive-toggle-pill"
                 className="absolute inset-0 bg-foreground rounded-full"
-                transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 32 }}
               />
             )}
             <span className="relative">{o.label}</span>
@@ -169,7 +163,10 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
       data-keyboard-scope=""
       className="grid grid-cols-[180px_1fr_1fr] gap-6 items-start py-8 border-t border-border"
     >
-      <div className="text-site-subtitle text-foreground" style={{ fontVariationSettings: fontWeights.semibold }}>
+      <div
+        className="text-site-subtitle text-foreground"
+        style={{ fontVariationSettings: fontWeights.semibold }}
+      >
         {label}
       </div>
       {children}
@@ -185,7 +182,10 @@ function SingleRow({ label, children }: { label: string; children: ReactNode }) 
       data-keyboard-scope=""
       className="grid grid-cols-[180px_1fr_1fr] gap-6 items-start py-8 border-t border-border"
     >
-      <div className="text-site-subtitle text-foreground" style={{ fontVariationSettings: fontWeights.semibold }}>
+      <div
+        className="text-site-subtitle text-foreground"
+        style={{ fontVariationSettings: fontWeights.semibold }}
+      >
         {label}
       </div>
       <div className="col-span-2">{children}</div>
@@ -201,19 +201,19 @@ export default function CompareBasesPage() {
   const [sliderB, setSliderB] = useState(50);
   const [checkedA, setCheckedA] = useState<Set<number>>(new Set([0, 2]));
   const [checkedB, setCheckedB] = useState<Set<number>>(new Set([0, 2]));
-  const [radioA, setRadioA] = useState("a");
-  const [radioB, setRadioB] = useState("a");
+  const [radioA, setRadioA] = useState('a');
+  const [radioB, setRadioB] = useState('a');
 
   const [viewA, setViewA] = useState(0);
   const [viewB, setViewB] = useState(0);
 
   // Single-source section state
-  const [fruitA, setFruitA] = useState("");
-  const [fruitB, setFruitB] = useState("");
+  const [fruitA, setFruitA] = useState('');
+  const [fruitB, setFruitB] = useState('');
   const [tabA, setTabA] = useState(0);
   const [tabB, setTabB] = useState(0);
-  const [searchValue, setSearchValue] = useState("");
-  const [emailValue, setEmailValue] = useState("");
+  const [searchValue, setSearchValue] = useState('');
+  const [emailValue, setEmailValue] = useState('');
 
   const toggle = (set: Set<number>, setSet: (s: Set<number>) => void) => (i: number) => {
     const n = new Set(set);
@@ -276,12 +276,8 @@ export default function CompareBasesPage() {
 
       <div className="grid grid-cols-[180px_1fr_1fr] gap-6 items-end pb-2">
         <div />
-        <div className="text-site-caption text-muted-foreground">
-          Radix
-        </div>
-        <div className="text-site-caption text-muted-foreground">
-          Base UI
-        </div>
+        <div className="text-site-caption text-muted-foreground">Radix</div>
+        <div className="text-site-caption text-muted-foreground">Base UI</div>
       </div>
 
       <Row label="Button">
@@ -300,7 +296,11 @@ export default function CompareBasesPage() {
       </Row>
 
       <Row label="Switch">
-        <RadixSwitch label="Notifications" checked={switchA} onToggle={() => setSwitchA(!switchA)} />
+        <RadixSwitch
+          label="Notifications"
+          checked={switchA}
+          onToggle={() => setSwitchA(!switchA)}
+        />
         <BaseSwitch label="Notifications" checked={switchB} onToggle={() => setSwitchB(!switchB)} />
       </Row>
 
@@ -355,9 +355,7 @@ export default function CompareBasesPage() {
           </RadixDialogContent>
         </RadixDialog>
         <BaseDialog>
-          <BaseDialogTrigger
-            render={<BaseButton variant="secondary">Open dialog</BaseButton>}
-          />
+          <BaseDialogTrigger render={<BaseButton variant="secondary">Open dialog</BaseButton>} />
           <BaseDialogContent>
             <BaseDialogHeader>
               <BaseDialogTitle>Base Dialog</BaseDialogTitle>
@@ -371,23 +369,65 @@ export default function CompareBasesPage() {
 
       <Row label="Slider">
         <div className="pt-1">
-          <RadixSlider value={sliderA} onChange={(v) => setSliderA(v as number)} min={0} max={100} step={1} />
+          <RadixSlider
+            value={sliderA}
+            onChange={(v) => setSliderA(v as number)}
+            min={0}
+            max={100}
+            step={1}
+          />
         </div>
         <div className="pt-1">
-          <BaseSlider value={sliderB} onChange={(v) => setSliderB(v as number)} min={0} max={100} step={1} />
+          <BaseSlider
+            value={sliderB}
+            onChange={(v) => setSliderB(v as number)}
+            min={0}
+            max={100}
+            step={1}
+          />
         </div>
       </Row>
 
       <Row label="Checkbox Group">
         <RadixCheckboxGroup checkedIndices={checkedA}>
-          <RadixCheckboxItem label="Option A" index={0} checked={checkedA.has(0)} onToggle={() => toggle(checkedA, setCheckedA)(0)} />
-          <RadixCheckboxItem label="Option B" index={1} checked={checkedA.has(1)} onToggle={() => toggle(checkedA, setCheckedA)(1)} />
-          <RadixCheckboxItem label="Option C" index={2} checked={checkedA.has(2)} onToggle={() => toggle(checkedA, setCheckedA)(2)} />
+          <RadixCheckboxItem
+            label="Option A"
+            index={0}
+            checked={checkedA.has(0)}
+            onToggle={() => toggle(checkedA, setCheckedA)(0)}
+          />
+          <RadixCheckboxItem
+            label="Option B"
+            index={1}
+            checked={checkedA.has(1)}
+            onToggle={() => toggle(checkedA, setCheckedA)(1)}
+          />
+          <RadixCheckboxItem
+            label="Option C"
+            index={2}
+            checked={checkedA.has(2)}
+            onToggle={() => toggle(checkedA, setCheckedA)(2)}
+          />
         </RadixCheckboxGroup>
         <BaseCheckboxGroup checkedIndices={checkedB}>
-          <BaseCheckboxItem label="Option A" index={0} checked={checkedB.has(0)} onToggle={() => toggle(checkedB, setCheckedB)(0)} />
-          <BaseCheckboxItem label="Option B" index={1} checked={checkedB.has(1)} onToggle={() => toggle(checkedB, setCheckedB)(1)} />
-          <BaseCheckboxItem label="Option C" index={2} checked={checkedB.has(2)} onToggle={() => toggle(checkedB, setCheckedB)(2)} />
+          <BaseCheckboxItem
+            label="Option A"
+            index={0}
+            checked={checkedB.has(0)}
+            onToggle={() => toggle(checkedB, setCheckedB)(0)}
+          />
+          <BaseCheckboxItem
+            label="Option B"
+            index={1}
+            checked={checkedB.has(1)}
+            onToggle={() => toggle(checkedB, setCheckedB)(1)}
+          />
+          <BaseCheckboxItem
+            label="Option C"
+            index={2}
+            checked={checkedB.has(2)}
+            onToggle={() => toggle(checkedB, setCheckedB)(2)}
+          />
         </BaseCheckboxGroup>
       </Row>
 
@@ -445,23 +485,55 @@ export default function CompareBasesPage() {
 
       <Row label="Dropdown Menu">
         <RadixDropdownMenu>
-          <RadixDropdownTrigger
-            render={<RadixButton variant="secondary">Open menu</RadixButton>}
-          />
+          <RadixDropdownTrigger render={<RadixButton variant="secondary">Open menu</RadixButton>} />
           <RadixDropdownContent checkedIndex={viewA}>
-            <MenuItem index={0} icon={SquareLibrary} label="Teamspaces" checked={viewA === 0} onSelect={() => setViewA(0)} />
-            <MenuItem index={1} icon={Clock} label="Recents" checked={viewA === 1} onSelect={() => setViewA(1)} />
-            <MenuItem index={2} icon={Star} label="Favorites" checked={viewA === 2} onSelect={() => setViewA(2)} />
+            <MenuItem
+              index={0}
+              icon={SquareLibrary}
+              label="Teamspaces"
+              checked={viewA === 0}
+              onSelect={() => setViewA(0)}
+            />
+            <MenuItem
+              index={1}
+              icon={Clock}
+              label="Recents"
+              checked={viewA === 1}
+              onSelect={() => setViewA(1)}
+            />
+            <MenuItem
+              index={2}
+              icon={Star}
+              label="Favorites"
+              checked={viewA === 2}
+              onSelect={() => setViewA(2)}
+            />
           </RadixDropdownContent>
         </RadixDropdownMenu>
         <BaseDropdownMenu>
-          <BaseDropdownTrigger
-            render={<BaseButton variant="secondary">Open menu</BaseButton>}
-          />
+          <BaseDropdownTrigger render={<BaseButton variant="secondary">Open menu</BaseButton>} />
           <BaseDropdownContent checkedIndex={viewB}>
-            <MenuItem index={0} icon={SquareLibrary} label="Teamspaces" checked={viewB === 0} onSelect={() => setViewB(0)} />
-            <MenuItem index={1} icon={Clock} label="Recents" checked={viewB === 1} onSelect={() => setViewB(1)} />
-            <MenuItem index={2} icon={Star} label="Favorites" checked={viewB === 2} onSelect={() => setViewB(2)} />
+            <MenuItem
+              index={0}
+              icon={SquareLibrary}
+              label="Teamspaces"
+              checked={viewB === 0}
+              onSelect={() => setViewB(0)}
+            />
+            <MenuItem
+              index={1}
+              icon={Clock}
+              label="Recents"
+              checked={viewB === 1}
+              onSelect={() => setViewB(1)}
+            />
+            <MenuItem
+              index={2}
+              icon={Star}
+              label="Favorites"
+              checked={viewB === 2}
+              onSelect={() => setViewB(2)}
+            />
           </BaseDropdownContent>
         </BaseDropdownMenu>
       </Row>
@@ -470,19 +542,35 @@ export default function CompareBasesPage() {
         <RadixSelect value={fruitA} onValueChange={setFruitA}>
           <RadixSelectTrigger placeholder="Select a fruit…" />
           <RadixSelectContent>
-            <RadixSelectItem index={0} value="apple">Apple</RadixSelectItem>
-            <RadixSelectItem index={1} value="banana">Banana</RadixSelectItem>
-            <RadixSelectItem index={2} value="cherry">Cherry</RadixSelectItem>
-            <RadixSelectItem index={3} value="mango">Mango</RadixSelectItem>
+            <RadixSelectItem index={0} value="apple">
+              Apple
+            </RadixSelectItem>
+            <RadixSelectItem index={1} value="banana">
+              Banana
+            </RadixSelectItem>
+            <RadixSelectItem index={2} value="cherry">
+              Cherry
+            </RadixSelectItem>
+            <RadixSelectItem index={3} value="mango">
+              Mango
+            </RadixSelectItem>
           </RadixSelectContent>
         </RadixSelect>
         <BaseSelect value={fruitB} onValueChange={setFruitB}>
           <BaseSelectTrigger placeholder="Select a fruit…" />
           <BaseSelectContent>
-            <BaseSelectItem index={0} value="apple">Apple</BaseSelectItem>
-            <BaseSelectItem index={1} value="banana">Banana</BaseSelectItem>
-            <BaseSelectItem index={2} value="cherry">Cherry</BaseSelectItem>
-            <BaseSelectItem index={3} value="mango">Mango</BaseSelectItem>
+            <BaseSelectItem index={0} value="apple">
+              Apple
+            </BaseSelectItem>
+            <BaseSelectItem index={1} value="banana">
+              Banana
+            </BaseSelectItem>
+            <BaseSelectItem index={2} value="cherry">
+              Cherry
+            </BaseSelectItem>
+            <BaseSelectItem index={3} value="mango">
+              Mango
+            </BaseSelectItem>
           </BaseSelectContent>
         </BaseSelect>
       </Row>
@@ -496,9 +584,9 @@ export default function CompareBasesPage() {
           Built on Base UI
         </h2>
         <p className="text-site-body text-muted-foreground mt-2 max-w-[560px]">
-          These components ship as a single source sitting on Base UI
-          primitives — Popover, Menu, NumberField, Field, and the
-          Radio/Checkbox Groups — and are used as-is under either flavor.
+          These components ship as a single source sitting on Base UI primitives — Popover, Menu,
+          NumberField, Field, and the Radio/Checkbox Groups — and are used as-is under either
+          flavor.
         </p>
       </section>
 
@@ -533,11 +621,11 @@ export default function CompareBasesPage() {
         <AskUserQuestions
           questions={[
             {
-              title: "How will you use Fluid Functionalism?",
+              title: 'How will you use Fluid Functionalism?',
               options: [
-                { title: "Design system" },
-                { title: "Product UI" },
-                { title: "Prototyping" },
+                { title: 'Design system' },
+                { title: 'Product UI' },
+                { title: 'Prototyping' },
               ],
             },
           ]}

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 /**
  * True below the sidebar's own 768px default breakpoint.
@@ -19,11 +19,11 @@ import { useEffect, useState } from "react";
 export function useNarrowFrame(): boolean {
   const [narrow, setNarrow] = useState(false);
   useEffect(() => {
-    const mql = window.matchMedia("(max-width: 767px)");
+    const mql = window.matchMedia('(max-width: 767px)');
     const onChange = () => setNarrow(mql.matches);
     onChange();
-    mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
   }, []);
   return narrow;
 }

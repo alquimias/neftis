@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useRef, useState, type RefObject } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { Check } from "lucide-react";
+import { useRef, useState, type RefObject } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { Check } from 'lucide-react';
 import {
   Compare,
   clickStep,
@@ -12,16 +12,13 @@ import {
   usePlayback,
   useScriptCursor,
   type Side,
-} from "./hero-shared";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { spring } from "@/registry/default/lib/springs";
-import { cn } from "@/registry/default/lib/utils";
-import { useShape } from "@/registry/default/lib/shape-context";
-import {
-  useFluidHover,
-  useRegisterFluidHoverItem,
-} from "@/registry/default/hooks/use-fluid-hover";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
+} from './hero-shared';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { spring } from '#registry/default/lib/springs';
+import { cn } from '#registry/default/lib/utils';
+import { useShape } from '#registry/default/lib/shape-context';
+import { useFluidHover, useRegisterFluidHoverItem } from '#registry/default/hooks/use-fluid-hover';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
 
 // ---------------------------------------------------------------------------
 // Menu example for /docs/skill: the same menu twice. Left is what
@@ -36,11 +33,11 @@ import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
 // ---------------------------------------------------------------------------
 
 const ROWS = [
-  { label: "Inbox", count: 12 },
-  { label: "Drafts", count: 3 },
-  { label: "Sent", count: 48 },
-  { label: "Archive", count: 210 },
-  { label: "Trash", count: 7 },
+  { label: 'Inbox', count: 12 },
+  { label: 'Drafts', count: 3 },
+  { label: 'Sent', count: 48 },
+  { label: 'Archive', count: 210 },
+  { label: 'Trash', count: 7 },
 ];
 
 /* Rows are h-9 (36px) stacked with no gap inside p-2 (8px), the same on
@@ -60,7 +57,7 @@ const TURN: Array<{ row: number; click?: boolean }> = [
 const HOLD_MS = 600;
 
 const rowBase =
-  "relative z-10 flex h-9 w-full shrink-0 items-center gap-2 px-3 text-left text-site-body text-foreground outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]";
+  'relative z-10 flex h-9 w-full shrink-0 items-center gap-2 px-3 text-left text-site-body text-foreground outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]';
 
 function Count({ n }: { n: number }) {
   return <span className="text-site-caption tabular-nums text-muted-foreground">{n}</span>;
@@ -81,10 +78,10 @@ function GenericList({ selected, onSelect }: { selected: number; onSelect: (i: n
             rowBase,
             // Hover louder than the selection: the cursor, not the pick,
             // is what the eye lands on. Scripted hover counts as hover.
-            "[&:is(:hover,[data-script-hover])]:bg-selected dark:[&:is(:hover,[data-script-hover])]:bg-selected",
+            '[&:is(:hover,[data-script-hover])]:bg-selected dark:[&:is(:hover,[data-script-hover])]:bg-selected',
             // eslint-disable-next-line no-restricted-syntax -- the generic version, bold on purpose to show the reflow
-            selected === i && "bg-selected/50 font-bold dark:bg-accent/40",
-            shape.item
+            selected === i && 'bg-selected/50 font-bold dark:bg-accent/40',
+            shape.item,
           )}
         >
           {label}
@@ -155,8 +152,8 @@ function FluidRow({
               <motion.path
                 d="M4 12L9 17L20 6"
                 initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1, transition: { duration: 0.08, ease: "easeOut" } }}
-                exit={{ pathLength: 0, transition: { duration: 0.04, ease: "easeIn" } }}
+                animate={{ pathLength: 1, transition: { duration: 0.08, ease: 'easeOut' } }}
+                exit={{ pathLength: 0, transition: { duration: 0.04, ease: 'easeIn' } }}
               />
             </motion.svg>
           )}
@@ -185,8 +182,8 @@ function SkillList({
       <motion.div
         aria-hidden
         className={cn(
-          "pointer-events-none absolute inset-x-2 top-0 h-9 bg-selected/50 dark:bg-accent/40",
-          shape.bg
+          'pointer-events-none absolute inset-x-2 top-0 h-9 bg-selected/50 dark:bg-accent/40',
+          shape.bg,
         )}
         initial={false}
         animate={{ y: rowTop(selected) }}
@@ -216,7 +213,7 @@ export function MenuExample() {
   const [generic, setGeneric] = useState(0);
   const [skill, setSkill] = useState(0);
   const [active, setActive] = useState<Side | null>(null);
-  const select = (side: Side) => (side === "generic" ? setGeneric : setSkill);
+  const select = (side: Side) => (side === 'generic' ? setGeneric : setSkill);
   const row = (side: Side) => `[data-side="${side}"] button`;
   useLoop(
     playing,
@@ -224,9 +221,9 @@ export function MenuExample() {
       TURN.flatMap(({ row: i, click }) =>
         click
           ? clickStep(cursor, row(side), i, () => select(side)(i), HOLD_MS)
-          : [glideStep(cursor, row(side), i, HOLD_MS)]
-      )
-    )
+          : [glideStep(cursor, row(side), i, HOLD_MS)],
+      ),
+    ),
   );
 
   return (
@@ -237,7 +234,9 @@ export function MenuExample() {
       active={playing ? active : null}
       cursor={playing ? cursor : null}
       generic={<GenericList selected={generic} onSelect={setGeneric} />}
-      skill={<SkillList containerRef={skillRef} hover={hover} selected={skill} onSelect={setSkill} />}
+      skill={
+        <SkillList containerRef={skillRef} hover={hover} selected={skill} onSelect={setSkill} />
+      }
     />
   );
 }

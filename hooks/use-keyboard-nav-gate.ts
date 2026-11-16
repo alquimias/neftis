@@ -1,1 +1,1 @@
-export { useKeyboardNavGate } from "@/registry/default/hooks/use-keyboard-nav-gate";
+export { useKeyboardNavGate } from '#registry/default/hooks/use-keyboard-nav-gate';

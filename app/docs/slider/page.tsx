@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Slider } from "@/registry/radix/slider";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { sliderProps } from "@/lib/docs/api/slider";
+import { useState } from 'react';
+import { Slider } from '#registry/radix/slider';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { sliderProps } from '#lib/docs/api/slider';
 
 // ---------------------------------------------------------------------------
 // Code snippets — compact step
@@ -123,7 +123,7 @@ const comfortableDisabledCode = `import { Slider } from "./components";
 // Page
 // ---------------------------------------------------------------------------
 
-const qualityLabels = ["Off", "Low", "Medium", "High", "Ultra"];
+const qualityLabels = ['Off', 'Low', 'Medium', 'High', 'Ultra'];
 
 export default function SliderDoc() {
   const [basic, setBasic] = useState(25);
@@ -153,11 +153,7 @@ export default function SliderDoc() {
       <DocSection title="Compact">
         <ComponentPreview code={basicCode}>
           <div className="w-72">
-            <Slider
-              size="compact"
-              value={basic}
-              onChange={(v) => setBasic(v as number)}
-            />
+            <Slider size="compact" value={basic} onChange={(v) => setBasic(v as number)} />
           </div>
         </ComponentPreview>
       </DocSection>
@@ -165,10 +161,7 @@ export default function SliderDoc() {
       <DocSection title="Range">
         <ComponentPreview code={rangeCode}>
           <div className="w-72">
-            <Slider
-              value={range}
-              onChange={(v) => setRange(v as [number, number])}
-            />
+            <Slider value={range} onChange={(v) => setRange(v as [number, number])} />
           </div>
         </ComponentPreview>
       </DocSection>
@@ -176,12 +169,7 @@ export default function SliderDoc() {
       <DocSection title="Steps">
         <ComponentPreview code={stepsCode}>
           <div className="w-72">
-            <Slider
-              value={stepped}
-              onChange={(v) => setStepped(v as number)}
-              step={25}
-              showSteps
-            />
+            <Slider value={stepped} onChange={(v) => setStepped(v as number)} step={25} showSteps />
             <Slider
               value={stepped10}
               onChange={(v) => setStepped10(v as number)}
@@ -327,10 +315,9 @@ export default function SliderDoc() {
 
       <DocSection title="API Reference">
         <p className="text-site-body text-muted-foreground mb-3">
-          One component: the default step renders the pip/scrubber design, the
-          compact step the dense one. Compact-only props (an array value,
-          steps, showSteps, showValue, valuePosition, track styling) always
-          render the compact design so no capability is lost.
+          One component: the default step renders the pip/scrubber design, the compact step the
+          dense one. Compact-only props (an array value, steps, showSteps, showValue, valuePosition,
+          track styling) always render the compact design so no capability is lost.
         </p>
         <PropsTable props={sliderProps} />
       </DocSection>

@@ -1,1 +1,1 @@
-export { NavMenu, useNavMenu } from "@/registry/default/nav-menu";
+export { NavMenu, useNavMenu } from '#registry/default/nav-menu';

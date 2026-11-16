@@ -6,10 +6,10 @@
  * leaves a closing banner for a neighbour, the flex gap is taken back from the
  * first open, and a leaving banner takes no clicks.
  */
-import { useEffect, useState } from "react";
-import { afterEach, describe, expect, it } from "vitest";
-import { act, cleanup, fireEvent, render, waitFor } from "@testing-library/react";
-import { Banner, BannerTitle, bannerMotion } from "@/registry/default/banner";
+import { useEffect, useState } from 'react';
+import { afterEach, describe, expect, it } from 'vitest';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { Banner, BannerTitle, bannerMotion } from '#registry/default/banner';
 
 const closeMs = Number(bannerMotion.dismiss.row.duration) * 1000;
 
@@ -31,18 +31,18 @@ function TickingBanner({ tickMs }: { tickMs: number }) {
   );
 }
 
-describe("Banner dismiss", () => {
-  it("finishes even when the parent re-renders mid-dismiss", async () => {
+describe('Banner dismiss', () => {
+  it('finishes even when the parent re-renders mid-dismiss', async () => {
     const { queryByText, getByLabelText } = render(<TickingBanner tickMs={30} />);
-    fireEvent.click(getByLabelText("Dismiss"));
+    fireEvent.click(getByLabelText('Dismiss'));
     // Re-renders every 30ms used to restart the 240ms close each time, so it
     // never finished.
-    await waitFor(() => expect(queryByText("Saved")).toBeNull(), {
+    await waitFor(() => expect(queryByText('Saved')).toBeNull(), {
       timeout: closeMs * 4,
     });
   });
 
-  it("moves keyboard focus to the next focusable element", () => {
+  it('moves keyboard focus to the next focusable element', () => {
     const { getByLabelText, getByText } = render(
       <div>
         <button type="button">Before</button>
@@ -50,46 +50,46 @@ describe("Banner dismiss", () => {
           <BannerTitle>Saved</BannerTitle>
         </Banner>
         <button type="button">After</button>
-      </div>
+      </div>,
     );
-    const dismiss = getByLabelText("Dismiss");
+    const dismiss = getByLabelText('Dismiss');
     dismiss.focus();
     fireEvent.click(dismiss);
-    expect(document.activeElement).toBe(getByText("After"));
+    expect(document.activeElement).toBe(getByText('After'));
   });
 
-  it("falls back to the previous focusable element when nothing follows", () => {
+  it('falls back to the previous focusable element when nothing follows', () => {
     const { getByLabelText, getByText } = render(
       <div>
         <button type="button">Before</button>
         <Banner dismissible>
           <BannerTitle>Saved</BannerTitle>
         </Banner>
-      </div>
+      </div>,
     );
-    const dismiss = getByLabelText("Dismiss");
+    const dismiss = getByLabelText('Dismiss');
     dismiss.focus();
     fireEvent.click(dismiss);
-    expect(document.activeElement).toBe(getByText("Before"));
+    expect(document.activeElement).toBe(getByText('Before'));
   });
 
-  it("takes no clicks once it starts leaving", async () => {
+  it('takes no clicks once it starts leaving', async () => {
     const { getByLabelText, getByText } = render(
       <Banner dismissible>
         <BannerTitle>Saved</BannerTitle>
-      </Banner>
+      </Banner>,
     );
-    fireEvent.click(getByLabelText("Dismiss"));
-    const content = getByText("Saved").closest('[data-slot="banner"]')!
+    fireEvent.click(getByLabelText('Dismiss'));
+    const content = getByText('Saved').closest('[data-slot="banner"]')!
       .parentElement as HTMLElement;
-    await waitFor(() => expect(content.style.pointerEvents).toBe("none"), {
+    await waitFor(() => expect(content.style.pointerEvents).toBe('none'), {
       timeout: closeMs * 2,
     });
   });
 });
 
-describe("Banner gap", () => {
-  const column = { display: "flex", flexDirection: "column" as const, rowGap: "12px" };
+describe('Banner gap', () => {
+  const column = { display: 'flex', flexDirection: 'column' as const, rowGap: '12px' };
 
   function Toggle({ initial, alone = false }: { initial: boolean; alone?: boolean }) {
     const [open, setOpen] = useState(initial);
@@ -113,9 +113,9 @@ describe("Banner gap", () => {
     root.querySelector('[data-slot="banner"]')!.parentElement!.parentElement!
       .parentElement as HTMLElement;
 
-  it("takes the gap back from the very first open", async () => {
+  it('takes the gap back from the very first open', async () => {
     const { getByText, getByTestId } = render(<Toggle initial={false} />);
-    await act(async () => fireEvent.click(getByText("Open")));
+    await act(async () => fireEvent.click(getByText('Open')));
     // framer applies the measured gap on the next animation frame, which in
     // a browser runs before the first paint.
     await act(() => new Promise<void>((r) => requestAnimationFrame(() => r())));
@@ -124,14 +124,14 @@ describe("Banner gap", () => {
     // margin is still close to minus the whole gap. How far the spring got
     // depends on how long that frame took, and a busy CI runner reached 18%
     // (-9.8px), so the bar is half the gap: 0 still fails it.
-    expect(parseFloat(row(getByTestId("column")).style.marginBottom)).toBeLessThan(
+    expect(parseFloat(row(getByTestId('column')).style.marginBottom)).toBeLessThan(
       -parseFloat(column.rowGap) / 2,
     );
   });
 
-  it("takes the gap back on the first frame even when the open is held", async () => {
+  it('takes the gap back on the first frame even when the open is held', async () => {
     const { getByText, getByTestId } = render(<Toggle initial={false} />);
-    await act(async () => fireEvent.click(getByText("Open")));
+    await act(async () => fireEvent.click(getByText('Open')));
     // Motion holds an animation's start while the main thread is busy, so
     // the row may not have moved by the first frame. The margin has to come
     // from the measured gap alone; it used to read 0 here, because the gap
@@ -141,27 +141,30 @@ describe("Banner gap", () => {
       // a long task between the open and the first frame
     }
     await act(() => new Promise<void>((r) => requestAnimationFrame(() => r())));
-    const el = row(getByTestId("column"));
+    const el = row(getByTestId('column'));
     const open = parseFloat(el.style.gridTemplateRows);
     // How far the row got depends on the runner: a busy CI runner reached
     // 95% by this frame. While it is still opening, a margin of 0 can't match
     // the gap it should be taking back.
     expect(open).toBeLessThan(1);
-    expect(parseFloat(el.style.marginBottom)).toBeCloseTo((open - 1) * parseFloat(column.rowGap), 5);
+    expect(parseFloat(el.style.marginBottom)).toBeCloseTo(
+      (open - 1) * parseFloat(column.rowGap),
+      5,
+    );
   });
 
-  it("takes nothing back when the banner is the only child", async () => {
+  it('takes nothing back when the banner is the only child', async () => {
     const { getByText, getByTestId } = render(<Toggle initial={false} alone />);
-    await act(async () => fireEvent.click(getByText("Open")));
+    await act(async () => fireEvent.click(getByText('Open')));
     await waitFor(() => {
-      const margin = row(getByTestId("column")).style.marginBottom;
-      expect(margin === "" || parseFloat(margin) === 0).toBe(true);
+      const margin = row(getByTestId('column')).style.marginBottom;
+      expect(margin === '' || parseFloat(margin) === 0).toBe(true);
     });
   });
 });
 
-describe("Banner re-open", () => {
-  it("keeps its scale continuous when re-opened mid-dismiss", async () => {
+describe('Banner re-open', () => {
+  it('keeps its scale continuous when re-opened mid-dismiss', async () => {
     function Flip() {
       const [open, setOpen] = useState(true);
       return (
@@ -177,17 +180,17 @@ describe("Banner re-open", () => {
     }
     const { getByText } = render(<Flip />);
     const content = () =>
-      getByText("Saved").closest('[data-slot="banner"]')!.parentElement as HTMLElement;
+      getByText('Saved').closest('[data-slot="banner"]')!.parentElement as HTMLElement;
     const scaleOf = (el: HTMLElement) => {
       const match = el.style.transform.match(/scale\(([\d.]+)\)/);
       return match ? Number(match[1]) : 1;
     };
 
-    fireEvent.click(getByText("Flip"));
+    fireEvent.click(getByText('Flip'));
     // Let the dismiss run about half way.
     await new Promise((r) => setTimeout(r, closeMs / 2));
     const before = scaleOf(content());
-    fireEvent.click(getByText("Flip"));
+    fireEvent.click(getByText('Flip'));
     await new Promise((r) => setTimeout(r, 34));
     const after = scaleOf(content());
     // The appear formula used to take over at once and snap the scale by

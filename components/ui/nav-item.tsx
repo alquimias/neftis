@@ -1,1 +1,1 @@
-export { NavItem } from "@/registry/default/nav-item";
+export { NavItem } from '#registry/default/nav-item';

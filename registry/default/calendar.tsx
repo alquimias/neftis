@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createContext,
@@ -17,7 +17,7 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
-} from "react";
+} from 'react';
 import {
   AnimatePresence,
   animate,
@@ -25,7 +25,7 @@ import {
   useIsPresent,
   useMotionValue,
   useReducedMotion,
-} from "motion/react";
+} from 'motion/react';
 import {
   DayPicker,
   dateMatchModifiers,
@@ -46,25 +46,25 @@ import {
   type MonthProps,
   type WeekNumberProps,
   type WeekProps,
-} from "@daypicker/react";
-import { cn } from "@/lib/utils";
-import { omit } from "@/lib/omit";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { fontWeights } from "@/lib/font-weight";
-import { useShape } from "@/lib/shape-context";
-import { useSize, typeClass, type SizeVariant } from "@/lib/size-context";
-import { useIcons } from "@/lib/icon-context";
-import { POPUP_NAV_KEYS } from "@/lib/popup";
-import { useKeyboardNavGate } from "@/hooks/use-keyboard-nav-gate";
+} from '@daypicker/react';
+import { cn } from '#lib/utils';
+import { omit } from '#lib/omit';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { fontWeights } from '#lib/font-weight';
+import { useShape } from '#lib/shape-context';
+import { useSize, typeClass, type SizeVariant } from '#lib/size-context';
+import { useIcons } from '#lib/icon-context';
+import { POPUP_NAV_KEYS } from '#lib/popup';
+import { useKeyboardNavGate } from '#hooks/use-keyboard-nav-gate';
 import {
   useFluidHover,
   useRegisterFluidHoverItem,
   type ItemRect,
   type UseFluidHoverReturn,
-} from "@/hooks/use-fluid-hover";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipGroup } from "@/components/ui/tooltip";
+} from '#hooks/use-fluid-hover';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
+import { Button } from '#components/ui/button';
+import { Tooltip, TooltipGroup } from '#components/ui/tooltip';
 
 // ---------------------------------------------------------------------------
 // Calendar
@@ -77,7 +77,7 @@ import { Tooltip, TooltipGroup } from "@/components/ui/tooltip";
 // month slide below is ours.
 // ---------------------------------------------------------------------------
 
-type CalendarOrientation = "auto" | "horizontal" | "vertical";
+type CalendarOrientation = 'auto' | 'horizontal' | 'vertical';
 
 /** Days since the epoch for a local calendar date. Comparing these instead
  *  of Date objects keeps every range check free of time-of-day and DST. */
@@ -125,8 +125,8 @@ export function resolveDayMatchers({
  *  which case the locale's own numbering applies. Exported for the test. */
 export function resolveWeekNumbering(
   showWeekNumber: boolean | undefined,
-  weekStartsOn: DayPickerProps["weekStartsOn"],
-  ISOWeek: boolean | undefined
+  weekStartsOn: DayPickerProps['weekStartsOn'],
+  ISOWeek: boolean | undefined,
 ) {
   if (ISOWeek !== undefined) return ISOWeek;
   if (!showWeekNumber) return false;
@@ -142,7 +142,7 @@ interface CalendarContextValue {
   fill: boolean;
   pill: boolean;
   sharp: boolean;
-  mode: "single" | "range";
+  mode: 'single' | 'range';
   /** Single mode: the selected day number. */
   selectedDay: number | null;
   /** Range mode: the committed range. */
@@ -151,7 +151,7 @@ interface CalendarContextValue {
   picking: boolean;
   /** Everything that can't be picked, for the preview's booked-day check. */
   disabledMatchers: Matcher[];
-  orientation: "horizontal" | "vertical";
+  orientation: 'horizontal' | 'vertical';
   numberOfMonths: number;
   outsideHidden: boolean;
   showWeekNumber: boolean;
@@ -168,12 +168,12 @@ const CalendarContext = createContext<CalendarContextValue | null>(null);
 
 function useCalendarContext() {
   const ctx = useContext(CalendarContext);
-  if (!ctx) throw new Error("Calendar parts must be inside <Calendar>");
+  if (!ctx) throw new Error('Calendar parts must be inside <Calendar>');
   return ctx;
 }
 
 interface GridContextValue {
-  registerItem: UseFluidHoverReturn["registerItem"];
+  registerItem: UseFluidHoverReturn['registerItem'];
   gridStart: number;
   /** The band to draw: committed, or start → hovered day while picking. */
   band: { from: number; to: number } | null;
@@ -201,17 +201,19 @@ const GridContext = createContext<GridContextValue | null>(null);
 
 function useGridContext() {
   const ctx = useContext(GridContext);
-  if (!ctx) throw new Error("Calendar parts must be inside <Calendar>");
+  if (!ctx) throw new Error('Calendar parts must be inside <Calendar>');
   return ctx;
 }
 
-const MonthContext = createContext<{ calendarMonth: CalendarMonth; displayIndex: number } | null>(null);
+const MonthContext = createContext<{ calendarMonth: CalendarMonth; displayIndex: number } | null>(
+  null,
+);
 
 /** False inside a month grid that is sliding out: its days stay on screen
  *  for the crossfade but leave the hover scope and the tab order. */
 const PanelPresentContext = createContext(true);
 
-const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 /**
  * True for a month panel that is sliding out of one slot while the same month
@@ -224,7 +226,7 @@ function useShownElsewhere(monthTime: number, present: boolean, stride: number |
   return !present && stride !== null && months.some((m) => m.date.getTime() === monthTime);
 }
 
-const INDEX_ATTR = "data-calendar-index";
+const INDEX_ATTR = 'data-calendar-index';
 
 /**
  * A month change. Side by side: every grid travels a full stride, so the
@@ -239,8 +241,8 @@ const SINGLE_MONTH_TRAVEL = 1 / 3;
 function slideVariants(
   offset: number,
   stride: number | null,
-  axis: "x" | "y" = "x",
-  single = false
+  axis: 'x' | 'y' = 'x',
+  single = false,
 ) {
   const carousel = stride !== null && offset > 0;
   const distance = carousel ? (single ? stride * SINGLE_MONTH_TRAVEL : stride) : offset;
@@ -248,7 +250,7 @@ function slideVariants(
   const solid = carousel && !single;
   const exitTransition = carousel ? spring.moderate : spring.moderate.exit;
   // Stacked months travel up and down, like the layout they sit in.
-  const at = (v: number) => (axis === "x" ? { x: v } : { y: v });
+  const at = (v: number) => (axis === 'x' ? { x: v } : { y: v });
   return {
     enter: (d: number) => ({ opacity: solid ? 1 : 0, ...at(d * distance) }),
     center: { opacity: 1, x: 0, y: 0, transition: spring.moderate },
@@ -261,11 +263,11 @@ function slideVariants(
 }
 /** One day column: the cell size, or the measured column when the months
  *  fill their container (see the grid). The chevrons take one each. */
-const COL = "var(--calendar-col, var(--cell-size))";
+const COL = 'var(--calendar-col, var(--cell-size))';
 /** The week-number column: narrower than a day, so the numbers sit close
  *  to the days instead of floating in a full cell. */
 export const WEEK_COL_RATIO = 0.75;
-const WEEK_COL = "calc(var(--cell-size) * 0.75)";
+const WEEK_COL = 'calc(var(--cell-size) * 0.75)';
 
 /**
  * The stacked strip's mask, the scroll-fade recipe twice over. Top: nothing
@@ -284,18 +286,18 @@ const WEEK_COL = "calc(var(--cell-size) * 0.75)";
 const STACKED_NAV_WIDTH = `calc(${COL} * 2)`;
 const stackedStripMask: CSSProperties = (() => {
   const fade =
-    "linear-gradient(to bottom, transparent calc(var(--strip-clip-top) + 16px), #000 calc(var(--strip-clip-top) + 16px + var(--cell-size) / 4), #000 calc(100% - 24px), transparent)";
-  const holeLeft = "linear-gradient(to left, #000 calc(100% - 16px), transparent)";
-  const holeBottom = "linear-gradient(to bottom, #000 calc(100% - 4px), transparent)";
+    'linear-gradient(to bottom, transparent calc(var(--strip-clip-top) + 16px), #000 calc(var(--strip-clip-top) + 16px + var(--cell-size) / 4), #000 calc(100% - 24px), transparent)';
+  const holeLeft = 'linear-gradient(to left, #000 calc(100% - 16px), transparent)';
+  const holeBottom = 'linear-gradient(to bottom, #000 calc(100% - 4px), transparent)';
   // The caption row and its 4px margin: the first week below stays whole.
   const holeSize = `calc(${STACKED_NAV_WIDTH} + 16px) calc(var(--cell-size) + 4px)`;
   return {
     maskImage: `${fade}, ${holeLeft}, ${holeBottom}`,
     maskSize: `100% 100%, ${holeSize}, ${holeSize}`,
     // The hole starts at the first caption row, below the strip's 16px reach.
-    maskPosition: "0 0, right 4px top 16px, right 4px top 16px",
-    maskRepeat: "no-repeat",
-    maskComposite: "subtract, intersect",
+    maskPosition: '0 0, right 4px top 16px, right 4px top 16px',
+    maskRepeat: 'no-repeat',
+    maskComposite: 'subtract, intersect',
   };
 })();
 
@@ -306,18 +308,19 @@ const stackedStripMask: CSSProperties = (() => {
  * out dissolves there instead of being cut.
  */
 const sideStripMask: CSSProperties = (() => {
-  const mask = "linear-gradient(to right, transparent, #000 8px, #000 calc(100% - 8px), transparent)";
+  const mask =
+    'linear-gradient(to right, transparent, #000 8px, #000 calc(100% - 8px), transparent)';
   return { maskImage: mask, WebkitMaskImage: mask };
 })();
 
 /** Parts the pointer passes over without lighting a day (captions, the
  *  weekday row, week numbers, booked days). */
-const INERT_ATTR = "data-calendar-inert";
+const INERT_ATTR = 'data-calendar-inert';
 const MONTH_GAP = 24;
 const CALENDAR_PAD = 8;
 
 function isDisabledDay(el: HTMLElement) {
-  return (el as HTMLButtonElement).disabled || el.getAttribute("aria-disabled") === "true";
+  return (el as HTMLButtonElement).disabled || el.getAttribute('aria-disabled') === 'true';
 }
 
 // ---------------------------------------------------------------------------
@@ -331,7 +334,7 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
   const containerRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
 
-  const hover = useFluidHover(containerRef, { axis: "xy", isItemDisabled: isDisabledDay });
+  const hover = useFluidHover(containerRef, { axis: 'xy', isItemDisabled: isDisabledDay });
   const { activeIndex, setActiveIndex, itemRects, isMeasured, handlers, registerItem } = hover;
   const { onMouseMove, onMouseEnter, onMouseLeave, onClick } = handlers;
 
@@ -394,7 +397,7 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
     autoFocusPendingRef.current = false;
     const ring =
       keyboardNavRef.current ||
-      (!fromScript && (e.target as HTMLElement).matches(":focus-visible"));
+      (!fromScript && (e.target as HTMLElement).matches(':focus-visible'));
     setFocusedIndex(ring ? idx : null);
   };
 
@@ -412,8 +415,8 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
   // starts from: the arriving month starts exactly where it was shown.
   // A single month slides the same way: out a full width while the next
   // comes in from the other side, so 1 and 2 months feel alike.
-  const twoUp = cal.numberOfMonths > 1 && cal.orientation === "horizontal";
-  const stacked = cal.numberOfMonths > 1 && cal.orientation === "vertical";
+  const twoUp = cal.numberOfMonths > 1 && cal.orientation === 'horizontal';
+  const stacked = cal.numberOfMonths > 1 && cal.orientation === 'vertical';
   const sideways = !stacked;
   const [stride, setStride] = useState<number | null>(null);
   useIsoLayoutEffect(() => {
@@ -428,7 +431,7 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
     const measure = () =>
       setStride(sideways ? first.offsetWidth + MONTH_GAP : second.offsetTop - first.offsetTop);
     measure();
-    if (typeof ResizeObserver === "undefined") return;
+    if (typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(measure);
     ro.observe(first);
     if (second) ro.observe(second);
@@ -442,7 +445,7 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
     const container = containerRef.current;
     if (!container) return;
     if (!cal.fill) {
-      container.style.setProperty("--calendar-col", "var(--cell-size)");
+      container.style.setProperty('--calendar-col', 'var(--cell-size)');
       return;
     }
     const measure = () => {
@@ -452,10 +455,13 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
       // layout pixels: the container's own ratio undoes a scaled ancestor.
       const box = container.getBoundingClientRect().width;
       const scale = box ? container.offsetWidth / box : 1;
-      container.style.setProperty("--calendar-col", `${cell.getBoundingClientRect().width * scale}px`);
+      container.style.setProperty(
+        '--calendar-col',
+        `${cell.getBoundingClientRect().width * scale}px`,
+      );
     };
     measure();
-    if (typeof ResizeObserver === "undefined") return;
+    if (typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(measure);
     ro.observe(container);
     return () => ro.disconnect();
@@ -467,7 +473,7 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
     cal.picking && activeIndex !== null && firstDay ? addDays(firstDay, activeIndex) : null;
   let previewEnd: number | null = null;
   let band: { from: number; to: number } | null = null;
-  if (cal.mode === "range" && cal.range?.from) {
+  if (cal.mode === 'range' && cal.range?.from) {
     const from = dayNumber(cal.range.from);
     if (cal.picking) {
       if (previewDate && cal.range.from) {
@@ -499,7 +505,7 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
   const litDay = activeIndex !== null ? gridStart + activeIndex : null;
   const litFilled =
     litDay !== null &&
-    (cal.mode === "single"
+    (cal.mode === 'single'
       ? cal.selectedDay === litDay
       : (!!cal.range?.from && dayNumber(cal.range.from) === litDay) ||
         (!!cal.range?.to && !cal.picking && dayNumber(cal.range.to) === litDay));
@@ -522,11 +528,11 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
   // that fades out on the moderate exit. Tracked during render, compared by
   // day numbers (the range's dates are new objects each render).
   const committed =
-    cal.mode === "range" && !cal.picking && cal.range?.from && cal.range.to
+    cal.mode === 'range' && !cal.picking && cal.range?.from && cal.range.to
       ? { from: dayNumber(cal.range.from), to: dayNumber(cal.range.to) }
       : null;
   const [lastCommitted, setLastCommitted] = useState(committed);
-  const [ghost, setGhost] = useState<GridContextValue["ghost"]>(null);
+  const [ghost, setGhost] = useState<GridContextValue['ghost']>(null);
   if (committed?.from !== lastCommitted?.from || committed?.to !== lastCommitted?.to) {
     if (lastCommitted && !committed) setGhost({ ...lastCommitted, id: (ghost?.id ?? 0) + 1 });
     setLastCommitted(committed);
@@ -543,8 +549,8 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
   useEffect(() => {
     if (!pressed) return;
     const release = () => setPressed(false);
-    window.addEventListener("mouseup", release);
-    return () => window.removeEventListener("mouseup", release);
+    window.addEventListener('mouseup', release);
+    return () => window.removeEventListener('mouseup', release);
   }, [pressed]);
   // The cell's usual color fades come back after the moment has passed.
   useEffect(() => {
@@ -566,7 +572,7 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
     const measure = () => {
       frame = 0;
       const top = row.getBoundingClientRect().bottom - strip.getBoundingClientRect().top;
-      strip.style.setProperty("--strip-clip-top", `${top}px`);
+      strip.style.setProperty('--strip-clip-top', `${top}px`);
     };
     // One read per frame, however many scroll events land in it.
     let frame = 0;
@@ -575,12 +581,12 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
     };
     measure();
     // Capture catches whichever ancestor scrolls (a popover, a demo, the page).
-    window.addEventListener("scroll", update, { capture: true, passive: true });
-    window.addEventListener("resize", update);
+    window.addEventListener('scroll', update, { capture: true, passive: true });
+    window.addEventListener('resize', update);
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", update, { capture: true });
-      window.removeEventListener("resize", update);
+      window.removeEventListener('scroll', update, { capture: true });
+      window.removeEventListener('resize', update);
     };
   }, [stacked]);
 
@@ -615,99 +621,99 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
       sharedRows,
       committedEnd,
       ghost,
-    ]
+    ],
   );
 
   const focusRect: ItemRect | null =
     isMeasured && focusedIndex !== null ? (itemRects[focusedIndex] ?? null) : null;
-  const cellRadius = cal.pill ? "rounded-full" : shape.bg;
+  const cellRadius = cal.pill ? 'rounded-full' : shape.bg;
 
   // The hover highlight, its inner ring over filled days, and the focus
   // ring. Positioned against the months container either way: the stacked
   // strip isn't a containing block, only a stacking layer.
   const overlays = (
     <>
-        <FluidHoverHighlight
-          hover={hover}
-          className={cn(
-            "z-[1]",
-            cellRadius,
-            // Picking a range end, the highlight is the proposed end: the solid
-            // fill glides to the pointer like the single-select highlight
-            // instead of jumping from cell to cell. Its ring is the overlay's.
-            previewGlides
-              ? "bg-foreground"
-              : cn(
-                  // Otherwise it's the hover fill, pressed like a ghost
-                  // Button: a surface 1px in with a same-color 1px spread at
-                  // rest, the spread collapsing on press so the fill shrinks
-                  // 1px per side and steps to the active token.
-                  "bg-transparent before:pointer-events-none before:absolute before:inset-px before:rounded-[inherit] before:bg-[var(--day-press)] before:transition-[box-shadow,background-color] before:[transition-duration:180ms,80ms] before:[transition-timing-function:cubic-bezier(0.23,1,0.32,1),ease]",
-                  pressed && !litFilled
-                    ? "[--day-press:var(--active)] before:shadow-[0_0_0_0px_var(--day-press)] before:[transition-duration:80ms,80ms]"
-                    : "[--day-press:var(--hover)] before:shadow-[0_0_0_1px_var(--day-press)]"
-                )
-          )}
-          from={pickStart}
-          fadeIn={!pickStart}
-          transition={snap ? false : undefined}
-        />
-        {/* The highlight sits under a filled start or end, so it brings an
+      <FluidHoverHighlight
+        hover={hover}
+        className={cn(
+          'z-[1]',
+          cellRadius,
+          // Picking a range end, the highlight is the proposed end: the solid
+          // fill glides to the pointer like the single-select highlight
+          // instead of jumping from cell to cell. Its ring is the overlay's.
+          previewGlides
+            ? 'bg-foreground'
+            : cn(
+                // Otherwise it's the hover fill, pressed like a ghost
+                // Button: a surface 1px in with a same-color 1px spread at
+                // rest, the spread collapsing on press so the fill shrinks
+                // 1px per side and steps to the active token.
+                'bg-transparent before:pointer-events-none before:absolute before:inset-px before:rounded-[inherit] before:bg-[var(--day-press)] before:transition-[box-shadow,background-color] before:[transition-duration:180ms,80ms] before:[transition-timing-function:cubic-bezier(0.23,1,0.32,1),ease]',
+                pressed && !litFilled
+                  ? '[--day-press:var(--active)] before:shadow-[0_0_0_0px_var(--day-press)] before:[transition-duration:80ms,80ms]'
+                  : '[--day-press:var(--hover)] before:shadow-[0_0_0_1px_var(--day-press)]',
+              ),
+        )}
+        from={pickStart}
+        fadeIn={!pickStart}
+        transition={snap ? false : undefined}
+      />
+      {/* The highlight sits under a filled start or end, so it brings an
             inner ring on top (1px in, concentric radius) at 40%, gliding on
             the same rect and spring, shown while the lit day is filled. The
             proposed end is a lit filled day too, so the ring stays as it is
             when the click commits it. Pressed, it goes solid. */}
-        <FluidHoverHighlight
-          hover={hover}
-          className={cn(
-            "z-[3] bg-transparent",
-            cellRadius,
-            "before:pointer-events-none before:absolute before:inset-px before:border before:border-background before:transition-opacity before:duration-80",
-            cal.pill
-              ? "before:rounded-full"
-              : cal.sharp
-                ? "before:rounded-none"
-                : "before:rounded-[7px]",
-            !(litFilled || previewGlides)
-              ? "before:opacity-0"
-              : pressed
-                ? "before:opacity-100"
-                : "before:opacity-40"
-          )}
-          from={pickStart}
-          fadeIn={!pickStart}
-          transition={snap ? false : undefined}
-        />
-        <AnimatePresence>
-          {focusRect && (
-            <motion.div
-              data-slot="calendar-focus-ring"
-              className={cn(
-                "pointer-events-none absolute left-0 top-0 z-[3] border border-[color:var(--focus-ring,#6B97FF)]",
-                cal.pill ? "rounded-full" : shape.focusRing
-              )}
-              initial={{
-                opacity: 0,
-                x: focusRect.left - 2,
-                y: focusRect.top - 2,
-                width: focusRect.width + 4,
-                height: focusRect.height + 4,
-              }}
-              animate={{
-                opacity: 1,
-                x: focusRect.left - 2,
-                y: focusRect.top - 2,
-                width: focusRect.width + 4,
-                height: focusRect.height + 4,
-              }}
-              exit={{ opacity: 0, transition: spring.fast.exit }}
-              transition={{
-                ...(snap || reduceMotion ? { duration: 0 } : spring.fast),
-                opacity: { duration: 0.08 },
-              }}
-            />
-          )}
-        </AnimatePresence>
+      <FluidHoverHighlight
+        hover={hover}
+        className={cn(
+          'z-[3] bg-transparent',
+          cellRadius,
+          'before:pointer-events-none before:absolute before:inset-px before:border before:border-background before:transition-opacity before:duration-80',
+          cal.pill
+            ? 'before:rounded-full'
+            : cal.sharp
+              ? 'before:rounded-none'
+              : 'before:rounded-[7px]',
+          !(litFilled || previewGlides)
+            ? 'before:opacity-0'
+            : pressed
+              ? 'before:opacity-100'
+              : 'before:opacity-40',
+        )}
+        from={pickStart}
+        fadeIn={!pickStart}
+        transition={snap ? false : undefined}
+      />
+      <AnimatePresence>
+        {focusRect && (
+          <motion.div
+            data-slot="calendar-focus-ring"
+            className={cn(
+              'pointer-events-none absolute left-0 top-0 z-[3] border border-[color:var(--focus-ring,#6B97FF)]',
+              cal.pill ? 'rounded-full' : shape.focusRing,
+            )}
+            initial={{
+              opacity: 0,
+              x: focusRect.left - 2,
+              y: focusRect.top - 2,
+              width: focusRect.width + 4,
+              height: focusRect.height + 4,
+            }}
+            animate={{
+              opacity: 1,
+              x: focusRect.left - 2,
+              y: focusRect.top - 2,
+              width: focusRect.width + 4,
+              height: focusRect.height + 4,
+            }}
+            exit={{ opacity: 0, transition: spring.fast.exit }}
+            transition={{
+              ...(snap || reduceMotion ? { duration: 0 } : spring.fast),
+              opacity: { duration: 0.08 },
+            }}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 
@@ -717,17 +723,17 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
       data-slot="calendar-months"
       data-orientation={cal.numberOfMonths > 1 ? cal.orientation : undefined}
       className={cn(
-        "relative isolate flex",
+        'relative isolate flex',
         // Stacked, the surface carries on to the sticky weekday row, which
         // must hide what scrolls under it.
-        stacked ? "flex-col gap-4 bg-inherit" : "flex-row flex-wrap gap-x-6 gap-y-4",
+        stacked ? 'flex-col gap-4 bg-inherit' : 'flex-row flex-wrap gap-x-6 gap-y-4',
         // With 2 months, the months sit in a masked strip (below): soft
         // edges side by side, a fade under the weekday row when stacked.
-        cal.fill && "w-full",
-        className
+        cal.fill && 'w-full',
+        className,
       )}
       // Seeded at the cell size; filling, the effect above measures it.
-      style={{ "--calendar-col": "var(--cell-size)", ...style } as CSSProperties}
+      style={{ '--calendar-col': 'var(--cell-size)', ...style } as CSSProperties}
       onKeyDownCapture={(e) => {
         if (POPUP_NAV_KEYS.includes(e.key)) trackKeyboardNav(e);
       }}
@@ -758,7 +764,7 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
         <div
           ref={weekdayRowRef}
           aria-hidden
-          {...{ [INERT_ATTR]: "" }}
+          {...{ [INERT_ATTR]: '' }}
           className="sticky top-0 z-[4] flex bg-inherit"
         >
           {cal.showWeekNumber && <span className="w-[calc(var(--cell-size)*0.75)] shrink-0" />}
@@ -775,11 +781,11 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
         // masked strip (whose hole fades the sliding months under them), and
         // pass under the sticky weekday row when a short popup scrolls.
         <div
-          {...{ [INERT_ATTR]: "" }}
+          {...{ [INERT_ATTR]: '' }}
           // Same rounded row height as the weekday row, with the same fallback.
           className="absolute right-0 top-[calc(var(--cell-size)*0.8_+_16px)] z-[3] flex h-[var(--cell-size)] items-center supports-[width:round(1px,1px)]:top-[calc(round(down,var(--cell-size)*0.8,1px)_+_16px)]"
         >
-          <NavGroup buttons={["previous", "next"]} />
+          <NavGroup buttons={['previous', 'next']} />
         </div>
       )}
       <GridContext.Provider value={gridCtx}>
@@ -798,7 +804,7 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
               {
                 // Seeded here; the effect above keeps it on the weekday row's
                 // edge (React leaves it alone while this seed doesn't change).
-                "--strip-clip-top": "0px",
+                '--strip-clip-top': '0px',
                 ...stackedStripMask,
               } as CSSProperties
             }
@@ -810,7 +816,10 @@ function Months({ className, style, children, ...props }: HTMLAttributes<HTMLDiv
           // Sideways (1 month or 2), the strip reaches 8px past the months
           // (and the bottom, for the focus ring), margins undone by padding.
           <div
-            className={cn("-mx-2 -mb-2 flex flex-row gap-x-6 px-2 pb-2", cal.fill && "min-w-0 flex-1")}
+            className={cn(
+              '-mx-2 -mb-2 flex flex-row gap-x-6 px-2 pb-2',
+              cal.fill && 'min-w-0 flex-1',
+            )}
             style={sideStripMask}
           >
             {overlays}
@@ -833,7 +842,7 @@ function Month({ calendarMonth, displayIndex, className, style, children, ...pro
     <MonthContext.Provider value={value}>
       <div
         data-slot="calendar-month"
-        className={cn("flex flex-col", cal.fill && "min-w-0 flex-1", className)}
+        className={cn('flex flex-col', cal.fill && 'min-w-0 flex-1', className)}
         style={style}
         {...props}
       >
@@ -843,20 +852,18 @@ function Month({ calendarMonth, displayIndex, className, style, children, ...pro
   );
 }
 
-function NavButton({ direction }: { direction: "previous" | "next" }) {
+function NavButton({ direction }: { direction: 'previous' | 'next' }) {
   const cal = useCalendarContext();
   const { previousMonth, nextMonth, goToMonth, labels, dayPickerProps } = useDayPicker();
   const icons = useIcons();
-  const Chevron = icons["chevron-right"];
-  const target = direction === "previous" ? previousMonth : nextMonth;
+  const Chevron = icons['chevron-right'];
+  const target = direction === 'previous' ? previousMonth : nextMonth;
   const label =
-    direction === "previous"
-      ? labels.labelPrevious(previousMonth)
-      : labels.labelNext(nextMonth);
-  const tooltip = direction === "previous" ? "Previous month" : "Next month";
-  const flip = (direction === "previous") !== (dayPickerProps.dir === "rtl");
+    direction === 'previous' ? labels.labelPrevious(previousMonth) : labels.labelNext(nextMonth);
+  const tooltip = direction === 'previous' ? 'Previous month' : 'Next month';
+  const flip = (direction === 'previous') !== (dayPickerProps.dir === 'rtl');
   // Stacked months page up and down, so the chevrons point that way.
-  const stacked = cal.numberOfMonths > 1 && cal.orientation === "vertical";
+  const stacked = cal.numberOfMonths > 1 && cal.orientation === 'vertical';
   return (
     <Tooltip content={tooltip}>
       <Button
@@ -870,7 +877,7 @@ function NavButton({ direction }: { direction: "previous" | "next" }) {
         onClick={() => {
           if (!target) return;
           goToMonth(target);
-          if (direction === "previous") dayPickerProps.onPrevClick?.(target);
+          if (direction === 'previous') dayPickerProps.onPrevClick?.(target);
           else dayPickerProps.onNextClick?.(target);
         }}
         // A day's size (a filled column caps at the cell size, like the days),
@@ -882,7 +889,11 @@ function NavButton({ direction }: { direction: "previous" | "next" }) {
         <Chevron
           size={16}
           className={cn(
-            stacked ? (direction === "previous" ? "-rotate-90" : "rotate-90") : flip && "rotate-180"
+            stacked
+              ? direction === 'previous'
+                ? '-rotate-90'
+                : 'rotate-90'
+              : flip && 'rotate-180',
           )}
         />
       </Button>
@@ -890,9 +901,9 @@ function NavButton({ direction }: { direction: "previous" | "next" }) {
   );
 }
 
-function NavGroup({ buttons }: { buttons: ("previous" | "next")[] }) {
+function NavGroup({ buttons }: { buttons: ('previous' | 'next')[] }) {
   const ref = useRef<HTMLDivElement>(null);
-  const hover = useFluidHover(ref, { axis: "x", isItemDisabled: isDisabledDay, gapClick: false });
+  const hover = useFluidHover(ref, { axis: 'x', isItemDisabled: isDisabledDay, gapClick: false });
   const shape = useShape();
   const { setActiveIndex } = hover;
   return (
@@ -903,15 +914,15 @@ function NavGroup({ buttons }: { buttons: ("previous" | "next")[] }) {
       {...hover.handlers}
       onFocus={(e) => {
         const idx = buttons.indexOf(
-          (e.target as HTMLElement).getAttribute("data-calendar-nav") as "previous" | "next"
+          (e.target as HTMLElement).getAttribute('data-calendar-nav') as 'previous' | 'next',
         );
-        if (idx >= 0 && (e.target as HTMLElement).matches(":focus-visible")) setActiveIndex(idx);
+        if (idx >= 0 && (e.target as HTMLElement).matches(':focus-visible')) setActiveIndex(idx);
       }}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node)) setActiveIndex(null);
       }}
     >
-      <FluidHoverHighlight hover={hover} className={cn("z-0", shape.button)} />
+      <FluidHoverHighlight hover={hover} className={cn('z-0', shape.button)} />
       {/* One bubble for the pair: it glides between the arrows. */}
       <TooltipGroup>
         {buttons.map((b, i) => (
@@ -930,7 +941,7 @@ function NavSlot({
   children,
 }: {
   index: number;
-  registerItem: UseFluidHoverReturn["registerItem"];
+  registerItem: UseFluidHoverReturn['registerItem'];
   children: ReactNode;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -969,20 +980,20 @@ function CaptionText({
   const shownElsewhere = useShownElsewhere(monthTime, present, stride);
   return (
     <motion.span
-      role={present ? "status" : undefined}
-      aria-live={present ? "polite" : undefined}
+      role={present ? 'status' : undefined}
+      aria-live={present ? 'polite' : undefined}
       aria-hidden={present ? undefined : true}
       className={cn(
-        "col-start-1 row-start-1 whitespace-nowrap text-foreground [text-box:trim-both_cap_alphabetic]",
+        'col-start-1 row-start-1 whitespace-nowrap text-foreground [text-box:trim-both_cap_alphabetic]',
         // Centered side by side, where captions are; left everywhere else
         // (one month too), so a shorter title doesn't sit centered in the
         // cell while the longer one leaves, then jump left when it shrinks.
-        centered ? "justify-self-center" : "justify-self-start",
-        shownElsewhere && "invisible",
-        typeClass("body", compact ? "compact" : "default")
+        centered ? 'justify-self-center' : 'justify-self-start',
+        shownElsewhere && 'invisible',
+        typeClass('body', compact ? 'compact' : 'default'),
       )}
       style={{ fontVariationSettings: fontWeights.semibold }}
-      variants={slideVariants(offset, stride, stacked ? "y" : "x", cal.numberOfMonths === 1)}
+      variants={slideVariants(offset, stride, stacked ? 'y' : 'x', cal.numberOfMonths === 1)}
       custom={direction}
       initial="enter"
       animate="center"
@@ -996,8 +1007,8 @@ function CaptionText({
 /** Mask for a side-by-side caption layer: transparent under the chevron
  *  (one day column, after the week numbers on the left), then a 24px ramp to
  *  opaque, toward `to`. */
-function captionFade(to: "left" | "right", weekNumbers: boolean) {
-  const nav = to === "right" && weekNumbers ? `calc(${WEEK_COL} + ${COL})` : COL;
+function captionFade(to: 'left' | 'right', weekNumbers: boolean) {
+  const nav = to === 'right' && weekNumbers ? `calc(${WEEK_COL} + ${COL})` : COL;
   return `linear-gradient(to ${to}, transparent ${nav}, #000 calc(${nav} + 24px))`;
 }
 
@@ -1008,13 +1019,19 @@ function oneUpCaptionFade(stride: number, noNav: boolean) {
   return `linear-gradient(to left, transparent ${clear}, #000 calc(${clear} + 24px))`;
 }
 
-function MonthCaption({ calendarMonth, displayIndex, className, style, ...props }: MonthCaptionProps) {
+function MonthCaption({
+  calendarMonth,
+  displayIndex,
+  className,
+  style,
+  ...props
+}: MonthCaptionProps) {
   const cal = useCalendarContext();
   const { formatters } = useDayPicker();
   const grid = useGridContext();
   const last = displayIndex === cal.numberOfMonths - 1;
   const first = displayIndex === 0;
-  const twoUp = cal.numberOfMonths > 1 && cal.orientation === "horizontal";
+  const twoUp = cal.numberOfMonths > 1 && cal.orientation === 'horizontal';
   // One month sliding a full stride: the title passes under the chevrons.
   const oneUp = cal.numberOfMonths === 1 && grid.stride !== null;
   const hideNav = cal.navHidden;
@@ -1022,17 +1039,18 @@ function MonthCaption({ calendarMonth, displayIndex, className, style, ...props 
   // Single month and stacked months: caption left, both chevrons right of
   // the first caption. Side by side: captions centered, previous at the far
   // left, next at the far right.
-  const navStart: ("previous" | "next")[] = !hideNav && twoUp && first ? ["previous"] : [];
-  const stackedLayout = cal.numberOfMonths > 1 && cal.orientation === "vertical";
-  const navEnd: ("previous" | "next")[] = hideNav || stackedLayout
-    ? []
-    : twoUp
-      ? last
-        ? ["next"]
-        : []
-      : first
-        ? ["previous", "next"]
-        : [];
+  const navStart: ('previous' | 'next')[] = !hideNav && twoUp && first ? ['previous'] : [];
+  const stackedLayout = cal.numberOfMonths > 1 && cal.orientation === 'vertical';
+  const navEnd: ('previous' | 'next')[] =
+    hideNav || stackedLayout
+      ? []
+      : twoUp
+        ? last
+          ? ['next']
+          : []
+        : first
+          ? ['previous', 'next']
+          : [];
   const key = calendarMonth.date.getTime();
   const offset = grid.reduceMotion ? 0 : 10;
   const caption = (
@@ -1051,7 +1069,7 @@ function MonthCaption({ calendarMonth, displayIndex, className, style, ...props 
           {formatters.formatCaption(
             calendarMonth.date,
             calendarMonth.weeks[0]?.days[0]?.dateLib.options,
-            calendarMonth.weeks[0]?.days[0]?.dateLib
+            calendarMonth.weeks[0]?.days[0]?.dateLib,
           )}
         </CaptionText>
       </AnimatePresence>
@@ -1061,25 +1079,25 @@ function MonthCaption({ calendarMonth, displayIndex, className, style, ...props 
   return (
     <div
       data-slot="calendar-caption"
-      {...{ [INERT_ATTR]: "" }}
+      {...{ [INERT_ATTR]: '' }}
       className={cn(
-        "relative flex h-[var(--cell-size)] items-center gap-1",
-        twoUp ? "justify-center" : "justify-between pl-2",
+        'relative flex h-[var(--cell-size)] items-center gap-1',
+        twoUp ? 'justify-center' : 'justify-between pl-2',
         // With week numbers, the title belongs to the days: it starts at the
         // Monday column (centered over the 7 days, side by side).
         cal.showWeekNumber &&
-          (twoUp ? "pl-[calc(var(--cell-size)*0.75)]" : "pl-[calc(var(--cell-size)*0.75+0.5rem)]"),
-        "mb-1",
-        className
+          (twoUp ? 'pl-[calc(var(--cell-size)*0.75)]' : 'pl-[calc(var(--cell-size)*0.75+0.5rem)]'),
+        'mb-1',
+        className,
       )}
       style={style}
-      {...omit(props, ["children"])}
+      {...omit(props, ['children'])}
     >
       {twoUp && (
         <div
           className={cn(
-            "absolute top-1/2 -translate-y-1/2",
-            cal.showWeekNumber ? "left-[calc(var(--cell-size)*0.75)]" : "left-0"
+            'absolute top-1/2 -translate-y-1/2',
+            cal.showWeekNumber ? 'left-[calc(var(--cell-size)*0.75)]' : 'left-0',
           )}
         >
           {navStart.length > 0 && <NavGroup buttons={navStart} />}
@@ -1096,8 +1114,8 @@ function MonthCaption({ calendarMonth, displayIndex, className, style, ...props 
           style={{
             left: first ? 0 : -grid.stride,
             right: last ? 0 : -grid.stride,
-            maskImage: captionFade(first ? "right" : "left", cal.showWeekNumber),
-            WebkitMaskImage: captionFade(first ? "right" : "left", cal.showWeekNumber),
+            maskImage: captionFade(first ? 'right' : 'left', cal.showWeekNumber),
+            WebkitMaskImage: captionFade(first ? 'right' : 'left', cal.showWeekNumber),
           }}
         >
           <div
@@ -1124,8 +1142,8 @@ function MonthCaption({ calendarMonth, displayIndex, className, style, ...props 
           >
             <div
               className={cn(
-                "absolute inset-y-0 flex items-center",
-                cal.showWeekNumber ? "pl-[calc(var(--cell-size)*0.75+0.5rem)]" : "pl-2"
+                'absolute inset-y-0 flex items-center',
+                cal.showWeekNumber ? 'pl-[calc(var(--cell-size)*0.75+0.5rem)]' : 'pl-2',
               )}
               style={{ left: grid.stride!, right: grid.stride! }}
             >
@@ -1156,7 +1174,7 @@ function MonthGrid({ className, style, children, ...props }: HTMLAttributes<HTML
   return (
     <div
       data-slot="calendar-grid"
-      className={cn("flex flex-col", className)}
+      className={cn('flex flex-col', className)}
       style={style}
       {...(props as HTMLAttributes<HTMLDivElement>)}
     >
@@ -1182,13 +1200,13 @@ function WeekdayCell({
   const cal = useCalendarContext();
   return (
     <span
-      role={label ? "columnheader" : undefined}
+      role={label ? 'columnheader' : undefined}
       aria-label={label}
       className={cn(
-        "flex h-[calc(var(--cell-size)*0.8)] items-center justify-center text-muted-foreground supports-[width:round(1px,1px)]:h-[round(down,calc(var(--cell-size)*0.8),1px)]",
-        cal.fill ? "min-w-0 flex-1" : "w-[var(--cell-size)]",
-        typeClass("caption", cal.compact ? "compact" : "default"),
-        className
+        'flex h-[calc(var(--cell-size)*0.8)] items-center justify-center text-muted-foreground supports-[width:round(1px,1px)]:h-[round(down,calc(var(--cell-size)*0.8),1px)]',
+        cal.fill ? 'min-w-0 flex-1' : 'w-[var(--cell-size)]',
+        typeClass('caption', cal.compact ? 'compact' : 'default'),
+        className,
       )}
     >
       {children}
@@ -1209,13 +1227,13 @@ function Weekday({ className, style, children, ...props }: HTMLAttributes<HTMLEl
     <div
       role="columnheader"
       className={cn(
-        "flex h-[calc(var(--cell-size)*0.8)] items-center justify-center text-muted-foreground supports-[width:round(1px,1px)]:h-[round(down,calc(var(--cell-size)*0.8),1px)]",
-        cal.fill ? "min-w-0 flex-1" : "w-[var(--cell-size)]",
-        typeClass("caption", cal.compact ? "compact" : "default"),
-        className
+        'flex h-[calc(var(--cell-size)*0.8)] items-center justify-center text-muted-foreground supports-[width:round(1px,1px)]:h-[round(down,calc(var(--cell-size)*0.8),1px)]',
+        cal.fill ? 'min-w-0 flex-1' : 'w-[var(--cell-size)]',
+        typeClass('caption', cal.compact ? 'compact' : 'default'),
+        className,
       )}
       style={style}
-      aria-label={(props as { "aria-label"?: string })["aria-label"]}
+      aria-label={(props as { 'aria-label'?: string })['aria-label']}
     >
       {children}
     </div>
@@ -1226,8 +1244,8 @@ function WeekNumberHeader({ className, style, ...props }: HTMLAttributes<HTMLEle
   return (
     <div
       role="columnheader"
-      aria-label={(props as { "aria-label"?: string })["aria-label"]}
-      className={cn("w-[calc(var(--cell-size)*0.75)] shrink-0", className)}
+      aria-label={(props as { 'aria-label'?: string })['aria-label']}
+      className={cn('w-[calc(var(--cell-size)*0.75)] shrink-0', className)}
       style={style}
     />
   );
@@ -1244,7 +1262,7 @@ function WeekNumberHeader({ className, style, ...props }: HTMLAttributes<HTMLEle
 function Weeks({ className, style, children }: HTMLAttributes<HTMLElement>) {
   const month = useContext(MonthContext);
   const grid = useGridContext();
-  const height = useMotionValue<number | "auto">("auto");
+  const height = useMotionValue<number | 'auto'>('auto');
   // The month the height was last taken from, and the height it settles on.
   const measuredRef = useRef<{ month: number; h: number } | null>(null);
   const [clip, setClip] = useState(false);
@@ -1266,7 +1284,7 @@ function Weeks({ className, style, children }: HTMLAttributes<HTMLElement>) {
       setClip(true);
       animate(height, h, { ...spring.moderate, onComplete: () => setClip(false) });
     },
-    [grid.reduceMotion, height]
+    [grid.reduceMotion, height],
   );
 
   const key = month ? month.calendarMonth.date.getTime() : 0;
@@ -1279,7 +1297,7 @@ function Weeks({ className, style, children }: HTMLAttributes<HTMLElement>) {
       // never spills below. Stacked months travel a whole slot vertically
       // through this box: a clip would slice them flat, so the strip's soft
       // mask is their only edge.
-      className={cn("relative grid", clip && !grid.stacked && "[overflow-y:clip]")}
+      className={cn('relative grid', clip && !grid.stacked && '[overflow-y:clip]')}
       style={{ height }}
     >
       <AnimatePresence initial={false} custom={grid.direction}>
@@ -1332,7 +1350,7 @@ function WeeksPanel({
     const el = ref.current;
     if (!el || !present) return;
     onHeight(el.offsetHeight, monthTime);
-    if (typeof ResizeObserver === "undefined") return;
+    if (typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(() => onHeight(el.offsetHeight, monthTime));
     ro.observe(el);
     return () => ro.disconnect();
@@ -1344,13 +1362,13 @@ function WeeksPanel({
         role="rowgroup"
         aria-hidden={present ? undefined : true}
         className={cn(
-          "col-start-1 row-start-1 flex flex-col self-start",
-          !present && "pointer-events-none",
-          shownElsewhere && "invisible",
-          className
+          'col-start-1 row-start-1 flex flex-col self-start',
+          !present && 'pointer-events-none',
+          shownElsewhere && 'invisible',
+          className,
         )}
         style={style}
-        variants={slideVariants(offset, stride, stacked ? "y" : "x", cal.numberOfMonths === 1)}
+        variants={slideVariants(offset, stride, stacked ? 'y' : 'x', cal.numberOfMonths === 1)}
         custom={direction}
         initial="enter"
         animate="center"
@@ -1358,7 +1376,7 @@ function WeeksPanel({
       >
         {side && (
           // The grid's column headers, as DayPicker's own row would give.
-          <div role="row" {...{ [INERT_ATTR]: "" }} className="flex">
+          <div role="row" {...{ [INERT_ATTR]: '' }} className="flex">
             {cal.showWeekNumber && (
               <span
                 role="columnheader"
@@ -1395,7 +1413,7 @@ function WeeksPanel({
 
 function Week({ className, style, children }: WeekProps) {
   return (
-    <div role="row" className={cn("flex", className)} style={style}>
+    <div role="row" className={cn('flex', className)} style={style}>
       {children}
     </div>
   );
@@ -1406,13 +1424,13 @@ function WeekNumber({ className, style, children, ...props }: WeekNumberProps) {
   return (
     <div
       role="rowheader"
-      aria-label={(props as { "aria-label"?: string })["aria-label"]}
-      {...{ [INERT_ATTR]: "" }}
+      aria-label={(props as { 'aria-label'?: string })['aria-label']}
+      {...{ [INERT_ATTR]: '' }}
       className={cn(
-        "flex w-[calc(var(--cell-size)*0.75)] shrink-0 items-center justify-center tabular-nums text-muted-foreground opacity-60",
-        cal.fill ? "max-h-[var(--cell-size)]" : "h-[var(--cell-size)]",
-        typeClass("caption", cal.compact ? "compact" : "default"),
-        className
+        'flex w-[calc(var(--cell-size)*0.75)] shrink-0 items-center justify-center tabular-nums text-muted-foreground opacity-60',
+        cal.fill ? 'max-h-[var(--cell-size)]' : 'h-[var(--cell-size)]',
+        typeClass('caption', cal.compact ? 'compact' : 'default'),
+        className,
       )}
       style={style}
     >
@@ -1454,7 +1472,7 @@ function Day({ day, modifiers, className, style, children, ...props }: DayProps)
     const d = addDays(day.date, m - n);
     return d.getMonth() === month.calendarMonth.date.getMonth();
   };
-  const corner = (edge: boolean, touching: boolean) => (edge && !touching ? "2px" : 0);
+  const corner = (edge: boolean, touching: boolean) => (edge && !touching ? '2px' : 0);
   // This cell's slice of a band (the live one, or a fading ghost), or null.
   const slice = (band: { from: number; to: number } | null): CSSProperties | null => {
     if (!band || !visible || band.from === band.to || n < band.from || n > band.to) return null;
@@ -1463,8 +1481,8 @@ function Day({ day, modifiers, className, style, children, ...props }: DayProps)
     const atLeft = (m: number) => drawn(m) && m > band.from && m <= band.to;
     const atRight = (m: number) => drawn(m) && m >= band.from && m < band.to;
     return {
-      left: n > band.from ? 0 : "50%",
-      right: n < band.to ? 0 : "50%",
+      left: n > band.from ? 0 : '50%',
+      right: n < band.to ? 0 : '50%',
       borderTopLeftRadius: corner(edgeLeft, atLeft(n - 7)),
       borderBottomLeftRadius: corner(edgeLeft, atLeft(n + 7)),
       borderTopRightRadius: corner(edgeRight, atRight(n - 7)),
@@ -1479,18 +1497,18 @@ function Day({ day, modifiers, className, style, children, ...props }: DayProps)
   return (
     <div
       role="gridcell"
-      aria-selected={(props as { "aria-selected"?: boolean })["aria-selected"]}
-      aria-label={(props as { "aria-label"?: string })["aria-label"]}
-      data-day={(props as { "data-day"?: string })["data-day"]}
+      aria-selected={(props as { 'aria-selected'?: boolean })['aria-selected']}
+      aria-label={(props as { 'aria-label'?: string })['aria-label']}
+      data-day={(props as { 'data-day'?: string })['data-day']}
       data-today={modifiers.today || undefined}
       data-outside={day.outside || undefined}
       data-hidden={modifiers.hidden || undefined}
       className={cn(
-        "relative flex items-center justify-center p-0",
+        'relative flex items-center justify-center p-0',
         cal.fill
-          ? "aspect-square max-h-[var(--cell-size)] min-w-0 flex-1"
-          : "size-[var(--cell-size)]",
-        className
+          ? 'aspect-square max-h-[var(--cell-size)] min-w-0 flex-1'
+          : 'size-[var(--cell-size)]',
+        className,
       )}
       style={style}
     >
@@ -1513,9 +1531,9 @@ function Day({ day, modifiers, className, style, children, ...props }: DayProps)
             {ghostEnd && (
               <span
                 className={cn(
-                  "relative bg-foreground",
-                  cal.fill ? "aspect-square h-full max-w-full" : "size-[var(--cell-size)]",
-                  cal.pill ? "rounded-full" : cal.sharp ? "rounded-[1px]" : "rounded-lg"
+                  'relative bg-foreground',
+                  cal.fill ? 'aspect-square h-full max-w-full' : 'size-[var(--cell-size)]',
+                  cal.pill ? 'rounded-full' : cal.sharp ? 'rounded-[1px]' : 'rounded-lg',
                 )}
               />
             )}
@@ -1555,11 +1573,12 @@ function DayButton({ day, modifiers, className, style, children, ...props }: Day
 
   const band = grid.band;
   const isEnd =
-    cal.mode === "single"
+    cal.mode === 'single'
       ? cal.selectedDay === n
       : (!!cal.range?.from && dayNumber(cal.range.from) === n) ||
         (!!cal.range?.to && !cal.picking && dayNumber(cal.range.to) === n);
-  const isPreviewEnd = cal.picking && grid.previewEnd === n && !(cal.range?.from && dayNumber(cal.range.from) === n);
+  const isPreviewEnd =
+    cal.picking && grid.previewEnd === n && !(cal.range?.from && dayNumber(cal.range.from) === n);
   const inMiddle = !!band && n > band.from && n < band.to;
   const booked = !!modifiers.booked;
   const unavailable = !!modifiers.disabled;
@@ -1572,9 +1591,9 @@ function DayButton({ day, modifiers, className, style, children, ...props }: Day
     () => (!day.outside && dayDetail ? dayDetail(day.date) : null),
     // day.date is a new Date each render; its day number is the identity.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dayDetail, n, day.outside]
+    [dayDetail, n, day.outside],
   );
-  const hasDetail = detail !== null && detail !== undefined && detail !== false && detail !== "";
+  const hasDetail = detail !== null && detail !== undefined && detail !== false && detail !== '';
   // Read after the date, whatever the detail is (text or a styled node).
   const detailId = useId();
 
@@ -1585,38 +1604,38 @@ function DayButton({ day, modifiers, className, style, children, ...props }: Day
       aria-describedby={hasDetail ? detailId : undefined}
       tabIndex={present ? props.tabIndex : -1}
       {...{ [INDEX_ATTR]: day.outside ? undefined : index }}
-      {...(unavailable ? { [INERT_ATTR]: "" } : {})}
+      {...(unavailable ? { [INERT_ATTR]: '' } : {})}
       data-selected={isEnd || undefined}
       data-range-middle={inMiddle || undefined}
       data-booked={booked || undefined}
       data-unavailable={unavailable || undefined}
       data-preview-end={isPreviewEnd || undefined}
       className={cn(
-        "relative z-[2] flex items-center justify-center p-0 outline-none select-none tabular-nums",
-        hasDetail && "flex-col gap-2",
+        'relative z-[2] flex items-center justify-center p-0 outline-none select-none tabular-nums',
+        hasDetail && 'flex-col gap-2',
         // While a range end is being picked the fill is the gliding
         // highlight's: cells only swap their number's color, faded over the
         // highlight's arrival so the number never shows on the wrong fill.
         cal.picking
-          ? "transition-[color] duration-80"
+          ? 'transition-[color] duration-80'
           : grid.committedEnd === n
             ? // The click that commits the end takes over the highlight's
               // fill in the same frame: a fade would flash an empty cell.
-              "transition-none"
-            : "transition-[color,background-color,font-variation-settings] duration-80",
-        cal.fill ? "aspect-square h-full max-w-full" : "size-[var(--cell-size)]",
-        cal.pill ? "rounded-full" : cal.sharp ? "rounded-[1px]" : "rounded-lg",
-        typeClass("body", compact ? "compact" : "default"),
+              'transition-none'
+            : 'transition-[color,background-color,font-variation-settings] duration-80',
+        cal.fill ? 'aspect-square h-full max-w-full' : 'size-[var(--cell-size)]',
+        cal.pill ? 'rounded-full' : cal.sharp ? 'rounded-[1px]' : 'rounded-lg',
+        typeClass('body', compact ? 'compact' : 'default'),
         isEnd
-          ? "bg-foreground text-background"
+          ? 'bg-foreground text-background'
           : isPreviewEnd
-            ? "cursor-pointer text-background"
+            ? 'cursor-pointer text-background'
             : unavailable
-            ? cn("cursor-default text-muted-foreground opacity-50", booked && "line-through")
-            : day.outside
-              ? "cursor-pointer text-muted-foreground opacity-60"
-              : "cursor-pointer text-foreground",
-        className
+              ? cn('cursor-default text-muted-foreground opacity-50', booked && 'line-through')
+              : day.outside
+                ? 'cursor-pointer text-muted-foreground opacity-60'
+                : 'cursor-pointer text-foreground',
+        className,
       )}
       style={{
         ...style,
@@ -1630,14 +1649,12 @@ function DayButton({ day, modifiers, className, style, children, ...props }: Day
           id={detailId}
           data-slot="calendar-day-detail"
           className={cn(
-            "whitespace-nowrap [text-box:trim-both_cap_alphabetic]",
-            typeClass("caption", compact ? "compact" : "default"),
+            'whitespace-nowrap [text-box:trim-both_cap_alphabetic]',
+            typeClass('caption', compact ? 'compact' : 'default'),
             // Quieter than the number. On a filled day it takes the fill's
             // text color with the number, overriding any color the caller
             // gave it, so a colored price never vanishes on the fill.
-            isEnd || isPreviewEnd
-              ? "[&_*]:!text-current"
-              : !unavailable && "text-muted-foreground"
+            isEnd || isPreviewEnd ? '[&_*]:!text-current' : !unavailable && 'text-muted-foreground',
           )}
           style={{ fontVariationSettings: fontWeights.normal }}
         >
@@ -1657,23 +1674,23 @@ function DayButton({ day, modifiers, className, style, children, ...props }: Day
 }
 
 function Root(props: { rootRef?: React.Ref<HTMLDivElement> } & HTMLAttributes<HTMLDivElement>) {
-  return <div data-slot="calendar" {...omit(props, ["rootRef"])} />;
+  return <div data-slot="calendar" {...omit(props, ['rootRef'])} />;
 }
 
 const components: Partial<CustomComponents> = {
-  Root: Root as CustomComponents["Root"],
-  Months: Months as CustomComponents["Months"],
-  Month: Month as CustomComponents["Month"],
-  MonthCaption: MonthCaption as CustomComponents["MonthCaption"],
-  MonthGrid: MonthGrid as unknown as CustomComponents["MonthGrid"],
-  Weekdays: Weekdays as unknown as CustomComponents["Weekdays"],
-  Weekday: Weekday as unknown as CustomComponents["Weekday"],
-  WeekNumberHeader: WeekNumberHeader as unknown as CustomComponents["WeekNumberHeader"],
-  Weeks: Weeks as unknown as CustomComponents["Weeks"],
-  Week: Week as unknown as CustomComponents["Week"],
-  WeekNumber: WeekNumber as unknown as CustomComponents["WeekNumber"],
-  Day: Day as unknown as CustomComponents["Day"],
-  DayButton: DayButton as CustomComponents["DayButton"],
+  Root: Root as CustomComponents['Root'],
+  Months: Months as CustomComponents['Months'],
+  Month: Month as CustomComponents['Month'],
+  MonthCaption: MonthCaption as CustomComponents['MonthCaption'],
+  MonthGrid: MonthGrid as unknown as CustomComponents['MonthGrid'],
+  Weekdays: Weekdays as unknown as CustomComponents['Weekdays'],
+  Weekday: Weekday as unknown as CustomComponents['Weekday'],
+  WeekNumberHeader: WeekNumberHeader as unknown as CustomComponents['WeekNumberHeader'],
+  Weeks: Weeks as unknown as CustomComponents['Weeks'],
+  Week: Week as unknown as CustomComponents['Week'],
+  WeekNumber: WeekNumber as unknown as CustomComponents['WeekNumber'],
+  Day: Day as unknown as CustomComponents['Day'],
+  DayButton: DayButton as CustomComponents['DayButton'],
 };
 
 // ---------------------------------------------------------------------------
@@ -1682,18 +1699,18 @@ const components: Partial<CustomComponents> = {
 
 type PassThrough = Omit<
   DayPickerProps,
-  | "mode"
-  | "selected"
-  | "onSelect"
-  | "required"
-  | "disabled"
-  | "numberOfMonths"
-  | "showOutsideDays"
-  | "animate"
-  | "min"
-  | "max"
-  | "excludeDisabled"
-  | "resetOnSelect"
+  | 'mode'
+  | 'selected'
+  | 'onSelect'
+  | 'required'
+  | 'disabled'
+  | 'numberOfMonths'
+  | 'showOutsideDays'
+  | 'animate'
+  | 'min'
+  | 'max'
+  | 'excludeDisabled'
+  | 'resetOnSelect'
 >;
 
 interface CalendarBaseProps extends PassThrough {
@@ -1731,14 +1748,14 @@ interface CalendarBaseProps extends PassThrough {
 }
 
 interface CalendarSingleProps extends CalendarBaseProps {
-  mode?: "single";
+  mode?: 'single';
   selected?: Date | undefined;
   onSelect?: (date: Date | undefined) => void;
   required?: boolean;
 }
 
 interface CalendarRangeProps extends CalendarBaseProps {
-  mode: "range";
+  mode: 'range';
   selected?: DateRange | undefined;
   onSelect?: (range: DateRange | undefined) => void;
   required?: boolean;
@@ -1769,20 +1786,20 @@ function useToday(): Date {
   const key = useSyncExternalStore(subscribeNever, localDayKey, utcDayKey);
   return useMemo(
     () => new Date(Math.floor(key / 10000), (Math.floor(key / 100) % 100) - 1, key % 100),
-    [key]
+    [key],
   );
 }
 
 function Calendar(props: CalendarProps) {
   const {
-    mode = "single",
+    mode = 'single',
     selected: selectedProp,
     onSelect,
     booked,
     available,
     disabled,
     numberOfMonths = 1,
-    orientation = "auto",
+    orientation = 'auto',
     cellSize: cellSizeProp,
     dayDetail,
     fill = false,
@@ -1798,12 +1815,12 @@ function Calendar(props: CalendarProps) {
     autoFocus,
     ...rest
   } = props as CalendarBaseProps & {
-    mode?: "single" | "range";
+    mode?: 'single' | 'range';
     selected?: Date | DateRange;
     onSelect?: (value: Date | DateRange | undefined) => void;
   };
   const sizeClasses = useSize(size);
-  const compact = sizeClasses.variant === "compact";
+  const compact = sizeClasses.variant === 'compact';
   const shape = useShape();
   const today = useToday();
   const cellSize = cellSizeProp ?? (compact ? 32 : 36);
@@ -1814,8 +1831,8 @@ function Calendar(props: CalendarProps) {
   // truth; without one, `selected` only seeds internal state.
   const [internal, setInternal] = useState<Date | DateRange | undefined>(selectedProp);
   const value = onSelect ? selectedProp : internal;
-  const range = mode === "range" ? (value as DateRange | undefined) : undefined;
-  const picking = mode === "range" && !!range?.from && !range.to;
+  const range = mode === 'range' ? (value as DateRange | undefined) : undefined;
+  const picking = mode === 'range' && !!range?.from && !range.to;
   // The range in place before a pick started, for Escape to restore.
   const beforePickRef = useRef<DateRange | undefined>(undefined);
 
@@ -1824,12 +1841,12 @@ function Calendar(props: CalendarProps) {
       if (!onSelect) setInternal(next);
       onSelect?.(next);
     },
-    [onSelect]
+    [onSelect],
   );
 
   const matchers = useMemo(
     () => resolveDayMatchers({ booked, available, disabled }),
-    [booked, available, disabled]
+    [booked, available, disabled],
   );
 
   const labels = useMemo<Partial<Labels>>(
@@ -1840,13 +1857,13 @@ function Calendar(props: CalendarProps) {
       },
       ...labelsProp,
     }),
-    [labelsProp]
+    [labelsProp],
   );
 
   // Week numbers read like the day numbers beside them: 1, not 01.
   const formatters = useMemo<Partial<Formatters>>(
     () => ({ formatWeekNumber: (n: number) => String(n), ...formattersProp }),
-    [formattersProp]
+    [formattersProp],
   );
 
   // "auto": side by side when the container fits both months, stacked
@@ -1857,30 +1874,28 @@ function Calendar(props: CalendarProps) {
   const neededWidth =
     (7 + (showWeekNumber ? WEEK_COL_RATIO : 0)) * cellSize * 2 + MONTH_GAP + CALENDAR_PAD * 2;
   useIsoLayoutEffect(() => {
-    if (orientation !== "auto" || !twoMonths) return;
+    if (orientation !== 'auto' || !twoMonths) return;
     const parent = wrapperRef.current?.parentElement;
-    if (!parent || typeof ResizeObserver === "undefined") return;
+    if (!parent || typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(() => {
       const cs = getComputedStyle(parent);
-      const width =
-        parent.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const width = parent.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
       setFits(width >= neededWidth);
     });
     ro.observe(parent);
     return () => ro.disconnect();
   }, [orientation, twoMonths, neededWidth]);
-  const resolvedOrientation: "horizontal" | "vertical" =
-    orientation === "auto" ? (fits ? "horizontal" : "vertical") : orientation;
+  const resolvedOrientation: 'horizontal' | 'vertical' =
+    orientation === 'auto' ? (fits ? 'horizontal' : 'vertical') : orientation;
 
   const ctx = useMemo<CalendarContextValue>(
     () => ({
       compact,
       fill,
-      pill: shape.variant === "pill",
-      sharp: shape.variant === "sharp",
+      pill: shape.variant === 'pill',
+      sharp: shape.variant === 'sharp',
       mode,
-      selectedDay:
-        mode === "single" && value instanceof Date ? dayNumber(value) : null,
+      selectedDay: mode === 'single' && value instanceof Date ? dayNumber(value) : null,
       range,
       picking,
       disabledMatchers: matchers.disabled,
@@ -1892,12 +1907,29 @@ function Calendar(props: CalendarProps) {
       navHidden: !!rest.hideNavigation || !!rest.disableNavigation,
       dayDetail,
     }),
-    [compact, fill, shape.variant, mode, value, range, picking, matchers.disabled, resolvedOrientation, numberOfMonths, showOutsideDays, showWeekNumber, autoFocus, rest.hideNavigation, rest.disableNavigation, dayDetail]
+    [
+      compact,
+      fill,
+      shape.variant,
+      mode,
+      value,
+      range,
+      picking,
+      matchers.disabled,
+      resolvedOrientation,
+      numberOfMonths,
+      showOutsideDays,
+      showWeekNumber,
+      autoFocus,
+      rest.hideNavigation,
+      rest.disableNavigation,
+      dayDetail,
+    ],
   );
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     // Escape before the second pick puts the previous range back.
-    if (e.key === "Escape" && picking) {
+    if (e.key === 'Escape' && picking) {
       e.stopPropagation();
       commit(beforePickRef.current);
     }
@@ -1921,13 +1953,13 @@ function Calendar(props: CalendarProps) {
     modifiers: { ...matchers.modifiers, ...rest.modifiers },
     components: { ...components, ...rest.components },
     // bg-inherit passes the surface down to the stacked weekday row.
-    className: cn("bg-inherit p-2", fill && "w-full", className),
+    className: cn('bg-inherit p-2', fill && 'w-full', className),
   };
 
   const picker =
-    mode === "range" ? (
+    mode === 'range' ? (
       <DayPicker
-        {...(shared as Omit<DayPickerProps, "mode">)}
+        {...(shared as Omit<DayPickerProps, 'mode'>)}
         mode="range"
         selected={range}
         excludeDisabled
@@ -1942,7 +1974,7 @@ function Calendar(props: CalendarProps) {
       />
     ) : (
       <DayPicker
-        {...(shared as Omit<DayPickerProps, "mode">)}
+        {...(shared as Omit<DayPickerProps, 'mode'>)}
         mode="single"
         selected={value instanceof Date ? value : undefined}
         required={(props as CalendarSingleProps).required as false | undefined}
@@ -1955,8 +1987,8 @@ function Calendar(props: CalendarProps) {
       <div
         ref={wrapperRef}
         data-slot="calendar-root"
-        className={cn("rounded-[inherit] bg-inherit", fill ? "w-full" : "w-fit")}
-        style={{ "--cell-size": `${cellSize}px`, ...style } as CSSProperties}
+        className={cn('rounded-[inherit] bg-inherit', fill ? 'w-full' : 'w-fit')}
+        style={{ '--cell-size': `${cellSize}px`, ...style } as CSSProperties}
         onKeyDown={handleKeyDown}
       >
         {picker}
@@ -1965,7 +1997,14 @@ function Calendar(props: CalendarProps) {
   );
 }
 
-Calendar.displayName = "Calendar";
+Calendar.displayName = 'Calendar';
 
 export { Calendar };
-export type { CalendarProps, CalendarSingleProps, CalendarRangeProps, CalendarOrientation, DateRange, Matcher };
+export type {
+  CalendarProps,
+  CalendarSingleProps,
+  CalendarRangeProps,
+  CalendarOrientation,
+  DateRange,
+  Matcher,
+};

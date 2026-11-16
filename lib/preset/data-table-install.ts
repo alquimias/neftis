@@ -10,8 +10,8 @@
 // space through a real ts.createProgram over the project tsconfig.
 // ---------------------------------------------------------------------------
 
-import type { PresetFile } from "./sidebar-install";
-import type { PresetGenerator } from "./light-generators";
+import type { PresetFile } from './sidebar-install';
+import type { PresetGenerator } from './light-generators';
 import {
   type DataTablePreset,
   DATA_TABLE_PROPS_OPTIONS,
@@ -19,15 +19,15 @@ import {
   DATA_TABLE_PRESET_NOTE,
   DATA_TABLE_TAG_OPTIONS,
   dataTablePresetHelpers,
-} from "./data-table-options";
-import { buildRows, type ComponentRow } from "@/lib/docs/playgrounds/data-table-rows";
-import { UNDO_TOAST_SOURCE, VIEW_TABS_SOURCE } from "./data-table-sources.generated";
+} from './data-table-options';
+import { buildRows, type ComponentRow } from '#lib/docs/playgrounds/data-table-rows';
+import { UNDO_TOAST_SOURCE, VIEW_TABS_SOURCE } from './data-table-sources.generated';
 
-const SITE = "https://www.fluidfunctionalism.com";
+const SITE = 'https://www.fluidfunctionalism.com';
 
 const PRIMITIVE_COLOR: Record<string, string> = {
-  "Radix + Base UI": "blue",
-  None: "gray",
+  'Radix + Base UI': 'blue',
+  None: 'gray',
 };
 
 /** One row as source text, its parts under it when sub-rows are on. */
@@ -43,16 +43,17 @@ function rowSource(r: ComponentRow, tree: boolean): string {
     `added: ${JSON.stringify(r.added)}`,
     `tags: ${JSON.stringify(r.tags)}`,
   ];
-  if (tree && r.subRows?.length) fields.push(`subRows: [${r.subRows.map((sub) => rowSource(sub, false)).join(", ")}]`);
-  return `{ ${fields.join(", ")} }`;
+  if (tree && r.subRows?.length)
+    fields.push(`subRows: [${r.subRows.map((sub) => rowSource(sub, false)).join(', ')}]`);
+  return `{ ${fields.join(', ')} }`;
 }
 
 function dataTableDemoFile(p: DataTablePreset): string {
   const icons = p.headerIcons;
   // Saved views come with filters: they save what the filters set.
   const views = p.views && p.filters;
-  const wrap = p.lines === "wrap";
-  const lines = wrap ? `"wrap"` : "1";
+  const wrap = p.lines === 'wrap';
+  const lines = wrap ? `"wrap"` : '1';
   const edit = p.editable;
   const tree = p.expandable;
   const move = p.rowReorder;
@@ -65,62 +66,69 @@ function dataTableDemoFile(p: DataTablePreset): string {
   const iconSet = icons || p.selection;
   // Rows moved by hand start unsorted: under a sort, a move first asks to
   // remove it.
-  const sorting = move ? "[]" : `[{ id: "added", desc: true }]`;
+  const sorting = move ? '[]' : `[{ id: "added", desc: true }]`;
   // The tabs start where the first data column's text does: past the
   // handles (20px) and the boxes (28px).
-  const gutter = move && p.selection ? "pl-12" : p.selection ? "pl-7" : move ? "pl-5" : "";
-  const tools = [p.filters, p.viewMenu, p.filter !== "none"].filter(Boolean).length;
+  const gutter = move && p.selection ? 'pl-12' : p.selection ? 'pl-7' : move ? 'pl-5' : '';
+  const tools = [p.filters, p.viewMenu, p.filter !== 'none'].filter(Boolean).length;
   const providers: [string, string][] = [];
-  if (p.shape !== "rounded") providers.push(["ShapeProvider", ` defaultShape="${p.shape}"`]);
-  if (p.size === "compact") providers.push(["SizeProvider", ` size="compact"`]);
+  if (p.shape !== 'rounded') providers.push(['ShapeProvider', ` defaultShape="${p.shape}"`]);
+  if (p.size === 'compact') providers.push(['SizeProvider', ` size="compact"`]);
 
   const parts = [
-    "useDataTable",
-    "DataTable",
-    "DataTableColumnHeader",
-    ...(p.title ? ["DataTableTitle"] : []),
-    ...(p.filter !== "none" ? ["DataTableSearch"] : []),
-    ...(p.filters ? ["DataTableFilters", "DataTableFilterChips"] : []),
-    ...(p.viewMenu ? ["DataTableViewOptions"] : []),
-    ...(p.pagination ? ["DataTablePagination"] : []),
-    ...(p.selection ? ["DataTableSelectionBar", "selectColumn"] : []),
-    ...(p.rowActions ? ["rowActionsColumn"] : []),
-    ...(move ? ["rowHandleColumn", "moveRows"] : []),
-    ...(held ? ["useUndoableRows"] : []),
-    "type ColumnDef",
-    ...(views ? ["type TableState"] : []),
+    'useDataTable',
+    'DataTable',
+    'DataTableColumnHeader',
+    ...(p.title ? ['DataTableTitle'] : []),
+    ...(p.filter !== 'none' ? ['DataTableSearch'] : []),
+    ...(p.filters ? ['DataTableFilters', 'DataTableFilterChips'] : []),
+    ...(p.viewMenu ? ['DataTableViewOptions'] : []),
+    ...(p.pagination ? ['DataTablePagination'] : []),
+    ...(p.selection ? ['DataTableSelectionBar', 'selectColumn'] : []),
+    ...(p.rowActions ? ['rowActionsColumn'] : []),
+    ...(move ? ['rowHandleColumn', 'moveRows'] : []),
+    ...(held ? ['useUndoableRows'] : []),
+    'type ColumnDef',
+    ...(views ? ['type TableState'] : []),
   ];
   const react = [
-    "startTransition",
-    ...(deletes ? ["useCallback"] : []),
-    "useEffect",
-    "useMemo",
-    ...(deletes ? ["useRef"] : []),
-    "useState",
+    'startTransition',
+    ...(deletes ? ['useCallback'] : []),
+    'useEffect',
+    'useMemo',
+    ...(deletes ? ['useRef'] : []),
+    'useState',
   ];
-  const icon = (name: string) => (icons ? `, icon: icons[${JSON.stringify(name)}]` : "");
+  const icon = (name: string) => (icons ? `, icon: icons[${JSON.stringify(name)}]` : '');
   const l: string[] = [];
 
   l.push(`"use client";`);
   l.push(``);
-  l.push(`import { ${react.join(", ")} } from "react";`);
+  l.push(`import { ${react.join(', ')} } from "react";`);
   if (views && !p.title) {
     l.push(`import { AnimatePresence, motion } from "motion/react";`);
-    l.push(`import { spring } from "@/lib/springs";`);
+    l.push(`import { spring } from "#lib/springs";`);
   }
   l.push(`import {`);
-  l.push(`  ${parts.join(",\n  ")},`);
-  l.push(`} from "@/components/ui/data-table";`);
-  if (p.rowActions) l.push(`import { MenuItem } from "@/components/ui/menu-item";`);
-  l.push(`import { Badge } from "@/components/ui/badge";`);
-  if (tools > 1) l.push(`import { TooltipGroup } from "@/components/ui/tooltip";`);
-  if (views || held) l.push(`import { Button } from "@/components/ui/button";`);
-  if (iconSet) l.push(`import { useIcons } from "@/lib/icon-context";`);
-  l.push(`import { ${providers.some(([n]) => n === "ShapeProvider") ? "ShapeProvider, " : ""}useShape } from "@/lib/shape-context";`);
-  l.push(`import { ${providers.some(([n]) => n === "SizeProvider") ? "SizeProvider, " : ""}typeClass, useSize } from "@/lib/size-context";`);
-  l.push(`import { cn } from "@/lib/utils";`);
-  if (views) l.push(`import { ${p.title ? "RowReveal, " : ""}ViewTabs } from "@/components/data-table-view-tabs";`);
-  if (toast) l.push(`import { UndoToaster, showUndoToast } from "@/components/undo-toast";`);
+  l.push(`  ${parts.join(',\n  ')},`);
+  l.push(`} from "#components/ui/data-table";`);
+  if (p.rowActions) l.push(`import { MenuItem } from "#components/ui/menu-item";`);
+  l.push(`import { Badge } from "#components/ui/badge";`);
+  if (tools > 1) l.push(`import { TooltipGroup } from "#components/ui/tooltip";`);
+  if (views || held) l.push(`import { Button } from "#components/ui/button";`);
+  if (iconSet) l.push(`import { useIcons } from "#lib/icon-context";`);
+  l.push(
+    `import { ${providers.some(([n]) => n === 'ShapeProvider') ? 'ShapeProvider, ' : ''}useShape } from "#lib/shape-context";`,
+  );
+  l.push(
+    `import { ${providers.some(([n]) => n === 'SizeProvider') ? 'SizeProvider, ' : ''}typeClass, useSize } from "#lib/size-context";`,
+  );
+  l.push(`import { cn } from "#lib/utils";`);
+  if (views)
+    l.push(
+      `import { ${p.title ? 'RowReveal, ' : ''}ViewTabs } from "#components/data-table-view-tabs";`,
+    );
+  if (toast) l.push(`import { UndoToaster, showUndoToast } from "#components/undo-toast";`);
   l.push(``);
   l.push(`type Row = {`);
   l.push(`  slug: string;`);
@@ -145,17 +153,22 @@ function dataTableDemoFile(p: DataTablePreset): string {
     l.push(``);
   }
   l.push(`const PRIMITIVE_COLOR = {`);
-  for (const [k, v] of Object.entries(PRIMITIVE_COLOR)) l.push(`  ${JSON.stringify(k)}: ${JSON.stringify(v)},`);
+  for (const [k, v] of Object.entries(PRIMITIVE_COLOR))
+    l.push(`  ${JSON.stringify(k)}: ${JSON.stringify(v)},`);
   l.push(`} as const;`);
   l.push(`// The select editor's and the filter's options carry the badge colors,`);
   l.push(`// so their menus show each option's dot.`);
-  l.push(`const PRIMITIVE_OPTIONS = Object.entries(PRIMITIVE_COLOR).map(([value, color]) => ({ value, color }));`);
+  l.push(
+    `const PRIMITIVE_OPTIONS = Object.entries(PRIMITIVE_COLOR).map(([value, color]) => ({ value, color }));`,
+  );
   l.push(``);
   l.push(`// A day as the date editor writes it (Wed Nov 4, the year only outside`);
   l.push(`// this one), so a date reads the same whether its cell edits or not.`);
   l.push(`// By hand, not with the viewer's time zone: an ISO day read as a local`);
   l.push(`// Date can land on the day before.`);
-  l.push(`const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];`);
+  l.push(
+    `const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];`,
+  );
   l.push(`const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];`);
   l.push(`function formatDay(iso: string) {`);
   l.push(`  if (!iso) return "";`);
@@ -165,7 +178,9 @@ function dataTableDemoFile(p: DataTablePreset): string {
   l.push(`  return \`\${day} \${MONTHS[m - 1]} \${d}\${year}\`;`);
   l.push(`}`);
   l.push(``);
-  l.push(`const CHIP_RADIUS = { pill: "rounded-full", rounded: "rounded-md", sharp: "rounded-[1px]" };`);
+  l.push(
+    `const CHIP_RADIUS = { pill: "rounded-full", rounded: "rounded-md", sharp: "rounded-[1px]" };`,
+  );
   l.push(``);
   l.push(`/** A row's tags as chips that only read: the tags editor's chips, less`);
   l.push(` *  the ✕. They sit where the editor's do, so editing moves none. */`);
@@ -181,7 +196,7 @@ function dataTableDemoFile(p: DataTablePreset): string {
         `      className="-my-0.5 flex min-w-0 flex-wrap items-center gap-1"`
       : // One line: the 24px chips overhang the line box, and one cut at
         // the cell's edge fades out, as the editor's do.
-        `      className="flex h-[1lh] min-w-0 items-center gap-1 overflow-x-clip [mask-image:linear-gradient(to_right,black_calc(100%-16px),transparent)]"`
+        `      className="flex h-[1lh] min-w-0 items-center gap-1 overflow-x-clip [mask-image:linear-gradient(to_right,black_calc(100%-16px),transparent)]"`,
   );
   l.push(`    >`);
   l.push(`      {tags.map((tag) => (`);
@@ -202,7 +217,7 @@ function dataTableDemoFile(p: DataTablePreset): string {
   l.push(`}`);
   l.push(``);
   if (deletes) {
-    l.push(`/** The rows without these slugs${tree ? ", at any depth" : ""}. */`);
+    l.push(`/** The rows without these slugs${tree ? ', at any depth' : ''}. */`);
     l.push(`function removeRows(list: Row[], slugs: readonly string[]): Row[] {`);
     if (tree) {
       l.push(`  return list`);
@@ -213,11 +228,15 @@ function dataTableDemoFile(p: DataTablePreset): string {
     l.push(``);
   }
   if (edit) {
-    l.push(`/** Writes one edit into the rows${tree ? ", a sub-row's into its parent's parts" : ""}. */`);
+    l.push(
+      `/** Writes one edit into the rows${tree ? ", a sub-row's into its parent's parts" : ''}. */`,
+    );
     l.push(`function updateRow(list: Row[], slug: string, key: string, value: unknown): Row[] {`);
     if (tree) {
       l.push(`  return list.map((r) =>`);
-      l.push(`    r.slug === slug ? { ...r, [key]: value } : r.subRows ? { ...r, subRows: updateRow(r.subRows, slug, key, value) } : r`);
+      l.push(
+        `    r.slug === slug ? { ...r, [key]: value } : r.subRows ? { ...r, subRows: updateRow(r.subRows, slug, key, value) } : r`,
+      );
       l.push(`  );`);
     } else l.push(`  return list.map((r) => (r.slug === slug ? { ...r, [key]: value } : r));`);
     l.push(`}`);
@@ -230,7 +249,9 @@ function dataTableDemoFile(p: DataTablePreset): string {
     l.push(`  /** Stable through renames and reorders: the tab's key. */`);
     l.push(`  id: number;`);
     l.push(`  name: string;`);
-    l.push(`  state: Pick<TableState, "columnFilters" | "globalFilter" | "sorting" | "columnOrder" | "columnVisibility">;`);
+    l.push(
+      `  state: Pick<TableState, "columnFilters" | "globalFilter" | "sorting" | "columnOrder" | "columnVisibility">;`,
+    );
     l.push(`};`);
     l.push(``);
     l.push(`/** The "All" view: how the table starts. */`);
@@ -301,7 +322,7 @@ function dataTableDemoFile(p: DataTablePreset): string {
   if (held || iconSet) l.push(``);
 
   // ── Columns ──────────────────────────────────────────────────────────────
-  const deps = [...(icons ? ["icons"] : []), ...(p.rowActions ? ["deleteRows"] : [])];
+  const deps = [...(icons ? ['icons'] : []), ...(p.rowActions ? ['deleteRows'] : [])];
   l.push(`  const columns = useMemo<ColumnDef<Row>[]>(`);
   l.push(`    () => [`);
   const c: string[] = [];
@@ -311,7 +332,9 @@ function dataTableDemoFile(p: DataTablePreset): string {
   c.push(`  accessorKey: "name",`);
   c.push(`  header: ({ column }) => <DataTableColumnHeader column={column} title="Component" />,`);
   c.push(`  enableHiding: false,`);
-  c.push(`  meta: { label: "Component", lines: ${lines}${icon("square-library")}${edit ? `, editor: "text"` : ""} },`);
+  c.push(
+    `  meta: { label: "Component", lines: ${lines}${icon('square-library')}${edit ? `, editor: "text"` : ''} },`,
+  );
   c.push(`},`);
   c.push(`{`);
   c.push(`  accessorKey: "primitives",`);
@@ -321,14 +344,16 @@ function dataTableDemoFile(p: DataTablePreset): string {
   c.push(`    <span className="flex h-[1lh] min-w-0 items-center">`);
   c.push(`      <Badge`);
   c.push(`        variant="ghost"`);
-  c.push(`        color={PRIMITIVE_COLOR[row.original.primitives as keyof typeof PRIMITIVE_COLOR] ?? "gray"}`);
+  c.push(
+    `        color={PRIMITIVE_COLOR[row.original.primitives as keyof typeof PRIMITIVE_COLOR] ?? "gray"}`,
+  );
   c.push(`      >`);
   c.push(`        {row.original.primitives}`);
   c.push(`      </Badge>`);
   c.push(`    </span>`);
   c.push(`  ),`);
   c.push(`  meta: {`);
-  c.push(`    label: "Primitives"${icon("folder")},`);
+  c.push(`    label: "Primitives"${icon('folder')},`);
   if (edit) c.push(`    editor: { type: "select", options: PRIMITIVE_OPTIONS },`);
   c.push(`    filter: { type: "options", options: PRIMITIVE_OPTIONS },`);
   c.push(`  },`);
@@ -338,13 +363,13 @@ function dataTableDemoFile(p: DataTablePreset): string {
   c.push(`  accessorKey: "fluidHover",`);
   c.push(`  header: "Fluid hover",`);
   c.push(`  cell: ({ row }) => (row.original.fluidHover ? "Yes" : "No"),`);
-  c.push(`  meta: { label: "Fluid hover"${icon("star")} },`);
+  c.push(`  meta: { label: "Fluid hover"${icon('star')} },`);
   c.push(`},`);
   c.push(`{`);
   c.push(`  accessorKey: "props",`);
   c.push(`  header: ({ column }) => <DataTableColumnHeader column={column} title="Props" />,`);
   c.push(
-    `  meta: { label: "Props", className: "tabular-nums"${icon("sliders-horizontal")}${edit ? `, editor: { type: "number", options: [${DATA_TABLE_PROPS_OPTIONS.join(", ")}] }` : ""} },`
+    `  meta: { label: "Props", className: "tabular-nums"${icon('sliders-horizontal')}${edit ? `, editor: { type: "number", options: [${DATA_TABLE_PROPS_OPTIONS.join(', ')}] }` : ''} },`,
   );
   c.push(`},`);
   c.push(`{`);
@@ -353,20 +378,29 @@ function dataTableDemoFile(p: DataTablePreset): string {
   c.push(`  cell: ({ row }) => formatDay(row.original.added),`);
   c.push(`  // A floor of 112px: the column never gets narrower than a whole date.`);
   c.push(
-    `  meta: { label: "Added", className: "min-w-28 tabular-nums whitespace-nowrap"${icon("calendar")}${edit ? `, editor: "date"` : ""} },`
+    `  meta: { label: "Added", className: "min-w-28 tabular-nums whitespace-nowrap"${icon('calendar')}${edit ? `, editor: "date"` : ''} },`,
   );
   c.push(`},`);
   c.push(`{`);
   c.push(`  accessorKey: "tags",`);
   c.push(`  header: "Tags",`);
   c.push(`  enableSorting: false,`);
-  c.push(`  // Read only, the tags editor's chips without their ✕.${edit ? " Editing swaps in the editor, which draws its own." : ""}`);
+  c.push(
+    `  // Read only, the tags editor's chips without their ✕.${edit ? ' Editing swaps in the editor, which draws its own.' : ''}`,
+  );
   c.push(`  cell: ({ row }) => <TagChips tags={row.original.tags} />,`);
   c.push(`  meta: {`);
   c.push(`    label: "Tags",`);
-  c.push(`    className: "min-w-56"${icon("tag")},`);
-  if (wrap) c.push(`    // Text wrap wraps the chips too, so none is cut at the edge.`, `    lines: "wrap",`);
-  if (edit) c.push(`    editor: { type: "tags", options: ${JSON.stringify(DATA_TABLE_TAG_OPTIONS)}, creatable: true },`);
+  c.push(`    className: "min-w-56"${icon('tag')},`);
+  if (wrap)
+    c.push(
+      `    // Text wrap wraps the chips too, so none is cut at the edge.`,
+      `    lines: "wrap",`,
+    );
+  if (edit)
+    c.push(
+      `    editor: { type: "tags", options: ${JSON.stringify(DATA_TABLE_TAG_OPTIONS)}, creatable: true },`,
+    );
   c.push(`  },`);
   c.push(`},`);
   c.push(`{`);
@@ -379,9 +413,11 @@ function dataTableDemoFile(p: DataTablePreset): string {
   c.push(`      target="_blank"`);
   c.push(`      rel="noreferrer"`);
   c.push(`      // The cell cuts what runs past it, a focus ring included: the link`);
-  c.push(`      // ${wrap ? "draws its ring inside its box." : "cuts its own text short and draws its ring inside that box."}`);
   c.push(
-    `      className="${wrap ? "" : "inline-block max-w-full truncate align-bottom "}underline decoration-foreground/30 underline-offset-2 transition-colors duration-80 hover:decoration-foreground focus-visible:outline-offset-[-1px]"`
+    `      // ${wrap ? 'draws its ring inside its box.' : 'cuts its own text short and draws its ring inside that box.'}`,
+  );
+  c.push(
+    `      className="${wrap ? '' : 'inline-block max-w-full truncate align-bottom '}underline decoration-foreground/30 underline-offset-2 transition-colors duration-80 hover:decoration-foreground focus-visible:outline-offset-[-1px]"`,
   );
   c.push(`    >`);
   c.push(`      {row.original.website}`);
@@ -389,14 +425,16 @@ function dataTableDemoFile(p: DataTablePreset): string {
   c.push(`  ),`);
   c.push(`  // Room for most of the URL before it cuts short.`);
   c.push(
-    `  meta: { label: "Website", lines: ${lines}, className: "min-w-60"${icon("link")}${edit ? `, editor: { type: "text", link: true }` : ""} },`
+    `  meta: { label: "Website", lines: ${lines}, className: "min-w-60"${icon('link')}${edit ? `, editor: { type: "text", link: true }` : ''} },`,
   );
   c.push(`},`);
   c.push(`{`);
   c.push(`  accessorKey: "summary",`);
   c.push(`  header: "Summary",`);
   c.push(`  // Last of the data columns: it takes the width left, at least 256px.`);
-  c.push(`  meta: { label: "Summary", className: "w-full min-w-64", lines: ${lines}${icon("file")}${edit ? `, editor: "text"` : ""} },`);
+  c.push(
+    `  meta: { label: "Summary", className: "w-full min-w-64", lines: ${lines}${icon('file')}${edit ? `, editor: "text"` : ''} },`,
+  );
   c.push(`},`);
   if (p.rowActions) {
     c.push(`rowActionsColumn<Row>((row) => (`);
@@ -404,34 +442,40 @@ function dataTableDemoFile(p: DataTablePreset): string {
     c.push(`    <MenuItem`);
     c.push(`      index={0}`);
     c.push(`      label="Open docs"`);
-    c.push(`      onSelect={() => window.open(\`\${SITE}/docs/\${row.original.slug.split("/")[0]}\`, "_blank", "noreferrer")}`);
+    c.push(
+      `      onSelect={() => window.open(\`\${SITE}/docs/\${row.original.slug.split("/")[0]}\`, "_blank", "noreferrer")}`,
+    );
     c.push(`    />`);
     c.push(`    <MenuItem`);
     c.push(`      index={1}`);
     c.push(`      label="Copy install command"`);
     c.push(`      // A part (a sub-row) installs with its component.`);
-    c.push(`      onSelect={() => navigator.clipboard?.writeText(\`npx shadcn@latest add \${SITE}/r/\${row.original.slug.split("/")[0]}.json\`)}`);
+    c.push(
+      `      onSelect={() => navigator.clipboard?.writeText(\`npx shadcn@latest add \${SITE}/r/\${row.original.slug.split("/")[0]}.json\`)}`,
+    );
     c.push(`    />`);
     c.push(`    <MenuItem`);
     c.push(`      index={2}`);
     c.push(`      label="Delete"`);
     c.push(`      destructive`);
-    c.push(`      onSelect={() => deleteRows([row.original.slug], \`Deleted \${row.original.name}\`)}`);
+    c.push(
+      `      onSelect={() => deleteRows([row.original.slug], \`Deleted \${row.original.name}\`)}`,
+    );
     c.push(`    />`);
     c.push(`  </>`);
     c.push(`)),`);
   }
   for (const line of c) l.push(`      ${line}`);
   l.push(`    ],`);
-  l.push(`    [${deps.join(", ")}]`);
+  l.push(`    [${deps.join(', ')}]`);
   l.push(`  );`);
   l.push(``);
 
   // ── Table ────────────────────────────────────────────────────────────────
   l.push(`  const table = useDataTable({`);
-  l.push(`    data: ${held ? "rows" : "ROWS"},`);
+  l.push(`    data: ${held ? 'rows' : 'ROWS'},`);
   l.push(`    columns,`);
-  l.push(`    pageSize: ${p.pagination ? p.pageSize : "10_000"},`);
+  l.push(`    pageSize: ${p.pagination ? p.pageSize : '10_000'},`);
   l.push(`    getRowId: (row) => row.slug,`);
   if (tree) l.push(`    getSubRows: (row) => row.subRows,`);
   // No sticky left columns: no Freeze item in the header menus either.
@@ -442,9 +486,11 @@ function dataTableDemoFile(p: DataTablePreset): string {
   if (p.pinning !== p.pinRight) {
     // Sticky on one side only: the left the boxes and the first column,
     // the right the row menus.
-    const left = p.pinning ? [...(move ? [`"drag"`] : []), ...(p.selection ? [`"select"`] : []), `"name"`] : [];
+    const left = p.pinning
+      ? [...(move ? [`"drag"`] : []), ...(p.selection ? [`"select"`] : []), `"name"`]
+      : [];
     const right = p.pinRight && p.rowActions ? [`"actions"`] : [];
-    l.push(`      columnPinning: { left: [${left.join(", ")}], right: [${right.join(", ")}] },`);
+    l.push(`      columnPinning: { left: [${left.join(', ')}], right: [${right.join(', ')}] },`);
   }
   l.push(`    },`);
   l.push(`  });`);
@@ -457,7 +503,9 @@ function dataTableDemoFile(p: DataTablePreset): string {
     l.push(`    const view = i === 0 ? START_VIEW : views[i - 1]?.state;`);
     l.push(`    if (!view) return;`);
     l.push(`    table.captureLayout();`);
-    l.push(`    table.setState((old) => ({ ...old, ...view, pagination: { ...old.pagination, pageIndex: 0 } }));`);
+    l.push(
+      `    table.setState((old) => ({ ...old, ...view, pagination: { ...old.pagination, pageIndex: 0 } }));`,
+    );
     l.push(`    setViewIndex(i);`);
     l.push(`  };`);
     l.push(`  // A view just saved opens for naming in its tab.`);
@@ -470,15 +518,21 @@ function dataTableDemoFile(p: DataTablePreset): string {
     l.push(`    // Its way back: the view returns to its place, open.`);
     l.push(`    showUndoToast(\`Deleted \${view.name}\`, () => {`);
     l.push(`      setViews((old) => [...old.slice(0, at), view, ...old.slice(at)]);`);
-    l.push(`      table.setState((old) => ({ ...old, ...view.state, pagination: { ...old.pagination, pageIndex: 0 } }));`);
+    l.push(
+      `      table.setState((old) => ({ ...old, ...view.state, pagination: { ...old.pagination, pageIndex: 0 } }));`,
+    );
     l.push(`      setViewIndex(at + 1);`);
     l.push(`    });`);
     l.push(`  };`);
     l.push(`  const saveView = () => {`);
-    l.push(`    const { columnFilters, globalFilter, sorting, columnOrder, columnVisibility } = table.getState();`);
+    l.push(
+      `    const { columnFilters, globalFilter, sorting, columnOrder, columnVisibility } = table.getState();`,
+    );
     l.push(`    const name = \`View \${views.length + 1}\`;`);
     l.push(`    const id = views.reduce((max, v) => Math.max(max, v.id), 0) + 1;`);
-    l.push(`    setViews((old) => [...old, { id, name, state: { columnFilters, globalFilter, sorting, columnOrder, columnVisibility } }]);`);
+    l.push(
+      `    setViews((old) => [...old, { id, name, state: { columnFilters, globalFilter, sorting, columnOrder, columnVisibility } }]);`,
+    );
     l.push(`    setViewIndex(views.length + 1);`);
     l.push(`    // Ask for its name in place, on the new tab.`);
     l.push(`    setNameNext(views.length + 1);`);
@@ -493,7 +547,9 @@ function dataTableDemoFile(p: DataTablePreset): string {
     l.push(`      return next;`);
     l.push(`    });`);
     l.push(`    setViewIndex((cur) =>`);
-    l.push(`      cur === from ? to : cur > Math.min(from, to) && cur <= Math.max(from, to) ? cur + (from < to ? -1 : 1) : cur`);
+    l.push(
+      `      cur === from ? to : cur > Math.min(from, to) && cur <= Math.max(from, to) ? cur + (from < to ? -1 : 1) : cur`,
+    );
     l.push(`    );`);
     l.push(`  };`);
     l.push(`  // Save view shows once the table differs from the open view.`);
@@ -518,12 +574,18 @@ function dataTableDemoFile(p: DataTablePreset): string {
     l.push(`      views={views}`);
     l.push(`      selected={viewIndex}`);
     l.push(`      onSelect={openView}`);
-    l.push(`      onRename={(at, name) => setViews((old) => old.map((v, i) => (i === at ? { ...v, name } : v)))}`);
+    l.push(
+      `      onRename={(at, name) => setViews((old) => old.map((v, i) => (i === at ? { ...v, name } : v)))}`,
+    );
     l.push(`      onDelete={deleteView}`);
     l.push(`      onMove={moveView}`);
     l.push(`      nameRequest={nameNext}`);
     l.push(`      onNameRequested={() => setNameNext(null)}`);
-    if (gutter) l.push(`      // Past the leading columns the tabs start where the first data column does.`, `      className="${gutter}"`);
+    if (gutter)
+      l.push(
+        `      // Past the leading columns the tabs start where the first data column does.`,
+        `      className="${gutter}"`,
+      );
     l.push(`    />`);
     l.push(`  );`);
     l.push(``);
@@ -541,7 +603,7 @@ function dataTableDemoFile(p: DataTablePreset): string {
   if (p.title || tools > 0 || views) {
     // The title, then the tools at the right end, on one row.
     // 12px under a title (the stack's 8px plus 4), a step off the table.
-    o.push(`  <div className="${p.title ? "mb-1 " : ""}flex flex-wrap items-center gap-1">`);
+    o.push(`  <div className="${p.title ? 'mb-1 ' : ''}flex flex-wrap items-center gap-1">`);
     if (p.title) o.push(`    <DataTableTitle table={table}>Components</DataTableTitle>`);
     if (views && !p.title) {
       o.push(`    {/* No title: the views share the row with the tools. They fade in`);
@@ -571,8 +633,10 @@ function dataTableDemoFile(p: DataTablePreset): string {
     const tool: string[] = [];
     if (p.filters) tool.push(`<DataTableFilters table={table} />`);
     if (p.viewMenu) tool.push(`<DataTableViewOptions table={table} />`);
-    if (p.filter === "column") tool.push(`<DataTableSearch table={table} column="name" placeholder="Search components…" />`);
-    else if (p.filter === "all") tool.push(`<DataTableSearch table={table} placeholder="Search all columns…" />`);
+    if (p.filter === 'column')
+      tool.push(`<DataTableSearch table={table} column="name" placeholder="Search components…" />`);
+    else if (p.filter === 'all')
+      tool.push(`<DataTableSearch table={table} placeholder="Search all columns…" />`);
     if (tool.length > 1) {
       o.push(`    <TooltipGroup>`);
       tool.forEach((t) => o.push(`      ${t}`));
@@ -599,8 +663,8 @@ function dataTableDemoFile(p: DataTablePreset): string {
   o.push(`    table={table}`);
   if (p.resize) o.push(`    resizeColumns`);
   if (p.reorder) o.push(`    reorderColumns`);
-  if (p.align !== "auto") o.push(`    cellAlign="${p.align}"`);
-  if (p.rowHover !== "auto") o.push(p.rowHover === "on" ? `    rowHover` : `    rowHover={false}`);
+  if (p.align !== 'auto') o.push(`    cellAlign="${p.align}"`);
+  if (p.rowHover !== 'auto') o.push(p.rowHover === 'on' ? `    rowHover` : `    rowHover={false}`);
   o.push(`    loading={loading}`);
   o.push(`    // A screenful of skeletons, not one per row of a long page.`);
   o.push(`    loadingRows={${p.pagination ? Math.min(Number(p.pageSize), 20) : 20}}`);
@@ -618,11 +682,15 @@ function dataTableDemoFile(p: DataTablePreset): string {
     o.push(`          }`);
     o.push(`        : table.getState().columnFilters.length > 0`);
     o.push(`          ? { title: "No components match" }`);
-    o.push(`          : { title: "No components match", description: "Try a name like Dialog or Tabs." }`);
+    o.push(
+      `          : { title: "No components match", description: "Try a name like Dialog or Tabs." }`,
+    );
   } else {
     o.push(`      table.getState().columnFilters.length > 0`);
     o.push(`        ? { title: "No components match" }`);
-    o.push(`        : { title: "No components match", description: "Try a name like Dialog or Tabs." }`);
+    o.push(
+      `        : { title: "No components match", description: "Try a name like Dialog or Tabs." }`,
+    );
   }
   o.push(`    }`);
   if (edit) {
@@ -636,10 +704,14 @@ function dataTableDemoFile(p: DataTablePreset): string {
     o.push(`    }`);
   }
   if (move) {
-    o.push(`    // Drag a handle, or Alt + ↑ / ↓ on a row. Under a sort, the table asks to remove it first.`);
+    o.push(
+      `    // Drag a handle, or Alt + ↑ / ↓ on a row. Under a sort, the table asks to remove it first.`,
+    );
     o.push(`    onRowReorder={(move) =>`);
     o.push(`      history.apply(`);
-    o.push(`        move.rows.length === 1 ? \`Moved \${move.rows[0].original.name}\` : \`Moved \${move.rows.length} rows\`,`);
+    o.push(
+      `        move.rows.length === 1 ? \`Moved \${move.rows[0].original.name}\` : \`Moved \${move.rows.length} rows\`,`,
+    );
     o.push(`        (old) => moveRows(old, move)`);
     o.push(`      )`);
     o.push(`    }`);
@@ -649,7 +721,10 @@ function dataTableDemoFile(p: DataTablePreset): string {
     o.push(`    onRedo={history.redo}`);
   }
   o.push(`  />`);
-  if (p.pagination) o.push(`  <DataTablePagination table={table} pageSizes={[${DATA_TABLE_PAGE_SIZES.join(", ")}]} />`);
+  if (p.pagination)
+    o.push(
+      `  <DataTablePagination table={table} pageSizes={[${DATA_TABLE_PAGE_SIZES.join(', ')}]} />`,
+    );
   if (p.selection) {
     o.push(`  {/* Floats over the table while rows are selected: ⌘K opens the actions. */}`);
     o.push(`  <DataTableSelectionBar`);
@@ -663,7 +738,9 @@ function dataTableDemoFile(p: DataTablePreset): string {
     o.push(`        onSelect: () => {`);
     o.push(`          deleteRows(`);
     o.push(`            picked.map((r) => r.original.slug),`);
-    o.push(`            picked.length === 1 ? \`Deleted \${picked[0].original.name}\` : \`Deleted \${picked.length} rows\``);
+    o.push(
+      `            picked.length === 1 ? \`Deleted \${picked[0].original.name}\` : \`Deleted \${picked.length} rows\``,
+    );
     o.push(`          );`);
     o.push(`          table.resetRowSelection();`);
     o.push(`        },`);
@@ -675,14 +752,18 @@ function dataTableDemoFile(p: DataTablePreset): string {
     o.push(`        onSelect: () =>`);
     o.push(`          navigator.clipboard?.writeText(`);
     o.push(`            // Each component once: parts (sub-rows) install with theirs.`);
-    o.push(`            \`npx shadcn@latest add \${[...new Set(picked.map((r) => r.original.slug.split("/")[0]))].map((slug) => \`\${SITE}/r/\${slug}.json\`).join(" ")}\``);
+    o.push(
+      `            \`npx shadcn@latest add \${[...new Set(picked.map((r) => r.original.slug.split("/")[0]))].map((slug) => \`\${SITE}/r/\${slug}.json\`).join(" ")}\``,
+    );
     o.push(`          ),`);
     o.push(`      },`);
     o.push(`      {`);
     o.push(`        value: "names",`);
     o.push(`        label: "Copy names",`);
     o.push(`        icon: icons.file,`);
-    o.push(`        onSelect: () => navigator.clipboard?.writeText(picked.map((r) => r.original.name).join("\\n")),`);
+    o.push(
+      `        onSelect: () => navigator.clipboard?.writeText(picked.map((r) => r.original.name).join("\\n")),`,
+    );
     o.push(`      },`);
     o.push(`    ]}`);
     o.push(`  />`);
@@ -700,7 +781,7 @@ function dataTableDemoFile(p: DataTablePreset): string {
   }
   l.push(`  );`);
   l.push(`}`);
-  return l.join("\n") + "\n";
+  return l.join('\n') + '\n';
 }
 
 export function generateDataTablePresetFiles(p: DataTablePreset): PresetFile[] {
@@ -708,17 +789,17 @@ export function generateDataTablePresetFiles(p: DataTablePreset): PresetFile[] {
   return [
     // First: the file to import and render. The rest support it.
     {
-      path: "components/data-table-demo.tsx",
-      type: "registry:component",
-      target: "components/data-table-demo.tsx",
+      path: 'components/data-table-demo.tsx',
+      type: 'registry:component',
+      target: 'components/data-table-demo.tsx',
       content: dataTableDemoFile(p),
     },
     ...(views
       ? [
           {
-            path: "components/data-table-view-tabs.tsx",
-            type: "registry:component" as const,
-            target: "components/data-table-view-tabs.tsx",
+            path: 'components/data-table-view-tabs.tsx',
+            type: 'registry:component' as const,
+            target: 'components/data-table-view-tabs.tsx',
             content: VIEW_TABS_SOURCE,
           },
         ]
@@ -726,9 +807,9 @@ export function generateDataTablePresetFiles(p: DataTablePreset): PresetFile[] {
     ...(toast
       ? [
           {
-            path: "components/undo-toast.tsx",
-            type: "registry:component" as const,
-            target: "components/undo-toast.tsx",
+            path: 'components/undo-toast.tsx',
+            type: 'registry:component' as const,
+            target: 'components/undo-toast.tsx',
             content: UNDO_TOAST_SOURCE,
           },
         ]
@@ -743,28 +824,28 @@ export function dataTablePresetRegistryDeps(p: DataTablePreset): string[] {
   const views = p.views && p.filters;
   const toast = p.rowActions || p.selection || views;
   return [
-    "utils",
-    "data-table",
-    "badge",
-    "shape-context",
-    "size-context",
-    ...(p.headerIcons || p.selection || views ? ["icon-context"] : []),
-    ...(views || p.rowActions || p.selection || p.editable || p.rowReorder ? ["button"] : []),
-    ...(views ? ["tabs", "tooltip", "springs"] : []),
-    ...(toast ? ["key-cap", "font-weight", "command-menu"] : []),
+    'utils',
+    'data-table',
+    'badge',
+    'shape-context',
+    'size-context',
+    ...(p.headerIcons || p.selection || views ? ['icon-context'] : []),
+    ...(views || p.rowActions || p.selection || p.editable || p.rowReorder ? ['button'] : []),
+    ...(views ? ['tabs', 'tooltip', 'springs'] : []),
+    ...(toast ? ['key-cap', 'font-weight', 'command-menu'] : []),
   ];
 }
 
 /** npm dependencies beyond what registryDependencies pull transitively. */
 export function dataTablePresetNpmDeps(p: DataTablePreset): string[] {
   const views = p.views && p.filters;
-  return p.rowActions || p.selection || views ? ["sonner"] : [];
+  return p.rowActions || p.selection || views ? ['sonner'] : [];
 }
 
 export const DATA_TABLE_PRESET_GENERATOR: PresetGenerator = {
-  title: "DataTable (playground preset)",
+  title: 'DataTable (playground preset)',
   description:
-    "A data table generated from a fluidfunctionalism.com playground configuration: the exact variant you built, installable.",
+    'A data table generated from a fluidfunctionalism.com playground configuration: the exact variant you built, installable.',
   files: (p) => generateDataTablePresetFiles(p as unknown as DataTablePreset),
   registryDeps: (p) => dataTablePresetRegistryDeps(p as unknown as DataTablePreset),
   npmDeps: (p) => dataTablePresetNpmDeps(p as unknown as DataTablePreset),

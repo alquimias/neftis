@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import {
   animate,
   easeInOut,
@@ -10,10 +10,10 @@ import {
   useReducedMotion,
   useTransform,
   type AnimationPlaybackControls,
-} from "motion/react";
-import { useShape } from "@/registry/default/lib/shape-context";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { ScrollArea } from "@/registry/base/scroll-area";
+} from 'motion/react';
+import { useShape } from '#registry/default/lib/shape-context';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { ScrollArea } from '#registry/base/scroll-area';
 import {
   Table,
   TableHeader,
@@ -21,32 +21,51 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@/registry/default/table";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { FakeCursor } from "@/lib/docs/fake-cursor";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { scrollAreaProps } from "@/lib/docs/api/scrollbars";
-import { KeyCap } from "@/lib/key-cap";
+} from '#registry/default/table';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { FakeCursor } from '#lib/docs/fake-cursor';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { scrollAreaProps } from '#lib/docs/api/scrollbars';
+import { KeyCap } from '#lib/key-cap';
 
 // ---------------------------------------------------------------------------
 // Demo data
 // ---------------------------------------------------------------------------
 
-const RELEASES = Array.from(
-  { length: 24 },
-  (_, i) => `v1.${23 - i}.0 — maintenance release`
-);
+const RELEASES = Array.from({ length: 24 }, (_, i) => `v1.${23 - i}.0 — maintenance release`);
 
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 const CITIES = [
-  "Amsterdam", "Berlin", "Copenhagen", "Dublin", "Helsinki", "Lisbon",
-  "London", "Madrid", "Oslo", "Paris", "Prague", "Stockholm",
-  "Vienna", "Warsaw", "Zurich",
+  'Amsterdam',
+  'Berlin',
+  'Copenhagen',
+  'Dublin',
+  'Helsinki',
+  'Lisbon',
+  'London',
+  'Madrid',
+  'Oslo',
+  'Paris',
+  'Prague',
+  'Stockholm',
+  'Vienna',
+  'Warsaw',
+  'Zurich',
 ];
 
 // Deterministic fake metric so the table renders identically on every pass.
@@ -190,10 +209,7 @@ function ReleaseRows() {
   return (
     <div className="flex flex-col p-3">
       {RELEASES.map((release) => (
-        <div
-          key={release}
-          className="px-3 py-2 text-site-body text-foreground whitespace-nowrap"
-        >
+        <div key={release} className="px-3 py-2 text-site-body text-foreground whitespace-nowrap">
           {release}
         </div>
       ))}
@@ -202,11 +218,7 @@ function ReleaseRows() {
 }
 
 function PanelLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="text-site-caption text-muted-foreground text-center">
-      {children}
-    </span>
-  );
+  return <span className="text-site-caption text-muted-foreground text-center">{children}</span>;
 }
 
 // ---------------------------------------------------------------------------
@@ -231,7 +243,10 @@ const SCROLL_TO = 200;
 const LEGS_S = [0.8, 0.7, 1.2, 0.6, 1.0, 0.5, 0.7, 1.3];
 const LOOP_S = LEGS_S.reduce((a, b) => a + b, 0);
 /** Where each leg ends, as offsets (0..1) into the loop. */
-const TIMES = LEGS_S.reduce<number[]>((acc, leg) => [...acc, acc[acc.length - 1] + leg / LOOP_S], [0]);
+const TIMES = LEGS_S.reduce<number[]>(
+  (acc, leg) => [...acc, acc[acc.length - 1] + leg / LOOP_S],
+  [0],
+);
 const XS = [OUT.x, IN.x, IN.x, IN.x, IN.x, IN.x, IN.x, OUT.x, OUT.x];
 const YS = [OUT.y, IN.y, IN.y, IN.y, IN.y, IN.y, IN.y, OUT.y, OUT.y];
 const SCROLLS = [0, 0, 0, SCROLL_TO, SCROLL_TO, 0, 0, 0, 0];
@@ -267,7 +282,7 @@ function ProblemPreview() {
     }
     controlsRef.current = animate(progress, [0, 1], {
       duration: LOOP_S,
-      ease: "linear",
+      ease: 'linear',
       repeat: Infinity,
     });
   }, [scripted, progress]);
@@ -279,18 +294,23 @@ function ProblemPreview() {
     const root = fluidRef.current;
     if (!root || hoveringRef.current === on) return;
     hoveringRef.current = on;
-    const init = { bubbles: true, pointerType: "mouse" } as const;
-    if (on) root.dispatchEvent(new PointerEvent("pointermove", init));
-    else root.dispatchEvent(new PointerEvent("pointerout", { ...init, relatedTarget: root.parentElement }));
+    const init = { bubbles: true, pointerType: 'mouse' } as const;
+    if (on) root.dispatchEvent(new PointerEvent('pointermove', init));
+    else
+      root.dispatchEvent(
+        new PointerEvent('pointerout', { ...init, relatedTarget: root.parentElement }),
+      );
   };
 
   // Every frame of the script: scroll both lists and hover the fluid one
   // while the cursor is inside it.
-  useMotionValueEvent(progress, "change", () => {
+  useMotionValueEvent(progress, 'change', () => {
     if (!scripted) return;
     const top = scroll.get();
     if (plainRef.current) plainRef.current.scrollTop = top;
-    const viewport = fluidRef.current?.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]');
+    const viewport = fluidRef.current?.querySelector<HTMLElement>(
+      '[data-slot="scroll-area-viewport"]',
+    );
     if (viewport) viewport.scrollTop = top;
     const cx = x.get();
     const cy = y.get();
@@ -322,8 +342,8 @@ function ProblemPreview() {
           {scripted && <FakeCursor x={x} y={y} />}
         </div>
         <PanelLabel>
-          <span aria-hidden="true">❌</span> The native scrollbar hides until you
-          scroll, so the list looks cut off
+          <span aria-hidden="true">❌</span> The native scrollbar hides until you scroll, so the
+          list looks cut off
         </PanelLabel>
       </div>
       <div className="flex flex-col gap-2">
@@ -338,8 +358,8 @@ function ProblemPreview() {
           {scripted && <FakeCursor x={x} y={y} />}
         </div>
         <PanelLabel>
-          <span aria-hidden="true">✅</span> ScrollArea shows its scrollbar on
-          hover and fades the edges
+          <span aria-hidden="true">✅</span> ScrollArea shows its scrollbar on hover and fades the
+          edges
         </PanelLabel>
       </div>
     </div>
@@ -357,16 +377,8 @@ function ProblemDemo() {
 function HorizontalDemo() {
   const shape = useShape();
   return (
-    <ComponentPreview
-      code={HORIZONTAL_CODE}
-      padding="none"
-      minHeightClass="min-h-0"
-    >
-      <ScrollArea
-        orientation="horizontal"
-        viewportClassName="scroll-fade-x"
-        className="w-full"
-      >
+    <ComponentPreview code={HORIZONTAL_CODE} padding="none" minHeightClass="min-h-0">
+      <ScrollArea orientation="horizontal" viewportClassName="scroll-fade-x" className="w-full">
         <div className="flex gap-2 p-3 w-max">
           {MONTHS.map((month) => (
             <div
@@ -414,14 +426,9 @@ function TableDemo() {
           <TableBody>
             {CITIES.map((city, r) => (
               <TableRow key={city} index={r}>
-                <TableCell className="text-foreground whitespace-nowrap">
-                  {city}
-                </TableCell>
+                <TableCell className="text-foreground whitespace-nowrap">{city}</TableCell>
                 {MONTHS.map((m, c) => (
-                  <TableCell
-                    key={m}
-                    className="text-right tabular-nums whitespace-nowrap"
-                  >
+                  <TableCell key={m} className="text-right tabular-nums whitespace-nowrap">
                     {metric(r, c)}
                   </TableCell>
                 ))}
@@ -450,11 +457,7 @@ function H3({ children }: { children: React.ReactNode }) {
 }
 
 function P({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-site-body text-muted-foreground">
-      {children}
-    </p>
-  );
+  return <p className="text-site-body text-muted-foreground">{children}</p>;
 }
 
 export default function ScrollbarsDoc() {
@@ -467,10 +470,9 @@ export default function ScrollbarsDoc() {
       <DocSection title="The problem">
         <div className="flex flex-col gap-3 text-site-body text-muted-foreground">
           <p>
-            macOS hides the scrollbar until you start scrolling, so a clipped
-            list gives no sign it has more below. And the moment it does appear,
-            it&apos;s the grey OS default sitting on top of your design. You
-            either get no affordance or the wrong one.
+            macOS hides the scrollbar until you start scrolling, so a clipped list gives no sign it
+            has more below. And the moment it does appear, it&apos;s the grey OS default sitting on
+            top of your design. You either get no affordance or the wrong one.
           </p>
         </div>
         <ProblemDemo />
@@ -478,16 +480,14 @@ export default function ScrollbarsDoc() {
 
       <DocSection title="The scrollbar">
         <P>
-          The thumb rests narrow and low-contrast, then widens and darkens on
-          hover so it stays quiet until you reach for it. Press{" "}
-          <KeyCap className="align-middle">R</KeyCap>{" "}
-          to see the radius follow the shape system. On touch-primary devices
-          the whole thing steps aside for native overflow scrolling, where
-          platform physics beat any custom scrollbar.
+          The thumb rests narrow and low-contrast, then widens and darkens on hover so it stays
+          quiet until you reach for it. Press <KeyCap className="align-middle">R</KeyCap> to see the
+          radius follow the shape system. On touch-primary devices the whole thing steps aside for
+          native overflow scrolling, where platform physics beat any custom scrollbar.
         </P>
         <P>
-          Ships in Radix and Base UI flavors with the same API — switch with
-          the Primitive toggle. Scrollbar machinery adapted from{" "}
+          Ships in Radix and Base UI flavors with the same API — switch with the Primitive toggle.
+          Scrollbar machinery adapted from{' '}
           <a
             href="https://lina.sameer.sh"
             target="_blank"
@@ -502,7 +502,7 @@ export default function ScrollbarsDoc() {
 
       <DocSection title="The fade">
         <P>
-          The baseline edge treatment is shadcn&apos;s{" "}
+          The baseline edge treatment is shadcn&apos;s{' '}
           <a
             href="https://ui.shadcn.com/docs/utils/scroll-fade"
             target="_blank"
@@ -511,17 +511,16 @@ export default function ScrollbarsDoc() {
           >
             scroll-fade
           </a>
-          , vendored as a CSS utility in{" "}
+          , vendored as a CSS utility in{' '}
           <code className="px-1 py-0.5 rounded bg-[light-dark(#EBEBED,#2C2C2C)] text-site-caption text-foreground">
             globals.css
           </code>
-          . A mask dissolves the content toward the edges that have more to
-          scroll, and a scroll-driven animation keeps the true start and end
-          crisp. Drop{" "}
+          . A mask dissolves the content toward the edges that have more to scroll, and a
+          scroll-driven animation keeps the true start and end crisp. Drop{' '}
           <code className="px-1 py-0.5 rounded bg-[light-dark(#EBEBED,#2C2C2C)] text-site-caption text-foreground">
             scroll-fade
-          </code>{" "}
-          (or{" "}
+          </code>{' '}
+          (or{' '}
           <code className="px-1 py-0.5 rounded bg-[light-dark(#EBEBED,#2C2C2C)] text-site-caption text-foreground">
             scroll-fade-x
           </code>
@@ -537,10 +536,10 @@ export default function ScrollbarsDoc() {
 
         <H3>Double overflow</H3>
         <P>
-          A table taller and wider than its box.{" "}
+          A table taller and wider than its box.{' '}
           <code className="px-1 py-0.5 rounded bg-[light-dark(#EBEBED,#2C2C2C)] text-site-caption text-foreground">
             orientation=&quot;both&quot;
-          </code>{" "}
+          </code>{' '}
           adds both scrollbars and the corner.
         </P>
         <TableDemo />

@@ -1,12 +1,20 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Check, Copy } from "lucide-react";
-import { cn } from "@/registry/default/lib/utils";
-import { useShape } from "@/registry/default/lib/shape-context";
-import { InputCopy } from "@/registry/default/input-copy";
-import { Tabs, TabsItem } from "@/components/flavored/tabs";
-import { Compare, clickStep, turns, useLoop, usePlayback, useScriptCursor, type Side } from "./hero-shared";
+import { useState } from 'react';
+import { Check, Copy } from 'lucide-react';
+import { cn } from '#registry/default/lib/utils';
+import { useShape } from '#registry/default/lib/shape-context';
+import { InputCopy } from '#registry/default/input-copy';
+import { Tabs, TabsItem } from '#components/flavored/tabs';
+import {
+  Compare,
+  clickStep,
+  turns,
+  useLoop,
+  usePlayback,
+  useScriptCursor,
+  type Side,
+} from './hero-shared';
 
 // ---------------------------------------------------------------------------
 // The other /docs/skill examples. Each pairs what an agent writes on its own with
@@ -21,7 +29,7 @@ import { Compare, clickStep, turns, useLoop, usePlayback, useScriptCursor, type 
 // Tabs: weight without reflow and a sliding pill
 // ---------------------------------------------------------------------------
 
-const TABS = ["Overview", "Activity", "Settings"];
+const TABS = ['Overview', 'Activity', 'Settings'];
 
 /** Generic tabs: font-semibold on the active tab widens it and
  *  shoves its neighbors; the active pill jumps instead of sliding, and each
@@ -38,10 +46,11 @@ function GenericTabs({ selected, onSelect }: { selected: number; onSelect: (i: n
           aria-selected={selected === i}
           onClick={() => onSelect(i)}
           className={cn(
-            "h-9 px-3 text-site-body text-muted-foreground [&:is(:hover,[data-script-hover])]:bg-muted/60",
+            'h-9 px-3 text-site-body text-muted-foreground [&:is(:hover,[data-script-hover])]:bg-muted/60',
             // eslint-disable-next-line no-restricted-syntax -- the generic version, bold on purpose to show the reflow
-            selected === i && "bg-muted font-semibold text-foreground [&:is(:hover,[data-script-hover])]:bg-muted",
-            shape.bg
+            selected === i &&
+              'bg-muted font-semibold text-foreground [&:is(:hover,[data-script-hover])]:bg-muted',
+            shape.bg,
           )}
         >
           {label}
@@ -57,7 +66,7 @@ export function TabsExample() {
   const [generic, setGeneric] = useState(0);
   const [skill, setSkill] = useState(0);
   const [active, setActive] = useState<Side | null>(null);
-  const set = (side: Side) => (side === "generic" ? setGeneric : setSkill);
+  const set = (side: Side) => (side === 'generic' ? setGeneric : setSkill);
   const tab = (side: Side) => `[data-side="${side}"] [role="tab"]`;
   useLoop(
     playing,
@@ -65,7 +74,7 @@ export function TabsExample() {
       ...clickStep(cursor, tab(side), 1, () => set(side)(1), 700),
       ...clickStep(cursor, tab(side), 2, () => set(side)(2), 700),
       ...clickStep(cursor, tab(side), 0, () => set(side)(0), 900),
-    ])
+    ]),
   );
 
   return (
@@ -76,7 +85,12 @@ export function TabsExample() {
       cursor={playing ? cursor : null}
       generic={<GenericTabs selected={generic} onSelect={setGeneric} />}
       skill={
-        <Tabs selectedIndex={skill} onSelect={setSkill} idPrefix="skill-example-tabs" aria-label="Example tabs">
+        <Tabs
+          selectedIndex={skill}
+          onSelect={setSkill}
+          idPrefix="skill-example-tabs"
+          aria-label="Example tabs"
+        >
           {TABS.map((label, i) => (
             <TabsItem key={label} index={i} label={label} />
           ))}
@@ -90,7 +104,7 @@ export function TabsExample() {
 // Copy field: the action swaps in place, the field never reflows
 // ---------------------------------------------------------------------------
 
-const COMMAND = "npx skills add mickadesign/fluid-functionalism";
+const COMMAND = 'npx skills add mickadesign/fluid-functionalism';
 
 /** The generic read-only field: the command, truncated, with the
  *  copy action inside on the right, like shadcn's copy input. */
@@ -99,18 +113,20 @@ function CopyField({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={cn(
-        "flex h-9 w-full max-w-[240px] items-center gap-1 border border-border bg-background pl-3 pr-1",
-        shape.bg
+        'flex h-9 w-full max-w-[240px] items-center gap-1 border border-border bg-background pl-3 pr-1',
+        shape.bg,
       )}
     >
-      <span className="min-w-0 flex-1 truncate font-mono text-site-caption text-muted-foreground">{COMMAND}</span>
+      <span className="min-w-0 flex-1 truncate font-mono text-site-caption text-muted-foreground">
+        {COMMAND}
+      </span>
       {children}
     </div>
   );
 }
 
 const actionClass =
-  "flex h-7 shrink-0 items-center gap-1.5 px-1.5 text-site-caption text-muted-foreground [&:is(:hover,[data-script-hover])]:text-foreground";
+  'flex h-7 shrink-0 items-center gap-1.5 px-1.5 text-site-caption text-muted-foreground [&:is(:hover,[data-script-hover])]:text-foreground';
 
 /** Generic: the icon snaps to a check and "Copy" turns into "Copied!", which
  *  is wider, so the action grows and eats into the command text. */
@@ -121,7 +137,7 @@ function GenericCopy({ copied, onCopy }: { copied: boolean; onCopy: () => void }
     <CopyField>
       <button type="button" onClick={onCopy} className={cn(actionClass, shape.bg)}>
         <Icon className="size-3.5" strokeWidth={1.5} />
-        {copied ? "Copied!" : "Copy"}
+        {copied ? 'Copied!' : 'Copy'}
       </button>
     </CopyField>
   );
@@ -136,14 +152,14 @@ function GenericCopy({ copied, onCopy }: { copied: boolean; onCopy: () => void }
 function clickWithoutClipboard(button: HTMLElement | null, value: string) {
   const clipboard = navigator.clipboard;
   if (!button || !clipboard) return;
-  const own = Object.prototype.hasOwnProperty.call(clipboard, "writeText");
+  const own = Object.prototype.hasOwnProperty.call(clipboard, 'writeText');
   const writeText = clipboard.writeText;
   let restored = false;
   const restore = () => {
     if (restored) return;
     restored = true;
     if (own) clipboard.writeText = writeText;
-    else Reflect.deleteProperty(clipboard, "writeText");
+    else Reflect.deleteProperty(clipboard, 'writeText');
   };
   clipboard.writeText = (text: string) => {
     if (text !== value) return writeText.call(clipboard, text);
@@ -162,19 +178,28 @@ export function CopyExample() {
   useLoop(
     playing,
     turns(setActive, (side) =>
-      side === "generic"
+      side === 'generic'
         ? [
             // Aim for the small action button, the only part that copies.
             ...clickStep(cursor, '[data-side="generic"] button', 0, () => setGeneric(true), 1400),
             { ms: 600, run: () => setGeneric(false) },
           ]
         : // Click the command itself: the whole field copies.
-          clickStep(cursor, '[data-side="skill"] mark', 0, () => {
-            clickWithoutClipboard(rootRef.current?.querySelector<HTMLElement>('[data-side="skill"] button') ?? null, COMMAND);
-          }, 2300)
+          clickStep(
+            cursor,
+            '[data-side="skill"] mark',
+            0,
+            () => {
+              clickWithoutClipboard(
+                rootRef.current?.querySelector<HTMLElement>('[data-side="skill"] button') ?? null,
+                COMMAND,
+              );
+            },
+            2300,
+          ),
     ),
     // InputCopy reverts on its own timer; the generic "Copied!" waits on the script.
-    () => setGeneric(false)
+    () => setGeneric(false),
   );
 
   return (
@@ -207,21 +232,21 @@ export function CopyExample() {
  *  be scripted. `pressed` is the index of the button held, or null. */
 function pressProps(index: number, pressed: number | null, setPressed: (v: number | null) => void) {
   return {
-    "data-pressed": pressed === index,
+    'data-pressed': pressed === index,
     onPointerDown: () => setPressed(index),
     onPointerUp: () => setPressed(null),
     onPointerLeave: () => setPressed(null),
   };
 }
 
-const button = "relative inline-flex items-center justify-center text-background outline-none";
+const button = 'relative inline-flex items-center justify-center text-background outline-none';
 
 /** The same press on 2 sizes: the compact rung of the ladder above a wide
  *  default button. The script presses them one after the other, so the
  *  difference between them is felt, not just seen. */
 const SIZES = [
-  { className: "h-7 px-3 text-site-caption", label: "Skip" },
-  { className: "h-9 w-full max-w-64 text-site-body", label: "Continue" },
+  { className: 'h-7 px-3 text-site-caption', label: 'Skip' },
+  { className: 'h-9 w-full max-w-64 text-site-body', label: 'Continue' },
 ];
 
 type PressProps = { pressed: number | null; setPressed: (v: number | null) => void };
@@ -243,10 +268,11 @@ function GenericPress({ pressed, setPressed }: PressProps) {
             button,
             className,
             // Tailwind v4's scale-* sets the `scale` property, not transform.
-            "bg-foreground transition-[scale,background-color] duration-150 ease-out",
-            "[&:is(:hover,[data-script-hover]):not([data-pressed=true])]:bg-foreground/90",
-            pressed === i && "scale-90 bg-[color-mix(in_oklab,var(--foreground)_80%,var(--background))]",
-            shape.bg
+            'bg-foreground transition-[scale,background-color] duration-150 ease-out',
+            '[&:is(:hover,[data-script-hover]):not([data-pressed=true])]:bg-foreground/90',
+            pressed === i &&
+              'scale-90 bg-[color-mix(in_oklab,var(--foreground)_80%,var(--background))]',
+            shape.bg,
           )}
         >
           {label}
@@ -273,17 +299,17 @@ function SkillPress({ pressed, setPressed }: PressProps) {
             button,
             className,
             // The Button's hover: the surface eases 10% toward the page.
-            "[--btn-rest:var(--foreground)] [&:is(:hover,[data-script-hover])]:[--btn-rest:color-mix(in_oklab,var(--foreground)_90%,var(--background))]",
-            shape.bg
+            '[--btn-rest:var(--foreground)] [&:is(:hover,[data-script-hover])]:[--btn-rest:color-mix(in_oklab,var(--foreground)_90%,var(--background))]',
+            shape.bg,
           )}
         >
           <span
             aria-hidden
             className={cn(
-              "absolute inset-px rounded-[inherit] bg-[var(--btn-bg)] transition-[box-shadow,background-color]",
+              'absolute inset-px rounded-[inherit] bg-[var(--btn-bg)] transition-[box-shadow,background-color]',
               pressed === i
-                ? "shadow-[0_0_0_0px_var(--btn-bg)] [--btn-bg:color-mix(in_oklab,var(--foreground)_80%,var(--background))] [transition-duration:80ms,80ms]"
-                : "shadow-[0_0_0_1px_var(--btn-bg)] [--btn-bg:var(--btn-rest)] [transition-duration:180ms,80ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1),ease]"
+                ? 'shadow-[0_0_0_0px_var(--btn-bg)] [--btn-bg:color-mix(in_oklab,var(--foreground)_80%,var(--background))] [transition-duration:80ms,80ms]'
+                : 'shadow-[0_0_0_1px_var(--btn-bg)] [--btn-bg:var(--btn-rest)] [transition-duration:180ms,80ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1),ease]',
             )}
           />
           <span className="relative">{label}</span>
@@ -299,7 +325,7 @@ export function PressExample() {
   const [generic, setGeneric] = useState<number | null>(null);
   const [skill, setSkill] = useState<number | null>(null);
   const [active, setActive] = useState<Side | null>(null);
-  const set = (side: Side) => (side === "generic" ? setGeneric : setSkill);
+  const set = (side: Side) => (side === 'generic' ? setGeneric : setSkill);
   // Each turn clicks the small button, then the wide one.
   const target = (side: Side) => `[data-side="${side}"] button`;
   useLoop(
@@ -314,7 +340,7 @@ export function PressExample() {
     () => {
       setGeneric(null);
       setSkill(null);
-    }
+    },
   );
 
   return (

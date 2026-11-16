@@ -1,30 +1,27 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import {
-  InputMessage,
-  type QueuedMessage,
-} from "@/registry/default/input-message";
-import { ChatMessage } from "@/registry/default/chat-message";
-import { ThinkingIndicator } from "@/registry/default/thinking-indicator";
-import { Button } from "@/registry/radix/button";
-import { Dropdown } from "@/components/flavored/dropdown";
-import { MenuItem } from "@/registry/default/menu-item";
-import { Tooltip } from "@/registry/radix/tooltip";
-import { useIcon } from "@/lib/icon-context";
-import { spring } from "@/registry/default/lib/springs";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { InputMessage, type QueuedMessage } from '#registry/default/input-message';
+import { ChatMessage } from '#registry/default/chat-message';
+import { ThinkingIndicator } from '#registry/default/thinking-indicator';
+import { Button } from '#registry/radix/button';
+import { Dropdown } from '#components/flavored/dropdown';
+import { MenuItem } from '#registry/default/menu-item';
+import { Tooltip } from '#registry/radix/tooltip';
+import { useIcon } from '#lib/icon-context';
+import { spring } from '#registry/default/lib/springs';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
 import {
   QueuedStack,
   collapsedStackHeight,
   useQueueCardHeight,
-} from "@/lib/docs/playgrounds/queued-stack";
+} from '#lib/docs/playgrounds/queued-stack';
 
-const MODELS = ["Sonnet 5", "Sonnet 4.6", "Sonnet 4.5", "Haiku 4"] as const;
+const MODELS = ['Sonnet 5', 'Sonnet 4.6', 'Sonnet 4.5', 'Haiku 4'] as const;
 
 type Turn = {
-  from: "user" | "assistant";
+  from: 'user' | 'assistant';
   text: string;
   thinking?: boolean;
   // Set on the demo's seeded turns: already sent when the demo loads, so they
@@ -51,8 +48,8 @@ type Turn = {
 export function QueuedChatDemo({
   code,
   rich = false,
-  minHeightClass = "h-[440px]",
-  placeholder = "Send while I’m responding to queue a message…",
+  minHeightClass = 'h-[440px]',
+  placeholder = 'Send while I’m responding to queue a message…',
   placeholderSuggestion,
 }: {
   code: string;
@@ -63,18 +60,18 @@ export function QueuedChatDemo({
   placeholderSuggestion?: string;
 }) {
   const cardH = useQueueCardHeight();
-  const ResetIcon = useIcon("rotate-ccw");
-  const PlayIcon = useIcon("play");
-  const PauseIcon = useIcon("pause");
-  const PlusIcon = useIcon("plus");
-  const ChevronDownIcon = useIcon("chevron-down");
-  const ImageIcon = useIcon("image");
-  const FileTextIcon = useIcon("square-library");
+  const ResetIcon = useIcon('rotate-ccw');
+  const PlayIcon = useIcon('play');
+  const PauseIcon = useIcon('pause');
+  const PlusIcon = useIcon('plus');
+  const ChevronDownIcon = useIcon('chevron-down');
+  const ImageIcon = useIcon('image');
+  const FileTextIcon = useIcon('square-library');
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const [composerFiles, setComposerFiles] = useState<File[]>([]);
   const [queue, setQueue] = useState<QueuedMessage[]>([]);
-  const [chatStatus, setChatStatus] = useState<"idle" | "streaming">("idle");
+  const [chatStatus, setChatStatus] = useState<'idle' | 'streaming'>('idle');
   const [chat, setChat] = useState<Turn[]>([]);
   // The id of the message currently playing its queued→sent morph. The morph
   // props (layout/layoutId) are applied ONLY to this one, ONLY for the brief
@@ -87,7 +84,7 @@ export function QueuedChatDemo({
     () => () => {
       if (morphTimerRef.current) clearTimeout(morphTimerRef.current);
     },
-    []
+    [],
   );
 
   // ── Pausable stepper: drives the in-flight reply (think → stream word-by-
@@ -145,19 +142,14 @@ export function QueuedChatDemo({
     }
   };
 
-  const respond = (
-    text: string,
-    files: File[] = [],
-    queuedId?: string,
-    seeded = false
-  ) => {
+  const respond = (text: string, files: File[] = [], queuedId?: string, seeded = false) => {
     const reply = `Replying to “${text}”. Here's a fuller answer that streams in a word at a time so you can watch the queue release the next message.`;
     setChat((c) => [
       ...c,
-      { from: "user", text, files, id: queuedId, seeded },
-      { from: "assistant", text: "", thinking: true, seeded },
+      { from: 'user', text, files, id: queuedId, seeded },
+      { from: 'assistant', text: '', thinking: true, seeded },
     ]);
-    setChatStatus("streaming");
+    setChatStatus('streaming');
 
     // A dispatched (from-queue) text message morphs from its stack card; flag it
     // so the transcript applies the morph props, then release them once the
@@ -172,27 +164,27 @@ export function QueuedChatDemo({
       fn: (m: { text: string; thinking?: boolean }) => {
         text: string;
         thinking?: boolean;
-      }
+      },
     ) =>
       setChat((c) => {
         const next = [...c];
         for (let k = next.length - 1; k >= 0; k--) {
-          if (next[k].from === "assistant") {
-            next[k] = { from: "assistant", ...fn(next[k]) };
+          if (next[k].from === 'assistant') {
+            next[k] = { from: 'assistant', ...fn(next[k]) };
             break;
           }
         }
         return next;
       });
 
-    const words = reply.split(" ");
+    const words = reply.split(' ');
     const revealWord = (i: number) => {
       patchAssistant(() => ({
-        text: words.slice(0, i + 1).join(" "),
+        text: words.slice(0, i + 1).join(' '),
         thinking: false,
       }));
       if (i === words.length - 1) {
-        setChatStatus("idle");
+        setChatStatus('idle');
         return;
       }
       armStep(() => revealWord(i + 1), 150);
@@ -212,19 +204,19 @@ export function QueuedChatDemo({
   const loadInitialDemo = () => {
     pausedRef.current = true;
     setPaused(true);
-    respond("Help me polish the dashboard design", [], undefined, true);
+    respond('Help me polish the dashboard design', [], undefined, true);
     const [img, pdf] = demoFilesRef.current;
     setQueue([
       // A message with attachments, a short one, and a longer one.
       {
         id: crypto.randomUUID(),
-        text: "Match these mockups",
+        text: 'Match these mockups',
         files: img && pdf ? [img, pdf] : [],
       },
-      { id: crypto.randomUUID(), text: "Tighten the spacing", files: [] },
+      { id: crypto.randomUUID(), text: 'Tighten the spacing', files: [] },
       {
         id: crypto.randomUUID(),
-        text: "Audit the color contrast across the dashboard and suggest accessible token values",
+        text: 'Audit the color contrast across the dashboard and suggest accessible token values',
         files: [],
       },
     ]);
@@ -234,16 +226,16 @@ export function QueuedChatDemo({
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      fetch("/micka.png")
+      fetch('/micka.png')
         .then((r) => r.blob())
-        .then((b) => new File([b], "photo.png", { type: b.type || "image/png" })),
-      fetch("/design-notes.pdf")
+        .then((b) => new File([b], 'photo.png', { type: b.type || 'image/png' })),
+      fetch('/design-notes.pdf')
         .then((r) => r.blob())
         .then(
           (b) =>
-            new File([b], "design-notes.pdf", {
-              type: b.type || "application/pdf",
-            })
+            new File([b], 'design-notes.pdf', {
+              type: b.type || 'application/pdf',
+            }),
         ),
     ])
       .then(([img, pdf]) => {
@@ -283,11 +275,11 @@ export function QueuedChatDemo({
   // with the messages queued), not an empty composer.
   const resetDemo = () => {
     clearStep();
-    setValue("");
+    setValue('');
     setComposerFiles([]);
     setChat([]);
     setQueue([]);
-    setChatStatus("idle");
+    setChatStatus('idle');
     loadInitialDemo();
   };
 
@@ -296,7 +288,7 @@ export function QueuedChatDemo({
     setComposerFiles(item.files);
     setQueue((q) => q.filter((x) => x.id !== item.id));
     requestAnimationFrame(() => {
-      const el = inputRef.current?.querySelector("textarea");
+      const el = inputRef.current?.querySelector('textarea');
       if (el) {
         el.focus();
         el.setSelectionRange(el.value.length, el.value.length);
@@ -313,7 +305,7 @@ export function QueuedChatDemo({
 
   // ── Composer chrome for the rich (hero) variant: attach dropdown + model
   // picker, with click-outside to close.
-  const [model, setModel] = useState<(typeof MODELS)[number]>("Sonnet 5");
+  const [model, setModel] = useState<(typeof MODELS)[number]>('Sonnet 5');
   const [attachOpen, setAttachOpen] = useState(false);
   const [modelOpen, setModelOpen] = useState(false);
   const attachRef = useRef<HTMLDivElement>(null);
@@ -321,35 +313,32 @@ export function QueuedChatDemo({
   useEffect(() => {
     if (!rich) return;
     const handler = (e: MouseEvent) => {
-      if (attachRef.current && !attachRef.current.contains(e.target as Node))
-        setAttachOpen(false);
-      if (modelRef.current && !modelRef.current.contains(e.target as Node))
-        setModelOpen(false);
+      if (attachRef.current && !attachRef.current.contains(e.target as Node)) setAttachOpen(false);
+      if (modelRef.current && !modelRef.current.contains(e.target as Node)) setModelOpen(false);
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, [rich]);
 
-  const playbackButton =
-    paused
+  const playbackButton = paused
+    ? {
+        icon: <PlayIcon size={16} strokeWidth={1.5} />,
+        tooltip: 'Resume',
+        onClick: resumeAnim,
+      }
+    : chatStatus === 'streaming'
       ? {
-          icon: <PlayIcon size={16} strokeWidth={1.5} />,
-          tooltip: "Resume",
-          onClick: resumeAnim,
+          icon: <PauseIcon size={16} strokeWidth={1.5} />,
+          tooltip: 'Pause',
+          onClick: pauseAnim,
         }
-      : chatStatus === "streaming"
+      : chat.length > 0 || queue.length > 0
         ? {
-            icon: <PauseIcon size={16} strokeWidth={1.5} />,
-            tooltip: "Pause",
-            onClick: pauseAnim,
+            icon: <ResetIcon size={16} strokeWidth={1.5} />,
+            tooltip: 'Reset',
+            onClick: resetDemo,
           }
-        : chat.length > 0 || queue.length > 0
-          ? {
-              icon: <ResetIcon size={16} strokeWidth={1.5} />,
-              tooltip: "Reset",
-              onClick: resetDemo,
-            }
-          : undefined;
+        : undefined;
 
   return (
     <ComponentPreview
@@ -360,10 +349,7 @@ export function QueuedChatDemo({
       playbackButton={playbackButton}
     >
       <div className="relative w-full self-stretch">
-        <div
-          ref={scrollRef}
-          className="absolute inset-0 overflow-y-auto scrollbar-hide"
-        >
+        <div ref={scrollRef} className="absolute inset-0 overflow-y-auto scrollbar-hide">
           <div
             className="flex min-h-full flex-col justify-start gap-2"
             style={{
@@ -406,7 +392,7 @@ export function QueuedChatDemo({
                 >
                   {m.text}
                 </ChatMessage>
-              )
+              ),
             )}
           </div>
         </div>
@@ -432,7 +418,7 @@ export function QueuedChatDemo({
           queue={queue}
           onQueueChange={setQueue}
           showQueue={false}
-          history={chat.filter((m) => m.from === "user").map((m) => m.text)}
+          history={chat.filter((m) => m.from === 'user').map((m) => m.text)}
           files={rich ? composerFiles : undefined}
           onFilesChange={rich ? setComposerFiles : undefined}
           onSend={(text, files, meta) => {
@@ -441,7 +427,7 @@ export function QueuedChatDemo({
             // dispatch (meta.queuedId) carries its own text/files and must
             // leave any in-progress draft the user is typing untouched.
             if (!meta?.queuedId) {
-              setValue("");
+              setValue('');
               setComposerFiles([]);
             }
           }}
@@ -452,9 +438,9 @@ export function QueuedChatDemo({
             setChat((c) => {
               const next = [...c];
               for (let k = next.length - 1; k >= 0; k--) {
-                if (next[k].from === "assistant") {
-                  if (next[k].thinking || next[k].text === "") {
-                    next[k] = { from: "assistant", text: "Stopped." };
+                if (next[k].from === 'assistant') {
+                  if (next[k].thinking || next[k].text === '') {
+                    next[k] = { from: 'assistant', text: 'Stopped.' };
                   } else {
                     next[k] = { ...next[k], thinking: false };
                   }
@@ -463,7 +449,7 @@ export function QueuedChatDemo({
               }
               return next;
             });
-            setChatStatus("idle");
+            setChatStatus('idle');
           }}
           placeholder={placeholder}
           placeholderSuggestion={placeholderSuggestion}
@@ -498,7 +484,7 @@ export function QueuedChatDemo({
                               icon={ImageIcon}
                               onSelect={() => {
                                 setAttachOpen(false);
-                                openFilePicker("image/png,image/jpeg");
+                                openFilePicker('image/png,image/jpeg');
                               }}
                             />
                             <MenuItem
@@ -507,7 +493,7 @@ export function QueuedChatDemo({
                               icon={FileTextIcon}
                               onSelect={() => {
                                 setAttachOpen(false);
-                                openFilePicker("application/pdf");
+                                openFilePicker('application/pdf');
                               }}
                             />
                           </Dropdown>

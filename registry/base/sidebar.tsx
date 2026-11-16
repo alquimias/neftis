@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useCallback,
@@ -9,22 +9,22 @@ import {
   type ReactNode,
   type CSSProperties,
   type HTMLAttributes,
-} from "react";
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
-import { motion, useReducedMotion } from "motion/react";
-import { cn } from "@/lib/utils";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { omit } from "@/lib/omit";
-import { useSurface, SurfaceProvider } from "@/lib/surface-context";
-import { surfaceClasses } from "@/lib/surface-classes";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from 'react';
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
+import { motion, useReducedMotion } from 'motion/react';
+import { cn } from '#lib/utils';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { omit } from '#lib/omit';
+import { useSurface, SurfaceProvider } from '#lib/surface-context';
+import { surfaceClasses } from '#lib/surface-classes';
+import { ScrollArea } from '#components/ui/scroll-area';
 import {
   useSidebar,
   SidebarShell,
   type SidebarSide,
   type SidebarVariant,
   type SidebarCollapsible,
-} from "@/components/ui/sidebar-core";
+} from '#components/ui/sidebar-core';
 
 // ─── Mobile sheet ────────────────────────────────────────────────────────────
 //
@@ -40,12 +40,12 @@ import {
 // be forwarded from Base UI's render-prop payload onto a motion.div.
 type MotionSafeDivProps = Omit<
   React.HTMLAttributes<HTMLDivElement>,
-  | "onDrag"
-  | "onDragStart"
-  | "onDragEnd"
-  | "onAnimationStart"
-  | "onAnimationEnd"
-  | "onAnimationIteration"
+  | 'onDrag'
+  | 'onDragStart'
+  | 'onDragEnd'
+  | 'onAnimationStart'
+  | 'onAnimationEnd'
+  | 'onAnimationIteration'
 >;
 
 interface SidebarSheetProps {
@@ -84,7 +84,7 @@ function SidebarSheet({ side, open, onClose, children }: SidebarSheetProps) {
     return () => clearTimeout(id);
   }, [exiting, finishClose]);
 
-  const offscreen = side === "left" ? "-100%" : "100%";
+  const offscreen = side === 'left' ? '-100%' : '100%';
 
   return (
     <DialogPrimitive.Root
@@ -99,10 +99,7 @@ function SidebarSheet({ side, open, onClose, children }: SidebarSheetProps) {
             boosted to /80 in explicit dark mode. */}
         <DialogPrimitive.Backdrop
           render={(backdropProps) => {
-            const rest = omit(
-              backdropProps as React.HTMLAttributes<HTMLDivElement>,
-              ["style"]
-            );
+            const rest = omit(backdropProps as React.HTMLAttributes<HTMLDivElement>, ['style']);
             return (
               <motion.div
                 {...(rest as MotionSafeDivProps)}
@@ -119,10 +116,13 @@ function SidebarSheet({ side, open, onClose, children }: SidebarSheetProps) {
           aria-label="Sidebar"
           initialFocus={panelRef}
           render={(popupProps) => {
-            const { style: baseStyle, ref: baseRef, ...rest } =
-              popupProps as React.HTMLAttributes<HTMLDivElement> & {
-                ref?: React.Ref<HTMLDivElement>;
-              };
+            const {
+              style: baseStyle,
+              ref: baseRef,
+              ...rest
+            } = popupProps as React.HTMLAttributes<HTMLDivElement> & {
+              ref?: React.Ref<HTMLDivElement>;
+            };
             return (
               <motion.div
                 {...(rest as MotionSafeDivProps)}
@@ -130,20 +130,19 @@ function SidebarSheet({ side, open, onClose, children }: SidebarSheetProps) {
                 // the panel as much as initialFocus needs ours.
                 ref={(node: HTMLDivElement | null) => {
                   panelRef.current = node;
-                  if (typeof baseRef === "function") baseRef(node);
+                  if (typeof baseRef === 'function') baseRef(node);
                   else if (baseRef)
-                    (baseRef as React.MutableRefObject<HTMLDivElement | null>).current =
-                      node;
+                    (baseRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
                 }}
                 tabIndex={-1}
                 data-sidebar="sidebar"
                 data-mobile="true"
                 data-side={side}
                 className={cn(
-                  "fixed inset-y-0 z-[var(--z-modal,50)] flex flex-col overflow-hidden outline-none",
-                  !visible && "pointer-events-none",
-                  side === "left" ? "left-0" : "right-0",
-                  surfaceClasses(level, 3)
+                  'fixed inset-y-0 z-[var(--z-modal,50)] flex flex-col overflow-hidden outline-none',
+                  !visible && 'pointer-events-none',
+                  side === 'left' ? 'left-0' : 'right-0',
+                  surfaceClasses(level, 3),
                 )}
                 style={{
                   ...(baseStyle as CSSProperties | undefined),
@@ -154,7 +153,9 @@ function SidebarSheet({ side, open, onClose, children }: SidebarSheetProps) {
                 // into x: 0 without overshooting and exposing the page behind
                 // its leading edge.
                 animate={{ x: visible ? 0 : offscreen }}
-                transition={reduceMotion ? { duration: 0 } : visible ? spring.moderate : spring.moderate.exit}
+                transition={
+                  reduceMotion ? { duration: 0 } : visible ? spring.moderate : spring.moderate.exit
+                }
                 onAnimationComplete={() => {
                   if (exiting) finishClose();
                 }}
@@ -171,11 +172,15 @@ function SidebarSheet({ side, open, onClose, children }: SidebarSheetProps) {
 
 // ─── Sidebar ─────────────────────────────────────────────────────────────────
 
-export interface SidebarProps
-  extends Omit<
-    HTMLAttributes<HTMLDivElement>,
-    "onDrag" | "onDragStart" | "onDragEnd" | "onAnimationStart" | "onAnimationEnd" | "onAnimationIteration"
-  > {
+export interface SidebarProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  | 'onDrag'
+  | 'onDragStart'
+  | 'onDragEnd'
+  | 'onAnimationStart'
+  | 'onAnimationEnd'
+  | 'onAnimationIteration'
+> {
   side?: SidebarSide;
   variant?: SidebarVariant;
   /** `"icon"` collapse is intentionally not supported — offcanvas or none. */
@@ -191,8 +196,19 @@ export interface SidebarProps
 
 const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
   (
-    { side = "left", variant = "sidebar", collapsible = "offcanvas", bordered = true, rail = true, railTooltipOpen, className, style, children, ...props },
-    ref
+    {
+      side = 'left',
+      variant = 'sidebar',
+      collapsible = 'offcanvas',
+      bordered = true,
+      rail = true,
+      railTooltipOpen,
+      className,
+      style,
+      children,
+      ...props
+    },
+    ref,
   ) => {
     const { isMobile, openMobile, setOpenMobile, width, registerSide } = useSidebar();
 
@@ -200,7 +216,7 @@ const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
     // and the rail handle.
     useEffect(() => registerSide(side), [side, registerSide]);
 
-    if (collapsible === "none") {
+    if (collapsible === 'none') {
       return (
         <div
           ref={ref}
@@ -208,9 +224,9 @@ const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
           data-variant={variant}
           data-side={side}
           className={cn(
-            "peer sticky top-0 flex h-svh shrink-0 flex-col",
-            side === "right" && "order-last",
-            className
+            'peer sticky top-0 flex h-svh shrink-0 flex-col',
+            side === 'right' && 'order-last',
+            className,
           )}
           style={{ width, ...style } as CSSProperties}
           {...props}
@@ -218,10 +234,10 @@ const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
           <div
             data-sidebar="sidebar"
             className={cn(
-              "flex h-full w-full min-h-0 flex-col",
+              'flex h-full w-full min-h-0 flex-col',
               bordered &&
-                variant === "sidebar" &&
-                (side === "left" ? "border-r border-border" : "border-l border-border")
+                variant === 'sidebar' &&
+                (side === 'left' ? 'border-r border-border' : 'border-l border-border'),
             )}
           >
             {children}
@@ -242,14 +258,24 @@ const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(
             {children}
           </SidebarSheet>
         )}
-        <SidebarShell ref={ref} side={side} variant={variant} bordered={bordered} rail={rail} railTooltipOpen={railTooltipOpen} className={className} style={style} {...props}>
+        <SidebarShell
+          ref={ref}
+          side={side}
+          variant={variant}
+          bordered={bordered}
+          rail={rail}
+          railTooltipOpen={railTooltipOpen}
+          className={className}
+          style={style}
+          {...props}
+        >
           {children}
         </SidebarShell>
       </>
     );
-  }
+  },
 );
-Sidebar.displayName = "Sidebar";
+Sidebar.displayName = 'Sidebar';
 
 // ─── SidebarContent ──────────────────────────────────────────────────────────
 
@@ -272,7 +298,10 @@ const SidebarContent = forwardRef<HTMLDivElement, SidebarContentProps>(
           <div
             ref={ref}
             data-sidebar="content"
-            className={cn("scroll-fade flex min-h-0 w-full flex-1 flex-col overflow-y-auto", className)}
+            className={cn(
+              'scroll-fade flex min-h-0 w-full flex-1 flex-col overflow-y-auto',
+              className,
+            )}
             {...props}
           >
             {children}
@@ -286,15 +315,18 @@ const SidebarContent = forwardRef<HTMLDivElement, SidebarContentProps>(
     // instead of truncating, so the viewport's direct child is forced back
     // to a plain shrinkable block.
     return (
-      <ScrollArea className={cn("scroll-divider min-h-0 w-full flex-1", className)} viewportClassName={cn("scroll-fade [&>div]:!block [&>div]:!min-w-0", viewportClassName)}>
+      <ScrollArea
+        className={cn('scroll-divider min-h-0 w-full flex-1', className)}
+        viewportClassName={cn('scroll-fade [&>div]:!block [&>div]:!min-w-0', viewportClassName)}
+      >
         <div ref={ref} data-sidebar="content" className="flex w-full min-w-0 flex-col" {...props}>
           {children}
         </div>
       </ScrollArea>
     );
-  }
+  },
 );
-SidebarContent.displayName = "SidebarContent";
+SidebarContent.displayName = 'SidebarContent';
 
 export { Sidebar, SidebarContent };
 
@@ -322,7 +354,7 @@ export {
   SIDEBAR_KEYBOARD_SHORTCUT_RIGHT,
   SIDEBAR_MIN_WIDTH,
   SIDEBAR_MAX_WIDTH,
-} from "@/components/ui/sidebar-core";
+} from '#components/ui/sidebar-core';
 export type {
   SidebarContextValue,
   SidebarProviderProps,
@@ -336,7 +368,7 @@ export type {
   SidebarSide,
   SidebarVariant,
   SidebarCollapsible,
-} from "@/components/ui/sidebar-core";
+} from '#components/ui/sidebar-core';
 export {
   SidebarMenu,
   SidebarMenuItem,
@@ -349,7 +381,7 @@ export {
   SidebarMenuSubItem,
   SidebarMenuSubButton,
   sidebarMenuButtonVariants,
-} from "@/components/ui/sidebar-menu";
+} from '#components/ui/sidebar-menu';
 export type {
   SidebarMenuProps,
   SidebarMenuItemProps,
@@ -360,4 +392,4 @@ export type {
   SidebarMenuSubProps,
   SidebarMenuSubItemProps,
   SidebarMenuSubButtonProps,
-} from "@/components/ui/sidebar-menu";
+} from '#components/ui/sidebar-menu';

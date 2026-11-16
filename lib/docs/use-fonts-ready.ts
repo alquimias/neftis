@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { startTransition, useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from 'react';
 
 /**
  * False on the server and at first paint, true once the page's fonts have

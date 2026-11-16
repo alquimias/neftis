@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // ---------------------------------------------------------------------------
 // One wrapper for the whole system. Put it near the root, once, and every
@@ -18,11 +18,11 @@
 // imports the icon set itself (components/providers.tsx in the starter).
 // ---------------------------------------------------------------------------
 
-import type { ReactNode } from "react";
-import { MotionConfig } from "motion/react";
-import { ShapeProvider, type ShapeVariant } from "@/lib/shape-context";
-import { SizeProvider, type SizeVariant } from "@/lib/size-context";
-import { IconProvider, type IconComponent, type IconName } from "@/lib/icon-context";
+import type { ReactNode } from 'react';
+import { MotionConfig } from 'motion/react';
+import { ShapeProvider, type ShapeVariant } from '#lib/shape-context';
+import { SizeProvider, type SizeVariant } from '#lib/size-context';
+import { IconProvider, type IconComponent, type IconName } from '#lib/icon-context';
 
 export interface FluidProviderProps {
   children: ReactNode;
@@ -39,8 +39,8 @@ export interface FluidProviderProps {
 
 export function FluidProvider({
   children,
-  shape = "rounded",
-  size = "default",
+  shape = 'rounded',
+  size = 'default',
   icons,
 }: FluidProviderProps) {
   return (

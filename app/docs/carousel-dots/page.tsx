@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState, type ReactNode } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { CarouselDots } from "@/registry/default/carousel-dots";
-import { slideVariants, useSlideDirection } from "@/lib/docs/slide-direction";
-import { useShape } from "@/registry/default/lib/shape-context";
-import { cn } from "@/registry/default/lib/utils";
-import { props } from "@/lib/docs/api/carousel-dots";
+import { useState, type ReactNode } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { CarouselDots } from '#registry/default/carousel-dots';
+import { slideVariants, useSlideDirection } from '#lib/docs/slide-direction';
+import { useShape } from '#registry/default/lib/shape-context';
+import { cn } from '#registry/default/lib/utils';
+import { props } from '#lib/docs/api/carousel-dots';
 
-const SLIDES = ["Inbox", "Drafts", "Sent", "Archive"];
+const SLIDES = ['Inbox', 'Drafts', 'Sent', 'Archive'];
 
 const staticCode = `import { CarouselDots } from "./components";
 
@@ -40,8 +40,8 @@ function Slide({ index, direction }: { index: number; direction: number }) {
   return (
     <div
       className={cn(
-        "relative grid size-40 place-items-center overflow-hidden border border-border/60 bg-background",
-        shape.container
+        'relative grid size-40 place-items-center overflow-hidden border border-border/60 bg-background',
+        shape.container,
       )}
     >
       <AnimatePresence mode="popLayout" initial={false} custom={direction}>
@@ -116,8 +116,7 @@ export default function CarouselDotsDoc() {
     >
       <DocSection title="Static">
         <p className="text-site-body text-muted-foreground">
-          Hover a dot to see its click area, then click it. The highlight glides
-          from dot to dot.
+          Hover a dot to see its click area, then click it. The highlight glides from dot to dot.
         </p>
         <ComponentPreview code={staticCode}>
           <StaticDemo />
@@ -126,8 +125,8 @@ export default function CarouselDotsDoc() {
 
       <DocSection title="Autoplay">
         <p className="text-site-body text-muted-foreground">
-          Add <Code>autoplay</Code> and the pill fills, then the next slide comes
-          in. Hover the slide to pause. Reduced motion turns the timer off.
+          Add <Code>autoplay</Code> and the pill fills, then the next slide comes in. Hover the
+          slide to pause. Reduced motion turns the timer off.
         </p>
         <ComponentPreview code={autoplayCode}>
           <AutoplayDemo />

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
 /** The doc slugs the latest changelog release marks, read on the server by
  *  latestMarks() in lib/changelog/load.ts. The one source for every New and
@@ -31,7 +31,13 @@ const NONE: MarkLookup = { isNew: () => false, isUpdated: () => false, isRecent:
 
 const ReleaseMarksContext = createContext<MarkLookup>(NONE);
 
-export function ReleaseMarksProvider({ marks, children }: { marks: ReleaseMarks; children: ReactNode }) {
+export function ReleaseMarksProvider({
+  marks,
+  children,
+}: {
+  marks: ReleaseMarks;
+  children: ReactNode;
+}) {
   const lookup = useMemo<MarkLookup>(() => {
     const ahead = new Set(marks.ahead);
     const updated = new Set(marks.updated);

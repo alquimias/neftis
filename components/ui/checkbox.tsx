@@ -1,1 +1,1 @@
-export * from "@/components/flavored/checkbox";
+export * from '#components/flavored/checkbox';

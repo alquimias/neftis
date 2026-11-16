@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import {
   useDataTable,
   DataTable,
@@ -8,48 +8,54 @@ import {
   DataTableSearch,
   DataTableTitle,
   type ColumnDef,
-} from "@/components/ui/data-table";
-import { Button } from "@/components/ui/button";
-import { useFontsReady } from "@/lib/docs/use-fonts-ready";
-import { clickStep, glideStep, useLoop, usePlayback, useScriptCursor } from "@/app/docs/skill/hero-shared";
-import { CursorLayer, GLIDE, retypeSteps, useHoldHeight, useScriptFocus } from "./scripted";
+} from '#components/ui/data-table';
+import { Button } from '#components/ui/button';
+import { useFontsReady } from '#lib/docs/use-fonts-ready';
+import {
+  clickStep,
+  glideStep,
+  useLoop,
+  usePlayback,
+  useScriptCursor,
+} from '#app/docs/skill/hero-shared';
+import { CursorLayer, GLIDE, retypeSteps, useHoldHeight, useScriptFocus } from './scripted';
 
 export type Payment = {
   id: string;
-  status: "pending" | "processing" | "success" | "failed";
+  status: 'pending' | 'processing' | 'success' | 'failed';
   email: string;
   amount: number;
 };
 
 export const PAYMENTS: Payment[] = [
-  { id: "m5gr84i9", status: "success", email: "ken99@example.com", amount: 316 },
-  { id: "3u1reuv4", status: "success", email: "abe45@example.com", amount: 242 },
-  { id: "derv1ws0", status: "processing", email: "monserrat44@example.com", amount: 837 },
-  { id: "5kma53ae", status: "success", email: "silas22@example.com", amount: 874 },
-  { id: "bhqecj4p", status: "failed", email: "carmella@example.com", amount: 721 },
-  { id: "p0r8xk2d", status: "pending", email: "nadia.r@example.com", amount: 129 },
-  { id: "w7t2lq9z", status: "success", email: "omar.f@example.com", amount: 560 },
-  { id: "c4n6vb1y", status: "processing", email: "lea.m@example.com", amount: 98 },
-  { id: "h2j8sd5k", status: "failed", email: "theo@example.com", amount: 415 },
-  { id: "q9z3mf7w", status: "success", email: "ines.b@example.com", amount: 1290 },
-  { id: "x1c5gt8r", status: "pending", email: "yuki@example.com", amount: 64 },
-  { id: "k6v2pn4e", status: "success", email: "arjun.k@example.com", amount: 705 },
+  { id: 'm5gr84i9', status: 'success', email: 'ken99@example.com', amount: 316 },
+  { id: '3u1reuv4', status: 'success', email: 'abe45@example.com', amount: 242 },
+  { id: 'derv1ws0', status: 'processing', email: 'monserrat44@example.com', amount: 837 },
+  { id: '5kma53ae', status: 'success', email: 'silas22@example.com', amount: 874 },
+  { id: 'bhqecj4p', status: 'failed', email: 'carmella@example.com', amount: 721 },
+  { id: 'p0r8xk2d', status: 'pending', email: 'nadia.r@example.com', amount: 129 },
+  { id: 'w7t2lq9z', status: 'success', email: 'omar.f@example.com', amount: 560 },
+  { id: 'c4n6vb1y', status: 'processing', email: 'lea.m@example.com', amount: 98 },
+  { id: 'h2j8sd5k', status: 'failed', email: 'theo@example.com', amount: 415 },
+  { id: 'q9z3mf7w', status: 'success', email: 'ines.b@example.com', amount: 1290 },
+  { id: 'x1c5gt8r', status: 'pending', email: 'yuki@example.com', amount: 64 },
+  { id: 'k6v2pn4e', status: 'success', email: 'arjun.k@example.com', amount: 705 },
 ];
 
-const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
 const sortOnlyColumns: ColumnDef<Payment>[] = [
   {
-    accessorKey: "email",
+    accessorKey: 'email',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
   },
   {
-    accessorKey: "status",
+    accessorKey: 'status',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => row.original.status[0].toUpperCase() + row.original.status.slice(1),
   },
   {
-    accessorKey: "amount",
+    accessorKey: 'amount',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
     cell: ({ row }) => currency.format(row.original.amount),
   },
@@ -59,7 +65,11 @@ const sortOnlyColumns: ColumnDef<Payment>[] = [
 export function SortableTable() {
   const [data] = useState(() => PAYMENTS.slice(0, 5));
   // Opens sorted, so the arrow and the order show.
-  const table = useDataTable({ data, columns: sortOnlyColumns, initialState: { sorting: [{ id: "amount", desc: true }] } });
+  const table = useDataTable({
+    data,
+    columns: sortOnlyColumns,
+    initialState: { sorting: [{ id: 'amount', desc: true }] },
+  });
   // Skeleton rows until the fonts are in: see useFontsReady.
   const ready = useFontsReady();
   // Left alone, the section plays itself: a cursor opens a header's menu
@@ -71,11 +81,12 @@ export function SortableTable() {
   const focus = useScriptFocus(rootRef, bind);
   const on = playing && ready && !focus.paused;
   // The menu renders in a portal: the cursor hovers it too.
-  const cursor = useScriptCursor(rootRef, on, "[role=menu]");
+  const cursor = useScriptCursor(rootRef, on, '[role=menu]');
   // The script's own menu is the one holding focus (a menu takes it on
   // opening): never another that happens to be open on the page.
-  const menu = () => (focus.scripting.current ? document.activeElement?.closest("[role=menu]") : null);
-  const menuItem = (n: number) => menu()?.querySelectorAll<HTMLElement>("[role^=menuitem]")[n];
+  const menu = () =>
+    focus.scripting.current ? document.activeElement?.closest('[role=menu]') : null;
+  const menuItem = (n: number) => menu()?.querySelectorAll<HTMLElement>('[role^=menuitem]')[n];
   const pick = (column: string, item: number, holdMs: number) => {
     const header = `thead th[data-column-id=${column}] button[aria-haspopup]`;
     return [
@@ -86,7 +97,7 @@ export function SortableTable() {
         () => {
           if (focus.take()) rootRef.current?.querySelector<HTMLElement>(header)?.click();
         },
-        450
+        450,
       ),
       {
         ms: GLIDE + 350,
@@ -110,18 +121,26 @@ export function SortableTable() {
   };
   const settle = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(settle.current), []);
-  useLoop(on, [...pick("amount", 0, 1500), ...pick("status", 0, 1500), ...pick("amount", 1, 2000)], () => {
-    if (!focus.scripting.current) return;
-    // A visitor took over with the script's menu open: close it, then
-    // hand focus back once the menu has returned it.
-    menu()?.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true }));
-    settle.current = setTimeout(focus.giveBack, 100);
-  });
+  useLoop(
+    on,
+    [...pick('amount', 0, 1500), ...pick('status', 0, 1500), ...pick('amount', 1, 2000)],
+    () => {
+      if (!focus.scripting.current) return;
+      // A visitor took over with the script's menu open: close it, then
+      // hand focus back once the menu has returned it.
+      menu()?.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+      );
+      settle.current = setTimeout(focus.giveBack, 100);
+    },
+  );
   return (
     <div ref={rootRef} className="flex w-full flex-col gap-2" {...focus.bind}>
       <CursorLayer rootRef={rootRef} cursor={cursor} playing={on} />
       {/* h3 here: the docs section above is the h2. */}
-      <DataTableTitle as="h3" table={table} className="mb-1 font-heading-display">Payments</DataTableTitle>
+      <DataTableTitle as="h3" table={table} className="mb-1 font-heading-display">
+        Payments
+      </DataTableTitle>
       <DataTable table={table} loading={!ready} loadingRows={5} />
     </div>
   );
@@ -140,19 +159,21 @@ export function SearchTable() {
   const on = playing && ready;
   const cursor = useScriptCursor(rootRef, on);
   useHoldHeight(rootRef);
-  const field = () => rootRef.current?.querySelector<HTMLInputElement>("input[type=search]");
+  const field = () => rootRef.current?.querySelector<HTMLInputElement>('input[type=search]');
   useLoop(on, [
-    glideStep(cursor, "input[type=search]", 0),
+    glideStep(cursor, 'input[type=search]', 0),
     { ms: 300, run: () => cursor.click() },
-    ...retypeSteps(field, "", "success", 1800),
-    ...retypeSteps(field, "success", "refund", 2000),
-    ...retypeSteps(field, "refund", "", 1800),
+    ...retypeSteps(field, '', 'success', 1800),
+    ...retypeSteps(field, 'success', 'refund', 2000),
+    ...retypeSteps(field, 'refund', '', 1800),
   ]);
   return (
     <div ref={rootRef} className="flex w-full flex-col gap-2" {...bind}>
       <CursorLayer rootRef={rootRef} cursor={cursor} playing={on} />
       <div className="mb-1 flex flex-wrap items-center gap-1">
-        <DataTableTitle as="h3" table={table} className="font-heading-display">Payments</DataTableTitle>
+        <DataTableTitle as="h3" table={table} className="font-heading-display">
+          Payments
+        </DataTableTitle>
         <span className="ml-auto" />
         {/* Always open: the script types into it. */}
         <DataTableSearch table={table} placeholder="Search payments…" collapsible={false} />
@@ -161,7 +182,7 @@ export function SearchTable() {
         table={table}
         loading={!ready}
         loadingRows={6}
-        empty={{ title: "No payments match", description: "Try an email, a status, or an amount." }}
+        empty={{ title: 'No payments match', description: 'Try an email, a status, or an amount.' }}
       />
     </div>
   );
@@ -177,10 +198,12 @@ export function LoadingTable() {
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="mb-1 flex flex-wrap items-center gap-1">
-        <DataTableTitle as="h3" table={table} className="font-heading-display">Payments</DataTableTitle>
+        <DataTableTitle as="h3" table={table} className="font-heading-display">
+          Payments
+        </DataTableTitle>
         <span className="ml-auto" />
         <Button variant="tertiary" onClick={() => setLoading((on) => !on)}>
-          {loading ? "Finish loading" : "Load again"}
+          {loading ? 'Finish loading' : 'Load again'}
         </Button>
       </div>
       <DataTable table={table} loading={loading} loadingRows={5} />

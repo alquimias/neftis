@@ -1,1 +1,1 @@
-export * from "@/registry/default/ask-user-questions";
+export * from '#registry/default/ask-user-questions';

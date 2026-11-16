@@ -1,5 +1,12 @@
-import { createElement, useEffect, useLayoutEffect, useState, type MouseEvent, type RefObject } from "react";
-import { createPortal } from "react-dom";
+import {
+  createElement,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  type MouseEvent,
+  type RefObject,
+} from 'react';
+import { createPortal } from 'react-dom';
 
 // ---------------------------------------------------------------------------
 // Shared popup chrome for the dropdown, select, and combobox popups: the
@@ -17,13 +24,13 @@ import { createPortal } from "react-dom";
  * time the position is settled.
  */
 export const popupMotionClass =
-  "origin-top [--popup-enter-y:-4px] " +
-  "data-[side=top]:origin-bottom data-[side=top]:[--popup-enter-y:4px] " +
-  "[[data-side=top]_&]:origin-bottom [[data-side=top]_&]:[--popup-enter-y:4px] " +
-  "data-[side=left]:origin-right data-[side=left]:[--popup-enter-y:0px] " +
-  "[[data-side=left]_&]:origin-right [[data-side=left]_&]:[--popup-enter-y:0px] " +
-  "data-[side=right]:origin-left data-[side=right]:[--popup-enter-y:0px] " +
-  "[[data-side=right]_&]:origin-left [[data-side=right]_&]:[--popup-enter-y:0px]";
+  'origin-top [--popup-enter-y:-4px] ' +
+  'data-[side=top]:origin-bottom data-[side=top]:[--popup-enter-y:4px] ' +
+  '[[data-side=top]_&]:origin-bottom [[data-side=top]_&]:[--popup-enter-y:4px] ' +
+  'data-[side=left]:origin-right data-[side=left]:[--popup-enter-y:0px] ' +
+  '[[data-side=left]_&]:origin-right [[data-side=left]_&]:[--popup-enter-y:0px] ' +
+  'data-[side=right]:origin-left data-[side=right]:[--popup-enter-y:0px] ' +
+  '[[data-side=right]_&]:origin-left [[data-side=right]_&]:[--popup-enter-y:0px]';
 
 /**
  * Popup lists scroll inside ScrollArea: the hover-revealed thumb instead of
@@ -35,21 +42,21 @@ export const popupMotionClass =
  * truncate; the `[style]` qualifier keeps that off the rows' own wrapper on
  * touch devices, where ScrollArea renders no sizer.
  */
-export const popupScrollAreaClass = "min-h-0 flex-1 max-h-[inherit]";
+export const popupScrollAreaClass = 'min-h-0 flex-1 max-h-[inherit]';
 export const popupViewportClass =
-  "!h-auto max-h-[inherit] [&>div[style]]:!block [&>div[style]]:!min-w-0 [--scroll-fade-size:32px]";
+  '!h-auto max-h-[inherit] [&>div[style]]:!block [&>div[style]]:!min-w-0 [--scroll-fade-size:32px]';
 
 /** Keys that count as keyboard navigation inside a popup (earn the ring). */
 export const POPUP_NAV_KEYS = [
-  "ArrowDown",
-  "ArrowUp",
-  "ArrowLeft",
-  "ArrowRight",
-  "Home",
-  "End",
-  "PageUp",
-  "PageDown",
-  "Tab",
+  'ArrowDown',
+  'ArrowUp',
+  'ArrowLeft',
+  'ArrowRight',
+  'Home',
+  'End',
+  'PageUp',
+  'PageDown',
+  'Tab',
 ];
 
 /**
@@ -57,12 +64,12 @@ export const POPUP_NAV_KEYS = [
  * nor a hover stop, whichever attribute the primitive marks it with.
  */
 export function isDisabledRow(el: HTMLElement): boolean {
-  return el.getAttribute("aria-disabled") === "true" || el.hasAttribute("data-disabled");
+  return el.getAttribute('aria-disabled') === 'true' || el.hasAttribute('data-disabled');
 }
 
 /** Whether `el` scrolls on one axis and still has room in that direction. */
 function canScroll(overflow: string, delta: number, at: number, size: number, view: number) {
-  if (!delta || (overflow !== "auto" && overflow !== "scroll")) return false;
+  if (!delta || (overflow !== 'auto' && overflow !== 'scroll')) return false;
   return delta < 0 ? at > 0 : Math.ceil(at + view) < size;
 }
 
@@ -72,7 +79,11 @@ function canScroll(overflow: string, delta: number, at: number, size: number, vi
  */
 function scrollerFor(el: Element, dx: number, dy: number): Element | null {
   const root = document.scrollingElement;
-  for (let node: Element | null = el; node && node !== root && node !== document.body; node = node.parentElement) {
+  for (
+    let node: Element | null = el;
+    node && node !== root && node !== document.body;
+    node = node.parentElement
+  ) {
     const style = getComputedStyle(node);
     if (
       canScroll(style.overflowY, dy, node.scrollTop, node.scrollHeight, node.clientHeight) ||
@@ -110,10 +121,10 @@ export function PopupShield({
     const cut = () => {
       const r = el.getBoundingClientRect();
       shield.style.setProperty(
-        "clip-path",
-        "polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, " +
+        'clip-path',
+        'polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ' +
           `${r.left}px ${r.top}px, ${r.left}px ${r.bottom}px, ${r.right}px ${r.bottom}px, ` +
-          `${r.right}px ${r.top}px, ${r.left}px ${r.top}px)`
+          `${r.right}px ${r.top}px, ${r.left}px ${r.top}px)`,
       );
     };
     cut();
@@ -122,12 +133,12 @@ export function PopupShield({
     // The anchor can move without resizing or scrolling, when content
     // above it changes height. The body resizing catches most of that.
     observer.observe(document.body);
-    window.addEventListener("scroll", cut, true);
-    window.addEventListener("resize", cut);
+    window.addEventListener('scroll', cut, true);
+    window.addEventListener('resize', cut);
     return () => {
       observer.disconnect();
-      window.removeEventListener("scroll", cut, true);
-      window.removeEventListener("resize", cut);
+      window.removeEventListener('scroll', cut, true);
+      window.removeEventListener('resize', cut);
     };
   }, [shield, anchor]);
 
@@ -138,7 +149,7 @@ export function PopupShield({
       if (e.ctrlKey) return;
       const under = document
         .elementsFromPoint(e.clientX, e.clientY)
-        .find((el) => el.getAttribute("data-slot") !== "popup-shield");
+        .find((el) => el.getAttribute('data-slot') !== 'popup-shield');
       const scroller = under && scrollerFor(under, e.deltaX, e.deltaY);
       // No panel to move: the browser scrolls the document as usual.
       if (!scroller) return;
@@ -152,21 +163,21 @@ export function PopupShield({
       scroller.scrollBy(e.deltaX * unit, e.deltaY * unit);
     };
     // Not passive: a wheel handed to a panel must not also move the page.
-    shield.addEventListener("wheel", onWheel, { passive: false });
-    return () => shield.removeEventListener("wheel", onWheel);
+    shield.addEventListener('wheel', onWheel, { passive: false });
+    return () => shield.removeEventListener('wheel', onWheel);
   }, [shield]);
 
-  if (!open || typeof document === "undefined") return null;
+  if (!open || typeof document === 'undefined') return null;
   return createPortal(
-    createElement("div", {
+    createElement('div', {
       ref: setShield,
-      "aria-hidden": true,
-      "data-slot": "popup-shield",
+      'aria-hidden': true,
+      'data-slot': 'popup-shield',
       // pointer-events-auto: a modal dialog turns the pointer off for
       // everything outside itself, and this layer sits outside.
-      className: "pointer-events-auto fixed inset-0 z-[calc(var(--z-popover,60)-1)]",
+      className: 'pointer-events-auto fixed inset-0 z-[calc(var(--z-popover,60)-1)]',
       onContextMenu: (e: MouseEvent) => e.preventDefault(),
     }),
-    document.body
+    document.body,
   );
 }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useEffect,
@@ -7,32 +7,32 @@ import {
   useState,
   type MouseEvent,
   type PointerEvent,
-} from "react";
-import { Fragment, useMemo } from "react";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { TaskItem, TaskList } from "@tiptap/extension-list";
-import { TableKit } from "@tiptap/extension-table";
-import { Placeholder } from "@tiptap/extensions";
-import { cn } from "@/lib/utils";
-import { useShape } from "@/registry/default/lib/shape-context";
-import { useSizeVariant } from "@/lib/size-context";
-import { useThemeContext } from "@/registry/default/lib/theme-context";
-import { Switch } from "@/registry/radix/switch";
-import { Tooltip } from "@/registry/radix/tooltip";
-import { typeStyles } from "@/lib/type-scale";
-import { selectorList, typesetRules } from "@/lib/typeset/generate";
-import { ACCENT_VAR } from "@/lib/accent";
+} from 'react';
+import { Fragment, useMemo } from 'react';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { TaskItem, TaskList } from '@tiptap/extension-list';
+import { TableKit } from '@tiptap/extension-table';
+import { Placeholder } from '@tiptap/extensions';
+import { cn } from '#lib/utils';
+import { useShape } from '#registry/default/lib/shape-context';
+import { useSizeVariant } from '#lib/size-context';
+import { useThemeContext } from '#registry/default/lib/theme-context';
+import { Switch } from '#registry/radix/switch';
+import { Tooltip } from '#registry/radix/tooltip';
+import { typeStyles } from '#lib/type-scale';
+import { selectorList, typesetRules } from '#lib/typeset/generate';
+import { ACCENT_VAR } from '#lib/accent';
 
 /** Starting HTML of the Markdown section on /docs/typography: a
  *  getting-started doc with most of what markdown writes: 3 heading levels,
  *  bold, italic, strikethrough, inline code, a link, nested bullets, numbers,
  *  and to-dos, a quote, a table, a code block, and a rule. */
 export const MARKDOWN_SAMPLE = [
-  "<h1>Getting started with Fluid Functionalism</h1>",
-  "<p><strong>Flavors</strong> Radix and Base UI · <strong>Stack</strong> React and Tailwind v4 · <strong>License</strong> MIT</p>",
-  "<h2>Setup</h2>",
+  '<h1>Getting started with Fluid Functionalism</h1>',
+  '<p><strong>Flavors</strong> Radix and Base UI · <strong>Stack</strong> React and Tailwind v4 · <strong>License</strong> MIT</p>',
+  '<h2>Setup</h2>',
   '<ul data-type="taskList">',
   '<li data-type="taskItem" data-checked="true"><p>Install the type scale and the markdown styles</p></li>',
   '<li data-type="taskItem" data-checked="true"><p>Add a dropdown and a dialog</p></li>',
@@ -40,37 +40,37 @@ export const MARKDOWN_SAMPLE = [
   '<ul data-type="taskList">',
   '<li data-type="taskItem" data-checked="true"><p>Sidebar</p></li>',
   '<li data-type="taskItem" data-checked="false"><p>Command menu</p></li>',
-  "</ul></li>",
+  '</ul></li>',
   '<li data-type="taskItem" data-checked="false"><p>Switch dense screens to compact</p></li>',
-  "</ul>",
-  "<h2>How it moves</h2>",
+  '</ul>',
+  '<h2>How it moves</h2>',
   '<p>Every component animates with <strong>3 spring speeds</strong>, and hover <em>glides</em> to the item under your cursor instead of blinking. A label turns <code>semibold</code> without moving its neighbors, since <code>fontWeights</code> pairs each weight with an optical size. The <a href="/docs/motion">motion page</a> has every value.</p>',
-  "<blockquote><p>No component invents its own timing, so everything moves at the same pace.</p></blockquote>",
-  "<h3>What you get</h3>",
-  "<ul>",
-  "<li><p>Components in 2 flavors</p><ul><li><p>Radix</p></li><li><p>Base UI</p></li></ul></li>",
-  "<li><p>A size ladder of 36px and 28px rows</p></li>",
-  "<li><p>A skill for your coding agent</p></li>",
-  "</ul>",
-  "<h3>Spring speeds</h3>",
-  "<table><tbody>",
-  "<tr><th><p>Speed</p></th><th><p>Duration</p></th><th><p>Used for</p></th></tr>",
-  "<tr><td><p>fast</p></td><td><p>0.08s</p></td><td><p>Hover, tooltips, focus rings</p></td></tr>",
-  "<tr><td><p>moderate</p></td><td><p>0.16s</p></td><td><p>Dropdowns and tabs</p></td></tr>",
-  "<tr><td><p>slow</p></td><td><p>0.24s</p></td><td><p>Dialogs and drawers</p></td></tr>",
-  "</tbody></table>",
-  "<h2>Install</h2>",
-  "<p>Each piece installs with the shadcn CLI. We planned to <s>ship one big bundle</s> ship one item per component, so you only add what you use:</p>",
+  '<blockquote><p>No component invents its own timing, so everything moves at the same pace.</p></blockquote>',
+  '<h3>What you get</h3>',
+  '<ul>',
+  '<li><p>Components in 2 flavors</p><ul><li><p>Radix</p></li><li><p>Base UI</p></li></ul></li>',
+  '<li><p>A size ladder of 36px and 28px rows</p></li>',
+  '<li><p>A skill for your coding agent</p></li>',
+  '</ul>',
+  '<h3>Spring speeds</h3>',
+  '<table><tbody>',
+  '<tr><th><p>Speed</p></th><th><p>Duration</p></th><th><p>Used for</p></th></tr>',
+  '<tr><td><p>fast</p></td><td><p>0.08s</p></td><td><p>Hover, tooltips, focus rings</p></td></tr>',
+  '<tr><td><p>moderate</p></td><td><p>0.16s</p></td><td><p>Dropdowns and tabs</p></td></tr>',
+  '<tr><td><p>slow</p></td><td><p>0.24s</p></td><td><p>Dialogs and drawers</p></td></tr>',
+  '</tbody></table>',
+  '<h2>Install</h2>',
+  '<p>Each piece installs with the shadcn CLI. We planned to <s>ship one big bundle</s> ship one item per component, so you only add what you use:</p>',
   '<pre><code class="language-bash"># One component\nnpx shadcn@latest add https://www.fluidfunctionalism.com/r/dropdown.json\n\n# The skill for your coding agent\nnpx skills add mickadesign/fluid-functionalism</code></pre>',
-  "<h3>Next steps</h3>",
-  "<ol>",
-  "<li><p>Read the craft notes for each component</p></li>",
-  "<li><p>Install the skill</p><ol><li><p>Let it read your stack</p></li><li><p>Fix what it flags</p></li></ol></li>",
-  "<li><p>Ship it</p></li>",
-  "</ol>",
-  "<hr>",
-  "<p>Found a bug? Open an issue on <strong>GitHub</strong>.</p>",
-].join("");
+  '<h3>Next steps</h3>',
+  '<ol>',
+  '<li><p>Read the craft notes for each component</p></li>',
+  '<li><p>Install the skill</p><ol><li><p>Let it read your stack</p></li><li><p>Fix what it flags</p></li></ol></li>',
+  '<li><p>Ship it</p></li>',
+  '</ol>',
+  '<hr>',
+  '<p>Found a bug? Open an issue on <strong>GitHub</strong>.</p>',
+].join('');
 
 // Tiptap's markdown shortcuts format as you type: "# " heading, "- " list,
 // "1. " numbered, "[] " to-do, "> " quote, "```" code, "---" rule, and
@@ -88,11 +88,11 @@ const EXTENSIONS = [
   // next block, since the placeholder takes no height.
   Placeholder.configure({
     placeholder: ({ node }) =>
-      node.type.name === "heading"
+      node.type.name === 'heading'
         ? `Heading ${node.attrs.level}`
-        : node.type.name === "codeBlock"
-          ? "Code"
-          : "Write something",
+        : node.type.name === 'codeBlock'
+          ? 'Code'
+          : 'Write something',
   }),
 ];
 
@@ -102,16 +102,16 @@ const EXTENSIONS = [
 // positioned, painted in tree order).
 const editorPropsFor = (label: string) => ({
   attributes: {
-    class: "relative outline-none",
-    role: "textbox",
-    "aria-multiline": "true",
-    "aria-label": label,
+    class: 'relative outline-none',
+    role: 'textbox',
+    'aria-multiline': 'true',
+    'aria-label': label,
   },
 });
 
 // Tiptap marks the empty line with data-placeholder; show it as a ghost.
 const PLACEHOLDER =
-  "[&_.is-empty]:before:pointer-events-none [&_.is-empty]:before:float-left [&_.is-empty]:before:h-0 [&_.is-empty]:before:whitespace-nowrap [&_.is-empty]:before:text-muted-foreground [&_.is-empty]:before:content-[attr(data-placeholder)]";
+  '[&_.is-empty]:before:pointer-events-none [&_.is-empty]:before:float-left [&_.is-empty]:before:h-0 [&_.is-empty]:before:whitespace-nowrap [&_.is-empty]:before:text-muted-foreground [&_.is-empty]:before:content-[attr(data-placeholder)]';
 
 // ── Inspect ──────────────────────────────────────────────
 // Hover a text block to see its line boxes (one band per line) and a readout
@@ -144,28 +144,28 @@ interface InspectMark {
   lineHeight: number;
 }
 
-const INSPECT_BLOCKS = ".ProseMirror :is(h1, h2, h3, h4, h5, h6, p, pre, figcaption)";
+const INSPECT_BLOCKS = '.ProseMirror :is(h1, h2, h3, h4, h5, h6, p, pre, figcaption)';
 const INSPECT_LINE = ACCENT_VAR;
-const INSPECT_BAND = "color-mix(in oklab, var(--fluid-accent, #6B97FF) 16%, transparent)";
+const INSPECT_BAND = 'color-mix(in oklab, var(--fluid-accent, #6B97FF) 16%, transparent)';
 const INSPECT_TONES = {
-  margin: { fill: "rgba(255, 168, 82, 0.28)", line: "rgba(240, 140, 40, 0.9)" },
-  padding: { fill: "rgba(153, 255, 201, 0.35)", line: "rgba(83, 214, 145, 0.9)" },
+  margin: { fill: 'rgba(255, 168, 82, 0.28)', line: 'rgba(240, 140, 40, 0.9)' },
+  padding: { fill: 'rgba(153, 255, 201, 0.35)', line: 'rgba(83, 214, 145, 0.9)' },
 } as const;
 
 /** The theme opposite the page's. The tooltip inverts the page
  *  (bg-foreground), so its readout sits in that theme's scope, the way the
  *  forced-theme previews do: muted there is the muted made for that surface. */
-function useInverseTheme(): "light" | "dark" {
+function useInverseTheme(): 'light' | 'dark' {
   const { theme } = useThemeContext();
   const [osDark, setOsDark] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const sync = () => setOsDark(mq.matches);
     sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
   }, []);
-  return theme === "dark" || (theme === "system" && osDark) ? "light" : "dark";
+  return theme === 'dark' || (theme === 'system' && osDark) ? 'light' : 'dark';
 }
 
 const pxLabel = (value: number) => {
@@ -180,12 +180,24 @@ function measureBlocks(frame: HTMLElement): InspectMark[] {
   return blocks.map((el) => {
     const cs = getComputedStyle(el);
     const r = el.getBoundingClientRect();
-    const [pt, pr, pb, pl] = [cs.paddingTop, cs.paddingRight, cs.paddingBottom, cs.paddingLeft].map(parseFloat);
-    const box = { top: r.top - base.top, left: r.left - base.left, width: r.width, height: r.height };
+    const [pt, pr, pb, pl] = [cs.paddingTop, cs.paddingRight, cs.paddingBottom, cs.paddingLeft].map(
+      parseFloat,
+    );
+    const box = {
+      top: r.top - base.top,
+      left: r.left - base.left,
+      width: r.width,
+      height: r.height,
+    };
     return {
       el,
       box,
-      content: { top: box.top + pt, left: box.left + pl, width: box.width - pl - pr, height: box.height - pt - pb },
+      content: {
+        top: box.top + pt,
+        left: box.left + pl,
+        width: box.width - pl - pr,
+        height: box.height - pt - pb,
+      },
       fontSize: parseFloat(cs.fontSize),
       lineHeight: parseFloat(cs.lineHeight),
     };
@@ -196,13 +208,13 @@ function measureBlocks(frame: HTMLElement): InspectMark[] {
 const distance = (x: number, y: number, b: Box) =>
   Math.hypot(
     Math.max(b.left - x, 0, x - (b.left + b.width)),
-    Math.max(b.top - y, 0, y - (b.top + b.height))
+    Math.max(b.top - y, 0, y - (b.top + b.height)),
   );
 
 // ── Spacing: who owns the space around a block, and which rule set it ──
 
 interface SpaceMark {
-  kind: "Margin top" | "Padding top" | "Padding bottom" | "Gap";
+  kind: 'Margin top' | 'Padding top' | 'Padding bottom' | 'Gap';
   value: number;
   /** The element the space belongs to, e.g. "li". */
   owner: string;
@@ -219,14 +231,14 @@ const SHEET_RULES = typesetRules(typeStyles);
 /** The selector list a sheet rule opens with, `:where(.typeset p, …)`,
  *  split at its top-level commas. */
 function whereParts(sel: string): string[] {
-  if (!sel.startsWith(":where(")) return [];
+  if (!sel.startsWith(':where(')) return [];
   let depth = 0;
   let i = 0;
   for (; i < sel.length; i++) {
-    if (sel[i] === "(") depth++;
-    else if (sel[i] === ")" && --depth === 0) break;
+    if (sel[i] === '(') depth++;
+    else if (sel[i] === ')' && --depth === 0) break;
   }
-  return selectorList(sel.slice(":where(".length, i));
+  return selectorList(sel.slice(':where('.length, i));
 }
 
 const safeMatches = (el: Element, sel: string) => {
@@ -239,18 +251,21 @@ const safeMatches = (el: Element, sel: string) => {
 
 /** The last sheet rule (same specificity, so order wins) that sets `prop`
  *  on `el`, as its selector. */
-function ruleFor(el: HTMLElement, prop: "margin-top" | "padding-top" | "padding-bottom" | "gap"): string | null {
-  const short = prop === "margin-top" ? "margin" : prop === "gap" ? "gap" : "padding";
+function ruleFor(
+  el: HTMLElement,
+  prop: 'margin-top' | 'padding-top' | 'padding-bottom' | 'gap',
+): string | null {
+  const short = prop === 'margin-top' ? 'margin' : prop === 'gap' ? 'gap' : 'padding';
   for (let i = SHEET_RULES.length - 1; i >= 0; i--) {
     const [sel, decls] = SHEET_RULES[i];
     const value = decls[prop] ?? decls[short];
-    if (value === undefined || sel.includes("::") || !safeMatches(el, sel)) continue;
+    if (value === undefined || sel.includes('::') || !safeMatches(el, sel)) continue;
     const part = whereParts(sel).find((p) => safeMatches(el, p)) ?? sel;
     // An element list reads better as the element it matched: the block
     // itself at the end, the one before it in front of a `+`.
-    const tag = (n: Element | null) => n?.tagName.toLowerCase() ?? "*";
+    const tag = (n: Element | null) => n?.tagName.toLowerCase() ?? '*';
     const readable = part
-      .replace(/^\.typeset /, "")
+      .replace(/^\.typeset /, '')
       .replace(/:is\([^)]*\)$/, tag(el))
       .replace(/:is\([^)]*\)/, tag(el.previousElementSibling));
     return readable;
@@ -260,12 +275,12 @@ function ruleFor(el: HTMLElement, prop: "margin-top" | "padding-top" | "padding-
 
 const isRow = (n: HTMLElement) => {
   const cs = getComputedStyle(n);
-  return /flex/.test(cs.display) && !cs.flexDirection.startsWith("column");
+  return /flex/.test(cs.display) && !cs.flexDirection.startsWith('column');
 };
 
 /** The space around `el` and who owns it, as bands relative to `frame`. */
 function spacingOf(el: HTMLElement, frame: HTMLElement): SpaceMark[] {
-  const root = frame.querySelector<HTMLElement>(".ProseMirror");
+  const root = frame.querySelector<HTMLElement>('.ProseMirror');
   if (!root) return [];
   const base = frame.getBoundingClientRect();
   const rel = (n: Element): Box => {
@@ -275,42 +290,42 @@ function spacingOf(el: HTMLElement, frame: HTMLElement): SpaceMark[] {
   const name = (n: Element) => n.tagName.toLowerCase();
   const out: SpaceMark[] = [];
 
-  const padding = (n: HTMLElement, side: "top" | "bottom") => {
+  const padding = (n: HTMLElement, side: 'top' | 'bottom') => {
     const cs = getComputedStyle(n);
-    const value = parseFloat(side === "top" ? cs.paddingTop : cs.paddingBottom);
+    const value = parseFloat(side === 'top' ? cs.paddingTop : cs.paddingBottom);
     if (value < 0.5) return;
     const b = rel(n);
-    const border = parseFloat(side === "top" ? cs.borderTopWidth : cs.borderBottomWidth);
+    const border = parseFloat(side === 'top' ? cs.borderTopWidth : cs.borderBottomWidth);
     out.push({
-      kind: side === "top" ? "Padding top" : "Padding bottom",
+      kind: side === 'top' ? 'Padding top' : 'Padding bottom',
       value,
       owner: name(n),
-      rule: ruleFor(n, side === "top" ? "padding-top" : "padding-bottom"),
+      rule: ruleFor(n, side === 'top' ? 'padding-top' : 'padding-bottom'),
       band: {
-        top: side === "top" ? b.top + border : b.top + b.height - border - value,
+        top: side === 'top' ? b.top + border : b.top + b.height - border - value,
         left: b.left,
         width: b.width,
         height: value,
       },
-      tone: "padding",
+      tone: 'padding',
     });
   };
 
   // Above: the block's own padding, then its margin, then up through every
   // ancestor it opens (a first child shares its parent's space above).
-  padding(el, "top");
+  padding(el, 'top');
   let node: HTMLElement = el;
   while (node !== root) {
     const mt = parseFloat(getComputedStyle(node).marginTop);
     if (mt >= 0.5) {
       const b = rel(node);
       out.push({
-        kind: "Margin top",
+        kind: 'Margin top',
         value: mt,
         owner: name(node),
-        rule: ruleFor(node, "margin-top"),
+        rule: ruleFor(node, 'margin-top'),
         band: { top: b.top - mt, left: b.left, width: b.width, height: mt },
-        tone: "margin",
+        tone: 'margin',
       });
     }
     const parent: HTMLElement | null = node.parentElement;
@@ -318,21 +333,21 @@ function spacingOf(el: HTMLElement, frame: HTMLElement): SpaceMark[] {
     // A sibling before it stacks above it, so the space is the block's own;
     // in a flex row (a to-do's checkbox) siblings sit beside it instead.
     if (node.previousElementSibling && !isRow(parent)) break;
-    padding(parent, "top");
-    if (getComputedStyle(parent).display === "table-cell") break;
+    padding(parent, 'top');
+    if (getComputedStyle(parent).display === 'table-cell') break;
     node = parent;
   }
 
   // Below: the block's own padding, then any ancestor it closes. The sheet
   // never adds margin below, so that's all the space under it.
-  padding(el, "bottom");
+  padding(el, 'bottom');
   node = el;
   while (node !== root) {
     const parent: HTMLElement | null = node.parentElement;
     if (!parent || parent === root) break;
     if (node.nextElementSibling && !isRow(parent)) break;
-    padding(parent, "bottom");
-    if (getComputedStyle(parent).display === "table-cell") break;
+    padding(parent, 'bottom');
+    if (getComputedStyle(parent).display === 'table-cell') break;
     node = parent;
   }
 
@@ -348,12 +363,17 @@ function spacingOf(el: HTMLElement, frame: HTMLElement): SpaceMark[] {
     const rb = rel(b);
     const host = rel(n);
     out.push({
-      kind: "Gap",
+      kind: 'Gap',
       value: gap,
       owner: name(n),
-      rule: ruleFor(n as HTMLElement, "gap"),
-      band: { top: host.top, left: ra.left + ra.width, width: Math.max(1, rb.left - ra.left - ra.width), height: host.height },
-      tone: "padding",
+      rule: ruleFor(n as HTMLElement, 'gap'),
+      band: {
+        top: host.top,
+        left: ra.left + ra.width,
+        width: Math.max(1, rb.left - ra.left - ra.width),
+        height: host.height,
+      },
+      tone: 'padding',
     });
     break;
   }
@@ -365,7 +385,7 @@ function spacingOf(el: HTMLElement, frame: HTMLElement): SpaceMark[] {
 export function TypesetEditor({ content, label }: { content: string; label: string }) {
   const shape = useShape();
   const inverse = useInverseTheme();
-  const typesetClassName = useSizeVariant() === "compact" ? "typeset-compact" : undefined;
+  const typesetClassName = useSizeVariant() === 'compact' ? 'typeset-compact' : undefined;
   const [editorProps] = useState(() => editorPropsFor(label));
   const [inspect, setInspect] = useState(false);
   const [marks, setMarks] = useState<InspectMark[]>([]);
@@ -388,10 +408,10 @@ export function TypesetEditor({ content, label }: { content: string; label: stri
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(frame);
-    editor.on("update", measure);
+    editor.on('update', measure);
     return () => {
       ro.disconnect();
-      editor.off("update", measure);
+      editor.off('update', measure);
     };
   }, [inspect, editor, typesetClassName]);
 
@@ -412,26 +432,26 @@ export function TypesetEditor({ content, label }: { content: string; label: stri
   const mark = inspect && hovered !== null ? marks[hovered] : undefined;
   const spacing = useMemo(
     () => (mark && frameRef.current ? spacingOf(mark.el, frameRef.current) : []),
-    [mark]
+    [mark],
   );
 
   // A click in the page margin lands at the end of the document, as in Notion.
   const focusEnd = (e: MouseEvent<HTMLDivElement>) => {
-    if (!editor || (e.target as HTMLElement).closest(".ProseMirror")) return;
+    if (!editor || (e.target as HTMLElement).closest('.ProseMirror')) return;
     e.preventDefault();
-    editor.commands.focus("end");
+    editor.commands.focus('end');
   };
 
   return (
     <div
       className={cn(
-        "flex w-full flex-col overflow-hidden border border-border/60 transition-[border-color] duration-150 ease-out focus-within:border-foreground/40",
-        shape.container
+        'flex w-full flex-col overflow-hidden border border-border/60 transition-[border-color] duration-150 ease-out focus-within:border-foreground/40',
+        shape.container,
       )}
     >
       <div className="flex items-center justify-between gap-3 border-b border-border/60 py-1.5 pl-4 pr-2">
         <p className="hidden min-w-0 text-site-caption text-muted-foreground sm:block">
-          Type <code>#</code> for a heading, <code>-</code> for a list, <code>[]</code> for a to-do,{" "}
+          Type <code>#</code> for a heading, <code>-</code> for a list, <code>[]</code> for a to-do,{' '}
           <code>&gt;</code> for a quote.
         </p>
         <div className="ml-auto flex shrink-0 items-center gap-1">
@@ -446,10 +466,7 @@ export function TypesetEditor({ content, label }: { content: string; label: stri
           />
         </div>
       </div>
-      <div
-        onMouseDown={focusEnd}
-        className="cursor-text bg-background px-5 py-6 sm:px-8 sm:py-8"
-      >
+      <div onMouseDown={focusEnd} className="cursor-text bg-background px-5 py-6 sm:px-8 sm:py-8">
         <div
           ref={frameRef}
           onPointerMove={pick}
@@ -481,12 +498,15 @@ export function TypesetEditor({ content, label }: { content: string; label: stri
                 outlineOffset: -1,
               }}
             >
-              <span className="font-mono text-[9px] leading-none text-foreground" style={{ fontVariationSettings: fontWeights.semibold }}>
+              <span
+                className="font-mono text-[9px] leading-none text-foreground"
+                style={{ fontVariationSettings: fontWeights.semibold }}
+              >
                 {Math.round(sp.value * 10) / 10}
               </span>
             </div>
           ))}
-          <div className={cn("typeset", typesetClassName, PLACEHOLDER)}>
+          <div className={cn('typeset', typesetClassName, PLACEHOLDER)}>
             {editor ? (
               <EditorContent editor={editor} />
             ) : (
@@ -500,7 +520,12 @@ export function TypesetEditor({ content, label }: { content: string; label: stri
               side="top"
               sideOffset={8}
               content={
-                <div className={cn(inverse, "grid grid-cols-[auto_auto] gap-x-4 font-mono text-[11px] leading-4 tabular-nums")}>
+                <div
+                  className={cn(
+                    inverse,
+                    'grid grid-cols-[auto_auto] gap-x-4 font-mono text-[11px] leading-4 tabular-nums',
+                  )}
+                >
                   <span className="text-muted-foreground">Font size</span>
                   <span className="text-right">{pxLabel(mark.fontSize)}</span>
                   <span className="text-muted-foreground">Line height</span>
@@ -511,7 +536,7 @@ export function TypesetEditor({ content, label }: { content: string; label: stri
                       <span className="mt-1.5 text-right">{pxLabel(sp.value)}</span>
                       <span className="col-span-2 text-muted-foreground">
                         {sp.owner}
-                        {sp.rule ? ` · ${sp.rule}` : ""}
+                        {sp.rule ? ` · ${sp.rule}` : ''}
                       </span>
                     </Fragment>
                   ))}

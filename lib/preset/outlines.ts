@@ -8,8 +8,8 @@
 // generator writes, and this module's imports clear of the heavy ones.
 // ---------------------------------------------------------------------------
 
-import { LIGHT_PRESET_GENERATORS, type PresetGenerator } from "./light-generators";
-import { dataTablePresetOutline, type DataTablePreset } from "./data-table-options";
+import { LIGHT_PRESET_GENERATORS, type PresetGenerator } from './light-generators';
+import { dataTablePresetOutline, type DataTablePreset } from './data-table-options';
 
 export interface PresetOutline {
   files: { target: string; exportName?: string; helper?: boolean }[];
@@ -34,7 +34,10 @@ export function outlineOf(generator: PresetGenerator, preset: Preset): PresetOut
 
 export const PRESET_OUTLINES: Record<string, (preset: Preset) => PresetOutline> = {
   ...Object.fromEntries(
-    Object.entries(LIGHT_PRESET_GENERATORS).map(([tag, generator]) => [tag, (preset: Preset) => outlineOf(generator, preset)])
+    Object.entries(LIGHT_PRESET_GENERATORS).map(([tag, generator]) => [
+      tag,
+      (preset: Preset) => outlineOf(generator, preset),
+    ]),
   ),
   t: (preset) => dataTablePresetOutline(preset as unknown as DataTablePreset),
 };

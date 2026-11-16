@@ -1,37 +1,28 @@
-"use client";
+'use client';
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ComponentProps,
-  type ReactNode,
-} from "react";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { fontWeights } from "@/registry/default/lib/font-weight";
+import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { fontWeights } from '#registry/default/lib/font-weight';
 import {
   shapeMap,
   useShape,
   usePopupShape,
   type ShapeVariant,
-} from "@/registry/default/lib/shape-context";
-import { SurfaceProvider } from "@/registry/default/lib/surface-context";
-import { Elevated } from "@/lib/elevated";
-import { Dropdown, useDropdown } from "@/components/flavored/dropdown";
-import { MenuItem } from "@/registry/default/menu-item";
-import { useFluidHoverSelect } from "@/hooks/use-fluid-hover";
-import { Slider } from "@/registry/radix/slider";
-import {
-  ColorPicker,
-  ColorPickerPortalContainer,
-} from "@/registry/default/color-picker";
-import { useIcon, type IconComponent } from "@/registry/default/lib/icon-context";
-import { useThemeContext } from "@/registry/default/lib/theme-context";
-import { surfaceClasses } from "@/registry/default/lib/surface-classes";
-import { cn } from "@/registry/default/lib/utils";
-import { ScrollArea } from "@/registry/base/scroll-area";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { ACCENT_VAR } from "@/lib/accent";
+} from '#registry/default/lib/shape-context';
+import { SurfaceProvider } from '#registry/default/lib/surface-context';
+import { Elevated } from '#lib/elevated';
+import { Dropdown, useDropdown } from '#components/flavored/dropdown';
+import { MenuItem } from '#registry/default/menu-item';
+import { useFluidHoverSelect } from '#hooks/use-fluid-hover';
+import { Slider } from '#registry/radix/slider';
+import { ColorPicker, ColorPickerPortalContainer } from '#registry/default/color-picker';
+import { useIcon, type IconComponent } from '#registry/default/lib/icon-context';
+import { useThemeContext } from '#registry/default/lib/theme-context';
+import { surfaceClasses } from '#registry/default/lib/surface-classes';
+import { cn } from '#registry/default/lib/utils';
+import { ScrollArea } from '#registry/base/scroll-area';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { ACCENT_VAR } from '#lib/accent';
 
 const LEVELS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 
@@ -47,12 +38,12 @@ const LEVELS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 // Layers 24px or more apart (dialog padding, the level stack) are tuned
 // independently, like the real Dialog. Rounded keeps the original radii there.
 function demoRadius(variant: ShapeVariant) {
-  const sharp = variant === "sharp";
+  const sharp = variant === 'sharp';
   return {
-    panel: { rounded: "rounded-2xl", pill: "rounded-3xl", sharp: "rounded-[1px]" }[variant],
-    field: { rounded: "rounded-xl", pill: "rounded-[20px]", sharp: "rounded-[1px]" }[variant],
-    menu: sharp ? "rounded-[1px]" : "rounded-xl",
-    button: { rounded: "rounded-lg", pill: "rounded-full", sharp: "rounded-[1px]" }[variant],
+    panel: { rounded: 'rounded-2xl', pill: 'rounded-3xl', sharp: 'rounded-[1px]' }[variant],
+    field: { rounded: 'rounded-xl', pill: 'rounded-[20px]', sharp: 'rounded-[1px]' }[variant],
+    menu: sharp ? 'rounded-[1px]' : 'rounded-xl',
+    button: { rounded: 'rounded-lg', pill: 'rounded-full', sharp: 'rounded-[1px]' }[variant],
     // Swatch chips (shape.container) sit 16px inside their panel.
     swatchPanel: { borderRadius: sharp ? 1 : shapeMap[variant].containerRadius + 16 },
     // A menu (popups cap at rounded) sits 16px plus a 1px border inside its panel.
@@ -63,7 +54,7 @@ function demoRadius(variant: ShapeVariant) {
 function DarkPreview(props: ComponentProps<typeof ComponentPreview>) {
   const shape = useShape();
   return (
-    <div className={cn("dark bg-background", shape.container)}>
+    <div className={cn('dark bg-background', shape.container)}>
       <ComponentPreview {...props} />
     </div>
   );
@@ -138,8 +129,8 @@ const SUBSTRATE_CODE = `// Substrate flows through React context.
 const substrate = useSurface();       // 1, 3, or 5
 const level = Math.min(substrate + 2, 8);`;
 
-const ELEVATED_SOURCE = `import { useSurface, SurfaceProvider } from "@/lib/surface-context";
-import { surfaceClasses } from "@/lib/surface-classes";
+const ELEVATED_SOURCE = `import { useSurface, SurfaceProvider } from "#lib/surface-context";
+import { surfaceClasses } from "#lib/surface-classes";
 
 const Elevated = forwardRef<HTMLDivElement, ElevatedProps>(
   ({ offset, shadowLevel, className, children, ...props }, ref) => {
@@ -196,13 +187,8 @@ function SurfaceChip({ level }: { level: number }) {
   const shape = useShape();
   return (
     <div className="flex flex-col items-center gap-2 shrink-0">
-      <div
-        className={cn("w-14 h-14", shape.container, surfaceClasses(level))}
-        aria-hidden
-      />
-      <span className="text-[11px] leading-3.5 text-muted-foreground font-mono">
-        {level}
-      </span>
+      <div className={cn('w-14 h-14', shape.container, surfaceClasses(level))} aria-hidden />
+      <span className="text-[11px] leading-3.5 text-muted-foreground font-mono">{level}</span>
     </div>
   );
 }
@@ -276,51 +262,39 @@ function StaticRoleItem({
 }) {
   // Rows inside a menu follow the popup shape, matching the capped panel.
   const shape = usePopupShape();
-  const CheckIcon = useIcon("check");
+  const CheckIcon = useIcon('check');
   return (
     <div
       className={cn(
-        "group relative flex items-start gap-3 px-3 py-2.5 cursor-pointer transition-colors duration-80",
+        'group relative flex items-start gap-3 px-3 py-2.5 cursor-pointer transition-colors duration-80',
         shape.item,
-        checked ? "bg-active" : "hover:bg-hover"
+        checked ? 'bg-active' : 'hover:bg-hover',
       )}
     >
       <Icon
         size={18}
         strokeWidth={checked ? 2 : 1.5}
         className={cn(
-          "shrink-0 mt-0.5 transition-colors duration-80",
-          checked
-            ? "text-foreground"
-            : "text-muted-foreground group-hover:text-foreground"
+          'shrink-0 mt-0.5 transition-colors duration-80',
+          checked ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground',
         )}
       />
       <div className="flex flex-col gap-0.5 min-w-0 flex-1">
         <span
           className={cn(
-            "text-site-body transition-colors duration-80",
-            checked
-              ? "text-foreground"
-              : "text-muted-foreground group-hover:text-foreground"
+            'text-site-body transition-colors duration-80',
+            checked ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground',
           )}
           style={{
-            fontVariationSettings: checked
-              ? fontWeights.semibold
-              : fontWeights.normal,
+            fontVariationSettings: checked ? fontWeights.semibold : fontWeights.normal,
           }}
         >
           {label}
         </span>
-        <span className="text-site-caption text-muted-foreground">
-          {description}
-        </span>
+        <span className="text-site-caption text-muted-foreground">{description}</span>
       </div>
       {checked && (
-        <CheckIcon
-          size={16}
-          strokeWidth={2}
-          className="text-foreground shrink-0 mt-0.5"
-        />
+        <CheckIcon size={16} strokeWidth={2} className="text-foreground shrink-0 mt-0.5" />
       )}
     </div>
   );
@@ -331,12 +305,12 @@ const ANNOTATION_ACCENT = ACCENT_VAR;
 // Red marks the collapse: the dialog and the dropdown share one surface, so
 // their callouts go red to flag the problem. The page background stays blue
 // (it's just orienting context, not part of the bug).
-const ANNOTATION_RED = "#FF6B6B";
+const ANNOTATION_RED = '#FF6B6B';
 
 // Each callout: a label chip plus a curved arrow drawn in the shared
 // 600×600 overlay (1 unit = 1px). Coordinates are tuned against the fixed
 // canvas below so the arrowheads land on the three surfaces.
-type ArrowKey = "page" | "dialog" | "dropdown";
+type ArrowKey = 'page' | 'dialog' | 'dropdown';
 
 const ANNOTATIONS: {
   key: ArrowKey;
@@ -344,39 +318,39 @@ const ANNOTATIONS: {
   hex: string;
   swatch: string;
   color: string;
-  label: { left: number; top: number; align: "left" | "right" };
+  label: { left: number; top: number; align: 'left' | 'right' };
   // Base anchor points (in the 600×600 canvas). The control point — and thus
   // the curvature — is derived at render time from the DialKit `curve` value.
   start: { x: number; y: number };
   end: { x: number; y: number };
 }[] = [
   {
-    key: "page",
-    title: "Page background",
-    hex: "#171717",
-    swatch: "#171717",
+    key: 'page',
+    title: 'Page background',
+    hex: '#171717',
+    swatch: '#171717',
     color: ANNOTATION_ACCENT,
-    label: { left: 14, top: 24, align: "left" },
+    label: { left: 14, top: 24, align: 'left' },
     start: { x: 118, y: 74 },
     end: { x: 84, y: 150 },
   },
   {
-    key: "dialog",
-    title: "Dialog",
-    hex: "#333333",
-    swatch: "#333333",
+    key: 'dialog',
+    title: 'Dialog',
+    hex: '#333333',
+    swatch: '#333333',
     color: ANNOTATION_RED,
-    label: { left: 8, top: 300, align: "left" },
+    label: { left: 8, top: 300, align: 'left' },
     start: { x: 118, y: 300 },
     end: { x: 152, y: 214 },
   },
   {
-    key: "dropdown",
-    title: "Role dropdown",
-    hex: "#333333",
-    swatch: "#333333",
+    key: 'dropdown',
+    title: 'Role dropdown',
+    hex: '#333333',
+    swatch: '#333333',
     color: ANNOTATION_RED,
-    label: { left: 442, top: 300, align: "left" },
+    label: { left: 442, top: 300, align: 'left' },
     start: { x: 500, y: 338 },
     end: { x: 434, y: 306 },
   },
@@ -405,7 +379,7 @@ const ARROW_VALUES: Record<ArrowKey, ArrowDial> = {
 function buildArrowPath(
   start: { x: number; y: number },
   end: { x: number; y: number },
-  dial: { x: number; y: number; rotation: number; curve: number }
+  dial: { x: number; y: number; rotation: number; curve: number },
 ) {
   const mx = (start.x + end.x) / 2;
   const my = (start.y + end.y) / 2;
@@ -478,8 +452,8 @@ function ProblemAnnotations() {
         <div
           key={a.title}
           className={cn(
-            "absolute flex flex-col gap-0.5",
-            a.label.align === "right" ? "items-end text-right" : "items-start"
+            'absolute flex flex-col gap-0.5',
+            a.label.align === 'right' ? 'items-end text-right' : 'items-start',
           )}
           style={{
             left: a.label.left + ARROW_VALUES[a.key].labelX,
@@ -499,11 +473,7 @@ function ProblemAnnotations() {
               className="w-2.5 h-2.5 rounded-[3px] border border-white/15 shrink-0"
               style={{ backgroundColor: a.swatch }}
             />
-            <span
-              className="text-[11px] font-mono leading-3.5 text-muted-foreground"
-            >
-              {a.hex}
-            </span>
+            <span className="text-[11px] font-mono leading-3.5 text-muted-foreground">{a.hex}</span>
           </span>
         </div>
       ))}
@@ -512,13 +482,13 @@ function ProblemAnnotations() {
 }
 
 function ProblemDemo() {
-  const XIcon = useIcon("x");
+  const XIcon = useIcon('x');
   const radius = demoRadius(useShape().variant);
 
-  const Users = useIcon("users");
-  const User = useIcon("user");
-  const Lock = useIcon("lock");
-  const ChevronDown = useIcon("chevron-down");
+  const Users = useIcon('users');
+  const User = useIcon('user');
+  const Lock = useIcon('lock');
+  const ChevronDown = useIcon('chevron-down');
 
   return (
     <DarkPreview code={PROBLEM_CODE} padding="none">
@@ -532,9 +502,9 @@ function ProblemDemo() {
           <SurfaceProvider value={5}>
             <div
               className={cn(
-                "absolute left-1/2 -translate-x-1/2 top-8 w-[320px] p-6 flex flex-col gap-5",
+                'absolute left-1/2 -translate-x-1/2 top-8 w-[320px] p-6 flex flex-col gap-5',
                 radius.panel,
-                surfaceClasses(5)
+                surfaceClasses(5),
               )}
             >
               <div className="flex items-start justify-between gap-3">
@@ -572,7 +542,10 @@ function ProblemDemo() {
                   readOnly
                   rows={2}
                   placeholder="email@gmail.com, email2@gmail.com..."
-                  className={cn("text-site-body text-foreground placeholder:text-muted-foreground bg-transparent hover:bg-hover border border-border px-3 py-2 resize-none outline-none transition-colors duration-80 cursor-pointer", radius.field)}
+                  className={cn(
+                    'text-site-body text-foreground placeholder:text-muted-foreground bg-transparent hover:bg-hover border border-border px-3 py-2 resize-none outline-none transition-colors duration-80 cursor-pointer',
+                    radius.field,
+                  )}
                 />
               </label>
 
@@ -586,7 +559,10 @@ function ProblemDemo() {
                 <button
                   type="button"
                   aria-expanded
-                  className={cn("flex items-center justify-between gap-2 h-10 px-3 bg-active text-site-body text-foreground border border-border cursor-pointer transition-colors duration-80", radius.field)}
+                  className={cn(
+                    'flex items-center justify-between gap-2 h-10 px-3 bg-active text-site-body text-foreground border border-border cursor-pointer transition-colors duration-80',
+                    radius.field,
+                  )}
                 >
                   <span>Member</span>
                   <ChevronDown
@@ -599,13 +575,7 @@ function ProblemDemo() {
                     background is hard-coded to the dialog's own level.
                     surface-5 on surface-5: the shadow gives a faint edge, yet
                     the body melts straight into the dialog. */}
-                <div
-                  className={cn(
-                    "-mt-px p-1 flex flex-col",
-                    radius.menu,
-                    surfaceClasses(5, 3)
-                  )}
-                >
+                <div className={cn('-mt-px p-1 flex flex-col', radius.menu, surfaceClasses(5, 3))}>
                   <StaticRoleItem
                     icon={Users}
                     label="Workspace owner"
@@ -630,7 +600,10 @@ function ProblemDemo() {
               <div className="flex justify-end items-center gap-2 pt-2">
                 <button
                   type="button"
-                  className={cn("h-9 px-4 bg-transparent hover:bg-hover text-site-body text-foreground cursor-pointer transition-colors duration-80", radius.button)}
+                  className={cn(
+                    'h-9 px-4 bg-transparent hover:bg-hover text-site-body text-foreground cursor-pointer transition-colors duration-80',
+                    radius.button,
+                  )}
                   style={{ fontVariationSettings: fontWeights.normal }}
                 >
                   Cancel
@@ -638,7 +611,10 @@ function ProblemDemo() {
                 <button
                   type="button"
                   disabled
-                  className={cn("h-9 px-4 bg-foreground text-background text-site-body cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-50 disabled:pointer-events-none", radius.button)}
+                  className={cn(
+                    'h-9 px-4 bg-foreground text-background text-site-body cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-50 disabled:pointer-events-none',
+                    radius.button,
+                  )}
                   style={{ fontVariationSettings: fontWeights.semibold }}
                 >
                   Send invites
@@ -661,14 +637,14 @@ function ProblemDemo() {
 // Dark-mode surface hex map — used to label the demo with raw color values.
 // Kept in sync with the --surface-N tokens in app/globals.css.
 const SURFACE_HEX_DARK: Record<number, string> = {
-  1: "#171717",
-  2: "#1E1E1E",
-  3: "#252525",
-  4: "#2C2C2C",
-  5: "#333333",
-  6: "#3A3A3A",
-  7: "#414141",
-  8: "#484848",
+  1: '#171717',
+  2: '#1E1E1E',
+  3: '#252525',
+  4: '#2C2C2C',
+  5: '#333333',
+  6: '#3A3A3A',
+  7: '#414141',
+  8: '#484848',
 };
 
 function SwatchRow({ label, hex }: { label: string; hex: string }) {
@@ -687,20 +663,20 @@ function SwatchRow({ label, hex }: { label: string; hex: string }) {
 
 function SubstrateDemo() {
   const { menuPanel } = demoRadius(useShape().variant);
-  const Star = useIcon("star");
-  const Clock = useIcon("clock");
-  const Lock = useIcon("lock");
+  const Star = useIcon('star');
+  const Clock = useIcon('clock');
+  const Lock = useIcon('lock');
 
   const items = [
-    { icon: Star, label: "Favorites" },
-    { icon: Clock, label: "Recents" },
-    { icon: Lock, label: "Private" },
+    { icon: Star, label: 'Favorites' },
+    { icon: Clock, label: 'Recents' },
+    { icon: Lock, label: 'Private' },
   ];
 
   const scenarios = [
-    { substrate: 1, label: "On the page" },
-    { substrate: 3, label: "Inside a popover" },
-    { substrate: 5, label: "Inside a dialog" },
+    { substrate: 1, label: 'On the page' },
+    { substrate: 3, label: 'Inside a popover' },
+    { substrate: 5, label: 'Inside a dialog' },
   ];
 
   return (
@@ -765,20 +741,17 @@ function ElevatedDemo() {
       <div className="dark w-full">
         <div
           className={cn(
-            "flex flex-col gap-3 p-5 w-full max-w-[480px] mx-auto",
+            'flex flex-col gap-3 p-5 w-full max-w-[480px] mx-auto',
             panel,
-            surfaceClasses(1)
+            surfaceClasses(1),
           )}
         >
           <span className="text-site-caption text-muted-foreground">Page</span>
-          <Elevated offset={2} className={cn("p-5 flex flex-col gap-3", panel)}>
+          <Elevated offset={2} className={cn('p-5 flex flex-col gap-3', panel)}>
             <span className="text-site-caption text-muted-foreground">Card</span>
-            <Elevated
-              offset={2}
-              className={cn("p-5 flex flex-col gap-3", panel)}
-            >
+            <Elevated offset={2} className={cn('p-5 flex flex-col gap-3', panel)}>
               <span className="text-site-caption text-muted-foreground">Popover</span>
-              <Elevated offset={2} className={cn("p-5", panel)}>
+              <Elevated offset={2} className={cn('p-5', panel)}>
                 <span className="text-site-caption text-muted-foreground">Menu</span>
               </Elevated>
             </Elevated>
@@ -796,16 +769,21 @@ function ElevatedDemo() {
 
 // Nested stack from surface-{low} (base) up to surface-{high}, each layer
 // lifting +1 off the one it sits in via the real Elevated primitive.
-function buildStack(low: number, high: number, panel: string, hovered: number | null = null): ReactNode {
+function buildStack(
+  low: number,
+  high: number,
+  panel: string,
+  hovered: number | null = null,
+): ReactNode {
   // Each surface's label is hidden until you hover *that* surface: the
   // innermost surface under the pointer, tracked by the demo. Not a CSS
   // `:has(:hover)` rule, which made Chrome restyle every page of the site on
   // each DOM insertion (each menu opening).
-  const boxClass = cn(panel, "relative p-6 flex items-center justify-center");
+  const boxClass = cn(panel, 'relative p-6 flex items-center justify-center');
   const labelClass = (lvl: number) =>
     cn(
-      "absolute top-2 left-2.5 text-site-caption text-muted-foreground transition-opacity duration-150",
-      hovered === lvl ? "opacity-100" : "opacity-0"
+      'absolute top-2 left-2.5 text-site-caption text-muted-foreground transition-opacity duration-150',
+      hovered === lvl ? 'opacity-100' : 'opacity-0',
     );
 
   let node: ReactNode = null;
@@ -818,7 +796,7 @@ function buildStack(low: number, high: number, panel: string, hovered: number | 
         data-surface={lvl}
         // Innermost surface is a square; each enclosing surface wraps it with
         // uniform padding, so the whole stack stays concentric squares.
-        className={cn(boxClass, isInner && "size-24")}
+        className={cn(boxClass, isInner && 'size-24')}
       >
         <span className={labelClass(lvl)}>surface-{lvl}</span>
         {inner}
@@ -829,7 +807,7 @@ function buildStack(low: number, high: number, panel: string, hovered: number | 
     <SurfaceProvider value={low}>
       <div
         data-surface={low}
-        className={cn(boxClass, surfaceClasses(low), node === null && "size-24")}
+        className={cn(boxClass, surfaceClasses(low), node === null && 'size-24')}
       >
         <span className={labelClass(low)}>surface-{low}</span>
         {node}
@@ -856,7 +834,7 @@ function ElevationStackDemo() {
           <div
             className="absolute inset-0 flex flex-col items-center justify-center"
             onPointerOver={(e) => {
-              const surface = (e.target as HTMLElement).closest<HTMLElement>("[data-surface]");
+              const surface = (e.target as HTMLElement).closest<HTMLElement>('[data-surface]');
               setHovered(surface ? Number(surface.dataset.surface) : null);
             }}
             onPointerLeave={() => setHovered(null)}
@@ -890,7 +868,10 @@ function ColorPickerDemo() {
     <DarkPreview code={COLOR_PICKER_CODE} padding="compact">
       <div
         ref={setContainerEl}
-        className={cn("dark relative w-full overflow-hidden flex items-start justify-center min-h-[520px] py-12 bg-background", panel)}
+        className={cn(
+          'dark relative w-full overflow-hidden flex items-start justify-center min-h-[520px] py-12 bg-background',
+          panel,
+        )}
       >
         <ColorPickerPortalContainer value={containerEl}>
           <ColorPicker defaultValue="#6B97FF" formatOpen />
@@ -916,7 +897,7 @@ function RoleItem({
   const ref = useRef<HTMLDivElement>(null);
   const { registerItem, activeStore, checkedIndex } = useDropdown();
   const shape = useShape();
-  const CheckIcon = useIcon("check");
+  const CheckIcon = useIcon('check');
 
   useEffect(() => {
     registerItem(index, ref.current);
@@ -935,42 +916,34 @@ function RoleItem({
       aria-label={label}
       tabIndex={index === (checkedIndex ?? 0) ? 0 : -1}
       className={cn(
-        "relative z-10 flex items-start gap-3 px-3 py-2.5 cursor-pointer outline-none transition-colors duration-80",
-        shape.item
+        'relative z-10 flex items-start gap-3 px-3 py-2.5 cursor-pointer outline-none transition-colors duration-80',
+        shape.item,
       )}
     >
       <Icon
         size={18}
         strokeWidth={highlighted ? 2 : 1.5}
         className={cn(
-          "shrink-0 mt-0.5 transition-[color,stroke-width] duration-80",
-          highlighted ? "text-foreground" : "text-muted-foreground"
+          'shrink-0 mt-0.5 transition-[color,stroke-width] duration-80',
+          highlighted ? 'text-foreground' : 'text-muted-foreground',
         )}
       />
       <div className="flex flex-col gap-0.5 min-w-0 flex-1">
         <span
           className={cn(
-            "text-site-body transition-colors duration-80",
-            highlighted ? "text-foreground" : "text-muted-foreground"
+            'text-site-body transition-colors duration-80',
+            highlighted ? 'text-foreground' : 'text-muted-foreground',
           )}
           style={{
-            fontVariationSettings: checked
-              ? fontWeights.semibold
-              : fontWeights.normal,
+            fontVariationSettings: checked ? fontWeights.semibold : fontWeights.normal,
           }}
         >
           {label}
         </span>
-        <span className="text-site-caption text-muted-foreground">
-          {description}
-        </span>
+        <span className="text-site-caption text-muted-foreground">{description}</span>
       </div>
       {checked && (
-        <CheckIcon
-          size={16}
-          strokeWidth={2}
-          className="text-foreground shrink-0 mt-0.5"
-        />
+        <CheckIcon size={16} strokeWidth={2} className="text-foreground shrink-0 mt-0.5" />
       )}
     </div>
   );
@@ -981,17 +954,17 @@ function rgbToHex(rgb: string) {
   const m = rgb.match(/\d+/g);
   if (!m || m.length < 3) return rgb;
   return (
-    "#" +
+    '#' +
     m
       .slice(0, 3)
-      .map((n) => Number(n).toString(16).padStart(2, "0"))
-      .join("")
+      .map((n) => Number(n).toString(16).padStart(2, '0'))
+      .join('')
       .toUpperCase()
   );
 }
 
 // Hand-tuned transforms for the two solution callouts.
-const SOLUTION_VALUES: Record<"dialog" | "dropdown", ArrowDial> = {
+const SOLUTION_VALUES: Record<'dialog' | 'dropdown', ArrowDial> = {
   dialog: { x: 0, y: -60, rotation: 20, curve: -10, labelX: 0, labelY: -30 },
   dropdown: { x: 0, y: 0, rotation: 0, curve: 10, labelX: 10, labelY: 10 },
 };
@@ -1064,17 +1037,13 @@ function SolutionAnnotations({
   const dEnd = { x: dlg.left + 12, y: dlg.top + dlg.h * 0.4 };
   const dLabelW = 72;
   const dialog = {
-    key: "dialog",
-    title: "Dialog",
+    key: 'dialog',
+    title: 'Dialog',
     hex: dlg.hex,
     labelW: dLabelW,
     left: dlg.left - dLabelW - 16 + SOLUTION_VALUES.dialog.labelX,
     top: dEnd.y + 6 + SOLUTION_VALUES.dialog.labelY,
-    path: buildArrowPath(
-      { x: dlg.left - 16, y: dEnd.y + 26 },
-      dEnd,
-      SOLUTION_VALUES.dialog
-    ),
+    path: buildArrowPath({ x: dlg.left - 16, y: dEnd.y + 26 }, dEnd, SOLUTION_VALUES.dialog),
   };
 
   // Role dropdown callout — label in the right margin, arrow into the menu.
@@ -1082,8 +1051,8 @@ function SolutionAnnotations({
   const mEnd = { x: dd.right - 2, y: dd.top + dd.h * 0.22 };
   const mLabelW = 92;
   const dropdown = {
-    key: "dropdown",
-    title: "Role dropdown",
+    key: 'dropdown',
+    title: 'Role dropdown',
     hex: dd.hex,
     labelW: mLabelW,
     left: geo.w - mLabelW - 4 + SOLUTION_VALUES.dropdown.labelX,
@@ -1091,7 +1060,7 @@ function SolutionAnnotations({
     path: buildArrowPath(
       { x: geo.w - mLabelW - 4, y: mEnd.y + 24 },
       mEnd,
-      SOLUTION_VALUES.dropdown
+      SOLUTION_VALUES.dropdown,
     ),
   };
 
@@ -1158,9 +1127,7 @@ function SolutionAnnotations({
               className="w-2.5 h-2.5 rounded-[3px] border border-white/15 shrink-0"
               style={{ backgroundColor: c.hex }}
             />
-            <span className="text-[11px] font-mono leading-3.5 text-muted-foreground">
-              {c.hex}
-            </span>
+            <span className="text-[11px] font-mono leading-3.5 text-muted-foreground">{c.hex}</span>
           </span>
         </div>
       ))}
@@ -1173,25 +1140,28 @@ function InviteDialogDemo() {
   const containerRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const XIcon = useIcon("x");
-  const Users = useIcon("users");
-  const User = useIcon("user");
-  const Lock = useIcon("lock");
-  const ChevronDown = useIcon("chevron-down");
+  const XIcon = useIcon('x');
+  const Users = useIcon('users');
+  const User = useIcon('user');
+  const Lock = useIcon('lock');
+  const ChevronDown = useIcon('chevron-down');
 
   return (
     <DarkPreview code={INVITE_DIALOG_CODE} padding="compact">
       <div
         ref={containerRef}
-        className={cn("dark relative w-full overflow-hidden min-h-[640px] flex items-center justify-center p-6 bg-background", radius.panel)}
+        className={cn(
+          'dark relative w-full overflow-hidden min-h-[640px] flex items-center justify-center p-6 bg-background',
+          radius.panel,
+        )}
       >
         <SurfaceProvider value={5}>
           <div
             ref={dialogRef}
             className={cn(
-              "relative w-full max-w-[320px] p-6 flex flex-col gap-5",
+              'relative w-full max-w-[320px] p-6 flex flex-col gap-5',
               radius.panel,
-              surfaceClasses(5)
+              surfaceClasses(5),
             )}
           >
             <div className="flex items-start justify-between gap-3">
@@ -1229,7 +1199,10 @@ function InviteDialogDemo() {
                 readOnly
                 rows={2}
                 placeholder="email@gmail.com, email2@gmail.com..."
-                className={cn("text-site-body text-foreground placeholder:text-muted-foreground bg-transparent hover:bg-hover border border-border px-3 py-2 resize-none outline-none transition-colors duration-80 cursor-pointer", radius.field)}
+                className={cn(
+                  'text-site-body text-foreground placeholder:text-muted-foreground bg-transparent hover:bg-hover border border-border px-3 py-2 resize-none outline-none transition-colors duration-80 cursor-pointer',
+                  radius.field,
+                )}
               />
             </label>
 
@@ -1243,7 +1216,10 @@ function InviteDialogDemo() {
               <button
                 type="button"
                 aria-expanded
-                className={cn("flex items-center justify-between gap-2 h-10 px-3 bg-active text-site-body text-foreground border border-border cursor-pointer transition-colors duration-80", radius.field)}
+                className={cn(
+                  'flex items-center justify-between gap-2 h-10 px-3 bg-active text-site-body text-foreground border border-border cursor-pointer transition-colors duration-80',
+                  radius.field,
+                )}
               >
                 <span>Member</span>
                 <ChevronDown
@@ -1282,7 +1258,10 @@ function InviteDialogDemo() {
             <div className="flex justify-end items-center gap-2 pt-2">
               <button
                 type="button"
-                className={cn("h-9 px-4 bg-transparent hover:bg-hover text-site-body text-foreground cursor-pointer transition-colors duration-80", radius.button)}
+                className={cn(
+                  'h-9 px-4 bg-transparent hover:bg-hover text-site-body text-foreground cursor-pointer transition-colors duration-80',
+                  radius.button,
+                )}
                 style={{ fontVariationSettings: fontWeights.normal }}
               >
                 Cancel
@@ -1290,7 +1269,10 @@ function InviteDialogDemo() {
               <button
                 type="button"
                 disabled
-                className={cn("h-9 px-4 bg-foreground text-background text-site-body cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-50 disabled:pointer-events-none", radius.button)}
+                className={cn(
+                  'h-9 px-4 bg-foreground text-background text-site-body cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-50 disabled:pointer-events-none',
+                  radius.button,
+                )}
                 style={{ fontVariationSettings: fontWeights.semibold }}
               >
                 Send invites
@@ -1313,13 +1295,7 @@ function InviteDialogDemo() {
 // Theme-switch links (used in the intro copy)
 // ---------------------------------------------------------------------------
 
-function UseThemeLink({
-  theme,
-  children,
-}: {
-  theme: "dark" | "light";
-  children: ReactNode;
-}) {
+function UseThemeLink({ theme, children }: { theme: 'dark' | 'light'; children: ReactNode }) {
   const { setTheme } = useThemeContext();
   return (
     <button
@@ -1351,25 +1327,21 @@ export default function SurfacesDoc() {
       slug="surfaces"
       description={
         <>
-          Eight surface levels that nest. Components read their substrate from
-          context and lift relative to it, so popovers, dropdowns, and dialogs
-          stay visible at any depth — in both{" "}
-          <UseLightLink>light</UseLightLink> and{" "}
-          <UseDarkLink>dark</UseDarkLink> mode.
+          Eight surface levels that nest. Components read their substrate from context and lift
+          relative to it, so popovers, dropdowns, and dialogs stay visible at any depth — in both{' '}
+          <UseLightLink>light</UseLightLink> and <UseDarkLink>dark</UseDarkLink> mode.
         </>
       }
     >
       <DocSection title="The problem">
         <div className="flex flex-col gap-3 text-site-body text-muted-foreground">
           <p>
-            In light mode, we use shadow behind white surfaces to signify
-            elevation. In dark mode, we use progressively lighter backgrounds
-            instead.
+            In light mode, we use shadow behind white surfaces to signify elevation. In dark mode,
+            we use progressively lighter backgrounds instead.
           </p>
           <p>
-            But traditional components have a fixed background — a dropdown
-            often ends up the same color as the dialog it sits in. That makes
-            your interface look like this:
+            But traditional components have a fixed background — a dropdown often ends up the same
+            color as the dialog it sits in. That makes your interface look like this:
           </p>
         </div>
         <ProblemDemo />
@@ -1387,9 +1359,8 @@ export default function SurfacesDoc() {
           Tokens
         </h3>
         <p className="text-site-body text-muted-foreground">
-          Eight bg/shadow pairs. Light mode flattens to white after step 2
-          (shadow alone carries elevation). Dark mode keeps adding white-opacity
-          plus a layered shadow recipe.
+          Eight bg/shadow pairs. Light mode flattens to white after step 2 (shadow alone carries
+          elevation). Dark mode keeps adding white-opacity plus a layered shadow recipe.
         </p>
         <TokensDemo />
 
@@ -1400,9 +1371,9 @@ export default function SurfacesDoc() {
           Substrate
         </h3>
         <p className="text-site-body text-muted-foreground">
-          Each container knows its own level and tells whatever opens inside.
-          A popover on the page and the same popover inside a dialog both
-          end up at the right depth, without anything passed between them.
+          Each container knows its own level and tells whatever opens inside. A popover on the page
+          and the same popover inside a dialog both end up at the right depth, without anything
+          passed between them.
         </p>
         <SubstrateDemo />
 
@@ -1413,9 +1384,8 @@ export default function SurfacesDoc() {
           Elevated
         </h3>
         <p className="text-site-body text-muted-foreground">
-          Wrap a panel and the background settles at the level it belongs to.
-          The shadow doesn&apos;t change, so a popover still reads as a popover
-          three layers down.
+          Wrap a panel and the background settles at the level it belongs to. The shadow
+          doesn&apos;t change, so a popover still reads as a popover three layers down.
         </p>
         <ElevatedDemo />
 
@@ -1426,9 +1396,8 @@ export default function SurfacesDoc() {
           Move through levels
         </h3>
         <p className="text-site-body text-muted-foreground">
-          Drag both knobs to choose which slice of the ladder to nest. Each
-          layer lifts a single step off the one it sits in — whether you span
-          two levels or all eight.
+          Drag both knobs to choose which slice of the ladder to nest. Each layer lifts a single
+          step off the one it sits in — whether you span two levels or all eight.
         </p>
         <ElevationStackDemo />
       </DocSection>
@@ -1441,8 +1410,7 @@ export default function SurfacesDoc() {
           Invite dialog
         </h3>
         <p className="text-site-body text-muted-foreground">
-          Dialog at surface 5, role picker at surface 7 — no props passed
-          between them.
+          Dialog at surface 5, role picker at surface 7 — no props passed between them.
         </p>
         <InviteDialogDemo />
 

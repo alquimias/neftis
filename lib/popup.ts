@@ -5,4 +5,4 @@ export {
   popupViewportClass,
   POPUP_NAV_KEYS,
   isDisabledRow,
-} from "@/registry/default/lib/popup";
+} from '#registry/default/lib/popup';

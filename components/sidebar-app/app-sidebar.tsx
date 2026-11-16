@@ -1,1 +1,1 @@
-export * from "@/registry/blocks/sidebar-app/app-sidebar";
+export * from '#registry/blocks/sidebar-app/app-sidebar';

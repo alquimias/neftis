@@ -1,12 +1,18 @@
-import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
-import { ChangelogFormatError, parseRelease, releaseEntries, type ChangeKind, type Release } from "@/lib/changelog/parse";
-import type { ReleaseMarks } from "@/lib/changelog/marks";
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import {
+  ChangelogFormatError,
+  parseRelease,
+  releaseEntries,
+  type ChangeKind,
+  type Release,
+} from '#lib/changelog/parse';
+import type { ReleaseMarks } from '#lib/changelog/marks';
 
 // Server only: reads content/changelog/, for the page and /changelog.md at
 // build, and for the root layout's New and Updated markers.
 
-export const CHANGELOG_DIR = join(process.cwd(), "content", "changelog");
+export const CHANGELOG_DIR = join(process.cwd(), 'content', 'changelog');
 const FILE = /^(\d{4}-\d{2})\.md$/;
 
 /** Every release, newest month first. Throws on a malformed file. */
@@ -16,9 +22,16 @@ export function loadReleases(dir = CHANGELOG_DIR): Release[] {
     .sort()
     .reverse()
     .map((name) => {
-      const release = parseRelease(readFileSync(join(dir, name), "utf8"), `content/changelog/${name}`);
+      const release = parseRelease(
+        readFileSync(join(dir, name), 'utf8'),
+        `content/changelog/${name}`,
+      );
       if (release.month !== FILE.exec(name)![1]) {
-        throw new ChangelogFormatError(`content/changelog/${name}`, 2, "`month` does not match the file name");
+        throw new ChangelogFormatError(
+          `content/changelog/${name}`,
+          2,
+          '`month` does not match the file name',
+        );
       }
       return release;
     });
@@ -36,12 +49,15 @@ export interface AheadOfRelease {
  *  sidebar dots them too, so a new page is marked from the day it lands. */
 export const AHEAD_OF_RELEASE: AheadOfRelease[] = [
   // Merged in October 2026; the October release ships Friday 2026-11-06.
-  { month: "2026-10", slugs: ["banner", "typography", "reveal", "calendar", "date-picker"] },
-  { month: "2026-11", slugs: ["field", "checkbox", "input", "textarea", "breadcrumb", "context-menu"] },
+  { month: '2026-10', slugs: ['banner', 'typography', 'reveal', 'calendar', 'date-picker'] },
+  {
+    month: '2026-11',
+    slugs: ['field', 'checkbox', 'input', 'textarea', 'breadcrumb', 'context-menu'],
+  },
 ];
 
 /** The first month whose new pages the sidebar dots (recentNew below). */
-export const NEW_SINCE = "2026-10";
+export const NEW_SINCE = '2026-10';
 
 let marksCache: ReleaseMarks | null = null;
 
@@ -53,7 +69,7 @@ let marksCache: ReleaseMarks | null = null;
  *  files only change with a deploy; every request in development, so an
  *  edited release shows. */
 export function latestMarks(dir = CHANGELOG_DIR, ahead = AHEAD_OF_RELEASE): ReleaseMarks {
-  if (marksCache && process.env.NODE_ENV === "production") return marksCache;
+  if (marksCache && process.env.NODE_ENV === 'production') return marksCache;
   let marks: ReleaseMarks = { updated: [], ahead: [] };
   try {
     const latest = loadReleases(dir)[0];
@@ -64,9 +80,11 @@ export function latestMarks(dir = CHANGELOG_DIR, ahead = AHEAD_OF_RELEASE): Rele
           .filter((e) => kinds.includes(e.kind))
           .map((e) => (e.href ? /^\/docs\/([^/#?]+)/.exec(e.href)?.[1] : undefined))
           .filter((slug): slug is string => !!slug);
-      const added = slugs(["new"]);
+      const added = slugs(['new']);
       marks = {
-        updated: slugs(["updated", "breaking"]).filter((s) => !added.includes(s) && !pending.includes(s)),
+        updated: slugs(['updated', 'breaking']).filter(
+          (s) => !added.includes(s) && !pending.includes(s),
+        ),
         ahead: pending,
       };
     } else marks = { updated: [], ahead: pending };
@@ -74,7 +92,7 @@ export function latestMarks(dir = CHANGELOG_DIR, ahead = AHEAD_OF_RELEASE): Rele
     // Every route's layout calls this: a missing or malformed release
     // costs the site its markers, never the page, and logs once per server.
     // tests/changelog.test.ts still fails the build on a malformed file.
-    console.error("[changelog] New and Updated markers skipped:", error);
+    console.error('[changelog] New and Updated markers skipped:', error);
   }
   marksCache = marks;
   return marks;
@@ -89,20 +107,21 @@ let recentCache: string[] | null = null;
 export function recentNew(
   dir = CHANGELOG_DIR,
   since = NEW_SINCE,
-  ahead = AHEAD_OF_RELEASE
+  ahead = AHEAD_OF_RELEASE,
 ): string[] {
-  if (recentCache && process.env.NODE_ENV === "production") return recentCache;
+  if (recentCache && process.env.NODE_ENV === 'production') return recentCache;
   const slugs = new Set<string>();
   try {
     for (const release of loadReleases(dir)) {
       if (release.month < since) continue;
       for (const e of releaseEntries(release)) {
-        const slug = e.kind === "new" && e.href ? /^\/docs\/([^/#?]+)/.exec(e.href)?.[1] : undefined;
+        const slug =
+          e.kind === 'new' && e.href ? /^\/docs\/([^/#?]+)/.exec(e.href)?.[1] : undefined;
         if (slug) slugs.add(slug);
       }
     }
   } catch (error) {
-    console.error("[changelog] Recent New dots skipped:", error);
+    console.error('[changelog] Recent New dots skipped:', error);
   }
   for (const a of ahead) if (a.month >= since) a.slugs.forEach((slug) => slugs.add(slug));
   recentCache = [...slugs];

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { KeyCaps } from "@/lib/key-cap";
+import { KeyCaps } from '#lib/key-cap';
 
 import {
   createContext,
@@ -10,9 +10,9 @@ import {
   useMemo,
   useState,
   type ReactNode,
-} from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { showSuccessToast } from "@/lib/docs/settings-toast";
+} from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { showSuccessToast } from '#lib/docs/settings-toast';
 import {
   CommandMenu,
   CommandMenuDialog,
@@ -23,30 +23,35 @@ import {
   CommandMenuFooter,
   useIsMac,
   type CommandMenuItemData,
-} from "@/registry/default/command-menu";
+} from '#registry/default/command-menu';
 import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarMenuBadge,
-} from "@/components/flavored/sidebar";
-import { componentList, systemNavList } from "@/lib/docs/components";
-import { useReleaseMarks } from "@/lib/changelog/marks";
-import { useIcons, type IconComponent, type IconComponentProps, type IconName } from "@/lib/icon-context";
-import { useThemeContext, type Theme } from "@/registry/default/lib/theme-context";
-import { useShapeContext, type ShapeVariant } from "@/lib/shape-context";
-import { useSizeContext, type SizeVariant } from "@/lib/size-context";
+} from '#components/flavored/sidebar';
+import { componentList, systemNavList } from '#lib/docs/components';
+import { useReleaseMarks } from '#lib/changelog/marks';
+import {
+  useIcons,
+  type IconComponent,
+  type IconComponentProps,
+  type IconName,
+} from '#lib/icon-context';
+import { useThemeContext, type Theme } from '#registry/default/lib/theme-context';
+import { useShapeContext, type ShapeVariant } from '#lib/shape-context';
+import { useSizeContext, type SizeVariant } from '#lib/size-context';
 import {
   useIconLibrary,
   iconLibraryOrder,
   iconLibraryLabels,
   type IconLibrary,
-} from "@/lib/docs/icon-playground";
-import { useBase, installUrl, type Base } from "@/lib/base-context";
-import { HOVER_MODE_LABELS, useHoverModeSetting } from "@/lib/docs/hover-mode";
-import { HOVER_MODES } from "@/lib/docs/site-settings";
-import { useAccent } from "@/lib/docs/accent";
-import { ACCENT_ORDER, ACCENT_PRESETS, accentCss } from "@/lib/accent";
+} from '#lib/docs/icon-playground';
+import { useBase, installUrl, type Base } from '#lib/base-context';
+import { HOVER_MODE_LABELS, useHoverModeSetting } from '#lib/docs/hover-mode';
+import { HOVER_MODES } from '#lib/docs/site-settings';
+import { useAccent } from '#lib/docs/accent';
+import { ACCENT_ORDER, ACCENT_PRESETS, accentCss } from '#lib/accent';
 
 // ---------------------------------------------------------------------------
 // The site's own command menu: ⌘K anywhere. Every page, every setting the
@@ -55,8 +60,8 @@ import { ACCENT_ORDER, ACCENT_PRESETS, accentCss } from "@/lib/accent";
 // last pages visited listed first.
 // ---------------------------------------------------------------------------
 
-const GITHUB_URL = "https://github.com/mickadesign/fluid-functionalism";
-const RECENT_KEY = "ff:command-menu-recent";
+const GITHUB_URL = 'https://github.com/mickadesign/fluid-functionalism';
+const RECENT_KEY = 'ff:command-menu-recent';
 const RECENT_MAX = 3;
 
 interface SiteCommandMenuContextValue {
@@ -68,7 +73,7 @@ const SiteCommandMenuContext = createContext<SiteCommandMenuContextValue | null>
 
 export function useSiteCommandMenu(): SiteCommandMenuContextValue {
   const ctx = useContext(SiteCommandMenuContext);
-  if (!ctx) throw new Error("useSiteCommandMenu must be used within SiteCommandMenuProvider");
+  if (!ctx) throw new Error('useSiteCommandMenu must be used within SiteCommandMenuProvider');
   return ctx;
 }
 
@@ -80,7 +85,7 @@ export function SiteCommandMenuProvider({ children }: { children: ReactNode }) {
   );
 }
 
-type Kind = "page" | "setting" | "action";
+type Kind = 'page' | 'setting' | 'action';
 
 /** A row plus what tab it belongs to. */
 interface SiteItem extends CommandMenuItemData {
@@ -88,37 +93,52 @@ interface SiteItem extends CommandMenuItemData {
 }
 
 const TABS = [
-  { value: "all", label: "All" },
-  { value: "page", label: "Pages" },
-  { value: "setting", label: "Settings" },
-  { value: "action", label: "Actions" },
+  { value: 'all', label: 'All' },
+  { value: 'page', label: 'Pages' },
+  { value: 'setting', label: 'Settings' },
+  { value: 'action', label: 'Actions' },
 ];
 
 const PAGES: { href: string; label: string; icon: IconName; keywords: string[] }[] = [
-  { href: "/", label: "Showcase", icon: "home", keywords: ["home", "bento", "gallery"] },
-  { href: "/docs", label: "Introduction", icon: "square-library", keywords: ["docs", "getting started", "install"] },
-  { href: "/changelog", label: "Changelog", icon: "clock", keywords: ["releases", "what's new", "updates", "breaking"] },
-  { href: "/demo", label: "Demo", icon: "play", keywords: ["slides", "playground"] },
-  { href: "/compare", label: "Compare with shadcn", icon: "scaling", keywords: ["shadcn", "side by side"] },
+  { href: '/', label: 'Showcase', icon: 'home', keywords: ['home', 'bento', 'gallery'] },
+  {
+    href: '/docs',
+    label: 'Introduction',
+    icon: 'square-library',
+    keywords: ['docs', 'getting started', 'install'],
+  },
+  {
+    href: '/changelog',
+    label: 'Changelog',
+    icon: 'clock',
+    keywords: ['releases', "what's new", 'updates', 'breaking'],
+  },
+  { href: '/demo', label: 'Demo', icon: 'play', keywords: ['slides', 'playground'] },
+  {
+    href: '/compare',
+    label: 'Compare with shadcn',
+    icon: 'scaling',
+    keywords: ['shadcn', 'side by side'],
+  },
 ];
 
 const PAGE_ORDER = [
-  "/",
-  "/docs",
-  "/changelog",
+  '/',
+  '/docs',
+  '/changelog',
   ...systemNavList.map((s) => `/docs/${s.slug}`),
   ...componentList.map((c) => `/docs/${c.slug}`),
 ];
 
 const THEMES: { value: Theme; label: string; icon: IconName }[] = [
-  { value: "system", label: "Follow system", icon: "monitor" },
-  { value: "light", label: "Light", icon: "sun" },
-  { value: "dark", label: "Dark", icon: "moon" },
+  { value: 'system', label: 'Follow system', icon: 'monitor' },
+  { value: 'light', label: 'Light', icon: 'sun' },
+  { value: 'dark', label: 'Dark', icon: 'moon' },
 ];
 const SHAPES: { value: ShapeVariant; label: string; icon: IconName }[] = [
-  { value: "sharp", label: "Sharp", icon: "square" },
-  { value: "rounded", label: "Rounded", icon: "rectangle-horizontal" },
-  { value: "pill", label: "Pill", icon: "circle" },
+  { value: 'sharp', label: 'Sharp', icon: 'square' },
+  { value: 'rounded', label: 'Rounded', icon: 'rectangle-horizontal' },
+  { value: 'pill', label: 'Pill', icon: 'circle' },
 ];
 
 /** Each accent preset's own color in place of an icon: a round swatch in
@@ -130,7 +150,7 @@ function accentSwatch(color: string): IconComponent {
     return (
       <span
         aria-hidden
-        className={`flex items-center justify-center ${className ?? ""}`}
+        className={`flex items-center justify-center ${className ?? ''}`}
         style={{ width: size, height: size }}
       >
         <span
@@ -143,22 +163,22 @@ function accentSwatch(color: string): IconComponent {
   return AccentSwatch;
 }
 const ACCENT_SWATCHES = Object.fromEntries(
-  ACCENT_ORDER.map((a) => [a, accentSwatch(accentCss(a, null))])
+  ACCENT_ORDER.map((a) => [a, accentSwatch(accentCss(a, null))]),
 ) as Record<(typeof ACCENT_ORDER)[number], IconComponent>;
 const SIZES: { value: SizeVariant; label: string }[] = [
-  { value: "default", label: "Default" },
-  { value: "compact", label: "Compact" },
+  { value: 'default', label: 'Default' },
+  { value: 'compact', label: 'Compact' },
 ];
 const BASES: { value: Base; label: string }[] = [
-  { value: "radix", label: "Radix" },
-  { value: "base", label: "Base UI" },
+  { value: 'radix', label: 'Radix' },
+  { value: 'base', label: 'Base UI' },
 ];
 
 function readRecent(): string[] {
   try {
     const raw = localStorage.getItem(RECENT_KEY);
     const list = raw ? (JSON.parse(raw) as unknown) : [];
-    return Array.isArray(list) ? list.filter((v): v is string => typeof v === "string") : [];
+    return Array.isArray(list) ? list.filter((v): v is string => typeof v === 'string') : [];
   } catch {
     return [];
   }
@@ -186,7 +206,7 @@ export function SiteCommandMenuTrigger() {
         {/* The site's key caps, one per key, 1px down to stay centered
             where the 20px badge sat. */}
         <SidebarMenuBadge className="mt-px px-0 [@media(hover:none)]:hidden">
-          <KeyCaps keys={mac ? ["⌘", "K"] : ["Ctrl", "K"]} />
+          <KeyCaps keys={mac ? ['⌘', 'K'] : ['Ctrl', 'K']} />
         </SidebarMenuBadge>
       </SidebarMenuItem>
     </SidebarMenu>
@@ -205,7 +225,7 @@ export function SiteCommandMenu() {
   const { base, setBase } = useBase();
   const { mode: hover, setMode: setHover } = useHoverModeSetting();
   const { preset: accent, custom: customAccent, setPreset: setAccent } = useAccent();
-  const [tab, setTab] = useState("all");
+  const [tab, setTab] = useState('all');
   const [recent, setRecent] = useState<string[]>([]);
 
   // Recent pages seed the suggestions; read after mount so the server and
@@ -225,7 +245,7 @@ export function SiteCommandMenu() {
       remember(href);
       router.push(href);
     },
-    [remember, router]
+    [remember, router],
   );
 
   const currentComponent = componentList.find((c) => `/docs/${c.slug}` === pathname);
@@ -234,134 +254,134 @@ export function SiteCommandMenu() {
   const { isNew, isUpdated } = useReleaseMarks();
 
   const items = useMemo<SiteItem[]>(() => {
-    const mark = (slug: string) => (isNew(slug) ? "New" : isUpdated(slug) ? "Updated" : undefined);
-    const current = (on: boolean) => (on ? "Current" : undefined);
+    const mark = (slug: string) => (isNew(slug) ? 'New' : isUpdated(slug) ? 'Updated' : undefined);
+    const current = (on: boolean) => (on ? 'Current' : undefined);
     const pages: SiteItem[] = [
       ...PAGES.map((p) => ({
-        kind: "page" as const,
+        kind: 'page' as const,
         value: p.href,
         label: p.label,
         action: `Open ${p.label}`,
         icon: icons[p.icon],
         keywords: p.keywords,
-        group: "Pages",
+        group: 'Pages',
         onSelect: () => go(p.href),
       })),
       ...systemNavList.map((s) => ({
-        kind: "page" as const,
+        kind: 'page' as const,
         value: `/docs/${s.slug}`,
         label: s.name,
         action: `Open ${s.name}`,
         description: mark(s.slug),
         keywords: [s.slug, ...s.description.split(/\W+/)],
-        group: "System",
+        group: 'System',
         onSelect: () => go(`/docs/${s.slug}`),
       })),
       ...componentList.map((c) => ({
-        kind: "page" as const,
+        kind: 'page' as const,
         value: `/docs/${c.slug}`,
         label: c.name,
         action: `Open ${c.name}`,
         description: mark(c.slug),
         keywords: [c.slug, ...c.description.split(/\W+/)],
-        group: "Components",
+        group: 'Components',
         onSelect: () => go(`/docs/${c.slug}`),
       })),
     ];
     const settings: SiteItem[] = [
       ...THEMES.map((t) => ({
-        kind: "setting" as const,
+        kind: 'setting' as const,
         value: `theme:${t.value}`,
         label: `Theme: ${t.label}`,
         action: `Set theme to ${t.label}`,
         description: current(theme === t.value),
         icon: icons[t.icon],
-        keywords: ["theme", "appearance", "mode", t.value],
-        group: "Settings",
+        keywords: ['theme', 'appearance', 'mode', t.value],
+        group: 'Settings',
         onSelect: () => {
           setTheme(t.value);
           showSuccessToast(`Theme set to ${t.label}`);
         },
       })),
       ...ACCENT_ORDER.map((a) => ({
-        kind: "setting" as const,
+        kind: 'setting' as const,
         value: `accent:${a}`,
         label: `Accent: ${ACCENT_PRESETS[a].label}`,
         action: `Set accent to ${ACCENT_PRESETS[a].label}`,
         description: current(!customAccent && accent === a),
         icon: ACCENT_SWATCHES[a],
-        keywords: ["accent", "color", "brand", "focus", a],
-        group: "Settings",
+        keywords: ['accent', 'color', 'brand', 'focus', a],
+        group: 'Settings',
         onSelect: () => {
           setAccent(a);
           showSuccessToast(`Accent set to ${ACCENT_PRESETS[a].label}`);
         },
       })),
       ...SHAPES.map((s) => ({
-        kind: "setting" as const,
+        kind: 'setting' as const,
         value: `shape:${s.value}`,
         label: `Radius: ${s.label}`,
         action: `Set radius to ${s.label}`,
         description: current(shape === s.value),
         icon: icons[s.icon],
-        keywords: ["radius", "shape", "corners", s.value],
-        group: "Settings",
+        keywords: ['radius', 'shape', 'corners', s.value],
+        group: 'Settings',
         onSelect: () => {
           setShape(s.value);
           showSuccessToast(`Radius set to ${s.label}`);
         },
       })),
       ...SIZES.map((s) => ({
-        kind: "setting" as const,
+        kind: 'setting' as const,
         value: `size:${s.value}`,
         label: `Size: ${s.label}`,
         action: `Set size to ${s.label}`,
         description: current(size === s.value),
         icon: icons.scaling,
-        keywords: ["size", "density", "ladder", s.value],
-        group: "Settings",
+        keywords: ['size', 'density', 'ladder', s.value],
+        group: 'Settings',
         onSelect: () => {
           setSize(s.value);
           showSuccessToast(`Size set to ${s.label}`);
         },
       })),
       ...iconLibraryOrder.map((lib: IconLibrary) => ({
-        kind: "setting" as const,
+        kind: 'setting' as const,
         value: `icons:${lib}`,
         label: `Icons: ${iconLibraryLabels[lib]}`,
         action: `Set icons to ${iconLibraryLabels[lib]}`,
         description: current(iconLibrary === lib),
         icon: icons.palette,
-        keywords: ["icons", "library", lib],
-        group: "Settings",
+        keywords: ['icons', 'library', lib],
+        group: 'Settings',
         onSelect: () => {
           setIconLibrary(lib);
           showSuccessToast(`Icons set to ${iconLibraryLabels[lib]}`);
         },
       })),
       ...BASES.map((b) => ({
-        kind: "setting" as const,
+        kind: 'setting' as const,
         value: `primitive:${b.value}`,
         label: `Primitive: ${b.label}`,
         action: `Set primitive to ${b.label}`,
         description: current(base === b.value),
         icon: icons.settings,
-        keywords: ["primitive", "flavor", "radix", "base ui", b.value],
-        group: "Settings",
+        keywords: ['primitive', 'flavor', 'radix', 'base ui', b.value],
+        group: 'Settings',
         onSelect: () => {
           setBase(b.value);
           showSuccessToast(`Primitive set to ${b.label}`);
         },
       })),
       ...HOVER_MODES.map((m) => ({
-        kind: "setting" as const,
+        kind: 'setting' as const,
         value: `hover:${m}`,
         label: `Hover: ${HOVER_MODE_LABELS[m]}`,
         action: `Set hover to ${HOVER_MODE_LABELS[m]}`,
         description: current(hover === m),
         icon: icons.settings,
-        keywords: ["hover", "fluid", "standard", "highlight", m],
-        group: "Settings",
+        keywords: ['hover', 'fluid', 'standard', 'highlight', m],
+        group: 'Settings',
         onSelect: () => {
           setHover(m);
           showSuccessToast(`Hover set to ${HOVER_MODE_LABELS[m]}`);
@@ -372,20 +392,20 @@ export function SiteCommandMenu() {
       ...(currentComponent
         ? [
             {
-              kind: "action" as const,
-              value: "action:copy-install",
-              label: "Copy install command",
+              kind: 'action' as const,
+              value: 'action:copy-install',
+              label: 'Copy install command',
               description: currentComponent.name,
               icon: icons.copy,
-              keywords: ["npx", "shadcn", "add", "registry"],
-              group: "Actions",
+              keywords: ['npx', 'shadcn', 'add', 'registry'],
+              group: 'Actions',
               onSelect: () => {
                 const cmd = `npx shadcn@latest add ${installUrl(currentComponent.slug, base, hover)}`;
                 // The toast follows the write: no clipboard (an insecure
                 // context) or a refused write must not announce a copy.
                 navigator.clipboard
                   ?.writeText(cmd)
-                  .then(() => showSuccessToast("Install command copied"))
+                  .then(() => showSuccessToast('Install command copied'))
                   .catch(() => {});
               },
             },
@@ -394,13 +414,13 @@ export function SiteCommandMenu() {
       ...(pageIndex > 0
         ? [
             {
-              kind: "action" as const,
-              value: "action:previous",
-              label: "Previous page",
-              action: "Go to the previous page",
-              icon: icons["arrow-left"],
-              shortcut: "left",
-              group: "Actions",
+              kind: 'action' as const,
+              value: 'action:previous',
+              label: 'Previous page',
+              action: 'Go to the previous page',
+              icon: icons['arrow-left'],
+              shortcut: 'left',
+              group: 'Actions',
               onSelect: () => go(PAGE_ORDER[pageIndex - 1]),
             },
           ]
@@ -408,26 +428,26 @@ export function SiteCommandMenu() {
       ...(pageIndex >= 0 && pageIndex < PAGE_ORDER.length - 1
         ? [
             {
-              kind: "action" as const,
-              value: "action:next",
-              label: "Next page",
-              action: "Go to the next page",
-              icon: icons["arrow-right"],
-              shortcut: "right",
-              group: "Actions",
+              kind: 'action' as const,
+              value: 'action:next',
+              label: 'Next page',
+              action: 'Go to the next page',
+              icon: icons['arrow-right'],
+              shortcut: 'right',
+              group: 'Actions',
               onSelect: () => go(PAGE_ORDER[pageIndex + 1]),
             },
           ]
         : []),
       {
-        kind: "action" as const,
-        value: "action:github",
-        label: "Open on GitHub",
-        description: "mickadesign/fluid-functionalism",
+        kind: 'action' as const,
+        value: 'action:github',
+        label: 'Open on GitHub',
+        description: 'mickadesign/fluid-functionalism',
         icon: icons.link,
-        keywords: ["source", "star", "repository"],
-        group: "Actions",
-        onSelect: () => window.open(GITHUB_URL, "_blank", "noopener"),
+        keywords: ['source', 'star', 'repository'],
+        group: 'Actions',
+        onSelect: () => window.open(GITHUB_URL, '_blank', 'noopener'),
       },
     ];
     return [...pages, ...settings, ...actions];
@@ -456,8 +476,8 @@ export function SiteCommandMenu() {
   ]);
 
   const visible = useMemo(
-    () => (tab === "all" ? items : items.filter((item) => item.kind === tab)),
-    [items, tab]
+    () => (tab === 'all' ? items : items.filter((item) => item.kind === tab)),
+    [items, tab],
   );
 
   return (

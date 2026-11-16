@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { SizeProvider, sizeMap, type SizeVariant } from "@/registry/default/lib/size-context";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { Button } from "@/registry/radix/button";
-import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/flavored/select";
-import { Tabs, TabsItem } from "@/components/flavored/tabs";
-import { InputGroup, InputField } from "@/registry/default/input-group";
-import { cn } from "@/registry/default/lib/utils";
-import { ListFilter, Plus, Search, SquareKanban, Table2 } from "lucide-react";
-import { ACCENT_VAR } from "@/lib/accent";
+import { useState } from 'react';
+import { SizeProvider, sizeMap, type SizeVariant } from '#registry/default/lib/size-context';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { Button } from '#registry/radix/button';
+import { Select, SelectTrigger, SelectContent, SelectItem } from '#components/flavored/select';
+import { Tabs, TabsItem } from '#components/flavored/tabs';
+import { InputGroup, InputField } from '#registry/default/input-group';
+import { cn } from '#registry/default/lib/utils';
+import { ListFilter, Plus, Search, SquareKanban, Table2 } from 'lucide-react';
+import { ACCENT_VAR } from '#lib/accent';
 
 // ---------------------------------------------------------------------------
 // The toolbar demo: the same toolbar line at each step of the ladder. Lives
@@ -18,15 +18,15 @@ import { ACCENT_VAR } from "@/lib/accent";
 // ---------------------------------------------------------------------------
 
 export const SORT_OPTIONS = [
-  { value: "updated", label: "Last updated" },
-  { value: "created", label: "Created" },
-  { value: "name", label: "Name" },
+  { value: 'updated', label: 'Last updated' },
+  { value: 'created', label: 'Created' },
+  { value: 'name', label: 'Name' },
 ];
 
 /** Toolbar search — the real InputGroup field, label hidden for inline use.
  *  Hover, focus and sizing all come from the component. */
 function SearchField() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
 
   return (
     <InputGroup className="w-24">
@@ -95,8 +95,8 @@ function HeightGuides({ height }: { height: number }) {
 
 function ToolbarRow({ variant }: { variant: SizeVariant }) {
   const [view, setView] = useState(0);
-  const [sort, setSort] = useState("updated");
-  const compactStep = variant === "compact";
+  const [sort, setSort] = useState('updated');
+  const compactStep = variant === 'compact';
   // Control-to-control spacing comes from the ladder: gap is 8px at the
   // default step and 4px at compact — density is spacing as much as height.
   const gap = sizeMap[variant].gap;
@@ -105,17 +105,15 @@ function ToolbarRow({ variant }: { variant: SizeVariant }) {
     <SizeProvider size={variant}>
       <div className="flex w-full flex-col items-start gap-3">
         <span className="text-site-caption text-muted-foreground select-none">
-          {variant === "default" ? "Default · 36px" : "Compact · 28px"}
+          {variant === 'default' ? 'Default · 36px' : 'Compact · 28px'}
         </span>
         <div className="relative w-full">
-          <div
-            className={cn("flex w-full flex-wrap items-center sm:pr-[44px]", gap)}
-          >
+          <div className={cn('flex w-full flex-wrap items-center sm:pr-[44px]', gap)}>
             <Tabs activeLabel selectedIndex={view} onSelect={setView}>
               <TabsItem index={0} icon={Table2} label="Table" />
               <TabsItem index={1} icon={SquareKanban} label="Board" />
             </Tabs>
-            <div className={cn("ml-auto flex items-center", gap)}>
+            <div className={cn('ml-auto flex items-center', gap)}>
               {/* Mobile shows the trimmed toolbar — tabs, filter, primary
                   action; search and sort return at sm. display:contents keeps
                   the row's gap running through the wrapper at sm+. */}
@@ -134,7 +132,7 @@ function ToolbarRow({ variant }: { variant: SizeVariant }) {
               </div>
               <Button
                 variant="tertiary"
-                size={compactStep ? "icon-compact" : "icon"}
+                size={compactStep ? 'icon-compact' : 'icon'}
                 aria-label="Filter"
               >
                 <ListFilter />

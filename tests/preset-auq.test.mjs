@@ -62,7 +62,7 @@ describe("AUQ preset install generator", () => {
         );
         expect(sf.parseDiagnostics.length, `iteration ${i}`).toBe(0);
         expect(file.content).not.toContain("@/lib/docs");
-        expect(file.content).not.toContain('from "@/registry/');
+        expect(file.content).not.toContain('from "#registry/');
       }
     }
   });

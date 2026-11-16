@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { AnimatePresence } from "motion/react";
-import { ChatMessage } from "@/registry/default/chat-message";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { useIcon } from "@/registry/default/lib/icon-context";
-import { useShape } from "@/registry/default/lib/shape-context";
-import { cn } from "@/registry/default/lib/utils";
-import { chatMessageProps } from "@/lib/docs/api/chat-message";
+import { useEffect, useState } from 'react';
+import { AnimatePresence } from 'motion/react';
+import { ChatMessage } from '#registry/default/chat-message';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { useIcon } from '#registry/default/lib/icon-context';
+import { useShape } from '#registry/default/lib/shape-context';
+import { cn } from '#registry/default/lib/utils';
+import { chatMessageProps } from '#lib/docs/api/chat-message';
 
 // Icon-only action buttons for the hover-revealed meta row. Assistant replies
 // get copy + regenerate; user messages get copy + edit. Illustrative only —
 // the buttons carry no behaviour in the docs demo.
-function MessageActions({ from }: { from: "user" | "assistant" }) {
+function MessageActions({ from }: { from: 'user' | 'assistant' }) {
   const shape = useShape();
-  const CopyIcon = useIcon("copy");
-  const SecondIcon = useIcon(from === "user" ? "pencil" : "rotate-ccw");
+  const CopyIcon = useIcon('copy');
+  const SecondIcon = useIcon(from === 'user' ? 'pencil' : 'rotate-ccw');
   const btn = cn(
-    "inline-flex size-6 items-center justify-center text-muted-foreground hover:text-foreground hover:bg-hover transition-colors duration-100 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]",
-    shape.button
+    'inline-flex size-6 items-center justify-center text-muted-foreground hover:text-foreground hover:bg-hover transition-colors duration-100 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
+    shape.button,
   );
   return (
     <>
@@ -29,7 +29,7 @@ function MessageActions({ from }: { from: "user" | "assistant" }) {
       </button>
       <button
         type="button"
-        aria-label={from === "user" ? "Edit message" : "Regenerate response"}
+        aria-label={from === 'user' ? 'Edit message' : 'Regenerate response'}
         className={btn}
       >
         <SecondIcon size={13} strokeWidth={1.5} />
@@ -97,13 +97,11 @@ export default function ChatMessageDoc() {
   const [sampleFiles, setSampleFiles] = useState<File[]>([]);
   useEffect(() => {
     let cancelled = false;
-    fetch("/micka.png")
+    fetch('/micka.png')
       .then((res) => res.blob())
       .then((blob) => {
         if (cancelled) return;
-        setSampleFiles([
-          new File([blob], "micka.png", { type: blob.type || "image/png" }),
-        ]);
+        setSampleFiles([new File([blob], 'micka.png', { type: blob.type || 'image/png' })]);
       })
       .catch(() => {});
     return () => {
@@ -121,49 +119,40 @@ export default function ChatMessageDoc() {
         <ComponentPreview code={conversationCode} minHeightClass="min-h-[220px]">
           <div className="w-full max-w-xl flex flex-col gap-2">
             <AnimatePresence initial={false}>
-            <ChatMessage
-              key="m1"
-              from="user"
-              time="Wednesday 6:06 PM"
-              actions={<MessageActions from="user" />}
-            >
-              What does &ldquo;good design&rdquo; actually mean? Everyone says
-              it, no one defines it.
-            </ChatMessage>
-            <ChatMessage
-              key="m2"
-              from="assistant"
-              actions={<MessageActions from="assistant" />}
-            >
-              Good design is mostly invisible — you only notice it when it&apos;s
-              missing. It&apos;s less about how something looks and more about
-              how effortlessly it lets you do what you came to do.
-            </ChatMessage>
-            <ChatMessage
-              key="m3"
-              from="user"
-              time="Wednesday 6:07 PM"
-              actions={<MessageActions from="user" />}
-            >
-              So function over form?
-            </ChatMessage>
-            <ChatMessage
-              key="m4"
-              from="assistant"
-              actions={<MessageActions from="assistant" />}
-            >
-              Not quite. Form is part of function — something that feels good to
-              use is, in a real sense, working better. The split between the two
-              is mostly a myth.
-            </ChatMessage>
-            <ChatMessage
-              key="m5"
-              from="user"
-              time="Wednesday 6:08 PM"
-              actions={<MessageActions from="user" />}
-            >
-              That reframes it completely.
-            </ChatMessage>
+              <ChatMessage
+                key="m1"
+                from="user"
+                time="Wednesday 6:06 PM"
+                actions={<MessageActions from="user" />}
+              >
+                What does &ldquo;good design&rdquo; actually mean? Everyone says it, no one defines
+                it.
+              </ChatMessage>
+              <ChatMessage key="m2" from="assistant" actions={<MessageActions from="assistant" />}>
+                Good design is mostly invisible — you only notice it when it&apos;s missing.
+                It&apos;s less about how something looks and more about how effortlessly it lets you
+                do what you came to do.
+              </ChatMessage>
+              <ChatMessage
+                key="m3"
+                from="user"
+                time="Wednesday 6:07 PM"
+                actions={<MessageActions from="user" />}
+              >
+                So function over form?
+              </ChatMessage>
+              <ChatMessage key="m4" from="assistant" actions={<MessageActions from="assistant" />}>
+                Not quite. Form is part of function — something that feels good to use is, in a real
+                sense, working better. The split between the two is mostly a myth.
+              </ChatMessage>
+              <ChatMessage
+                key="m5"
+                from="user"
+                time="Wednesday 6:08 PM"
+                actions={<MessageActions from="user" />}
+              >
+                That reframes it completely.
+              </ChatMessage>
             </AnimatePresence>
           </div>
         </ComponentPreview>
@@ -173,8 +162,12 @@ export default function ChatMessageDoc() {
         <ComponentPreview code={rolesCode} minHeightClass="min-h-[160px]">
           <div className="w-full max-w-xl flex flex-col gap-2">
             <AnimatePresence initial={false}>
-              <ChatMessage key="user" from="user">Right-aligned accent bubble.</ChatMessage>
-              <ChatMessage key="assistant" from="assistant">Left-aligned, no background.</ChatMessage>
+              <ChatMessage key="user" from="user">
+                Right-aligned accent bubble.
+              </ChatMessage>
+              <ChatMessage key="assistant" from="assistant">
+                Left-aligned, no background.
+              </ChatMessage>
             </AnimatePresence>
           </div>
         </ComponentPreview>

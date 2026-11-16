@@ -7,8 +7,8 @@
 // outlines.ts, which leaves the DataTable generator's data out of the bundle.
 // ---------------------------------------------------------------------------
 
-import { LIGHT_PRESET_GENERATORS, type PresetGenerator } from "./light-generators";
-import { DATA_TABLE_PRESET_GENERATOR } from "./data-table-install";
+import { LIGHT_PRESET_GENERATORS, type PresetGenerator } from './light-generators';
+import { DATA_TABLE_PRESET_GENERATOR } from './data-table-install';
 
 export type { PresetGenerator };
 

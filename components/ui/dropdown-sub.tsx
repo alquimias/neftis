@@ -1,1 +1,1 @@
-export * from "@/registry/default/dropdown-sub";
+export * from '#registry/default/dropdown-sub';

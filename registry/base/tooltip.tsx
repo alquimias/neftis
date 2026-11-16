@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createContext,
@@ -8,9 +8,9 @@ import {
   useRef,
   useState,
   type ReactNode,
-} from "react";
-import { flushSync } from "react-dom";
-import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
+} from 'react';
+import { flushSync } from 'react-dom';
+import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import {
   animate,
   motion,
@@ -18,13 +18,13 @@ import {
   useMotionValue,
   useReducedMotion,
   type MotionValue,
-} from "motion/react";
-import { cn } from "@/lib/utils";
-import { KeyCaps } from "@/lib/key-cap";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { omit } from "@/lib/omit";
-import { fontWeights } from "@/lib/font-weight";
-import { useShape } from "@/lib/shape-context";
+} from 'motion/react';
+import { cn } from '#lib/utils';
+import { KeyCaps } from '#lib/key-cap';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { omit } from '#lib/omit';
+import { fontWeights } from '#lib/font-weight';
+import { useShape } from '#lib/shape-context';
 
 // ---------------------------------------------------------------------------
 // Portal container context
@@ -78,10 +78,7 @@ function TooltipProvider({
 }: TooltipProviderProps) {
   return (
     <TooltipGroupContext.Provider value={true}>
-      <TooltipPrimitive.Provider
-        delay={delayDuration}
-        timeout={skipDelayDuration}
-      >
+      <TooltipPrimitive.Provider delay={delayDuration} timeout={skipDelayDuration}>
         {children}
       </TooltipPrimitive.Provider>
     </TooltipGroupContext.Provider>
@@ -92,7 +89,7 @@ function TooltipProvider({
 // Types
 // ---------------------------------------------------------------------------
 
-type TooltipSide = "top" | "right" | "bottom" | "left";
+type TooltipSide = 'top' | 'right' | 'bottom' | 'left';
 
 interface TooltipProps {
   content: ReactNode;
@@ -116,7 +113,7 @@ interface TooltipProps {
   /** Follow the cursor along one axis while hovering the trigger — for tall
    *  or wide triggers (the Sidebar rail) where a centered tooltip sits far
    *  from the pointer. The other axis stays anchored by `side`. */
-  followCursor?: "x" | "y";
+  followCursor?: 'x' | 'y';
   /** Called when the tooltip's internal open state changes (before forceOpen is applied). */
   onOpenChange?: (open: boolean) => void;
   /** Whether the pointer can move onto the bubble and keep it open
@@ -132,13 +129,13 @@ interface TooltipProps {
 
 function getSlideOffset(side: TooltipSide) {
   switch (side) {
-    case "top":
+    case 'top':
       return { y: 4 };
-    case "bottom":
+    case 'bottom':
       return { y: -4 };
-    case "left":
+    case 'left':
       return { x: 4 };
-    case "right":
+    case 'right':
       return { x: -4 };
   }
 }
@@ -147,7 +144,7 @@ function getSlideOffset(side: TooltipSide) {
 // padding bump only applies where text-box is supported, keeping the same
 // overall height (~24px) as untrimmed browsers.
 const bubbleText =
-  "text-background text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)] px-2 py-1 [text-box:trim-both_cap_alphabetic] supports-[text-box:trim-both]:py-2";
+  'text-background text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)] px-2 py-1 [text-box:trim-both_cap_alphabetic] supports-[text-box:trim-both]:py-2';
 
 /** A keystroke in the bubble's inverted colors, one cap per key. Negative
  *  margins keep the caps out of the row's height, so they never make a
@@ -159,13 +156,7 @@ function TooltipShortcut({
   children: string | readonly string[];
   className?: string;
 }) {
-  return (
-    <KeyCaps
-      keys={children}
-      tone="inverted"
-      className={cn("-my-[5px]", className)}
-    />
-  );
+  return <KeyCaps keys={children} tone="inverted" className={cn('-my-[5px]', className)} />;
 }
 
 // ---------------------------------------------------------------------------
@@ -211,9 +202,7 @@ function createGroupStore(): GroupStore {
 // Where the primitive put a bubble, which is not always the side it was
 // asked for: one that doesn't fit flips to the opposite side.
 const placedSide = (el: HTMLElement) =>
-  (el.closest<HTMLElement>("[data-side]")?.dataset.side as
-    | TooltipSide
-    | undefined) ?? null;
+  (el.closest<HTMLElement>('[data-side]')?.dataset.side as TooltipSide | undefined) ?? null;
 
 const TooltipGroupStoreContext = createContext<GroupStore | null>(null);
 
@@ -241,7 +230,7 @@ function createBubbleValues() {
   };
 }
 
-type BubbleTransition = { type?: "spring"; duration: number; bounce?: number };
+type BubbleTransition = { type?: 'spring'; duration: number; bounce?: number };
 
 // A grouped tooltip's bubble. The first one in enters like any tooltip. One
 // that opens while a neighbor's is still up starts from that bubble's shape
@@ -296,7 +285,7 @@ function GroupBubble({
       value: MotionValue<number>,
       to: number,
       transition: BubbleTransition,
-      onComplete?: () => void
+      onComplete?: () => void,
     ) => {
       state.runs.push(animate(value, to, { ...transition, onComplete }));
     };
@@ -327,7 +316,7 @@ function GroupBubble({
       }
       mv.label.set(1);
       mv.previous.set(0);
-      mv.slide.set(still ? 0 : from === "top" || from === "left" ? 4 : -4);
+      mv.slide.set(still ? 0 : from === 'top' || from === 'left' ? 4 : -4);
       play(mv.slide, 0, spring.fast);
       play(mv.opacity, 1, spring.fast);
     };
@@ -435,7 +424,7 @@ function GroupBubble({
     };
   }, [store]);
 
-  const label = cn(bubbleText, "relative", className);
+  const label = cn(bubbleText, 'relative', className);
 
   return (
     <motion.div
@@ -443,14 +432,12 @@ function GroupBubble({
       className="relative"
       style={{
         opacity: mv.opacity,
-        ...(side === "top" || side === "bottom"
-          ? { y: mv.slide }
-          : { x: mv.slide }),
+        ...(side === 'top' || side === 'bottom' ? { y: mv.slide } : { x: mv.slide }),
       }}
     >
       <motion.div
         ref={shapeRef}
-        className={cn("absolute bg-foreground", shape.bg)}
+        className={cn('absolute bg-foreground', shape.bg)}
         style={{
           left: mv.left,
           right: mv.right,
@@ -474,7 +461,7 @@ function GroupBubble({
           aria-hidden
           className={cn(
             label,
-            "pointer-events-none absolute left-1/2 top-1/2 w-max -translate-x-1/2 -translate-y-1/2"
+            'pointer-events-none absolute left-1/2 top-1/2 w-max -translate-x-1/2 -translate-y-1/2',
           )}
           style={{
             fontVariationSettings: fontWeights.normal,
@@ -508,19 +495,16 @@ function TooltipGroup({
   // A side taken because a bubble had no room holds until the room changes.
   useEffect(() => {
     const reset = () => store.setSide(null);
-    window.addEventListener("scroll", reset, { capture: true, passive: true });
-    window.addEventListener("resize", reset);
+    window.addEventListener('scroll', reset, { capture: true, passive: true });
+    window.addEventListener('resize', reset);
     return () => {
-      window.removeEventListener("scroll", reset, { capture: true });
-      window.removeEventListener("resize", reset);
+      window.removeEventListener('scroll', reset, { capture: true });
+      window.removeEventListener('resize', reset);
     };
   }, [store]);
   return (
     <TooltipGroupStoreContext.Provider value={store}>
-      <TooltipProvider
-        delayDuration={delayDuration}
-        skipDelayDuration={skipDelayDuration}
-      >
+      <TooltipProvider delayDuration={delayDuration} skipDelayDuration={skipDelayDuration}>
         {children}
       </TooltipProvider>
     </TooltipGroupStoreContext.Provider>
@@ -548,10 +532,7 @@ function usePopupExit(open: boolean, setOpen: (open: boolean) => void) {
     if (actionsRef.current) actionsRef.current.close();
     else setRootOpen(false);
   }, [open, rootOpen]);
-  const onOpenChange = (
-    next: boolean,
-    details: { preventUnmountOnClose: () => void }
-  ) => {
+  const onOpenChange = (next: boolean, details: { preventUnmountOnClose: () => void }) => {
     if (!next) {
       details.preventUnmountOnClose();
       setRootOpen(false);
@@ -566,7 +547,7 @@ function Tooltip({
   content: label,
   shortcut,
   children,
-  side: sideProp = "top",
+  side: sideProp = 'top',
   sideOffset = 8,
   delayDuration,
   className,
@@ -633,9 +614,9 @@ function Tooltip({
     if (!followCursor) return;
     const rect = event.currentTarget.getBoundingClientRect();
     followOffset.set(
-      followCursor === "y"
+      followCursor === 'y'
         ? event.clientY - (rect.top + rect.height / 2)
-        : event.clientX - (rect.left + rect.width / 2)
+        : event.clientX - (rect.left + rect.width / 2),
     );
   };
 
@@ -660,26 +641,26 @@ function Tooltip({
           side={side}
           sideOffset={sideOffset}
           className={cn(
-            "z-[var(--z-tooltip,70)]",
-            passThrough && "pointer-events-none",
-            contentClassName
+            'z-[var(--z-tooltip,70)]',
+            passThrough && 'pointer-events-none',
+            contentClassName,
           )}
         >
           <TooltipPrimitive.Popup
             render={(props, state) => {
-              const exiting = state.transitionStatus === "ending";
+              const exiting = state.transitionStatus === 'ending';
               const contentChildren = content;
               const { style: baseStyle, ...baseProps } =
                 props as React.HTMLAttributes<HTMLDivElement>;
               // motion.div has incompatible drag/animation event signatures —
               // strip the React-DOM versions so they don't fight motion's own.
               const rest = omit(baseProps, [
-                "onDrag",
-                "onDragStart",
-                "onDragEnd",
-                "onAnimationStart",
-                "onAnimationEnd",
-                "onAnimationIteration",
+                'onDrag',
+                'onDragStart',
+                'onDragEnd',
+                'onAnimationStart',
+                'onAnimationEnd',
+                'onAnimationIteration',
               ]);
               return (
                 // Outer wrapper carries Base UI's popup props plus the
@@ -689,9 +670,9 @@ function Tooltip({
                   {...rest}
                   style={{
                     ...(baseStyle as React.CSSProperties | undefined),
-                    ...(followCursor === "y"
+                    ...(followCursor === 'y'
                       ? { y: followOffset }
-                      : followCursor === "x"
+                      : followCursor === 'x'
                         ? { x: followOffset }
                         : {}),
                   }}
@@ -707,12 +688,7 @@ function Tooltip({
                     />
                   ) : (
                     <motion.div
-                      className={cn(
-                        "bg-foreground",
-                        bubbleText,
-                        shape.bg,
-                        className
-                      )}
+                      className={cn('bg-foreground', bubbleText, shape.bg, className)}
                       style={{ fontVariationSettings: fontWeights.normal }}
                       initial={{ opacity: 0, ...slideOffset }}
                       // Both targets name x and y: an exit target without one
@@ -752,16 +728,5 @@ function Tooltip({
   );
 }
 
-export {
-  Tooltip,
-  TooltipGroup,
-  TooltipPortalContainer,
-  TooltipProvider,
-  TooltipShortcut,
-};
-export type {
-  TooltipGroupProps,
-  TooltipProps,
-  TooltipProviderProps,
-  TooltipSide,
-};
+export { Tooltip, TooltipGroup, TooltipPortalContainer, TooltipProvider, TooltipShortcut };
+export type { TooltipGroupProps, TooltipProps, TooltipProviderProps, TooltipSide };

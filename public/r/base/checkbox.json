@@ -3,10 +3,7 @@
   "name": "checkbox",
   "title": "Checkbox (Base UI)",
   "description": "A single checkbox: a hairline square that darkens on hover and a check that draws itself. Pairs with Field. Base UI flavor.",
-  "dependencies": [
-    "motion",
-    "@base-ui/react@^1.9.0"
-  ],
+  "dependencies": ["motion", "@base-ui/react@^1.9.0"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/shape-context.json",
@@ -23,8 +20,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/checkbox. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#checkbox.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

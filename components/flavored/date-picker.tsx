@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { DatePicker as DatePickerBase } from "@/registry/base/date-picker";
-import { DatePicker as DatePickerRadix } from "@/registry/radix/date-picker";
-import { flavored } from "@/components/flavored/flavored";
+import { DatePicker as DatePickerBase } from '#registry/base/date-picker';
+import { DatePicker as DatePickerRadix } from '#registry/radix/date-picker';
+import { flavored } from '#components/flavored/flavored';
 
-export const DatePicker = flavored(DatePickerBase, DatePickerRadix, "Flavored(DatePicker)");
+export const DatePicker = flavored(DatePickerBase, DatePickerRadix, 'Flavored(DatePicker)');
 
 export {
   formatDateLabel,
@@ -14,7 +14,7 @@ export {
   parseTime,
   shiftEnd,
   buildSlots,
-} from "@/registry/base/date-picker";
+} from '#registry/base/date-picker';
 export type {
   DatePickerProps,
   DatePickerSingleProps,
@@ -22,4 +22,4 @@ export type {
   DatePickerPreset,
   TimeRange,
   DateRange,
-} from "@/registry/base/date-picker";
+} from '#registry/base/date-picker';

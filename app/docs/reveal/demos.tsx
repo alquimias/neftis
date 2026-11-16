@@ -1,22 +1,17 @@
-"use client";
+'use client';
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
-import { useInView } from "motion/react";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { useIcon, type IconName } from "@/lib/icon-context";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { cn } from "@/registry/default/lib/utils";
-import { useShape } from "@/registry/default/lib/shape-context";
-import { PRESET_SPECS } from "@/lib/docs/api/reveal";
-import type { RevealPresetName } from "@/lib/reveal/presets";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsItem } from "@/components/flavored/tabs";
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useInView } from 'motion/react';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { useIcon, type IconName } from '#lib/icon-context';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { cn } from '#registry/default/lib/utils';
+import { useShape } from '#registry/default/lib/shape-context';
+import { PRESET_SPECS } from '#lib/docs/api/reveal';
+import type { RevealPresetName } from '#lib/reveal/presets';
+import { Button } from '#components/ui/button';
+import { Skeleton } from '#components/ui/skeleton';
+import { Tabs, TabsItem } from '#components/flavored/tabs';
 
 // ---------------------------------------------------------------------------
 // Tidepool, a made-up shared inbox: its landing page and the app itself
@@ -24,110 +19,110 @@ import { Tabs, TabsItem } from "@/components/flavored/tabs";
 
 const THREADS = [
   {
-    from: "Maya Chen",
-    initials: "MC",
-    subject: "Invoice 2041 is missing the VAT line",
-    tag: "Billing",
-    time: "9:41",
+    from: 'Maya Chen',
+    initials: 'MC',
+    subject: 'Invoice 2041 is missing the VAT line',
+    tag: 'Billing',
+    time: '9:41',
     unread: true,
   },
   {
-    from: "Rafael Ortiz",
-    initials: "RO",
-    subject: "Can we move the onboarding call?",
-    tag: "Sales",
-    time: "9:12",
+    from: 'Rafael Ortiz',
+    initials: 'RO',
+    subject: 'Can we move the onboarding call?',
+    tag: 'Sales',
+    time: '9:12',
     unread: true,
   },
   {
-    from: "Lena Park",
-    initials: "LP",
-    subject: "Card ending 4242 expires in May",
-    tag: "Billing",
-    time: "8:55",
+    from: 'Lena Park',
+    initials: 'LP',
+    subject: 'Card ending 4242 expires in May',
+    tag: 'Billing',
+    time: '8:55',
     unread: false,
   },
   {
-    from: "Ines Duarte",
-    initials: "ID",
-    subject: "Love the new export, one question",
-    tag: "Support",
-    time: "Mon",
+    from: 'Ines Duarte',
+    initials: 'ID',
+    subject: 'Love the new export, one question',
+    tag: 'Support',
+    time: 'Mon',
     unread: false,
   },
   {
-    from: "Tom Becker",
-    initials: "TB",
-    subject: "SSO for the second workspace?",
-    tag: "Sales",
-    time: "Mon",
+    from: 'Tom Becker',
+    initials: 'TB',
+    subject: 'SSO for the second workspace?',
+    tag: 'Sales',
+    time: 'Mon',
     unread: false,
   },
 ];
 
 const STATS = [
-  { label: "Open", value: "38" },
-  { label: "First reply", value: "42m" },
-  { label: "Waiting", value: "5" },
+  { label: 'Open', value: '38' },
+  { label: 'First reply', value: '42m' },
+  { label: 'Waiting', value: '5' },
 ];
 
 const NAV: { icon: IconName; label: string; count?: string }[] = [
-  { icon: "inbox", label: "Inbox", count: "38" },
-  { icon: "user", label: "Assigned to me", count: "5" },
-  { icon: "clock", label: "Snoozed", count: "2" },
-  { icon: "check", label: "Done" },
+  { icon: 'inbox', label: 'Inbox', count: '38' },
+  { icon: 'user', label: 'Assigned to me', count: '5' },
+  { icon: 'clock', label: 'Snoozed', count: '2' },
+  { icon: 'check', label: 'Done' },
 ];
 
-const TEAMS = ["Support", "Billing", "Sales"];
+const TEAMS = ['Support', 'Billing', 'Sales'];
 
 const FEATURES = [
   {
-    title: "1 inbox",
-    body: "Support, sales, and billing in one list, sorted by who owes a reply.",
+    title: '1 inbox',
+    body: 'Support, sales, and billing in one list, sorted by who owes a reply.',
   },
   {
-    title: "Claim, then type",
-    body: "A name on the thread before the draft. Nobody answers twice.",
+    title: 'Claim, then type',
+    body: 'A name on the thread before the draft. Nobody answers twice.',
   },
   {
-    title: "Quiet nudges",
-    body: "A thread waiting 4 hours pings its owner once. Only its owner.",
+    title: 'Quiet nudges',
+    body: 'A thread waiting 4 hours pings its owner once. Only its owner.',
   },
 ];
 
 const LANDING_NUMBERS = [
-  { value: "40m", label: "First reply" },
-  { value: "3×", label: "Threads per agent" },
-  { value: "0", label: "Double replies" },
+  { value: '40m', label: 'First reply' },
+  { value: '3×', label: 'Threads per agent' },
+  { value: '0', label: 'Double replies' },
 ];
 
 const STEPS = [
   {
-    title: "Forward your address",
-    body: "Point support@ at Tidepool. Old threads come along.",
+    title: 'Forward your address',
+    body: 'Point support@ at Tidepool. Old threads come along.',
   },
   {
-    title: "Invite the team",
-    body: "Everyone sees the same inbox and who owns what.",
+    title: 'Invite the team',
+    body: 'Everyone sees the same inbox and who owns what.',
   },
   {
-    title: "Set your nudges",
-    body: "Pick how long a customer can wait before someone hears.",
+    title: 'Set your nudges',
+    body: 'Pick how long a customer can wait before someone hears.',
   },
 ];
 
 const PLANS = [
   {
-    name: "Starter",
-    note: "For a team of up to 3",
-    price: "$0",
-    perks: ["1 shared inbox", "Claims and nudges", "30 days of history"],
+    name: 'Starter',
+    note: 'For a team of up to 3',
+    price: '$0',
+    perks: ['1 shared inbox', 'Claims and nudges', '30 days of history'],
   },
   {
-    name: "Team",
-    note: "Per seat, per month",
-    price: "$12",
-    perks: ["Unlimited inboxes", "Shared drafts", "Reports and CSV export"],
+    name: 'Team',
+    note: 'Per seat, per month',
+    price: '$12',
+    perks: ['Unlimited inboxes', 'Shared drafts', 'Reports and CSV export'],
   },
 ];
 
@@ -141,16 +136,10 @@ function NavIcon({ name }: { name: IconName }) {
 
 /** 1 line of text as a skeleton: a box the line's height, so a block of
  *  these is exactly as tall as the text it stands in for. */
-function Line({
-  className,
-  height = "h-4",
-}: {
-  className?: string;
-  height?: string;
-}) {
+function Line({ className, height = 'h-4' }: { className?: string; height?: string }) {
   return (
-    <span className={cn("flex items-center", height)}>
-      <Skeleton className={cn("h-2.5 bg-hover", className)} />
+    <span className={cn('flex items-center', height)}>
+      <Skeleton className={cn('h-2.5 bg-hover', className)} />
     </span>
   );
 }
@@ -162,8 +151,8 @@ function SidebarItems() {
         <span
           key={item.label}
           className={cn(
-            "flex items-center gap-2 rounded-md px-2 py-1.5 text-site-caption",
-            i === 0 ? "bg-muted text-foreground" : "text-muted-foreground",
+            'flex items-center gap-2 rounded-md px-2 py-1.5 text-site-caption',
+            i === 0 ? 'bg-muted text-foreground' : 'text-muted-foreground',
           )}
         >
           <NavIcon name={item.icon} />
@@ -171,9 +160,7 @@ function SidebarItems() {
           {item.count && <span className="tabular-nums">{item.count}</span>}
         </span>
       ))}
-      <span className="px-2 pt-4 pb-1.5 text-site-caption text-muted-foreground">
-        Teams
-      </span>
+      <span className="px-2 pt-4 pb-1.5 text-site-caption text-muted-foreground">Teams</span>
       {TEAMS.map((team) => (
         <span
           key={team}
@@ -198,13 +185,11 @@ function SidebarSkeleton() {
   );
   return (
     <div aria-hidden className="reveal-items flex flex-col gap-0.5">
-      {NAV.map((item, i) =>
-        row(item.label, ["w-12", "w-24", "w-16", "w-10"][i]),
-      )}
+      {NAV.map((item, i) => row(item.label, ['w-12', 'w-24', 'w-16', 'w-10'][i]))}
       <span className="px-2 pt-4 pb-1.5">
         <Line className="w-10" />
       </span>
-      {TEAMS.map((team, i) => row(team, ["w-14", "w-12", "w-10"][i]))}
+      {TEAMS.map((team, i) => row(team, ['w-14', 'w-12', 'w-10'][i]))}
     </div>
   );
 }
@@ -213,7 +198,7 @@ function SidebarSkeleton() {
  *  its own: a new element lands in the grid and plays its step. */
 function Stats({ ready }: { ready?: boolean[] }) {
   const shape = useShape();
-  const card = cn("flex flex-col gap-1 bg-muted p-4", shape.container);
+  const card = cn('flex flex-col gap-1 bg-muted p-4', shape.container);
   return (
     <div className="reveal-items grid grid-cols-3 gap-3">
       {STATS.map((s, i) => (
@@ -228,9 +213,7 @@ function Stats({ ready }: { ready?: boolean[] }) {
           }
         >
           <div className={card}>
-            <span className="truncate text-site-caption text-muted-foreground">
-              {s.label}
-            </span>
+            <span className="truncate text-site-caption text-muted-foreground">{s.label}</span>
             <span
               className="text-[24px] leading-[28px] text-foreground tabular-nums"
               style={semibold}
@@ -273,8 +256,8 @@ function Threads() {
         <div key={t.subject} className="flex items-center gap-3 py-2.5">
           <span
             className={cn(
-              "size-1.5 shrink-0 rounded-full",
-              t.unread ? "bg-foreground" : "bg-transparent",
+              'size-1.5 shrink-0 rounded-full',
+              t.unread ? 'bg-foreground' : 'bg-transparent',
             )}
           />
           <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted text-site-micro text-muted-foreground">
@@ -288,8 +271,8 @@ function Threads() {
           </span>
           <span
             className={cn(
-              "min-w-0 flex-1 truncate text-site-caption",
-              t.unread ? "text-foreground" : "text-muted-foreground",
+              'min-w-0 flex-1 truncate text-site-caption',
+              t.unread ? 'text-foreground' : 'text-muted-foreground',
             )}
           >
             {t.subject}
@@ -308,10 +291,7 @@ function Threads() {
 
 function ThreadsSkeleton() {
   return (
-    <div
-      aria-hidden
-      className="reveal-items flex flex-col divide-y divide-border"
-    >
+    <div aria-hidden className="reveal-items flex flex-col divide-y divide-border">
       {THREADS.map((t, i) => (
         <div key={t.subject} className="flex items-center gap-3 py-2.5">
           <span className="size-1.5 shrink-0" />
@@ -340,13 +320,7 @@ interface AppReady {
 /** The app: a sidebar beside the preset, and a main column that takes it.
  *  With `ready`, each data block shows its skeleton until it is ready;
  *  without, the screen renders loaded. */
-function AppScreen({
-  mainClassName,
-  ready,
-}: {
-  mainClassName?: string;
-  ready?: AppReady;
-}) {
+function AppScreen({ mainClassName, ready }: { mainClassName?: string; ready?: AppReady }) {
   return (
     <div className="flex h-full min-h-[500px] text-left">
       <aside className="hidden w-48 shrink-0 flex-col gap-4 border-r border-border p-3 sm:flex">
@@ -371,18 +345,10 @@ function AppScreen({
           Ana Lima
         </span>
       </aside>
-      <main
-        className={cn(
-          "@container flex min-w-0 flex-1 flex-col gap-6 p-6",
-          mainClassName,
-        )}
-      >
+      <main className={cn('@container flex min-w-0 flex-1 flex-col gap-6 p-6', mainClassName)}>
         <div className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 flex-col">
-            <span
-              className="text-[20px] leading-[26px] text-foreground"
-              style={bold}
-            >
+            <span className="text-[20px] leading-[26px] text-foreground" style={bold}>
               Inbox
             </span>
             <span className="truncate text-site-caption text-muted-foreground">
@@ -453,9 +419,7 @@ function LandingPage({ className }: { className: string }) {
         </span>
       </header>
 
-      <div
-        className={cn("flex flex-col gap-28 px-6 pb-28 sm:px-10", className)}
-      >
+      <div className={cn('flex flex-col gap-28 px-6 pb-28 sm:px-10', className)}>
         <section className="flex flex-col items-center gap-3 pt-16 text-center">
           <span className="text-site-caption text-muted-foreground">
             The shared inbox for support teams
@@ -481,7 +445,7 @@ function LandingPage({ className }: { className: string }) {
           <div
             aria-hidden
             className={cn(
-              "pointer-events-none mt-9 w-[calc(100%+24px)] overflow-hidden border border-border bg-background select-none sm:w-[calc(100%+48px)]",
+              'pointer-events-none mt-9 w-[calc(100%+24px)] overflow-hidden border border-border bg-background select-none sm:w-[calc(100%+48px)]',
               shape.container,
             )}
           >
@@ -495,9 +459,7 @@ function LandingPage({ className }: { className: string }) {
               <span className="text-site-body text-foreground" style={semibold}>
                 {f.title}
               </span>
-              <span className="text-site-body text-muted-foreground">
-                {f.body}
-              </span>
+              <span className="text-site-body text-muted-foreground">{f.body}</span>
             </div>
           ))}
         </section>
@@ -511,20 +473,15 @@ function LandingPage({ className }: { className: string }) {
               >
                 {n.value}
               </span>
-              <span className="text-site-caption text-muted-foreground">
-                {n.label}
-              </span>
+              <span className="text-site-caption text-muted-foreground">{n.label}</span>
             </div>
           ))}
         </section>
 
         <section className="flex flex-col items-center gap-4 text-center">
-          <p
-            className="max-w-lg text-[24px] leading-[32px] text-foreground"
-            style={semibold}
-          >
-            &ldquo;First reply went from 6 hours to 40 minutes. Nobody answers
-            the same customer twice.&rdquo;
+          <p className="max-w-lg text-[24px] leading-[32px] text-foreground" style={semibold}>
+            &ldquo;First reply went from 6 hours to 40 minutes. Nobody answers the same customer
+            twice.&rdquo;
           </p>
           <span className="text-site-caption text-muted-foreground">
             Ana Lima, Head of Support, Northwind
@@ -532,10 +489,7 @@ function LandingPage({ className }: { className: string }) {
         </section>
 
         <section className="flex flex-col gap-6">
-          <h4
-            className="text-[22px] leading-[28px] text-foreground"
-            style={bold}
-          >
+          <h4 className="text-[22px] leading-[28px] text-foreground" style={bold}>
             Live in an afternoon
           </h4>
           <ol className="grid gap-6 sm:grid-cols-3">
@@ -544,46 +498,30 @@ function LandingPage({ className }: { className: string }) {
                 <span className="text-site-caption text-muted-foreground tabular-nums">
                   {n + 1}
                 </span>
-                <span
-                  className="text-site-body text-foreground"
-                  style={semibold}
-                >
+                <span className="text-site-body text-foreground" style={semibold}>
                   {step.title}
                 </span>
-                <span className="text-site-body text-muted-foreground">
-                  {step.body}
-                </span>
+                <span className="text-site-body text-muted-foreground">{step.body}</span>
               </li>
             ))}
           </ol>
         </section>
 
         <section className="flex flex-col items-center gap-6">
-          <h4
-            className="text-[22px] leading-[28px] text-foreground"
-            style={bold}
-          >
+          <h4 className="text-[22px] leading-[28px] text-foreground" style={bold}>
             Simple pricing
           </h4>
           <div className="grid w-full gap-3 sm:grid-cols-2">
             {PLANS.map((plan) => (
               <div
                 key={plan.name}
-                className={cn(
-                  "flex flex-col gap-4 bg-muted p-6",
-                  shape.container,
-                )}
+                className={cn('flex flex-col gap-4 bg-muted p-6', shape.container)}
               >
                 <div className="flex flex-col gap-1">
-                  <span
-                    className="text-site-body text-foreground"
-                    style={semibold}
-                  >
+                  <span className="text-site-body text-foreground" style={semibold}>
                     {plan.name}
                   </span>
-                  <span className="text-site-caption text-muted-foreground">
-                    {plan.note}
-                  </span>
+                  <span className="text-site-caption text-muted-foreground">{plan.note}</span>
                 </div>
                 <span
                   className="text-[32px] leading-[38px] text-foreground tabular-nums"
@@ -602,10 +540,7 @@ function LandingPage({ className }: { className: string }) {
         </section>
 
         <section className="flex flex-col items-center gap-5 text-center">
-          <h4
-            className="text-[28px] leading-[34px] text-foreground"
-            style={bold}
-          >
+          <h4 className="text-[28px] leading-[34px] text-foreground" style={bold}>
             Answer once.
           </h4>
           <Button tabIndex={-1}>Start free</Button>
@@ -627,8 +562,8 @@ function LandingPage({ className }: { className: string }) {
 // The demos: 1 window per preset, 2 intensities each
 // ---------------------------------------------------------------------------
 
-type Preset = "Landing" | "Product";
-const INTENSITIES = ["Default", "Subtle"] as const;
+type Preset = 'Landing' | 'Product';
+const INTENSITIES = ['Default', 'Subtle'] as const;
 type Intensity = (typeof INTENSITIES)[number];
 
 /** The class in use and the values it sets, in 1 quiet row. */
@@ -647,24 +582,22 @@ function Spec({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col gap-0.5">
       <span className="text-site-caption text-muted-foreground">{label}</span>
-      <span className="font-mono text-site-caption whitespace-nowrap text-foreground">
-        {value}
-      </span>
+      <span className="font-mono text-site-caption whitespace-nowrap text-foreground">{value}</span>
     </div>
   );
 }
 
 export function PresetDemo({ preset }: { preset: Preset }) {
-  const [intensity, setIntensity] = useState<Intensity>("Default");
+  const [intensity, setIntensity] = useState<Intensity>('Default');
   const [run, setRun] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   // Plays only once half of it is on screen, so a visitor who scrolls to
   // it sees it run instead of its end state.
   const seen = useInView(scrollRef, { once: true, amount: 0.5 });
-  const ReplayIcon = useIcon("rotate-ccw");
+  const ReplayIcon = useIcon('rotate-ccw');
 
   const className =
-    `reveal-${preset.toLowerCase()}${intensity === "Subtle" ? "-subtle" : ""}` as RevealPresetName;
+    `reveal-${preset.toLowerCase()}${intensity === 'Subtle' ? '-subtle' : ''}` as RevealPresetName;
   const restart = () => scrollRef.current?.scrollTo({ top: 0 });
 
   return (
@@ -701,18 +634,15 @@ export function PresetDemo({ preset }: { preset: Preset }) {
           ref={scrollRef}
           tabIndex={0}
           className={cn(
-            "w-full overflow-y-auto bg-background outline-none",
-            preset === "Landing" ? "h-[560px]" : "h-[500px]",
+            'w-full overflow-y-auto bg-background outline-none',
+            preset === 'Landing' ? 'h-[560px]' : 'h-[500px]',
           )}
         >
           {seen &&
-            (preset === "Landing" ? (
+            (preset === 'Landing' ? (
               <LandingPage key={`${className}-${run}`} className={className} />
             ) : (
-              <ProductApp
-                key={`${className}-${run}`}
-                mainClassName={className}
-              />
+              <ProductApp key={`${className}-${run}`} mainClassName={className} />
             ))}
         </div>
         <div className="border-t border-border/60 px-4 py-4 sm:px-6">

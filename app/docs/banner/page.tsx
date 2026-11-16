@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useIcon } from "@/lib/icon-context";
+import { useState } from 'react';
+import { useIcon } from '#lib/icon-context';
 import {
   Banner,
   BannerTitle,
@@ -9,15 +9,15 @@ import {
   BannerActions,
   BannerAction,
   type BannerStatus,
-} from "@/registry/default/banner";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { PlaygroundLayout, PlaygroundOverlay } from "@/lib/docs/playground";
-import { BannerPlayground, MockPage } from "@/lib/docs/playgrounds/banner";
-import { bannerProps, partProps, actionProps } from "@/lib/docs/api/banner";
+} from '#registry/default/banner';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { PlaygroundLayout, PlaygroundOverlay } from '#lib/docs/playground';
+import { BannerPlayground, MockPage } from '#lib/docs/playgrounds/banner';
+import { bannerProps, partProps, actionProps } from '#lib/docs/api/banner';
 
-const STATUSES: BannerStatus[] = ["default", "info", "success", "warning", "error"];
+const STATUSES: BannerStatus[] = ['default', 'info', 'success', 'warning', 'error'];
 
 const statusesCode = `import { Banner, BannerTitle } from "./components";
 
@@ -101,20 +101,20 @@ function BannerPlaygroundSection() {
 }
 
 const STATUS_LABEL: Record<BannerStatus, string> = {
-  default: "Default",
-  info: "Info",
-  success: "Success",
-  warning: "Warning",
-  error: "Error",
+  default: 'Default',
+  info: 'Info',
+  success: 'Success',
+  warning: 'Warning',
+  error: 'Error',
 };
 
 function StatusesDemo() {
   return (
     <div className="grid w-full max-w-[560px] grid-cols-1 gap-x-3 gap-y-5 sm:grid-cols-2">
-      {(["low", "high"] as const).map((contrast) => (
+      {(['low', 'high'] as const).map((contrast) => (
         <div key={contrast} className="flex flex-col gap-2">
           <span className="px-1 text-site-caption text-muted-foreground">
-            {contrast === "low" ? "Low contrast" : "High contrast"}
+            {contrast === 'low' ? 'Low contrast' : 'High contrast'}
           </span>
           {STATUSES.map((status) => (
             <Banner key={status} status={status} contrast={contrast}>
@@ -169,7 +169,7 @@ function FixedDemo() {
 }
 
 function IconDemo() {
-  const Bell = useIcon("bell");
+  const Bell = useIcon('bell');
   return (
     <div className="w-full max-w-[520px]">
       <Banner icon={Bell}>

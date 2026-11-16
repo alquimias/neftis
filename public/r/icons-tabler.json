@@ -3,12 +3,8 @@
   "name": "icons-tabler",
   "title": "Tabler Icon Set",
   "description": "Tabler glyphs for every icon slot the components look up. Pass the map to IconProvider (or FluidProvider's icons prop) and every component draws Tabler.",
-  "dependencies": [
-    "@tabler/icons-react"
-  ],
-  "registryDependencies": [
-    "https://www.fluidfunctionalism.com/r/icon-context.json"
-  ],
+  "dependencies": ["@tabler/icons-react"],
+  "registryDependencies": ["https://www.fluidfunctionalism.com/r/icon-context.json"],
   "files": [
     {
       "path": "registry/default/lib/icons-tabler.tsx",
@@ -17,8 +13,6 @@
     }
   ],
   "docs": "Docs: https://www.fluidfunctionalism.com/docs (Icons). Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "lib"
-  ],
+  "categories": ["lib"],
   "type": "registry:lib"
 }

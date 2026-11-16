@@ -1,20 +1,19 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { componentList } from "@/lib/docs/components";
-import { BentoGrid } from "@/app/components/bento-grid";
-import { Button } from "@/registry/radix/button";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { useIcon } from "@/lib/icon-context";
-import { useSizeVariant } from "@/lib/size-context";
-import { Tooltip } from "@/registry/radix/tooltip";
-import { StarterPromptButton } from "@/app/components/starter-install";
+import Link from 'next/link';
+import { componentList } from '#lib/docs/components';
+import { BentoGrid } from '#app/components/bento-grid';
+import { Button } from '#registry/radix/button';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { useIcon } from '#lib/icon-context';
+import { useSizeVariant } from '#lib/size-context';
+import { Tooltip } from '#registry/radix/tooltip';
+import { StarterPromptButton } from '#app/components/starter-install';
 
 export default function Page() {
-  const ArrowRight = useIcon("arrow-right");
+  const ArrowRight = useIcon('arrow-right');
   // Square icon buttons follow the site-wide size step (see /docs/sizes).
-  const iconSize =
-    useSizeVariant() === "compact" ? ("icon-compact" as const) : ("icon" as const);
+  const iconSize = useSizeVariant() === 'compact' ? ('icon-compact' as const) : ('icon' as const);
 
   return (
     // reveal-landing-subtle, a preset the Reveal page documents: the hero
@@ -39,7 +38,12 @@ export default function Page() {
               <ArrowRight className="rotate-180" />
             </Button>
             <Tooltip content="Introduction" shortcut="→">
-              <Link href="/docs" aria-label="Next: Introduction" className="outline-none" tabIndex={-1}>
+              <Link
+                href="/docs"
+                aria-label="Next: Introduction"
+                className="outline-none"
+                tabIndex={-1}
+              >
                 <Button variant="ghost" size={iconSize}>
                   <ArrowRight />
                 </Button>
@@ -55,11 +59,15 @@ export default function Page() {
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <StarterPromptButton size="sm" />
           <Link href="/docs" className="outline-none" tabIndex={-1}>
-            <Button variant="secondary" size="sm">Learn more</Button>
+            <Button variant="secondary" size="sm">
+              Learn more
+            </Button>
           </Link>
           {/* The demo is a desktop stage: phones skip the button. */}
           <Link href="/demo" className="outline-none max-sm:hidden" tabIndex={-1}>
-            <Button variant="ghost" size="sm">See demo</Button>
+            <Button variant="ghost" size="sm">
+              See demo
+            </Button>
           </Link>
         </div>
       </div>

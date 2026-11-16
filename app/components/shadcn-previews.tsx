@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/components/shadcn/accordion";
-import { Badge } from "@/components/shadcn/badge";
-import { Button } from "@/components/shadcn/button";
-import { Checkbox } from "@/components/shadcn/checkbox";
+} from '#components/shadcn/accordion';
+import { Badge } from '#components/shadcn/badge';
+import { Button } from '#components/shadcn/button';
+import { Checkbox } from '#components/shadcn/checkbox';
 import {
   Dialog,
   DialogTrigger,
@@ -20,19 +20,19 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from "@/components/shadcn/dialog";
-import { Input } from "@/components/shadcn/input";
-import { Label } from "@/components/shadcn/label";
-import { RadioGroup, RadioGroupItem } from "@/components/shadcn/radio-group";
+} from '#components/shadcn/dialog';
+import { Input } from '#components/shadcn/input';
+import { Label } from '#components/shadcn/label';
+import { RadioGroup, RadioGroupItem } from '#components/shadcn/radio-group';
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/shadcn/select";
-import { Slider } from "@/components/shadcn/slider";
-import { Switch } from "@/components/shadcn/switch";
+} from '#components/shadcn/select';
+import { Slider } from '#components/shadcn/slider';
+import { Switch } from '#components/shadcn/switch';
 import {
   Table,
   TableHeader,
@@ -40,23 +40,15 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@/components/shadcn/table";
-import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
+} from '#components/shadcn/table';
+import { Tabs, TabsList, TabsTrigger } from '#components/shadcn/tabs';
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from "@/components/shadcn/tooltip";
-import {
-  Circle,
-  Star,
-  Plus,
-  Heart,
-  Check,
-  Brain,
-  type LucideIcon,
-} from "lucide-react";
+} from '#components/shadcn/tooltip';
+import { Circle, Star, Plus, Heart, Check, Brain, type LucideIcon } from 'lucide-react';
 import {
   ACCORDION_ITEMS,
   BADGE_ITEMS,
@@ -76,7 +68,7 @@ import {
   TABLE_COLUMNS,
   TABLE_ROWS,
   TOOLTIP_COPY,
-} from "@/app/components/demo-data";
+} from '#app/components/demo-data';
 
 function AccordionPreview() {
   return (
@@ -85,9 +77,7 @@ function AccordionPreview() {
         {ACCORDION_ITEMS.map((item) => (
           <AccordionItem key={item.value} value={item.value}>
             <AccordionTrigger className="py-2">{item.title}</AccordionTrigger>
-            <AccordionContent className="text-[13px] pt-1 pb-3">
-              {item.content}
-            </AccordionContent>
+            <AccordionContent className="text-[13px] pt-1 pb-3">{item.content}</AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
@@ -226,10 +216,8 @@ function InputGroupPreview() {
           <Input
             id={`shadcn-${field.key}`}
             placeholder={field.placeholder}
-            value={values[field.key] ?? ""}
-            onChange={(e) =>
-              setValues((prev) => ({ ...prev, [field.key]: e.target.value }))
-            }
+            value={values[field.key] ?? ''}
+            onChange={(e) => setValues((prev) => ({ ...prev, [field.key]: e.target.value }))}
           />
         </div>
       ))}
@@ -300,7 +288,7 @@ function SliderPreview() {
 
 function SwitchPreview() {
   const [on, setOn] = useState<Set<string>>(
-    () => new Set(SWITCH_ITEMS.filter((item) => item.initial).map((item) => item.id))
+    () => new Set(SWITCH_ITEMS.filter((item) => item.initial).map((item) => item.id)),
   );
   return (
     <div className="flex flex-col gap-3 w-fit mx-auto">
@@ -357,7 +345,7 @@ function TablePreview() {
 }
 
 function TabsPreview() {
-  const [tab, setTab] = useState("library");
+  const [tab, setTab] = useState('library');
   return (
     <div className="w-full max-w-[360px] mx-auto flex justify-center">
       <Tabs value={tab} onValueChange={setTab}>
@@ -379,9 +367,7 @@ function TooltipPreview() {
           <TooltipTrigger asChild>
             <Button variant="secondary">{TOOLTIP_COPY.trigger}</Button>
           </TooltipTrigger>
-          <TooltipContent className="shadcn-theme">
-            {TOOLTIP_COPY.content}
-          </TooltipContent>
+          <TooltipContent className="shadcn-theme">{TOOLTIP_COPY.content}</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>
@@ -392,15 +378,15 @@ export const shadcnPreviewMap: Record<string, React.FC> = {
   accordion: AccordionPreview,
   badge: BadgePreview,
   button: ButtonPreview,
-  "checkbox-group": CheckboxPreview,
+  'checkbox-group': CheckboxPreview,
   dialog: DialogPreview,
   dropdown: DropdownPreview,
-  "input-group": InputGroupPreview,
-  "radio-group": RadioGroupPreview,
+  'input-group': InputGroupPreview,
+  'radio-group': RadioGroupPreview,
   select: SelectPreview,
   slider: SliderPreview,
   switch: SwitchPreview,
   table: TablePreview,
-  "tabs": TabsPreview,
+  tabs: TabsPreview,
   tooltip: TooltipPreview,
 };

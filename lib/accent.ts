@@ -12,23 +12,23 @@
 // ---------------------------------------------------------------------------
 
 export type AccentPreset =
-  | "red"
-  | "orange"
-  | "amber"
-  | "yellow"
-  | "lime"
-  | "green"
-  | "emerald"
-  | "teal"
-  | "cyan"
-  | "sky"
-  | "blue"
-  | "indigo"
-  | "violet"
-  | "purple"
-  | "fuchsia"
-  | "pink"
-  | "rose";
+  | 'red'
+  | 'orange'
+  | 'amber'
+  | 'yellow'
+  | 'lime'
+  | 'green'
+  | 'emerald'
+  | 'teal'
+  | 'cyan'
+  | 'sky'
+  | 'blue'
+  | 'indigo'
+  | 'violet'
+  | 'purple'
+  | 'fuchsia'
+  | 'pink'
+  | 'rose';
 
 export interface AccentColor {
   label: string;
@@ -44,34 +44,34 @@ export interface AccentColor {
  *  so a focus ring stays clear on either. Tailwind's own blue is left out:
  *  the system's blue holds that place. */
 export const ACCENT_PRESETS: Record<AccentPreset, AccentColor> = {
-  red: { label: "Red", light: "#E7000B", dark: "#FF6467" },
-  orange: { label: "Orange", light: "#F54900", dark: "#FF8904" },
-  amber: { label: "Amber", light: "#E17100", dark: "#FFB900" },
-  yellow: { label: "Yellow", light: "#D08700", dark: "#FDC700" },
-  lime: { label: "Lime", light: "#5EA500", dark: "#9AE600" },
-  green: { label: "Green", light: "#00A63E", dark: "#05DF72" },
-  emerald: { label: "Emerald", light: "#009966", dark: "#00D492" },
-  teal: { label: "Teal", light: "#009689", dark: "#00D5BE" },
-  cyan: { label: "Cyan", light: "#0092B8", dark: "#00D3F2" },
-  sky: { label: "Sky", light: "#0084D1", dark: "#00BCFF" },
-  blue: { label: "Blue", light: "#6B97FF", dark: "#6B97FF" },
-  indigo: { label: "Indigo", light: "#4F39F6", dark: "#7C86FF" },
-  violet: { label: "Violet", light: "#7F22FE", dark: "#A684FF" },
-  purple: { label: "Purple", light: "#9810FA", dark: "#C27AFF" },
-  fuchsia: { label: "Fuchsia", light: "#C800DE", dark: "#ED6AFF" },
-  pink: { label: "Pink", light: "#E60076", dark: "#FB64B6" },
-  rose: { label: "Rose", light: "#EC003F", dark: "#FF637E" },
+  red: { label: 'Red', light: '#E7000B', dark: '#FF6467' },
+  orange: { label: 'Orange', light: '#F54900', dark: '#FF8904' },
+  amber: { label: 'Amber', light: '#E17100', dark: '#FFB900' },
+  yellow: { label: 'Yellow', light: '#D08700', dark: '#FDC700' },
+  lime: { label: 'Lime', light: '#5EA500', dark: '#9AE600' },
+  green: { label: 'Green', light: '#00A63E', dark: '#05DF72' },
+  emerald: { label: 'Emerald', light: '#009966', dark: '#00D492' },
+  teal: { label: 'Teal', light: '#009689', dark: '#00D5BE' },
+  cyan: { label: 'Cyan', light: '#0092B8', dark: '#00D3F2' },
+  sky: { label: 'Sky', light: '#0084D1', dark: '#00BCFF' },
+  blue: { label: 'Blue', light: '#6B97FF', dark: '#6B97FF' },
+  indigo: { label: 'Indigo', light: '#4F39F6', dark: '#7C86FF' },
+  violet: { label: 'Violet', light: '#7F22FE', dark: '#A684FF' },
+  purple: { label: 'Purple', light: '#9810FA', dark: '#C27AFF' },
+  fuchsia: { label: 'Fuchsia', light: '#C800DE', dark: '#ED6AFF' },
+  pink: { label: 'Pink', light: '#E60076', dark: '#FB64B6' },
+  rose: { label: 'Rose', light: '#EC003F', dark: '#FF637E' },
 };
 
 export const ACCENT_ORDER = Object.keys(ACCENT_PRESETS) as AccentPreset[];
 
-export const DEFAULT_ACCENT: AccentPreset = "blue";
+export const DEFAULT_ACCENT: AccentPreset = 'blue';
 
 /** The accent as a CSS value, for site code that draws in it (inspect
  *  rulers, spec-sheet guides, annotations). SVG presentation attributes
  *  can't read var(): pass it through style or as the CSS color under
  *  currentColor. */
-export const ACCENT_VAR = "var(--fluid-accent, #6B97FF)";
+export const ACCENT_VAR = 'var(--fluid-accent, #6B97FF)';
 
 /** A 6-digit hex color, the only custom accent shape the site stores. */
 export function isAccentHex(value: string | null | undefined): value is string {
@@ -81,7 +81,11 @@ export function isAccentHex(value: string | null | undefined): value is string {
 /** The preset a hex color is, on either theme, if any (case-insensitive). */
 export function presetForHex(hex: string): AccentPreset | null {
   const upper = hex.toUpperCase();
-  return ACCENT_ORDER.find((p) => ACCENT_PRESETS[p].light === upper || ACCENT_PRESETS[p].dark === upper) ?? null;
+  return (
+    ACCENT_ORDER.find(
+      (p) => ACCENT_PRESETS[p].light === upper || ACCENT_PRESETS[p].dark === upper,
+    ) ?? null
+  );
 }
 
 /** The accent as a CSS value for --fluid-accent: the custom color, the
@@ -96,7 +100,7 @@ export function accentCss(preset: AccentPreset, custom: string | null): string {
 /** The color on screen on one theme: the custom one when set, else the
  *  preset's shade for that theme. */
 export function accentHex(preset: AccentPreset, custom: string | null, dark: boolean): string {
-  return custom ?? ACCENT_PRESETS[preset][dark ? "dark" : "light"];
+  return custom ?? ACCENT_PRESETS[preset][dark ? 'dark' : 'light'];
 }
 
 /** How the accent reads in words: "Violet", or the custom hex. */

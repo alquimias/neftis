@@ -1,36 +1,36 @@
-"use client";
+'use client';
 
-import { inKeyboardScope } from "@/lib/keyboard-scope";
-import { useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
-import { Toaster, toast } from "sonner";
+import { inKeyboardScope } from '#lib/keyboard-scope';
+import { useEffect, useRef, useState } from 'react';
+import { motion } from 'motion/react';
+import { Toaster, toast } from 'sonner';
 
-import { cn } from "@/lib/utils";
-import { KeyCap } from "@/lib/key-cap";
-import { spring } from "@/lib/springs";
-import { fontWeights } from "@/lib/font-weight";
-import { useShape, useShapeContext } from "@/lib/shape-context";
-import { useSizeContext } from "@/lib/size-context";
-import { useThemeContext } from "@/registry/default/lib/theme-context";
-import { useIconLibrary, iconLibraryLabels } from "@/lib/docs/icon-playground";
-import { useIcon } from "@/lib/icon-context";
+import { cn } from '#lib/utils';
+import { KeyCap } from '#lib/key-cap';
+import { spring } from '#lib/springs';
+import { fontWeights } from '#lib/font-weight';
+import { useShape, useShapeContext } from '#lib/shape-context';
+import { useSizeContext } from '#lib/size-context';
+import { useThemeContext } from '#registry/default/lib/theme-context';
+import { useIconLibrary, iconLibraryLabels } from '#lib/docs/icon-playground';
+import { useIcon } from '#lib/icon-context';
 
 /** Which right-panel setting each global shortcut key drives. */
 const shortcutSettings = {
-  t: "theme",
-  r: "shape",
-  s: "size",
-  i: "icons",
+  t: 'theme',
+  r: 'shape',
+  s: 'size',
+  i: 'icons',
 } as const;
 
 type Setting = (typeof shortcutSettings)[keyof typeof shortcutSettings];
 
 /** Display label of the shortcut key for each setting (shown in the toast). */
 const settingKeys: Record<Setting, string> = {
-  theme: "T",
-  shape: "R",
-  size: "S",
-  icons: "I",
+  theme: 'T',
+  shape: 'R',
+  size: 'S',
+  icons: 'I',
 };
 
 const TOAST_MS = 2000;
@@ -52,16 +52,13 @@ let pressSeq = 0;
  *  sidebar's "[", the properties panel's "]"). */
 export function showShortcutToast(keyLabel: string, message: string) {
   const press = ++pressSeq;
-  toast.custom(
-    () => <ShortcutToast keyLabel={keyLabel} message={message} press={press} />,
-    {
-      id: "settings-shortcut",
-      duration: TOAST_MS,
-      // A custom toast's <li> shrinks to fit and left-aligns inside the
-      // centered 356px-wide list; full width lets the body's mx-auto center.
-      style: { width: "100%" },
-    }
-  );
+  toast.custom(() => <ShortcutToast keyLabel={keyLabel} message={message} press={press} />, {
+    id: 'settings-shortcut',
+    duration: TOAST_MS,
+    // A custom toast's <li> shrinks to fit and left-aligns inside the
+    // centered 356px-wide list; full width lets the body's mx-auto center.
+    style: { width: '100%' },
+  });
 }
 
 /** Surface a completed action (a command menu pick, a copy) in the same
@@ -70,32 +67,32 @@ export function showShortcutToast(keyLabel: string, message: string) {
  *  shortcut toast and a success toast never fight over one. */
 export function showSuccessToast(message: string) {
   toast.custom(() => <SuccessToast message={message} />, {
-    id: "site-success",
+    id: 'site-success',
     duration: TOAST_MS,
-    style: { width: "100%" },
+    style: { width: '100%' },
   });
 }
 
 // An action that can be taken back (a delete) has its own toast, shared
 // with the DataTable preset's install: see lib/docs/undo-toast.tsx.
-export { showUndoToast } from "@/lib/docs/undo-toast";
+export { showUndoToast } from '#lib/docs/undo-toast';
 
 function SuccessToast({ message }: { message: string }) {
   const shapeClasses = useShape();
-  const CheckIcon = useIcon("check");
+  const CheckIcon = useIcon('check');
   return (
     <div
       className={cn(
-        "mx-auto flex h-9 w-max items-center gap-2 bg-foreground px-3 text-site-body text-background",
-        shapeClasses.bg
+        'mx-auto flex h-9 w-max items-center gap-2 bg-foreground px-3 text-site-body text-background',
+        shapeClasses.bg,
       )}
       style={{ fontVariationSettings: fontWeights.normal }}
     >
       <span
         aria-hidden
         className={cn(
-          "inline-flex h-[18px] w-[18px] items-center justify-center bg-background/15 text-background",
-          shapeClasses.bg
+          'inline-flex h-[18px] w-[18px] items-center justify-center bg-background/15 text-background',
+          shapeClasses.bg,
         )}
       >
         <CheckIcon size={12} strokeWidth={2.5} />
@@ -148,8 +145,8 @@ function ShortcutToast({
       animate={{ scale: pressed ? 0.95 : 1 }}
       transition={spring.fast}
       className={cn(
-        "mx-auto flex h-9 w-max items-center gap-2 bg-foreground px-3 text-site-body text-background",
-        shapeClasses.bg
+        'mx-auto flex h-9 w-max items-center gap-2 bg-foreground px-3 text-site-body text-background',
+        shapeClasses.bg,
       )}
       style={{ fontVariationSettings: fontWeights.normal }}
     >
@@ -184,8 +181,7 @@ export function SettingsToast() {
     const onKeyDown = (e: KeyboardEvent) => {
       // Keys typed in a preview belong to the component in it.
       if (inKeyboardScope(e.target)) return;
-      const setting =
-        shortcutSettings[e.key.toLowerCase() as keyof typeof shortcutSettings];
+      const setting = shortcutSettings[e.key.toLowerCase() as keyof typeof shortcutSettings];
       if (!setting) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       // Mirror the shortcut guards: keys typed into fields or open popups
@@ -194,21 +190,21 @@ export function SettingsToast() {
       // itself, which has no closest() — hence the instanceof check.)
       const target = e.target instanceof HTMLElement ? e.target : null;
       if (
-        target?.tagName === "INPUT" ||
-        target?.tagName === "TEXTAREA" ||
+        target?.tagName === 'INPUT' ||
+        target?.tagName === 'TEXTAREA' ||
         target?.isContentEditable
       )
         return;
       if (
         target?.closest(
-          '[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]'
+          '[role="listbox"], [role="menu"], [role="dialog"], [role="combobox"], [role="option"]',
         )
       )
         return;
       pendingRef.current = { setting, at: e.timeStamp };
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, []);
 
   // Detect which setting changed and, if a matching shortcut was just
@@ -226,14 +222,14 @@ export function SettingsToast() {
 
     let changed: { setting: Setting; message: string } | null = null;
     if (theme !== prev.theme)
-      changed = { setting: "theme", message: `Theme set to ${capitalize(theme)}` };
+      changed = { setting: 'theme', message: `Theme set to ${capitalize(theme)}` };
     else if (shape !== prev.shape)
-      changed = { setting: "shape", message: `Radius set to ${capitalize(shape)}` };
+      changed = { setting: 'shape', message: `Radius set to ${capitalize(shape)}` };
     else if (size !== prev.size)
-      changed = { setting: "size", message: `Size set to ${capitalize(size)}` };
+      changed = { setting: 'size', message: `Size set to ${capitalize(size)}` };
     else if (iconLibrary !== prev.iconLibrary)
       changed = {
-        setting: "icons",
+        setting: 'icons',
         message: `Icons set to ${iconLibraryLabels[iconLibrary]}`,
       };
     if (!changed) return;

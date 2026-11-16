@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Switch } from "@/registry/radix/switch";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { switchProps } from "@/lib/docs/api/switch";
+import { useState } from 'react';
+import { Switch } from '#registry/radix/switch';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { switchProps } from '#lib/docs/api/switch';
 
 const basicCode = `import { Switch } from "./components";
 import { useState } from "react";
@@ -46,12 +46,7 @@ export default function SwitchDoc() {
 
       <DocSection title="Disabled">
         <ComponentPreview code={disabledCode}>
-          <Switch
-            label="Disabled option"
-            checked={false}
-            onToggle={() => {}}
-            disabled
-          />
+          <Switch label="Disabled option" checked={false} onToggle={() => {}} disabled />
         </ComponentPreview>
       </DocSection>
 

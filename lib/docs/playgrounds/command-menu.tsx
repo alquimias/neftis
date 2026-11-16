@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useMemo, useState, useRef } from "react";
-import { showSuccessToast } from "@/lib/docs/settings-toast";
+import { useMemo, useState, useRef } from 'react';
+import { showSuccessToast } from '#lib/docs/settings-toast';
 import {
   CommandMenu,
   CommandMenuDialog,
@@ -15,18 +15,13 @@ import {
   formatShortcut,
   useIsMac,
   type CommandMenuItemData,
-} from "@/registry/default/command-menu";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/flavored/select";
-import { Button } from "@/registry/radix/button";
-import { Switch } from "@/registry/radix/switch";
-import { Elevated } from "@/lib/elevated";
-import { useShape } from "@/lib/shape-context";
-import { cn } from "@/lib/utils";
+} from '#registry/default/command-menu';
+import { Select, SelectTrigger, SelectContent, SelectItem } from '#components/flavored/select';
+import { Button } from '#registry/radix/button';
+import { Switch } from '#registry/radix/switch';
+import { Elevated } from '#lib/elevated';
+import { useShape } from '#lib/shape-context';
+import { cn } from '#lib/utils';
 import {
   PLAY_SWITCH,
   PlayField,
@@ -34,7 +29,7 @@ import {
   PlaySection,
   PlayDivider,
   PlaygroundPanel,
-} from "@/lib/docs/playground";
+} from '#lib/docs/playground';
 import {
   COMMAND_MENU_SUGGESTIONS,
   COMMAND_MENU_TABS,
@@ -42,7 +37,7 @@ import {
   COMMAND_MENU_SORTS,
   COMMAND_MENU_COPY,
   useCommandMenuItems,
-} from "@/lib/docs/command-menu-items";
+} from '#lib/docs/command-menu-items';
 import {
   COMMAND_MENU_PRESET_DEF,
   COMMAND_MENU_DEFAULT_CODE,
@@ -52,13 +47,9 @@ import {
   decodeCommandMenuPreset,
   type CommandMenuPlayState,
   type CommandMenuTrigger,
-} from "@/lib/preset/command-menu-options";
-import {
-  usePresetGlobals,
-  usePresetUrlSync,
-  GetCodeDialog,
-} from "@/lib/docs/preset-ui";
-import type { PlaygroundProps } from "./types";
+} from '#lib/preset/command-menu-options';
+import { usePresetGlobals, usePresetUrlSync, GetCodeDialog } from '#lib/docs/preset-ui';
+import type { PlaygroundProps } from './types';
 
 // ── Command menu playground ──────────────────────────────
 // One palette, two homes: inline in the preview, and as the dialog the
@@ -71,7 +62,7 @@ type PlayState = CommandMenuPlayState;
 // playground's dialog then answers it ahead of the site's own menu, which
 // the sidebar's Search row still opens.
 function shortcutLabel(value: CommandMenuTrigger, mac: boolean): string {
-  return formatShortcut(value, mac).join(mac ? "" : "+");
+  return formatShortcut(value, mac).join(mac ? '' : '+');
 }
 
 const TABS = COMMAND_MENU_TABS;
@@ -98,26 +89,55 @@ export function buildCommandMenuPlaygroundCode(o: PlayState): string {
       `icon: ${item.icon}`,
       ...(o.shortcuts && item.shortcut ? [`shortcut: "${item.shortcut}"`] : []),
       `group: "${item.group}"`,
-    ].join(", ");
+    ].join(', ');
   const sample = [
-    { value: "new-file", label: "New file", description: "Blank document", icon: "Plus", shortcut: "mod+n", group: "Actions" },
-    { value: "theme", label: "Toggle dark mode", description: "System, light, or dark", icon: "Moon", shortcut: "mod+shift+l", group: "Actions" },
-    { value: "calendar", label: "Calendar", action: "Go to Calendar", description: "Today", icon: "Calendar", group: "Go to" },
-    { value: "settings", label: "Settings", action: "Go to Settings", description: "Account and workspace", icon: "Settings", shortcut: "mod+,", group: "Go to" },
+    {
+      value: 'new-file',
+      label: 'New file',
+      description: 'Blank document',
+      icon: 'Plus',
+      shortcut: 'mod+n',
+      group: 'Actions',
+    },
+    {
+      value: 'theme',
+      label: 'Toggle dark mode',
+      description: 'System, light, or dark',
+      icon: 'Moon',
+      shortcut: 'mod+shift+l',
+      group: 'Actions',
+    },
+    {
+      value: 'calendar',
+      label: 'Calendar',
+      action: 'Go to Calendar',
+      description: 'Today',
+      icon: 'Calendar',
+      group: 'Go to',
+    },
+    {
+      value: 'settings',
+      label: 'Settings',
+      action: 'Go to Settings',
+      description: 'Account and workspace',
+      icon: 'Settings',
+      shortcut: 'mod+,',
+      group: 'Go to',
+    },
   ];
   const parts = [
-    "CommandMenuDialog",
-    "CommandMenu",
-    "CommandMenuInput",
-    ...(o.tabs ? ["CommandMenuTabs"] : []),
-    ...(o.filters ? ["CommandMenuFilters"] : []),
-    "CommandMenuList",
-    "CommandMenuEmpty",
-    ...(o.footer ? ["CommandMenuFooter"] : []),
+    'CommandMenuDialog',
+    'CommandMenu',
+    'CommandMenuInput',
+    ...(o.tabs ? ['CommandMenuTabs'] : []),
+    ...(o.filters ? ['CommandMenuFilters'] : []),
+    'CommandMenuList',
+    'CommandMenuEmpty',
+    ...(o.footer ? ['CommandMenuFooter'] : []),
   ];
-  const icons = ["Plus", "Moon", "Calendar", "Settings"];
+  const icons = ['Plus', 'Moon', 'Calendar', 'Settings'];
   const state = [
-    "const [open, setOpen] = useState(false);",
+    'const [open, setOpen] = useState(false);',
     ...(o.tabs ? ['const [tab, setTab] = useState("all");'] : []),
     ...(o.filters
       ? ['const [type, setType] = useState("all");', 'const [sort, setSort] = useState("default");']
@@ -127,10 +147,12 @@ export function buildCommandMenuPlaygroundCode(o: PlayState): string {
   // The same derivation the preview runs: tab, then type, then sort.
   const derived = scoped
     ? [
-        "",
-        "// The header controls are your state: derive the rows from them.",
-        "let visible = items;",
-        ...(o.tabs ? [`if (tab !== "all") visible = visible.filter((item) => item.group === tab);`] : []),
+        '',
+        '// The header controls are your state: derive the rows from them.',
+        'let visible = items;',
+        ...(o.tabs
+          ? [`if (tab !== "all") visible = visible.filter((item) => item.group === tab);`]
+          : []),
         ...(o.filters
           ? [
               `if (type !== "all") visible = visible.filter((item) => item.group === type);`,
@@ -140,19 +162,19 @@ export function buildCommandMenuPlaygroundCode(o: PlayState): string {
       ]
     : [];
   const list = (name: string, entries: readonly { value: string; label: string }[]) =>
-    `const ${name} = [${entries.map((e) => `{ value: "${e.value}", label: "${e.label}" }`).join(", ")}];`;
+    `const ${name} = [${entries.map((e) => `{ value: "${e.value}", label: "${e.label}" }`).join(', ')}];`;
   const lists = [
-    ...(o.tabs ? [list("TABS", COMMAND_MENU_TABS)] : []),
-    ...(o.filters ? [list("TYPES", COMMAND_MENU_TYPES), list("SORTS", COMMAND_MENU_SORTS)] : []),
+    ...(o.tabs ? [list('TABS', COMMAND_MENU_TABS)] : []),
+    ...(o.filters ? [list('TYPES', COMMAND_MENU_TYPES), list('SORTS', COMMAND_MENU_SORTS)] : []),
   ];
   const root = [
-    `items={${scoped ? "visible" : "items"}}`,
+    `items={${scoped ? 'visible' : 'items'}}`,
     ...(o.suggestions ? [`suggestions={${JSON.stringify([...COMMAND_MENU_SUGGESTIONS])}}`] : []),
-    "onSelect={(item) => run(item)}",
-  ].join(" ");
+    'onSelect={(item) => run(item)}',
+  ].join(' ');
   // Filters inside the tabs share the row (hugging their controls); alone
   // they are a row of their own.
-  const indent = o.tabs ? "      " : "    ";
+  const indent = o.tabs ? '      ' : '    ';
   const select = (value: string, setter: string, entries: string) => [
     `${indent}  <Select value={${value}} onValueChange={${setter}}>`,
     `${indent}    <SelectTrigger variant="borderless" />`,
@@ -166,8 +188,8 @@ export function buildCommandMenuPlaygroundCode(o: PlayState): string {
   const filters = o.filters
     ? [
         `${indent}<CommandMenuFilters>`,
-        ...select("type", "setType", "TYPES"),
-        ...select("sort", "setSort", "SORTS"),
+        ...select('type', 'setType', 'TYPES'),
+        ...select('sort', 'setSort', 'SORTS'),
         `${indent}</CommandMenuFilters>`,
       ]
     : [];
@@ -175,19 +197,25 @@ export function buildCommandMenuPlaygroundCode(o: PlayState): string {
     `    <CommandMenuInput placeholder="${COMMAND_MENU_COPY.placeholder}" />`,
     ...(o.tabs
       ? [
-          `    <CommandMenuTabs tabs={TABS} value={tab} onValueChange={setTab}${o.filters ? "" : " /"}>`,
+          `    <CommandMenuTabs tabs={TABS} value={tab} onValueChange={setTab}${o.filters ? '' : ' /'}>`,
           ...(o.filters
-            ? [`      {/* Trailing children hug the row's end */}`, ...filters, `    </CommandMenuTabs>`]
+            ? [
+                `      {/* Trailing children hug the row's end */}`,
+                ...filters,
+                `    </CommandMenuTabs>`,
+              ]
             : []),
         ]
       : filters),
   ];
   return [
     `import {`,
-    `  ${parts.join(", ")},`,
+    `  ${parts.join(', ')},`,
     `} from "./components";`,
-    ...(o.filters ? [`import { Select, SelectTrigger, SelectContent, SelectItem } from "./components";`] : []),
-    `import { ${icons.join(", ")} } from "lucide-react";`,
+    ...(o.filters
+      ? [`import { Select, SelectTrigger, SelectContent, SelectItem } from "./components";`]
+      : []),
+    `import { ${icons.join(', ')} } from "lucide-react";`,
     ``,
     `const items = [`,
     ...sample.map((item) => `  { ${fields(item)} },`),
@@ -199,18 +227,23 @@ export function buildCommandMenuPlaygroundCode(o: PlayState): string {
     ``,
     `{/* shortcut: the combo that toggles the dialog from anywhere ("mod+k" if omitted).`,
     `    mod is ⌘ on a Mac, Ctrl elsewhere. */}`,
-    `<CommandMenuDialog open={open} onOpenChange={setOpen}${o.shortcut === "mod+k" ? "" : ` shortcut="${o.shortcut}"`}>`,
+    `<CommandMenuDialog open={open} onOpenChange={setOpen}${o.shortcut === 'mod+k' ? '' : ` shortcut="${o.shortcut}"`}>`,
     `  <CommandMenu ${root}>`,
     ...header,
     `    <CommandMenuList>`,
     `      <CommandMenuEmpty>${COMMAND_MENU_COPY.empty}</CommandMenuEmpty>`,
     `    </CommandMenuList>`,
-    ...(o.footer ? [`    {/* Hints follow the menu: tabs add ← →, a dialog adds Esc */}`, `    <CommandMenuFooter />`] : []),
+    ...(o.footer
+      ? [
+          `    {/* Hints follow the menu: tabs add ← →, a dialog adds Esc */}`,
+          `    <CommandMenuFooter />`,
+        ]
+      : []),
     `  </CommandMenu>`,
     `</CommandMenuDialog>`,
     ``,
     `{/* Inline instead: drop the dialog and give CommandMenu a height. */}`,
-  ].join("\n");
+  ].join('\n');
 }
 
 export function CommandMenuPlayground({ children }: PlaygroundProps) {
@@ -225,9 +258,9 @@ export function CommandMenuPlayground({ children }: PlaygroundProps) {
   const shape = useShape();
 
   const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState("all");
-  const [type, setType] = useState("all");
-  const [sort, setSort] = useState("default");
+  const [tab, setTab] = useState('all');
+  const [type, setType] = useState('all');
+  const [sort, setSort] = useState('default');
   const previewRef = useRef<HTMLDivElement>(null);
 
   const all = useCommandMenuItems({
@@ -237,9 +270,9 @@ export function CommandMenuPlayground({ children }: PlaygroundProps) {
   // The header controls are state; the rows derive from them.
   const items = useMemo(() => {
     let visible = all;
-    if (state.tabs && tab !== "all") visible = visible.filter((item) => item.group === tab);
-    if (state.filters && type !== "all") visible = visible.filter((item) => item.group === type);
-    if (state.filters && sort === "az")
+    if (state.tabs && tab !== 'all') visible = visible.filter((item) => item.group === tab);
+    if (state.filters && type !== 'all') visible = visible.filter((item) => item.group === type);
+    if (state.filters && sort === 'az')
       visible = [...visible].sort((a, b) => a.label.localeCompare(b.label));
     return visible;
   }, [all, state.tabs, tab, state.filters, type, sort]);
@@ -331,7 +364,11 @@ export function CommandMenuPlayground({ children }: PlaygroundProps) {
     <Elevated
       offset={2}
       shadowLevel={3}
-      className={cn("flex w-full max-w-[560px] flex-col overflow-hidden", shape.container, heightClass)}
+      className={cn(
+        'flex w-full max-w-[560px] flex-col overflow-hidden',
+        shape.container,
+        heightClass,
+      )}
     >
       {menu}
     </Elevated>
@@ -341,7 +378,7 @@ export function CommandMenuPlayground({ children }: PlaygroundProps) {
   // site's own ⌘K menu keeps the key everywhere else on the page.
   const preview = (
     <div ref={previewRef} className="flex w-full flex-col items-center gap-4">
-      {panel("max-h-[400px]")}
+      {panel('max-h-[400px]')}
       <Button variant="secondary" onClick={() => setOpen(true)} className="pr-3">
         Open as a dialog
         <CommandMenuShortcut keys={state.shortcut} className="ml-1" />
@@ -363,7 +400,7 @@ export function CommandMenuPlayground({ children }: PlaygroundProps) {
       <PlayField label="Trigger shortcut">
         <PlaySelect
           value={state.shortcut}
-          onChange={(v) => set("shortcut", v as CommandMenuTrigger)}
+          onChange={(v) => set('shortcut', v as CommandMenuTrigger)}
           options={shortcutOptions}
         />
       </PlayField>
@@ -377,19 +414,19 @@ export function CommandMenuPlayground({ children }: PlaygroundProps) {
         <Switch
           label="Descriptions"
           checked={state.descriptions}
-          onToggle={() => set("descriptions", !state.descriptions)}
+          onToggle={() => set('descriptions', !state.descriptions)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Shortcut caps"
           checked={state.shortcuts}
-          onToggle={() => set("shortcuts", !state.shortcuts)}
+          onToggle={() => set('shortcuts', !state.shortcuts)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Suggestions first"
           checked={state.suggestions}
-          onToggle={() => set("suggestions", !state.suggestions)}
+          onToggle={() => set('suggestions', !state.suggestions)}
           className={PLAY_SWITCH}
         />
       </div>
@@ -400,13 +437,13 @@ export function CommandMenuPlayground({ children }: PlaygroundProps) {
         <Switch
           label="Tabs"
           checked={state.tabs}
-          onToggle={() => set("tabs", !state.tabs)}
+          onToggle={() => set('tabs', !state.tabs)}
           className={PLAY_SWITCH}
         />
         <Switch
           label="Filters"
           checked={state.filters}
-          onToggle={() => set("filters", !state.filters)}
+          onToggle={() => set('filters', !state.filters)}
           className={PLAY_SWITCH}
         />
       </div>
@@ -417,7 +454,7 @@ export function CommandMenuPlayground({ children }: PlaygroundProps) {
         <Switch
           label="Footer hints"
           checked={state.footer}
-          onToggle={() => set("footer", !state.footer)}
+          onToggle={() => set('footer', !state.footer)}
           className={PLAY_SWITCH}
         />
       </div>
@@ -436,7 +473,7 @@ export function CommandMenuPlayground({ children }: PlaygroundProps) {
     // the panel's top so the field stays put while the rows filter down.
     demoPreview: (
       <div className="flex h-[440px] w-full items-start justify-center">
-        {panel("max-h-[440px]")}
+        {panel('max-h-[440px]')}
       </div>
     ),
     demoMaxWidth: 540,

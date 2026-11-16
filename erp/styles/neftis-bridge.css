@@ -1,0 +1,12 @@
+/* Tokens que los primitivos de Neftis leen y el tema del ERP no declara. */
+:root {
+  --tint: rgb(0 0 0 / 0.08);
+  --tint-hover: rgb(0 0 0 / 0.12);
+  --fluid-accent: var(--color-brand-soft);
+  --focus-ring: var(--fluid-accent);
+}
+
+.dark {
+  --tint: rgb(255 255 255 / 0.25);
+  --tint-hover: rgb(255 255 255 / 0.32);
+}

@@ -1,26 +1,23 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { createPortal } from "react-dom";
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { useShape } from "@/registry/default/lib/shape-context";
-import { spring } from "@/registry/default/lib/springs";
-import {
-  useFluidHover,
-  useRegisterFluidHoverItem,
-} from "@/registry/default/hooks/use-fluid-hover";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
-import { Button } from "@/registry/radix/button";
-import { Tooltip, TooltipGroup } from "@/registry/radix/tooltip";
-import { useIcon } from "@/lib/icon-context";
-import { useSizeVariant } from "@/lib/size-context";
-import { useBase } from "@/lib/base-context";
-import { RailHairline, useRightRailNode } from "@/lib/right-rail";
-import { docOrder } from "@/lib/docs/components";
-import { CopyPromptButton } from "@/lib/docs/copy-prompt-button";
-import { cn } from "@/lib/utils";
+import Link from 'next/link';
+import { createPortal } from 'react-dom';
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { useShape } from '#registry/default/lib/shape-context';
+import { spring } from '#registry/default/lib/springs';
+import { useFluidHover, useRegisterFluidHoverItem } from '#registry/default/hooks/use-fluid-hover';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
+import { Button } from '#registry/radix/button';
+import { Tooltip, TooltipGroup } from '#registry/radix/tooltip';
+import { useIcon } from '#lib/icon-context';
+import { useSizeVariant } from '#lib/size-context';
+import { useBase } from '#lib/base-context';
+import { RailHairline, useRightRailNode } from '#lib/right-rail';
+import { docOrder } from '#lib/docs/components';
+import { CopyPromptButton } from '#lib/docs/copy-prompt-button';
+import { cn } from '#lib/utils';
 import {
   KIND_LABEL,
   type ChangeEntry,
@@ -28,14 +25,19 @@ import {
   type ChangeRef,
   type Inline,
   type Release,
-} from "@/lib/changelog/parse";
-import { KIND_DOT } from "@/lib/changelog/kind-style";
-import { BentoTileContext } from "@/app/components/bento-card";
-import { PreviewPlaybackContext } from "@/lib/docs/preview-playback";
-import { ANIMATED_PREVIEWS, ChangelogPreview, hasPreview, STAGE_PADDING } from "@/app/changelog/previews";
-import { buildMigrationPrompt, monthLabel } from "@/lib/changelog/migration-prompt";
-import type { EntryInstall } from "@/lib/changelog/install";
-import { buildUpgradePrompt } from "@/lib/changelog/upgrade-prompt";
+} from '#lib/changelog/parse';
+import { KIND_DOT } from '#lib/changelog/kind-style';
+import { BentoTileContext } from '#app/components/bento-card';
+import { PreviewPlaybackContext } from '#lib/docs/preview-playback';
+import {
+  ANIMATED_PREVIEWS,
+  ChangelogPreview,
+  hasPreview,
+  STAGE_PADDING,
+} from '#app/changelog/previews';
+import { buildMigrationPrompt, monthLabel } from '#lib/changelog/migration-prompt';
+import type { EntryInstall } from '#lib/changelog/install';
+import { buildUpgradePrompt } from '#lib/changelog/upgrade-prompt';
 
 export type EntryView = ChangeEntry & {
   id: string;
@@ -45,25 +47,28 @@ export type EntryView = ChangeEntry & {
   install: EntryInstall;
 };
 
-export type ReleaseView = Omit<Release, "groups"> & {
+export type ReleaseView = Omit<Release, 'groups'> & {
   groups: Array<{ kind: ChangeKind; entries: EntryView[] }>;
 };
 
-const REPO = "https://github.com/mickadesign/fluid-functionalism";
+const REPO = 'https://github.com/mickadesign/fluid-functionalism';
 
 function releasedLabel(day: string) {
-  const [year, month, date] = day.split("-").map(Number);
-  return new Date(Date.UTC(year, month - 1, date)).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    timeZone: "UTC",
+  const [year, month, date] = day.split('-').map(Number);
+  return new Date(Date.UTC(year, month - 1, date)).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
   });
 }
 
 /** One pause for the whole page: previews play as they scroll into view
  *  until the visitor pauses any of them, which pauses them all; Play on any
  *  one resumes them all. Reduced motion starts the page paused. */
-const PagePlaybackContext = createContext<{ paused: boolean; setPaused: (paused: boolean) => void }>({
+const PagePlaybackContext = createContext<{
+  paused: boolean;
+  setPaused: (paused: boolean) => void;
+}>({
   paused: false,
   setPaused: () => {},
 });
@@ -75,9 +80,8 @@ export function ChangelogView({ releases }: { releases: ReleaseView[] }) {
   // Memoized: the scroll-spy re-renders this view on scroll, and a fresh
   // object would re-render every preview with it.
   const playback = useMemo(() => ({ paused, setPaused: setUserPaused }), [paused]);
-  const ArrowRight = useIcon("arrow-right");
-  const iconSize =
-    useSizeVariant() === "compact" ? ("icon-compact" as const) : ("icon" as const);
+  const ArrowRight = useIcon('arrow-right');
+  const iconSize = useSizeVariant() === 'compact' ? ('icon-compact' as const) : ('icon' as const);
   const next = docOrder[0];
 
   const sectionsRef = useRef(new Map<string, HTMLElement>());
@@ -119,7 +123,7 @@ export function ChangelogView({ releases }: { releases: ReleaseView[] }) {
           {/* /changelog.md is the same page as one Markdown file, for an
               agent; agents also find it from the page's <head>. */}
           <p className="mt-2 text-site-body text-muted-foreground">
-            Every change, month by month. A release lands on the first Friday.{" "}
+            Every change, month by month. A release lands on the first Friday.{' '}
             <a
               href="/changelog.md"
               className="rounded-sm text-foreground underline decoration-border underline-offset-4 outline-none transition-[text-decoration-color] duration-80 hover:decoration-foreground focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]"
@@ -178,8 +182,8 @@ export function ChangelogView({ releases }: { releases: ReleaseView[] }) {
 
 /** Where a month's dot sits, from the top of its block: the middle of the
  *  title line, below the divider's 64px + 1px + 64px when there is one. */
-const DOT_Y = "calc(var(--lh-site-title, 22px) / 2)";
-const DOT_Y_DIVIDED = "calc(8rem + 1px + var(--lh-site-title, 22px) / 2)";
+const DOT_Y = 'calc(var(--lh-site-title, 22px) / 2)';
+const DOT_Y_DIVIDED = 'calc(8rem + 1px + var(--lh-site-title, 22px) / 2)';
 
 function TimelineMark({ first, active }: { first: boolean; active: boolean }) {
   const reduceMotion = useReducedMotion() ?? false;
@@ -228,7 +232,7 @@ function ReleaseSection({
       aria-labelledby={`${release.month}-title`}
       // Below xl the sidebar trigger floats at the top-left, so an anchor
       // jump lands under it instead of behind it.
-      className={cn("scroll-mt-16 xl:scroll-mt-8", divided && "pt-16")}
+      className={cn('scroll-mt-16 xl:scroll-mt-8', divided && 'pt-16')}
     >
       <MonthHeading release={release} />
       <h3
@@ -243,7 +247,12 @@ function ReleaseSection({
         </p>
       )}
       {release.groups.map((group) => (
-        <KindGroup key={group.kind} kind={group.kind} entries={group.entries} month={release.month} />
+        <KindGroup
+          key={group.kind}
+          kind={group.kind}
+          entries={group.entries}
+          month={release.month}
+        />
       ))}
     </section>
   );
@@ -252,13 +261,16 @@ function ReleaseSection({
 /** The month as the section title, a link beside it that copies the
  *  month's URL, and the release date on the right. */
 function MonthHeading({ release }: { release: ReleaseView }) {
-  const LinkIcon = useIcon("link");
-  const Check = useIcon("check");
+  const LinkIcon = useIcon('link');
+  const Check = useIcon('check');
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
-  useEffect(() => () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    },
+    [],
+  );
 
   const copy = async () => {
     const url = `${window.location.origin}/changelog#${release.month}`;
@@ -285,7 +297,11 @@ function MonthHeading({ release }: { release: ReleaseView }) {
         href={`#${release.month}`}
         onClick={(e) => {
           e.preventDefault();
-          window.history.replaceState(window.history.state, "", `${window.location.search}#${release.month}`);
+          window.history.replaceState(
+            window.history.state,
+            '',
+            `${window.location.search}#${release.month}`,
+          );
           void copy();
         }}
         aria-label={`Copy link to ${monthLabel(release.month)}`}
@@ -293,17 +309,17 @@ function MonthHeading({ release }: { release: ReleaseView }) {
       >
         <AnimatePresence initial={false} mode="popLayout">
           <motion.span
-            key={copied ? "check" : "link"}
+            key={copied ? 'check' : 'link'}
             className="grid place-items-center"
-            initial={{ opacity: 0, scale: 0.6, filter: "blur(4px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)", transition: spring.fast }}
-            exit={{ opacity: 0, scale: 0.6, filter: "blur(4px)", transition: spring.fast.exit }}
+            initial={{ opacity: 0, scale: 0.6, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', transition: spring.fast }}
+            exit={{ opacity: 0, scale: 0.6, filter: 'blur(4px)', transition: spring.fast.exit }}
           >
             {copied ? <Check className="size-3.5" /> : <LinkIcon className="size-3.5" />}
           </motion.span>
         </AnimatePresence>
         <span className="sr-only" aria-live="polite">
-          {copied ? "Link copied" : ""}
+          {copied ? 'Link copied' : ''}
         </span>
       </a>
       {release.released && (
@@ -319,7 +335,15 @@ function MonthHeading({ release }: { release: ReleaseView }) {
 // A kind group: a hairline, the kind's name, then its entries
 // ---------------------------------------------------------------------------
 
-function KindGroup({ kind, entries, month }: { kind: ChangeKind; entries: EntryView[]; month: string }) {
+function KindGroup({
+  kind,
+  entries,
+  month,
+}: {
+  kind: ChangeKind;
+  entries: EntryView[];
+  month: string;
+}) {
   return (
     // A hairline above every group, the first one included, so it also
     // closes the month's header: 40px on each side, inside the content
@@ -360,7 +384,7 @@ function KindDot({ kind }: { kind: ChangeKind }) {
       aria-hidden
       className="absolute -left-6 top-1/2 size-[5px] -translate-y-1/2 rounded-full bg-background ring-[3px] ring-background"
     >
-      <span className={cn("block size-full rounded-full", KIND_DOT[kind])} />
+      <span className={cn('block size-full rounded-full', KIND_DOT[kind])} />
     </span>
   );
 }
@@ -383,20 +407,19 @@ function Entry({ entry, month, first }: { entry: EntryView; month: string; first
   const playing = inView && !paused;
   // The preview's code loads once its stage is within 600px of the
   // viewport, so it is ready by the time it scrolls in.
-  const near = useInView(stageRef, { once: true, margin: "600px 0px" });
-  const PlayIcon = useIcon("play");
-  const PauseIcon = useIcon("pause");
-  const ArrowRight = useIcon("arrow-right");
-  const iconSize =
-    useSizeVariant() === "compact" ? ("icon-compact" as const) : ("icon" as const);
+  const near = useInView(stageRef, { once: true, margin: '600px 0px' });
+  const PlayIcon = useIcon('play');
+  const PauseIcon = useIcon('pause');
+  const ArrowRight = useIcon('arrow-right');
+  const iconSize = useSizeVariant() === 'compact' ? ('icon-compact' as const) : ('icon' as const);
   const slug = entry.href ? /^\/docs\/([^/#]+)$/.exec(entry.href)?.[1] : undefined;
-  const staged = entry.kind === "new" && slug !== undefined && hasPreview(slug);
+  const staged = entry.kind === 'new' && slug !== undefined && hasPreview(slug);
   const animated = slug ? ANIMATED_PREVIEWS.has(slug) : false;
 
   return (
     // Space only goes above a block: 24px between entries, 4px under the
     // name, 12px above a diff or a stage.
-    <article className={cn(!first && "pt-6")}>
+    <article className={cn(!first && 'pt-6')}>
       <div className="flex items-center justify-between gap-4 pt-2">
         <h5 className="relative text-site-body text-foreground">
           <KindDot kind={entry.kind} />
@@ -414,7 +437,7 @@ function Entry({ entry, month, first }: { entry: EntryView; month: string; first
         </h5>
         <div className="-mr-1.5 flex items-center">
           {entry.refs.map((ref) => (
-            <RefChip key={ref.type === "pr" ? ref.number : ref.sha} gitRef={ref} />
+            <RefChip key={ref.type === 'pr' ? ref.number : ref.sha} gitRef={ref} />
           ))}
         </div>
       </div>
@@ -439,15 +462,15 @@ function Entry({ entry, month, first }: { entry: EntryView; month: string; first
           ref={stageRef}
           // Keys typed in here reach the component, not the site's shortcuts.
           data-keyboard-scope=""
-          className={cn("bento-card-border relative mt-3 overflow-hidden border", shape.container)}
+          className={cn('bento-card-border relative mt-3 overflow-hidden border', shape.container)}
         >
           {animated && (
-            <Tooltip content={paused ? "Play all previews" : "Pause all previews"} side="top">
+            <Tooltip content={paused ? 'Play all previews' : 'Pause all previews'} side="top">
               <Button
                 variant="ghost"
                 size={iconSize}
                 className="absolute right-2 top-2 z-10"
-                aria-label={paused ? "Play all previews" : "Pause all previews"}
+                aria-label={paused ? 'Play all previews' : 'Pause all previews'}
                 onClick={() => setPaused(!paused)}
               >
                 {paused ? <PlayIcon /> : <PauseIcon />}
@@ -458,7 +481,12 @@ function Entry({ entry, month, first }: { entry: EntryView; month: string; first
               300px rows. */}
           <BentoTileContext.Provider value>
             <PreviewPlaybackContext.Provider value={playing}>
-              <div className={cn("flex min-h-[260px] items-center justify-center", STAGE_PADDING[slug!] ?? "px-6 py-12")}>
+              <div
+                className={cn(
+                  'flex min-h-[260px] items-center justify-center',
+                  STAGE_PADDING[slug!] ?? 'px-6 py-12',
+                )}
+              >
                 {near && <ChangelogPreview slug={slug!} />}
               </div>
             </PreviewPlaybackContext.Provider>
@@ -470,7 +498,7 @@ function Entry({ entry, month, first }: { entry: EntryView; month: string; first
 }
 
 function RefChip({ gitRef }: { gitRef: ChangeRef }) {
-  const pr = gitRef.type === "pr";
+  const pr = gitRef.type === 'pr';
   return (
     <a
       href={pr ? `${REPO}/pull/${gitRef.number}` : `${REPO}/commit/${gitRef.sha}`}
@@ -490,7 +518,11 @@ function InlineText({ inline }: { inline: Inline[] }) {
   return (
     <>
       {inline.map((part, i) =>
-        part.type === "code" ? <code key={i}>{part.value}</code> : <span key={i}>{part.value}</span>
+        part.type === 'code' ? (
+          <code key={i}>{part.value}</code>
+        ) : (
+          <span key={i}>{part.value}</span>
+        ),
       )}
     </>
   );
@@ -502,7 +534,7 @@ function InlineText({ inline }: { inline: Inline[] }) {
 
 function useScrollSpy(
   releases: ReleaseView[],
-  sectionsRef: React.RefObject<Map<string, HTMLElement>>
+  sectionsRef: React.RefObject<Map<string, HTMLElement>>,
 ) {
   const [active, setActive] = useState<string | null>(releases[0]?.month ?? null);
 
@@ -527,12 +559,12 @@ function useScrollSpy(
       if (!frame) frame = requestAnimationFrame(update);
     };
     update();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
     return () => {
       if (frame) cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
     };
   }, [releases, sectionsRef]);
 
@@ -553,10 +585,7 @@ function ReleaseIndex({
   const node = useRightRailNode();
   // Below xl the rail is display:none; the page scrolls on its own there.
   if (!node) return null;
-  return createPortal(
-    <ReleaseIndexCard releases={releases} activeMonth={activeMonth} />,
-    node
-  );
+  return createPortal(<ReleaseIndexCard releases={releases} activeMonth={activeMonth} />, node);
 }
 
 function ReleaseIndexCard({
@@ -588,9 +617,14 @@ function ReleaseIndexCard({
         {activeRect && (
           <motion.div
             aria-hidden
-            className={cn("absolute left-0 top-0 bg-active pointer-events-none", shape.input)}
+            className={cn('absolute left-0 top-0 bg-active pointer-events-none', shape.input)}
             initial={false}
-            animate={{ x: activeRect.left, y: activeRect.top, width: activeRect.width, height: activeRect.height }}
+            animate={{
+              x: activeRect.left,
+              y: activeRect.top,
+              width: activeRect.width,
+              height: activeRect.height,
+            }}
             transition={reduceMotion ? { duration: 0 } : spring.moderate}
           />
         )}
@@ -630,20 +664,24 @@ function IndexRow({
     <a
       ref={ref}
       href={`#${release.month}`}
-      aria-current={active ? "location" : undefined}
+      aria-current={active ? 'location' : undefined}
       onClick={(e) => {
         e.preventDefault();
         document.getElementById(release.month)?.scrollIntoView({
-          behavior: reduceMotion ? "auto" : "smooth",
-          block: "start",
+          behavior: reduceMotion ? 'auto' : 'smooth',
+          block: 'start',
         });
-        window.history.replaceState(window.history.state, "", `${window.location.search}#${release.month}`);
+        window.history.replaceState(
+          window.history.state,
+          '',
+          `${window.location.search}#${release.month}`,
+        );
       }}
       className={cn(
-        "relative z-10 flex h-8 items-center px-2 text-site-body outline-none transition-[color,opacity] duration-80",
-        "focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]",
+        'relative z-10 flex h-8 items-center px-2 text-site-body outline-none transition-[color,opacity] duration-80',
+        'focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
         shape.input,
-        active ? "text-foreground" : "text-muted-foreground"
+        active ? 'text-foreground' : 'text-muted-foreground',
       )}
     >
       <span className="inline-grid">

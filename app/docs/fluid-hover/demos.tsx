@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   createElement,
@@ -8,7 +8,7 @@ import {
   useState,
   type CSSProperties,
   type ReactNode,
-} from "react";
+} from 'react';
 import {
   animate,
   motion,
@@ -18,23 +18,23 @@ import {
   useReducedMotion,
   type AnimationPlaybackControls,
   type MotionValue,
-} from "motion/react";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { FakeCursor } from "@/lib/docs/fake-cursor";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { spring } from "@/registry/default/lib/springs";
-import { cn } from "@/registry/default/lib/utils";
-import { useShape } from "@/registry/default/lib/shape-context";
-import { useIcon } from "@/lib/icon-context";
+} from 'motion/react';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { FakeCursor } from '#lib/docs/fake-cursor';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { spring } from '#registry/default/lib/springs';
+import { cn } from '#registry/default/lib/utils';
+import { useShape } from '#registry/default/lib/shape-context';
+import { useIcon } from '#lib/icon-context';
 import {
   useFluidHover,
   useRegisterFluidHoverItem,
   pickNearest,
-} from "@/registry/default/hooks/use-fluid-hover";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
-import { Switch } from "@/components/flavored/switch";
-import { Tabs, TabsItem } from "@/registry/radix/tabs";
-import { Dropdown } from "@/components/flavored/dropdown";
+} from '#registry/default/hooks/use-fluid-hover';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
+import { Switch } from '#components/flavored/switch';
+import { Tabs, TabsItem } from '#registry/radix/tabs';
+import { Dropdown } from '#components/flavored/dropdown';
 import {
   SidebarProvider,
   Sidebar,
@@ -48,16 +48,10 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
-} from "@/components/flavored/sidebar";
-import { useIcons } from "@/lib/icon-context";
-import { MenuItem } from "@/registry/default/menu-item";
-import {
-  Card,
-  CardGroup,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/registry/default/card";
+} from '#components/flavored/sidebar';
+import { useIcons } from '#lib/icon-context';
+import { MenuItem } from '#registry/default/menu-item';
+import { Card, CardGroup, CardHeader, CardTitle, CardDescription } from '#registry/default/card';
 
 // ---------------------------------------------------------------------------
 // Fluid hover: the three demos on the /docs/fluid-hover page. Bare rows for the
@@ -65,15 +59,15 @@ import {
 // components for the axes.
 // ---------------------------------------------------------------------------
 
-const ROWS = ["Inbox", "Drafts", "Sent", "Archive", "Trash"];
+const ROWS = ['Inbox', 'Drafts', 'Sent', 'Archive', 'Trash'];
 
 // ---------------------------------------------------------------------------
 // Code snippets
 // ---------------------------------------------------------------------------
 
 const FLUID_HOVER_CODE = `import { useRef } from "react";
-import { useFluidHover, useRegisterFluidHoverItem } from "@/hooks/use-fluid-hover";
-import { FluidHoverHighlight } from "@/components/fluid-hover-highlight";
+import { useFluidHover, useRegisterFluidHoverItem } from "#hooks/use-fluid-hover";
+import { FluidHoverHighlight } from "#components/fluid-hover-highlight";
 
 // One list, one highlight. The hook lights the row under the cursor; the
 // highlight springs to that row's rect on spring.fast, and goes out over
@@ -126,7 +120,7 @@ if (distance < closestDistance) {
 // so the cursor in a gap, in the padding, or past the last row still lands.
 setActiveIndex(containing ?? nearest);`;
 
-const AXES_CODE = `import { useFluidHover } from "@/hooks/use-fluid-hover";
+const AXES_CODE = `import { useFluidHover } from "#hooks/use-fluid-hover";
 
 // With nearest, the axis says how "nearest" is measured.
 // "y" (default): lists. Nearest by the vertical center, top + height / 2.
@@ -143,7 +137,7 @@ useFluidHover(containerRef, { nearest: true, axis: "xy" });`;
 // ---------------------------------------------------------------------------
 
 const rowClass =
-  "relative z-10 flex h-9 w-full shrink-0 items-center px-3 text-left text-site-body text-foreground outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]";
+  'relative z-10 flex h-9 w-full shrink-0 items-center px-3 text-left text-site-body text-foreground outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]';
 
 function FluidRow({
   index,
@@ -182,8 +176,7 @@ const ROW_GAP = 4;
 const LIST_PAD = 8;
 const CURSOR_X = 120;
 const CURSOR_TOP = 2;
-const CURSOR_BOTTOM =
-  LIST_PAD * 2 + ROWS.length * ROW_H + (ROWS.length - 1) * ROW_GAP - 2;
+const CURSOR_BOTTOM = LIST_PAD * 2 + ROWS.length * ROW_H + (ROWS.length - 1) * ROW_GAP - 2;
 /** One pass is three round trips, each faster than the last: reading
  *  speed, pointing speed, then a flick. Seconds per leg. */
 const CURSOR_SLOW_LEG_S = 2;
@@ -210,7 +203,7 @@ const CURSOR_PASS_S = CURSOR_LEGS_S.reduce((a, b) => a + b, 0);
 /** Keyframe offsets (0..1) where each leg ends. */
 const CURSOR_TIMES = CURSOR_LEGS_S.reduce<number[]>(
   (acc, leg) => [...acc, acc[acc.length - 1] + leg / CURSOR_PASS_S],
-  [0]
+  [0],
 );
 
 /** Which row a y (in list coordinates) is inside, or null in a gap or the
@@ -237,12 +230,7 @@ function PlainHoverList({
         <button
           key={label}
           type="button"
-          className={cn(
-            rowClass,
-            "hover:bg-hover",
-            fakeIndex === i && "bg-hover",
-            shape.item
-          )}
+          className={cn(rowClass, 'hover:bg-hover', fakeIndex === i && 'bg-hover', shape.item)}
         >
           {label}
         </button>
@@ -266,11 +254,7 @@ function FluidHoverList({
   const shape = useShape();
   const { handlers, registerItem } = hover;
   return (
-    <div
-      ref={containerRef}
-      className="relative flex w-full flex-col gap-1 p-2"
-      {...handlers}
-    >
+    <div ref={containerRef} className="relative flex w-full flex-col gap-1 p-2" {...handlers}>
       <FluidHoverHighlight hover={hover} className={shape.bg} />
       {ROWS.map((label, i) => (
         <FluidRow key={label} index={i} registerItem={registerItem}>
@@ -313,7 +297,7 @@ export function PlainVsFluidPreview({ paused }: { paused: boolean }) {
     controlsRef.current = animate(y, CURSOR_KEYFRAMES, {
       duration: CURSOR_PASS_S,
       times: CURSOR_TIMES,
-      ease: "easeInOut",
+      ease: 'easeInOut',
       repeat: Infinity,
     });
   }, [running, y]);
@@ -333,7 +317,7 @@ export function PlainVsFluidPreview({ paused }: { paused: boolean }) {
 
   // Every frame of the cursor: the plain list gets what :hover would say,
   // the fluid list gets the same point as a real mouse move.
-  useMotionValueEvent(y, "change", (value) => {
+  useMotionValueEvent(y, 'change', (value) => {
     if (!scripted) return;
     setFakeIndex(rowUnder(value));
     const box = fluidRef.current?.getBoundingClientRect();
@@ -344,9 +328,9 @@ export function PlainVsFluidPreview({ paused }: { paused: boolean }) {
     } as React.MouseEvent);
   });
 
-  const frame = cn("w-full border border-border/60", shape.container);
+  const frame = cn('w-full border border-border/60', shape.container);
   const labelClass =
-    "flex items-center justify-center gap-2 text-site-caption text-muted-foreground";
+    'flex items-center justify-center gap-2 text-site-caption text-muted-foreground';
   const cursor = scripted ? y : null;
   return (
     <div
@@ -363,7 +347,8 @@ export function PlainVsFluidPreview({ paused }: { paused: boolean }) {
             <PlainHoverList fakeIndex={scripted ? fakeIndex : null} cursor={cursor} />
           </div>
           <span className={labelClass}>
-            <span aria-hidden="true">❌</span> Plain <code className="font-mono">:hover</code> blinks at every gap
+            <span aria-hidden="true">❌</span> Plain <code className="font-mono">:hover</code>{' '}
+            blinks at every gap
           </span>
         </div>
         <div className="flex flex-col items-center gap-3">
@@ -383,8 +368,8 @@ export function PlainVsFluidPreview({ paused }: { paused: boolean }) {
  *  the cursors on any frame. */
 export function PlainVsFluidDemo() {
   const [paused, setPaused] = useState(false);
-  const PauseIcon = useIcon("pause");
-  const PlayIcon = useIcon("play");
+  const PauseIcon = useIcon('pause');
+  const PlayIcon = useIcon('play');
   return (
     <ComponentPreview
       code={FLUID_HOVER_CODE}
@@ -394,7 +379,7 @@ export function PlainVsFluidDemo() {
         ) : (
           <PauseIcon size={16} strokeWidth={1.5} />
         ),
-        tooltip: paused ? "Play" : "Pause",
+        tooltip: paused ? 'Play' : 'Pause',
         onClick: () => setPaused((v) => !v),
       }}
     >
@@ -414,8 +399,7 @@ function MathList({ showMath }: { showMath: boolean }) {
   const { activeIndex, itemRects, isMeasured, handlers, registerItem } = hover;
   const [cursorY, setCursorY] = useState<number | null>(null);
 
-  const rect =
-    isMeasured && activeIndex !== null ? (itemRects[activeIndex] ?? null) : null;
+  const rect = isMeasured && activeIndex !== null ? (itemRects[activeIndex] ?? null) : null;
   const centers = isMeasured
     ? ROWS.map((_, i) => {
         const r = itemRects[i];
@@ -478,14 +462,12 @@ function MathList({ showMath }: { showMath: boolean }) {
                 <div
                   key={ROWS[i]}
                   className={cn(
-                    "absolute left-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-colors",
-                    i === activeIndex
-                      ? "bg-[color:var(--focus-ring,#6B97FF)]"
-                      : "bg-foreground/25"
+                    'absolute left-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-colors',
+                    i === activeIndex ? 'bg-[color:var(--focus-ring,#6B97FF)]' : 'bg-foreground/25',
                   )}
                   style={{ top: c }}
                 />
-              )
+              ),
             )}
             {cursorY !== null && winner !== null && distance !== null && (
               <>
@@ -517,14 +499,10 @@ export function ShowTheMathDemo() {
   return (
     <ComponentPreview code={MATH_CODE}>
       <div className="flex w-full max-w-sm flex-col items-center gap-4">
-        <div className={cn("w-full border border-border/60", shape.container)}>
+        <div className={cn('w-full border border-border/60', shape.container)}>
           <MathList showMath={showMath} />
         </div>
-        <Switch
-          label="Show the math"
-          checked={showMath}
-          onToggle={() => setShowMath((v) => !v)}
-        />
+        <Switch label="Show the math" checked={showMath} onToggle={() => setShowMath((v) => !v)} />
       </div>
     </ComponentPreview>
   );
@@ -534,24 +512,16 @@ export function ShowTheMathDemo() {
 // Demo 3: three axes, on real components
 // ---------------------------------------------------------------------------
 
-const TAB_ITEMS = ["Library", "Recents", "Favorites", "Settings"];
+const TAB_ITEMS = ['Library', 'Recents', 'Favorites', 'Settings'];
 
 const CARD_ITEMS = [
-  { title: "Inbox", description: "Everything new lands here." },
-  { title: "Drafts", description: "Unsent, saved as you type." },
-  { title: "Sent", description: "Delivered and archived." },
-  { title: "Trash", description: "Emptied after 30 days." },
+  { title: 'Inbox', description: 'Everything new lands here.' },
+  { title: 'Drafts', description: 'Unsent, saved as you type.' },
+  { title: 'Sent', description: 'Delivered and archived.' },
+  { title: 'Trash', description: 'Emptied after 30 days.' },
 ];
 
-function AxisBlock({
-  axis,
-  hint,
-  children,
-}: {
-  axis: string;
-  hint: string;
-  children: ReactNode;
-}) {
+function AxisBlock({ axis, hint, children }: { axis: string; hint: string; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-baseline gap-2">
@@ -619,10 +589,10 @@ export function AxesDemo() {
 const COST_ROW_COUNT = 200;
 const COST_ROWS = Array.from(
   { length: COST_ROW_COUNT },
-  (_, i) => `Message ${String(i + 1).padStart(3, "0")}`
+  (_, i) => `Message ${String(i + 1).padStart(3, '0')}`,
 );
 
-const COST_CODE = `import { useFluidHover, pickNearest } from "@/hooks/use-fluid-hover";
+const COST_CODE = `import { useFluidHover, pickNearest } from "#hooks/use-fluid-hover";
 
 // The hook runs pickNearest once per animation frame: one loop over the
 // cached row rects, no DOM reads per row. The meter times that same
@@ -712,7 +682,7 @@ function CostList({ onMeter }: { onMeter: (m: CostMeter) => void }) {
     if (!container) return;
     const t0 = performance.now();
     pickNearest({
-      axis: "y",
+      axis: 'y',
       point: { x: e.clientX, y: e.clientY },
       rects: itemRects,
       containerRect: container.getBoundingClientRect(),
@@ -740,8 +710,8 @@ function CostList({ onMeter }: { onMeter: (m: CostMeter) => void }) {
     let raf = 0;
     let prev: { el: Element | null; transform: string; layout: string } = {
       el: null,
-      transform: "",
-      layout: "",
+      transform: '',
+      layout: '',
     };
     let last = performance.now();
     const tick = () => {
@@ -763,7 +733,7 @@ function CostList({ onMeter }: { onMeter: (m: CostMeter) => void }) {
         publish();
       }
       if (!el) {
-        prev = { el: null, transform: "", layout: "" };
+        prev = { el: null, transform: '', layout: '' };
         return;
       }
       const transform = el.style.transform;
@@ -839,7 +809,7 @@ export function CostDemo() {
   return (
     <ComponentPreview code={COST_CODE}>
       <div className="flex w-full max-w-md flex-col items-center gap-4">
-        <div className={cn("w-full border border-border/60", shape.container)}>
+        <div className={cn('w-full border border-border/60', shape.container)}>
           <CostList onMeter={setMeter} />
         </div>
         {/* Three numbers, one per claim in the copy: the loop, the element,
@@ -911,7 +881,7 @@ const LISTS_CODE = `<SidebarGroup>
 function ListsSidebar() {
   const icons = useIcons();
   const [open, setOpen] = useState(true);
-  const [current, setCurrent] = useState("Today");
+  const [current, setCurrent] = useState('Today');
   const row = (label: string) => ({
     isActive: current === label,
     onClick: () => setCurrent(label),
@@ -928,10 +898,10 @@ function ListsSidebar() {
                     the label's trailing edge and turns 90° while open. */}
                 <SidebarMenuButton
                   className="group/parent-row"
-                  icon={icons["message-circle"]}
+                  icon={icons['message-circle']}
                   aria-expanded={open}
                   onClick={() => setOpen((v) => !v)}
-                  style={{ "--row-gutter": "var(--row-gutter-hover)" } as CSSProperties}
+                  style={{ '--row-gutter': 'var(--row-gutter-hover)' } as CSSProperties}
                 >
                   Chat
                   <span className="ml-auto -mr-0.5 flex size-6 shrink-0 items-center justify-center">
@@ -940,20 +910,20 @@ function ListsSidebar() {
                       animate={{ rotate: open ? 90 : 0 }}
                       transition={spring.fast}
                     >
-                      {createElement(icons["chevron-right"], {
+                      {createElement(icons['chevron-right'], {
                         size: 16,
                         strokeWidth: 1.5,
                         className: `text-muted-foreground transition-opacity duration-80 ${
                           open
-                            ? "opacity-0 group-hover/parent-row:opacity-100 group-focus-within/parent-row:opacity-100"
-                            : "opacity-100"
+                            ? 'opacity-0 group-hover/parent-row:opacity-100 group-focus-within/parent-row:opacity-100'
+                            : 'opacity-100'
                         }`,
                       })}
                     </motion.span>
                   </span>
                 </SidebarMenuButton>
                 <SidebarMenuSub open={open}>
-                  {["Today", "Yesterday"].map((label) => (
+                  {['Today', 'Yesterday'].map((label) => (
                     <SidebarMenuSubItem key={label}>
                       <SidebarMenuSubButton
                         href="#"
@@ -970,17 +940,17 @@ function ListsSidebar() {
                 </SidebarMenuSub>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton icon={icons.brain} {...row("Agents")}>
+                <SidebarMenuButton icon={icons.brain} {...row('Agents')}>
                   Agents
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton icon={icons["square-library"]} disabled>
+                <SidebarMenuButton icon={icons['square-library']} disabled>
                   Knowledge
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton icon={icons.play} {...row("Runs")}>
+                <SidebarMenuButton icon={icons.play} {...row('Runs')}>
                   Runs
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -991,12 +961,12 @@ function ListsSidebar() {
             <SidebarGroupLabel>Account</SidebarGroupLabel>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton icon={icons.user} {...row("Profile")}>
+                <SidebarMenuButton icon={icons.user} {...row('Profile')}>
                   Profile
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton icon={icons["arrow-left"]} {...row("Log out")}>
+                <SidebarMenuButton icon={icons['arrow-left']} {...row('Log out')}>
                   Log out
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -1019,7 +989,7 @@ const SIDEBAR_W = 260;
 const LABEL_W = 140;
 /** Arrows stop this far outside the sidebar frame, never inside it. */
 const ARROW_GAP = 6;
-const ANNOTATION_BLUE = "var(--focus-ring, #6B97FF)";
+const ANNOTATION_BLUE = 'var(--focus-ring, #6B97FF)';
 
 type Callout = {
   key: string;
@@ -1028,7 +998,7 @@ type Callout = {
   color: string;
   /** Which side of the sidebar the label sits on. Its vertical position
    *  follows the target, so the arrow is short and level. */
-  side: "left" | "right";
+  side: 'left' | 'right';
   /** Row labels the arrow points at: the arrow ends level with the mean of
    *  their centers, just outside the frame. */
   targets: string[];
@@ -1036,39 +1006,35 @@ type Callout = {
 
 const CALLOUTS: Callout[] = [
   {
-    key: "one",
-    title: "1 list",
-    line: "Children ride with their parent.",
+    key: 'one',
+    title: '1 list',
+    line: 'Children ride with their parent.',
     color: ANNOTATION_BLUE,
-    side: "left",
-    targets: ["Today", "Yesterday"],
+    side: 'left',
+    targets: ['Today', 'Yesterday'],
   },
   {
-    key: "skip",
-    title: "Skipped",
-    line: "Disabled rows are passed over.",
+    key: 'skip',
+    title: 'Skipped',
+    line: 'Disabled rows are passed over.',
     color: ANNOTATION_BLUE,
-    side: "right",
-    targets: ["Knowledge"],
+    side: 'right',
+    targets: ['Knowledge'],
   },
   {
-    key: "two",
-    title: "New list",
-    line: "A divider means a different kind.",
+    key: 'two',
+    title: 'New list',
+    line: 'A divider means a different kind.',
     color: ANNOTATION_BLUE,
-    side: "left",
-    targets: ["Profile", "Log out"],
+    side: 'left',
+    targets: ['Profile', 'Log out'],
   },
 ];
 
 const LABEL_LEFT = { left: 14, right: SIDEBAR_LEFT + SIDEBAR_W + 40 } as const;
 
 /** A quadratic curve from `s` to `e`, bowed by `curve` px off the chord. */
-function arrowPath(
-  s: { x: number; y: number },
-  e: { x: number; y: number },
-  curve: number
-) {
+function arrowPath(s: { x: number; y: number }, e: { x: number; y: number }, curve: number) {
   const dx = e.x - s.x;
   const dy = e.y - s.y;
   const len = Math.hypot(dx, dy) || 1;
@@ -1079,7 +1045,7 @@ function arrowPath(
 }
 
 function rowLabel(el: Element) {
-  return el.textContent?.replace(/(.+)\1/, "$1").trim() ?? "";
+  return el.textContent?.replace(/(.+)\1/, '$1').trim() ?? '';
 }
 
 function ListsCallouts({ canvasRef }: { canvasRef: React.RefObject<HTMLDivElement | null> }) {
@@ -1092,7 +1058,11 @@ function ListsCallouts({ canvasRef }: { canvasRef: React.RefObject<HTMLDivElemen
     if (!canvas) return;
     const measure = () => {
       const box = canvas.getBoundingClientRect();
-      const buttons = [...canvas.querySelectorAll<HTMLElement>('[data-sidebar="menu-button"], [data-sidebar="menu-sub-button"]')];
+      const buttons = [
+        ...canvas.querySelectorAll<HTMLElement>(
+          '[data-sidebar="menu-button"], [data-sidebar="menu-sub-button"]',
+        ),
+      ];
       const next: Record<string, { y: number; edge: number }> = {};
       for (const c of CALLOUTS) {
         const rects = c.targets
@@ -1113,10 +1083,10 @@ function ListsCallouts({ canvasRef }: { canvasRef: React.RefObject<HTMLDivElemen
         }
         const edge =
           lines.length > 0
-            ? (c.side === "left"
+            ? (c.side === 'left'
                 ? Math.max(...lines.map((r) => r.right))
                 : Math.min(...lines.map((r) => r.left))) - box.left
-            : c.side === "left"
+            : c.side === 'left'
               ? LABEL_LEFT.left + LABEL_W
               : LABEL_LEFT.right;
         next[c.key] = { y, edge };
@@ -1128,7 +1098,12 @@ function ListsCallouts({ canvasRef }: { canvasRef: React.RefObject<HTMLDivElemen
     // itself never resizes, so watch the subtree for the rows arriving and
     // the rows for size changes (the sub-tree collapsing, a size step flip).
     const mo = new MutationObserver(measure);
-    mo.observe(canvas, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-state"] });
+    mo.observe(canvas, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['data-state'],
+    });
     const ro = new ResizeObserver(measure);
     ro.observe(canvas);
     for (const el of canvas.querySelectorAll('[data-sidebar="menu"]')) ro.observe(el);
@@ -1175,16 +1150,15 @@ function ListsCallouts({ canvasRef }: { canvasRef: React.RefObject<HTMLDivElemen
           const { y, edge } = end0;
           // Level with the target: from just past the label's text to just
           // outside the frame, with a small bow so it reads as drawn.
-          const start =
-            c.side === "left" ? { x: edge + 6, y } : { x: edge - 6, y };
+          const start = c.side === 'left' ? { x: edge + 6, y } : { x: edge - 6, y };
           const end =
-            c.side === "left"
+            c.side === 'left'
               ? { x: SIDEBAR_LEFT - ARROW_GAP, y }
               : { x: SIDEBAR_LEFT + SIDEBAR_W + ARROW_GAP, y };
           return (
             <path
               key={c.key}
-              d={arrowPath(start, end, c.side === "left" ? -6 : 6)}
+              d={arrowPath(start, end, c.side === 'left' ? -6 : 6)}
               stroke={c.color}
               strokeWidth={1.5}
               strokeLinecap="round"
@@ -1203,11 +1177,11 @@ function ListsCallouts({ canvasRef }: { canvasRef: React.RefObject<HTMLDivElemen
             left: LABEL_LEFT[c.side],
             // Sized to the text (up to LABEL_W), so the measured edge is the
             // longest line, not an empty column.
-            width: "max-content",
+            width: 'max-content',
             maxWidth: LABEL_W,
             // The title line sits on the arrow; the description hangs below.
             top: (ends[c.key]?.y ?? 0) - 9,
-            visibility: ends[c.key] === undefined ? "hidden" : undefined,
+            visibility: ends[c.key] === undefined ? 'hidden' : undefined,
           }}
         >
           <span
@@ -1216,7 +1190,9 @@ function ListsCallouts({ canvasRef }: { canvasRef: React.RefObject<HTMLDivElemen
           >
             {c.title}
           </span>
-          <span className="text-balance text-[11px] leading-3.5 text-muted-foreground">{c.line}</span>
+          <span className="text-balance text-[11px] leading-3.5 text-muted-foreground">
+            {c.line}
+          </span>
         </div>
       ))}
     </>
@@ -1236,8 +1212,8 @@ export function ListsDemo() {
         >
           <div
             className={cn(
-              "absolute h-[368px] overflow-hidden border border-border/60 bg-background",
-              shape.container
+              'absolute h-[368px] overflow-hidden border border-border/60 bg-background',
+              shape.container,
             )}
             style={{ left: SIDEBAR_LEFT, top: SIDEBAR_TOP, width: SIDEBAR_W }}
           >

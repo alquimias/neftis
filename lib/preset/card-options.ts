@@ -17,12 +17,12 @@ import {
   decodePreset,
   type PresetField,
   type PresetComponentDef,
-} from "./codec";
-import { DEFAULT_GLOBALS, type PresetGlobals } from "./sidebar-options";
+} from './codec';
+import { DEFAULT_GLOBALS, type PresetGlobals } from './sidebar-options';
 
-export type CardOrientation = "card" | "inline";
-export type CardBorder = "none" | "outlined";
-export type CardMediaKind = "icon" | "logo" | "image" | "none";
+export type CardOrientation = 'card' | 'inline';
+export type CardBorder = 'none' | 'outlined';
+export type CardMediaKind = 'icon' | 'logo' | 'image' | 'none';
 export type CardColumns = 1 | 2 | 3;
 
 export interface CardPlayState {
@@ -45,14 +45,14 @@ export interface CardPlayState {
 export type CardPreset = CardPlayState & PresetGlobals;
 
 export const DEFAULT_CARD_STATE: CardPlayState = {
-  media: "icon",
+  media: 'icon',
   description: true,
   primaryBtn: false,
   secondaryBtn: false,
   ghostBtn: false,
-  orientation: "card",
+  orientation: 'card',
   columns: 2,
-  border: "none",
+  border: 'none',
   separated: false,
   fluidHover: true,
   selected: false,
@@ -67,20 +67,20 @@ export const DEFAULT_CARD_PRESET: CardPreset = {
 // their natural order (e.g. columns [2, 1, 3]). The three site-global fields
 // stay LAST, mirroring SIDEBAR_PRESET_FIELDS exactly.
 export const CARD_PRESET_FIELDS: readonly PresetField[] = [
-  { key: "media", values: ["icon", "logo", "image", "none"], bits: 3 },
-  { key: "description", values: [true, false], bits: 1 },
-  { key: "primaryBtn", values: [false, true], bits: 1 },
-  { key: "secondaryBtn", values: [false, true], bits: 1 },
-  { key: "ghostBtn", values: [false, true], bits: 1 },
-  { key: "orientation", values: ["card", "inline"], bits: 2 },
-  { key: "columns", values: [2, 1, 3], bits: 3 },
-  { key: "border", values: ["none", "outlined"], bits: 2 },
-  { key: "separated", values: [false, true], bits: 1 },
-  { key: "fluidHover", values: [true, false], bits: 1 },
-  { key: "selected", values: [false, true], bits: 1 },
-  { key: "flavor", values: ["radix", "base"], bits: 3 },
-  { key: "shape", values: ["rounded", "pill", "sharp"], bits: 2 },
-  { key: "size", values: ["default", "compact"], bits: 2 },
+  { key: 'media', values: ['icon', 'logo', 'image', 'none'], bits: 3 },
+  { key: 'description', values: [true, false], bits: 1 },
+  { key: 'primaryBtn', values: [false, true], bits: 1 },
+  { key: 'secondaryBtn', values: [false, true], bits: 1 },
+  { key: 'ghostBtn', values: [false, true], bits: 1 },
+  { key: 'orientation', values: ['card', 'inline'], bits: 2 },
+  { key: 'columns', values: [2, 1, 3], bits: 3 },
+  { key: 'border', values: ['none', 'outlined'], bits: 2 },
+  { key: 'separated', values: [false, true], bits: 1 },
+  { key: 'fluidHover', values: [true, false], bits: 1 },
+  { key: 'selected', values: [false, true], bits: 1 },
+  { key: 'flavor', values: ['radix', 'base'], bits: 3 },
+  { key: 'shape', values: ['rounded', 'pill', 'sharp'], bits: 2 },
+  { key: 'size', values: ['default', 'compact'], bits: 2 },
 ];
 
 // ── Registration (tag "c") ──────────────────────────────────────────────────
@@ -88,12 +88,12 @@ export const CARD_PRESET_FIELDS: readonly PresetField[] = [
 // is known to the codec before any encode/decode runs.
 
 export const CARD_PRESET_DEF: PresetComponentDef = {
-  tag: "c",
-  label: "Card",
-  docsPath: "/docs/card",
+  tag: 'c',
+  label: 'Card',
+  docsPath: '/docs/card',
   versions: { a: CARD_PRESET_FIELDS },
-  currentVersion: "a",
-  defaults: DEFAULT_CARD_PRESET as unknown as PresetComponentDef["defaults"],
+  currentVersion: 'a',
+  defaults: DEFAULT_CARD_PRESET as unknown as PresetComponentDef['defaults'],
   installable: true,
 };
 registerPresetComponent(CARD_PRESET_DEF);
@@ -103,13 +103,12 @@ export function encodeCardPreset(config: Partial<CardPreset>): string {
 }
 
 export type CardDecodeResult =
-  | { ok: true; preset: CardPreset; version: string }
-  | { ok: false; error: string };
+  { ok: true; preset: CardPreset; version: string } | { ok: false; error: string };
 
 export function decodeCardPreset(code: string): CardDecodeResult {
   const res = decodePreset(code);
   if (!res.ok) return res;
-  if (res.def.tag !== "c") {
+  if (res.def.tag !== 'c') {
     return { ok: false, error: `Not a card preset (tag "${res.def.tag}").` };
   }
   return {
@@ -126,12 +125,36 @@ export const CARD_DEFAULT_CODE = encodeCardPreset({});
 /** The feature tiles the playground previews — icon keys index the shipped
  *  icon-context (lucide by default). */
 export const CARD_ITEMS = [
-  { icon: "circle", title: "Fluid motion", description: "Spring-tuned transitions calibrated across three tiers" },
-  { icon: "shield", title: "Accessible by default", description: "Focus-visible rings and ARIA roles in every part" },
-  { icon: "palette", title: "Yours to theme", description: "Swap radius, icons, and primitive at runtime" },
-  { icon: "moon", title: "Dark mode ready", description: "Tokens adapt to light and dark automatically" },
-  { icon: "search", title: "Fluid hover", description: "A magnetic highlight previews where a click lands" },
-  { icon: "lightbulb", title: "Drop-in registry", description: "Install any component with one shadcn command" },
+  {
+    icon: 'circle',
+    title: 'Fluid motion',
+    description: 'Spring-tuned transitions calibrated across three tiers',
+  },
+  {
+    icon: 'shield',
+    title: 'Accessible by default',
+    description: 'Focus-visible rings and ARIA roles in every part',
+  },
+  {
+    icon: 'palette',
+    title: 'Yours to theme',
+    description: 'Swap radius, icons, and primitive at runtime',
+  },
+  {
+    icon: 'moon',
+    title: 'Dark mode ready',
+    description: 'Tokens adapt to light and dark automatically',
+  },
+  {
+    icon: 'search',
+    title: 'Fluid hover',
+    description: 'A magnetic highlight previews where a click lands',
+  },
+  {
+    icon: 'lightbulb',
+    title: 'Drop-in registry',
+    description: 'Install any component with one shadcn command',
+  },
 ] as const;
 
 // An inline data-URI banner so the demo needs no asset files (CardImage
@@ -149,5 +172,5 @@ export const CARD_THUMB =
  *  the site's demos pass the visitor's accent. The art uses that one hue (on
  *  white), so swapping it recolors the whole mesh. */
 export function tintCardArt(uri: string, hex: string): string {
-  return uri.replaceAll("%236B97FF", `%23${hex.replace(/^#/, "")}`);
+  return uri.replaceAll('%236B97FF', `%23${hex.replace(/^#/, '')}`);
 }

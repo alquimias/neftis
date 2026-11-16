@@ -1,6 +1,6 @@
-import { loadReleases } from "@/lib/changelog/load";
-import { releasesToMarkdown } from "@/lib/changelog/markdown";
-import { entryInstall } from "@/lib/changelog/install";
+import { loadReleases } from "#lib/changelog/load";
+import { releasesToMarkdown } from "#lib/changelog/markdown";
+import { entryInstall } from "#lib/changelog/install";
 
 // /changelog.md: the changelog as plain Markdown, for agents. Built once at
 // deploy, like the page: the release files only change with a deploy.

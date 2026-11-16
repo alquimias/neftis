@@ -4,12 +4,12 @@
  * scope there, leaves a focused text field (so a typed time commits), and
  * a press on a portaled popup keeps focus where it is.
  */
-import { afterEach, describe, expect, it } from "vitest";
-import type { MouseEvent } from "react";
-import { routeKeyboardOnMouseDown } from "@/lib/click-to-focus";
+import { afterEach, describe, expect, it } from 'vitest';
+import type { MouseEvent } from 'react';
+import { routeKeyboardOnMouseDown } from '#lib/click-to-focus';
 
 afterEach(() => {
-  document.body.innerHTML = "";
+  document.body.innerHTML = '';
 });
 
 function setup() {
@@ -22,7 +22,7 @@ function setup() {
     <div id="portal"><div id="row">11:30 AM</div></div>
   `;
   const $ = (id: string) => document.getElementById(id)!;
-  return { region: $("region"), $ };
+  return { region: $('region'), $ };
 }
 
 function press(target: HTMLElement) {
@@ -31,49 +31,49 @@ function press(target: HTMLElement) {
   return { event, prevented: () => prevented };
 }
 
-describe("routeKeyboardOnMouseDown", () => {
-  it("lets a focusable target take focus natively", () => {
+describe('routeKeyboardOnMouseDown', () => {
+  it('lets a focusable target take focus natively', () => {
     const { region, $ } = setup();
-    const p = press($("button"));
+    const p = press($('button'));
     routeKeyboardOnMouseDown(p.event, region);
     expect(p.prevented()).toBe(false);
   });
 
-  it("keeps a focused control on an empty-space press", () => {
+  it('keeps a focused control on an empty-space press', () => {
     const { region, $ } = setup();
-    $("button").focus();
-    const p = press($("empty"));
+    $('button').focus();
+    const p = press($('empty'));
     routeKeyboardOnMouseDown(p.event, region);
     expect(p.prevented()).toBe(true);
-    expect(document.activeElement).toBe($("button"));
+    expect(document.activeElement).toBe($('button'));
   });
 
-  it("leaves a focused text field for the region on an empty-space press", () => {
+  it('leaves a focused text field for the region on an empty-space press', () => {
     const { region, $ } = setup();
-    $("input").focus();
-    const p = press($("empty"));
+    $('input').focus();
+    const p = press($('empty'));
     routeKeyboardOnMouseDown(p.event, region);
     expect(p.prevented()).toBe(true);
     expect(document.activeElement).toBe(region);
   });
 
-  it("keeps a focused non-text input (a range) on an empty-space press", () => {
+  it('keeps a focused non-text input (a range) on an empty-space press', () => {
     const { region, $ } = setup();
-    const range = document.createElement("input");
-    range.type = "range";
+    const range = document.createElement('input');
+    range.type = 'range';
     region.appendChild(range);
     range.focus();
-    const p = press($("empty"));
+    const p = press($('empty'));
     routeKeyboardOnMouseDown(p.event, region);
     expect(document.activeElement).toBe(range);
   });
 
-  it("keeps focus in the field when a portaled popup row is pressed", () => {
+  it('keeps focus in the field when a portaled popup row is pressed', () => {
     const { region, $ } = setup();
-    $("input").focus();
-    const p = press($("row"));
+    $('input').focus();
+    const p = press($('row'));
     routeKeyboardOnMouseDown(p.event, region);
     expect(p.prevented()).toBe(true);
-    expect(document.activeElement).toBe($("input"));
+    expect(document.activeElement).toBe($('input'));
   });
 });

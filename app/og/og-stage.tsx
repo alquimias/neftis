@@ -1,37 +1,32 @@
-"use client";
+'use client';
 
-import { useEffect, type CSSProperties, type ReactNode, type Ref } from "react";
-import { previewMap } from "@/app/components/bento-previews";
-import { BentoTileContext } from "@/app/components/bento-card";
-import { RADIO_ITEMS } from "@/app/components/demo-data";
-import { Elevated } from "@/lib/elevated";
-import { cn } from "@/lib/utils";
-import { fontWeights } from "@/lib/font-weight";
-import { Badge } from "@/registry/default/badge";
-import { CheckboxGroup, CheckboxItem } from "@/registry/radix/checkbox-group";
-import { RadioGroup, RadioItem } from "@/registry/radix/radio-group";
+import { useEffect, type CSSProperties, type ReactNode, type Ref } from 'react';
+import { previewMap } from '#app/components/bento-previews';
+import { BentoTileContext } from '#app/components/bento-card';
+import { RADIO_ITEMS } from '#app/components/demo-data';
+import { Elevated } from '#lib/elevated';
+import { cn } from '#lib/utils';
+import { fontWeights } from '#lib/font-weight';
+import { Badge } from '#registry/default/badge';
+import { CheckboxGroup, CheckboxItem } from '#registry/radix/checkbox-group';
+import { RadioGroup, RadioItem } from '#registry/radix/radio-group';
 import {
   ShapeProvider,
   useShapeContext,
   type ShapeVariant,
-} from "@/registry/default/lib/shape-context";
+} from '#registry/default/lib/shape-context';
 import {
   Combobox,
   ComboboxChips,
   ComboboxContent,
   ComboboxList,
   ComboboxItem,
-} from "@/components/flavored/combobox";
-import { systemList } from "@/lib/docs/components";
-import { Slider } from "@/registry/radix/slider";
-import { useIcon } from "@/lib/icon-context";
-import { iconLibraryLabels } from "@/lib/docs/icon-map";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/flavored/select";
+} from '#components/flavored/combobox';
+import { systemList } from '#lib/docs/components';
+import { Slider } from '#registry/radix/slider';
+import { useIcon } from '#lib/icon-context';
+import { iconLibraryLabels } from '#lib/docs/icon-map';
+import { Select, SelectTrigger, SelectContent, SelectItem } from '#components/flavored/select';
 
 // The OG card, shared by the still (/og) and the loop (/og/video). Every
 // tile is a live component driven by `state`, so the video is the image in
@@ -45,11 +40,11 @@ export const OG_H = 630;
 
 // What FF ships, ticked, and the one thing it refuses, left unticked.
 export const PRINCIPLES = [
-  "Spring physics",
-  "Fluid hover",
-  "Janky animations",
-  "Smooth bold on hover",
-  "Accessible by default",
+  'Spring physics',
+  'Fluid hover',
+  'Janky animations',
+  'Smooth bold on hover',
+  'Accessible by default',
 ] as const;
 
 export type OgState = {
@@ -73,19 +68,19 @@ export const OG_STILL: OgState = {
   checked: [0, 1, 3, 4],
   satisfaction: 80,
   coffee: 68,
-  systems: ["motion", "typography", "surfaces"],
-  spring: "moderate",
-  shape: "pill",
+  systems: ['motion', 'typography', 'surfaces'],
+  spring: 'moderate',
+  shape: 'pill',
 };
 
 function PersonalizePreview({ shape }: { shape: ShapeVariant }) {
-  const PillIcon = useIcon("circle");
-  const RoundedIcon = useIcon("rectangle-horizontal");
-  const radius = shape === "pill" ? "Pill" : "Rounded";
+  const PillIcon = useIcon('circle');
+  const RoundedIcon = useIcon('rectangle-horizontal');
+  const radius = shape === 'pill' ? 'Pill' : 'Rounded';
   const rows = [
-    { label: "Radius", value: radius, icon: shape === "pill" ? PillIcon : RoundedIcon },
-    { label: "Icons", value: iconLibraryLabels.phosphor },
-    { label: "Size", value: "Compact" },
+    { label: 'Radius', value: radius, icon: shape === 'pill' ? PillIcon : RoundedIcon },
+    { label: 'Icons', value: iconLibraryLabels.phosphor },
+    { label: 'Size', value: 'Compact' },
   ];
   return (
     <div className="flex w-full flex-col gap-1.5">
@@ -103,7 +98,7 @@ function PersonalizePreview({ shape }: { shape: ShapeVariant }) {
               variant="borderless"
               className="min-w-0 w-auto h-7 px-2 text-site-body"
               icon={row.icon}
-              data-og-target={row.label === "Radius" ? "radius" : undefined}
+              data-og-target={row.label === 'Radius' ? 'radius' : undefined}
             />
             <SelectContent>
               <SelectItem value={row.value} index={0}>
@@ -120,7 +115,7 @@ function PersonalizePreview({ shape }: { shape: ShapeVariant }) {
 // What sets the library apart, in badge form.
 // Dots in the focus-ring blue, the site's one accent. Badge only takes
 // palette colors, so the dot's inline color is overridden here.
-const DIFFERENTIATORS = ["Open source", "Shadcn registry"];
+const DIFFERENTIATORS = ['Open source', 'Shadcn registry'];
 
 function DifferentiatorsPreview() {
   return (
@@ -144,7 +139,13 @@ function PrinciplesPreview({ checked }: { checked: number[] }) {
     <div className="w-full">
       <CheckboxGroup checkedIndices={set}>
         {PRINCIPLES.map((label, i) => (
-          <CheckboxItem key={label} index={i} label={label} checked={set.has(i)} onToggle={() => {}} />
+          <CheckboxItem
+            key={label}
+            index={i}
+            label={label}
+            checked={set.has(i)}
+            onToggle={() => {}}
+          />
         ))}
       </CheckboxGroup>
     </div>
@@ -161,8 +162,8 @@ function SystemComboboxPreview({ systems }: { systems: string[] }) {
       <ComboboxContent>
         <ComboboxList>
           {(item) => {
-            const v = typeof item === "string" ? item : item.value;
-            const label = typeof item === "string" ? item : item.label;
+            const v = typeof item === 'string' ? item : item.value;
+            const label = typeof item === 'string' ? item : item.label;
             return (
               <ComboboxItem key={v} value={v}>
                 {label}
@@ -232,24 +233,24 @@ type Tile = {
 export const SLIDER_TILE_ROTATE = 5;
 
 const TILES: Tile[] = [
-  { slug: "personalize", x: 90, y: 20, rotate: -7, width: 220, padding: "px-5 py-4" },
-  { slug: "principles", x: 940, y: 22, rotate: 6, width: 220, padding: "p-3" },
-  { slug: "sliders", x: 40, y: 425, rotate: SLIDER_TILE_ROTATE, width: 250 },
-  { slug: "system", x: 432, y: 470, rotate: -3, width: 352, bare: true },
-  { slug: "radio-group", x: 972, y: 392, rotate: -5, width: 220, padding: "p-3" },
+  { slug: 'personalize', x: 90, y: 20, rotate: -7, width: 220, padding: 'px-5 py-4' },
+  { slug: 'principles', x: 940, y: 22, rotate: 6, width: 220, padding: 'p-3' },
+  { slug: 'sliders', x: 40, y: 425, rotate: SLIDER_TILE_ROTATE, width: 250 },
+  { slug: 'system', x: 432, y: 470, rotate: -3, width: 352, bare: true },
+  { slug: 'radio-group', x: 972, y: 392, rotate: -5, width: 220, padding: 'p-3' },
 ];
 
 function renderTile(slug: string, state: OgState) {
   switch (slug) {
-    case "personalize":
+    case 'personalize':
       return <PersonalizePreview shape={state.shape} />;
-    case "principles":
+    case 'principles':
       return <PrinciplesPreview checked={state.checked} />;
-    case "sliders":
+    case 'sliders':
       return <SliderPreview satisfaction={state.satisfaction} coffee={state.coffee} />;
-    case "system":
+    case 'system':
       return <SystemComboboxPreview systems={state.systems} />;
-    case "radio-group":
+    case 'radio-group':
       return <SpringPreview spring={state.spring} />;
     default: {
       const Preview = previewMap[slug as keyof typeof previewMap];
@@ -278,10 +279,7 @@ function TileCard({ tile, children }: { tile: Tile; children: ReactNode }) {
       shadowLevel={3}
       style={style}
       data-og-tile={tile.slug}
-      className={cn(
-        "absolute flex items-center justify-center rounded-2xl",
-        tile.padding ?? "p-5"
-      )}
+      className={cn('absolute flex items-center justify-center rounded-2xl', tile.padding ?? 'p-5')}
     >
       {children}
     </Elevated>

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   forwardRef,
@@ -10,28 +10,28 @@ import {
   useState,
   type HTMLAttributes,
   type KeyboardEvent as ReactKeyboardEvent,
-} from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group";
-import { Radio as RadioPrimitive } from "@base-ui/react/radio";
-import { CheckboxGroup as CheckboxGroupPrimitive } from "@base-ui/react/checkbox-group";
-import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
-import { Field } from "@base-ui/react/field";
-import { cn } from "@/lib/utils";
-import { KeyCaps } from "@/lib/key-cap";
-import { spring } from "@/lib/springs";
-import { fontWeights } from "@/lib/font-weight";
-import { useShape } from "@/lib/shape-context";
-import { SizeProvider, useSize, typeClass, type SizeVariant } from "@/lib/size-context";
-import { useIcons } from "@/lib/icon-context";
-import { useFluidHover, useRegisterFluidHoverItem } from "@/hooks/use-fluid-hover";
+} from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
+import { Radio as RadioPrimitive } from '@base-ui/react/radio';
+import { CheckboxGroup as CheckboxGroupPrimitive } from '@base-ui/react/checkbox-group';
+import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
+import { Field } from '@base-ui/react/field';
+import { cn } from '#lib/utils';
+import { KeyCaps } from '#lib/key-cap';
+import { spring } from '#lib/springs';
+import { fontWeights } from '#lib/font-weight';
+import { useShape } from '#lib/shape-context';
+import { SizeProvider, useSize, typeClass, type SizeVariant } from '#lib/size-context';
+import { useIcons } from '#lib/icon-context';
+import { useFluidHover, useRegisterFluidHoverItem } from '#hooks/use-fluid-hover';
 import {
   useMergeSplitBlocks,
   useSelectionRuns,
   SelectionBackgrounds,
-} from "@/hooks/use-merge-split";
-import { Button } from "@/components/ui/button";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
+} from '#hooks/use-merge-split';
+import { Button } from '#components/ui/button';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
 
 export interface AskUserOption {
   id?: string;
@@ -54,7 +54,7 @@ export interface AskUserQuestion {
    *  - "inline" (default): title and description on one line.
    *  - "stacked": title above, description below — useful when descriptions
    *    are long enough to wrap. */
-  layout?: "inline" | "stacked";
+  layout?: 'inline' | 'stacked';
   /** Which side of the row the numbered chip sits on.
    *  - "right" (default): chip on the right; the single-select submit
    *    arrow overlays it on hover/focus.
@@ -63,7 +63,7 @@ export interface AskUserQuestion {
    *    affordance stays where the eye expects it.
    *  Works with every other option (single/multi-select, allowOther,
    *  inline/stacked layout). */
-  chipPosition?: "left" | "right";
+  chipPosition?: 'left' | 'right';
   /** Render a single multi-line textarea as the *only* answer, with no
    *  option rows — for open-ended prompts (a name, a description, free
    *  comments). Distinct from `allowOther`, which appends a free-text row
@@ -93,8 +93,7 @@ export interface AskUserAnswer {
   skipped?: boolean;
 }
 
-export interface AskUserQuestionsProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
+export interface AskUserQuestionsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   questions: AskUserQuestion[];
   currentIndex?: number;
   defaultCurrentIndex?: number;
@@ -149,18 +148,18 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
       onAnswersChange,
       onComplete,
       onSkip,
-      skipLabel = "Skip",
+      skipLabel = 'Skip',
       size,
       className,
       ...rest
     },
-    ref
+    ref,
   ) {
     // Resolve locally with the prop override — this component both consumes
     // the ladder (its own rows and chrome) and re-provides it to nested
     // ladder-aware children (Button etc.) via the SizeProvider wrap below.
     const sizeClasses = useSize(size);
-    const compact = sizeClasses.variant === "compact";
+    const compact = sizeClasses.variant === 'compact';
 
     // ── Controlled / uncontrolled state ──────────────────────────
     const [internalIndex, setInternalIndex] = useState(defaultCurrentIndex);
@@ -171,12 +170,12 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
         if (!isIndexControlled) setInternalIndex(next);
         onCurrentIndexChange?.(next);
       },
-      [isIndexControlled, onCurrentIndexChange]
+      [isIndexControlled, onCurrentIndexChange],
     );
 
-    const [internalAnswers, setInternalAnswers] = useState<
-      Record<string, AskUserAnswer>
-    >(defaultAnswers ?? {});
+    const [internalAnswers, setInternalAnswers] = useState<Record<string, AskUserAnswer>>(
+      defaultAnswers ?? {},
+    );
     const isAnswersControlled = controlledAnswers !== undefined;
     const answers = isAnswersControlled
       ? (controlledAnswers as Record<string, AskUserAnswer>)
@@ -188,24 +187,20 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     }, [answers]);
 
     const writeAnswers = useCallback(
-      (
-        updater: (
-          prev: Record<string, AskUserAnswer>
-        ) => Record<string, AskUserAnswer>
-      ) => {
+      (updater: (prev: Record<string, AskUserAnswer>) => Record<string, AskUserAnswer>) => {
         const next = updater(answersRef.current);
         answersRef.current = next;
         if (!isAnswersControlled) setInternalAnswers(next);
         onAnswersChange?.(next);
         return next;
       },
-      [isAnswersControlled, onAnswersChange]
+      [isAnswersControlled, onAnswersChange],
     );
 
     const shape = useShape();
     const icons = useIcons();
-    const ArrowLeft = icons["arrow-left"];
-    const ArrowRight = icons["arrow-right"];
+    const ArrowLeft = icons['arrow-left'];
+    const ArrowRight = icons['arrow-right'];
 
     // The footer ← / → icons hint at the ArrowLeft/ArrowRight keys, which
     // mobile has no equivalent for, so render them desktop-only. (The inline
@@ -213,25 +208,17 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     // keyboard hints.)
     const ArrowLeftKey = useMemo(
       () =>
-        function ArrowLeftKey(p: {
-          size?: number;
-          strokeWidth?: number;
-          className?: string;
-        }) {
-          return <ArrowLeft {...p} className={cn(p.className, "hidden sm:block")} />;
+        function ArrowLeftKey(p: { size?: number; strokeWidth?: number; className?: string }) {
+          return <ArrowLeft {...p} className={cn(p.className, 'hidden sm:block')} />;
         },
-      [ArrowLeft]
+      [ArrowLeft],
     );
     const ArrowRightKey = useMemo(
       () =>
-        function ArrowRightKey(p: {
-          size?: number;
-          strokeWidth?: number;
-          className?: string;
-        }) {
-          return <ArrowRight {...p} className={cn(p.className, "hidden sm:block")} />;
+        function ArrowRightKey(p: { size?: number; strokeWidth?: number; className?: string }) {
+          return <ArrowRight {...p} className={cn(p.className, 'hidden sm:block')} />;
         },
-      [ArrowRight]
+      [ArrowRight],
     );
 
     // Detect the platform so the Continue shortcut hint shows the right
@@ -242,11 +229,11 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     // platform, so the ⌘/⌃ glyph alone may differ on hydration; ShortcutChip
     // carries suppressHydrationWarning to absorb that one-character delta.
     const [isMac] = useState(() => {
-      if (typeof navigator === "undefined") return false;
+      if (typeof navigator === 'undefined') return false;
       const nav = navigator as Navigator & {
         userAgentData?: { platform?: string };
       };
-      const platform = nav.userAgentData?.platform || nav.platform || "";
+      const platform = nav.userAgentData?.platform || nav.platform || '';
       return /mac/i.test(platform);
     });
 
@@ -254,7 +241,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     const total = questions.length;
     const safeIndex = Math.max(0, Math.min(index, Math.max(0, total - 1)));
     const question = questions[safeIndex];
-    const qId = question ? questionKey(question, safeIndex) : "";
+    const qId = question ? questionKey(question, safeIndex) : '';
     const currentAnswer = answers[qId];
 
     const isMulti = !!question?.multiSelect;
@@ -265,11 +252,8 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     // freeText owns the whole answer area, so the inline Other row is
     // suppressed even if a caller sets both.
     const allowOther = !isFreeText && !!question?.allowOther;
-    const selectedIds = useMemo(
-      () => currentAnswer?.selectedIds ?? [],
-      [currentAnswer]
-    );
-    const otherText = currentAnswer?.otherText ?? "";
+    const selectedIds = useMemo(() => currentAnswer?.selectedIds ?? [], [currentAnswer]);
+    const otherText = currentAnswer?.otherText ?? '';
 
     const options = question?.options ?? NO_OPTIONS;
     const otherIndex = allowOther ? options.length : -1;
@@ -293,13 +277,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     // wrapped content and lets users press Enter for a newline.
     const otherInputRef = useRef<HTMLTextAreaElement>(null);
     const hover = useFluidHover(rowsContainerRef);
-    const {
-      activeIndex,
-      setActiveIndex,
-      itemRects,
-      handlers,
-      registerItem,
-    } = hover;
+    const { activeIndex, setActiveIndex, itemRects, handlers, registerItem } = hover;
 
     // ── Other-row textarea auto-resize ──────────────────────────
     // The Other field is a textarea so users can write a multi-line answer.
@@ -329,7 +307,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     useEffect(() => {
       const el = otherInputRef.current;
       if (!el) return;
-      el.style.height = "0px";
+      el.style.height = '0px';
       el.style.height = `${el.scrollHeight}px`;
       // Threshold against the textarea's *measured* line-height, not a
       // hard-coded 22px — so the flag stays correct at high browser
@@ -337,8 +315,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
       // for a single line. 1.5× line-height is a generous fudge below
       // a true second wrapped line (2× line-height) but well above any
       // single-line rounding artefact.
-      const lineHeight =
-        parseFloat(window.getComputedStyle(el).lineHeight) || 18;
+      const lineHeight = parseFloat(window.getComputedStyle(el).lineHeight) || 18;
       setIsOtherMultiline(el.scrollHeight > lineHeight * 1.5);
     }, [otherText, qId]);
 
@@ -361,7 +338,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     // height morph and the footer move together. A ResizeObserver keeps the
     // target in sync across question swaps, shape changes, and text wrapping.
     const contentMeasureRef = useRef<HTMLDivElement>(null);
-    const [contentHeight, setContentHeight] = useState<number | "auto">("auto");
+    const [contentHeight, setContentHeight] = useState<number | 'auto'>('auto');
     useEffect(() => {
       const el = contentMeasureRef.current;
       if (!el) return;
@@ -418,7 +395,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
       if (!restoreFocusRef.current) return;
       restoreFocusRef.current = false;
       const firstRow = rowsContainerRef.current?.querySelector(
-        '[data-fluid-hover-index="0"]'
+        '[data-fluid-hover-index="0"]',
       ) as HTMLElement | null;
       firstRow?.focus();
     }, [safeIndex]);
@@ -433,7 +410,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
           setIndex(safeIndex + 1);
         }
       },
-      [safeIndex, total, onComplete, setIndex, markFocusRestore]
+      [safeIndex, total, onComplete, setIndex, markFocusRestore],
     );
 
     const handleSingleSelect = useCallback(
@@ -454,7 +431,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
         }));
         goNext(snapshot);
       },
-      [question, qId, writeAnswers, goNext]
+      [question, qId, writeAnswers, goNext],
     );
 
     const handleMultiToggle = useCallback(
@@ -476,7 +453,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
           };
         });
       },
-      [question, qId, writeAnswers]
+      [question, qId, writeAnswers],
     );
 
     // Base UI Checkbox.Group reports value changes coming from its (hidden)
@@ -496,7 +473,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
           },
         }));
       },
-      [question, qId, writeAnswers]
+      [question, qId, writeAnswers],
     );
 
     const handleOtherChange = useCallback(
@@ -514,14 +491,14 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
           },
         }));
       },
-      [question, qId, writeAnswers]
+      [question, qId, writeAnswers],
     );
 
     const handleOtherSubmit = useCallback(() => {
       if (!question) return;
       // answersRef (not render-scope `answers`) keeps this read consistent
       // with writeAnswers below — see handleSingleSelect.
-      const text = (answersRef.current[qId]?.otherText ?? "").trim();
+      const text = (answersRef.current[qId]?.otherText ?? '').trim();
       if (!text) return;
       // freeText questions may validate on submit; a returned message blocks
       // navigation and surfaces in the footer.
@@ -579,15 +556,14 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
         const target = e.target as HTMLElement | null;
         if (!target) return;
         const tag = target.tagName;
-        if (tag === "INPUT" || tag === "TEXTAREA" || target.isContentEditable) return;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || target.isContentEditable) return;
         // Only one mounted instance may answer this keypress (see
         // mountedInstances): the one containing focus, or the most recently
         // mounted one when focus sits outside every instance.
         const root = rootRef.current;
         if (!root) return;
         if (!root.contains(target)) {
-          if (mountedInstances.some((el) => el !== root && el.contains(target)))
-            return;
+          if (mountedInstances.some((el) => el !== root && el.contains(target))) return;
           // A focused element that WRAPS instances (a docs preview frame
           // holding keyboard scope — see click-to-focus) narrows the pick to
           // the instances inside it; focus on <body> wraps them all, which
@@ -597,7 +573,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
           if (pool[pool.length - 1] !== root) return;
         }
         const code = e.key;
-        if (code < "1" || code > "9") return;
+        if (code < '1' || code > '9') return;
         const idx = parseInt(code, 10) - 1;
         if (idx >= 0 && idx < options.length) {
           e.preventDefault();
@@ -609,16 +585,9 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
           otherInputRef.current?.focus();
         }
       };
-      document.addEventListener("keydown", handler);
-      return () => document.removeEventListener("keydown", handler);
-    }, [
-      question,
-      options,
-      isMulti,
-      allowOther,
-      handleSingleSelect,
-      handleMultiToggle,
-    ]);
+      document.addEventListener('keydown', handler);
+      return () => document.removeEventListener('keydown', handler);
+    }, [question, options, isMulti, allowOther, handleSingleSelect, handleMultiToggle]);
 
     // ── Keyboard navigation ──────────────────────────────────────
     // Up/Down move the highlight between rows using the SAME indicator as
@@ -629,7 +598,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     // (not "radiogroup") and so isn't auto-skipped by that handler.
     const focusRow = (idx: number) => {
       const el = rowsContainerRef.current?.querySelector(
-        `[data-fluid-hover-index="${idx}"]`
+        `[data-fluid-hover-index="${idx}"]`,
       ) as HTMLElement | null;
       el?.focus();
     };
@@ -642,15 +611,13 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
         if (allowOther && next === otherIndex) otherInputRef.current?.focus();
         else focusRow(next);
       },
-      [allowOther, otherIndex, setActiveIndex]
+      [allowOther, otherIndex, setActiveIndex],
     );
 
     const handleNavKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
       const target = e.target as HTMLElement;
       const isTextInput =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
 
       // Inside the Other text field, ←/→ and Home/End move the caret natively.
       // ↑/↓ are dual-purpose in the textarea: when the caret has more lines
@@ -659,11 +626,11 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
       // navigate to an adjacent option row when the caret is already at the
       // first / last line — otherwise the user can't edit a multi-line draft
       // without focus jumping out of the field.
-      if (isTextInput && e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+      if (isTextInput && e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
       if (
         isTextInput &&
-        (e.key === "ArrowUp" || e.key === "ArrowDown") &&
-        target.tagName === "TEXTAREA"
+        (e.key === 'ArrowUp' || e.key === 'ArrowDown') &&
+        target.tagName === 'TEXTAREA'
       ) {
         // Position-bounds check — works for BOTH explicit `\n` AND visual
         // line wraps. Only steal the key when the caret has nowhere left
@@ -672,8 +639,8 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
         // handle native caret movement (line-by-line up/down, including
         // through wrapped lines without `\n`).
         const ta = target as HTMLTextAreaElement;
-        if (e.key === "ArrowUp" && ta.selectionStart > 0) return;
-        if (e.key === "ArrowDown" && ta.selectionEnd < ta.value.length) return;
+        if (e.key === 'ArrowUp' && ta.selectionStart > 0) return;
+        if (e.key === 'ArrowDown' && ta.selectionEnd < ta.value.length) return;
       }
 
       // Our keydown handler and Base UI's RadioGroup composite are merged onto
@@ -682,15 +649,14 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
       // runs our (external) handler first and skips its own when we call
       // preventBaseUIHandler — without it, every arrow press would land focus
       // on an invisible control right after we move it to the next row.
-      const preventBaseUI = (
-        e as unknown as { preventBaseUIHandler?: () => void }
-      ).preventBaseUIHandler;
+      const preventBaseUI = (e as unknown as { preventBaseUIHandler?: () => void })
+        .preventBaseUIHandler;
 
-      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         e.preventDefault();
         e.stopPropagation();
         preventBaseUI?.();
-        if (e.key === "ArrowLeft") {
+        if (e.key === 'ArrowLeft') {
           if (safeIndex > 0) handleBack();
         } else if (isSkippable && total > 1) {
           handleSkip();
@@ -699,22 +665,17 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
       }
 
       if (rowCount === 0) return;
-      if (
-        e.key === "ArrowDown" ||
-        e.key === "ArrowUp" ||
-        e.key === "Home" ||
-        e.key === "End"
-      ) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Home' || e.key === 'End') {
         e.preventDefault();
         e.stopPropagation();
         preventBaseUI?.();
         let next: number;
-        if (e.key === "Home") next = 0;
-        else if (e.key === "End") next = rowCount - 1;
+        if (e.key === 'Home') next = 0;
+        else if (e.key === 'End') next = rowCount - 1;
         else {
           // When focus is in the Other field, treat it as the Other row.
-          const base = isTextInput ? otherIndex : activeIndex ?? -1;
-          next = e.key === "ArrowDown" ? base + 1 : base - 1;
+          const base = isTextInput ? otherIndex : (activeIndex ?? -1);
+          next = e.key === 'ArrowDown' ? base + 1 : base - 1;
           next = (next + rowCount) % rowCount;
         }
         moveActive(next);
@@ -727,7 +688,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     // the event has to bubble up from a focused descendant (no global listener,
     // so stacked demos don't all fire at once).
     const handleRootKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-      if (e.key !== "Enter") return;
+      if (e.key !== 'Enter') return;
       const mod = isMac ? e.metaKey : e.ctrlKey;
       // ⌘/⌃+Enter commits multi-select and freeText alike — both use the
       // bottom submit button rather than an inline arrow.
@@ -776,13 +737,15 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
         <div
           ref={ref}
           className={cn(
-            "w-full max-w-[520px] p-5 bg-card border border-border",
+            'w-full max-w-[520px] p-5 bg-card border border-border',
             shape.container,
-            className
+            className,
           )}
           {...rest}
         >
-          <p className="text-[length:var(--fs-body,13px)] leading-[var(--lh-body,20px)] text-muted-foreground">No questions.</p>
+          <p className="text-[length:var(--fs-body,13px)] leading-[var(--lh-body,20px)] text-muted-foreground">
+            No questions.
+          </p>
         </div>
       );
     }
@@ -814,9 +777,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     // fallback from registry/base). Arrows handle row-to-row movement; Tab
     // moves on past the group. The Other row never takes the stop — its
     // textarea is natively focusable on its own.
-    const firstSelectedRow = options.findIndex((opt, i) =>
-      selectedIds.includes(optionKey(opt, i))
-    );
+    const firstSelectedRow = options.findIndex((opt, i) => selectedIds.includes(optionKey(opt, i)));
 
     // ── Option rows ──────────────────────────────────────────────
     // The rows container is handed to a Base UI group primitive via `render`
@@ -832,7 +793,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     const rowsContent = (
       <div
         ref={rowsContainerRef}
-        role={isMulti ? "group" : "radiogroup"}
+        role={isMulti ? 'group' : 'radiogroup'}
         aria-labelledby={`${reactId}-${qId}-title`}
         onMouseEnter={handlers.onMouseEnter}
         onMouseMove={handlers.onMouseMove}
@@ -845,16 +806,15 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
           // morphing blue ring, gated to keyboard focus via :focus-visible —
           // mouse clicks focus rows without drawing the ring.
           const indexAttr = (e.target as HTMLElement)
-            .closest("[data-fluid-hover-index]")
-            ?.getAttribute("data-fluid-hover-index");
+            .closest('[data-fluid-hover-index]')
+            ?.getAttribute('data-fluid-hover-index');
           if (indexAttr != null) {
             const idx = Number(indexAttr);
             setActiveIndex(idx);
             setFocusedIndex(
-              !pointerFocusRedirect &&
-                (e.target as HTMLElement).matches(":focus-visible")
+              !pointerFocusRedirect && (e.target as HTMLElement).matches(':focus-visible')
                 ? idx
-                : null
+                : null,
             );
           }
         }}
@@ -862,8 +822,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
           // Only clear when focus leaves the whole group — row-to-row moves
           // keep the indicators mounted so they morph instead of exiting and
           // re-entering.
-          if (rowsContainerRef.current?.contains(e.relatedTarget as Node))
-            return;
+          if (rowsContainerRef.current?.contains(e.relatedTarget as Node)) return;
           setFocusedIndex(null);
           setActiveIndex(null);
         }}
@@ -879,16 +838,15 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
           {(() => {
             if (!allowOther) return null;
             const otherRect = itemRects[otherIndex];
-            const isEmptyFocused =
-              focusedIndex === otherIndex && otherText.length === 0;
+            const isEmptyFocused = focusedIndex === otherIndex && otherText.length === 0;
             if (!otherRect || !isEmptyFocused) return null;
             return (
               <motion.div
                 key="other-input"
                 aria-hidden
                 className={cn(
-                  "absolute pointer-events-none bg-card ring-1 ring-inset ring-border",
-                  shape.bg
+                  'absolute pointer-events-none bg-card ring-1 ring-inset ring-border',
+                  shape.bg,
                 )}
                 initial={{
                   opacity: 0,
@@ -916,10 +874,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
 
         {/* Single morphing hover indicator (rendered below selected bg
             so a hovered+selected row still reads as clearly selected) */}
-        <FluidHoverHighlight
-          hover={hover}
-          className={shape.bg}
-        />
+        <FluidHoverHighlight hover={hover} className={shape.bg} />
 
         {/* Selected-row backgrounds (merged for contiguous selections).
             A run is normally one block; mid merge/split it is drawn as two
@@ -937,8 +892,8 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
             <motion.div
               aria-hidden
               className={cn(
-                "absolute pointer-events-none border border-[color:var(--focus-ring,#6B97FF)] z-20",
-                shape.focusRing
+                'absolute pointer-events-none border border-[color:var(--focus-ring,#6B97FF)] z-20',
+                shape.focusRing,
               )}
               initial={{
                 opacity: 0,
@@ -973,27 +928,16 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
               key={oid}
               index={i}
               registerItem={registerItem}
-              role={isMulti ? "checkbox" : "radio"}
+              role={isMulti ? 'checkbox' : 'radio'}
               isSelected={isSelected}
               // Roving tabindex — see firstSelectedRow above. Multi-select
               // no longer puts a tab stop on every row.
-              tabIndex={
-                i === firstSelectedRow ||
-                (firstSelectedRow === -1 && i === 0)
-                  ? 0
-                  : -1
-              }
-              onClick={() =>
-                isMulti ? handleMultiToggle(oid) : handleSingleSelect(oid)
-              }
+              tabIndex={i === firstSelectedRow || (firstSelectedRow === -1 && i === 0) ? 0 : -1}
+              onClick={() => (isMulti ? handleMultiToggle(oid) : handleSingleSelect(oid))}
               onKeyDown={(e) => {
                 // Let ⌘/Ctrl+Enter fall through to the root handler
                 // (Continue) instead of toggling the focused row.
-                if (
-                  (e.key === " " || e.key === "Enter") &&
-                  !e.metaKey &&
-                  !e.ctrlKey
-                ) {
+                if ((e.key === ' ' || e.key === 'Enter') && !e.metaKey && !e.ctrlKey) {
                   e.preventDefault();
                   if (isMulti) handleMultiToggle(oid);
                   else handleSingleSelect(oid);
@@ -1005,19 +949,13 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
               chipFilled={isSelected}
               isMulti={isMulti}
               showArrow={showArrow}
-              bodyLayout={question.layout === "stacked" ? "stacked" : "inline"}
+              bodyLayout={question.layout === 'stacked' ? 'stacked' : 'inline'}
               // Anchor the chip to the first text line whenever the
               // body can wrap to multiple lines (stacked layouts
               // pair a title with a description that often wraps).
-              topAlign={question.layout === "stacked"}
-              chipPosition={question.chipPosition ?? "right"}
-              arrowIcon={
-                <ArrowRight
-                  size={14}
-                  strokeWidth={2}
-                  className="h-3.5 w-3.5"
-                />
-              }
+              topAlign={question.layout === 'stacked'}
+              chipPosition={question.chipPosition ?? 'right'}
+              arrowIcon={<ArrowRight size={14} strokeWidth={2} className="h-3.5 w-3.5" />}
               // Hidden Base UI primitive (sr-only): carries the group's
               // selection plumbing while the visible row wrapper handles
               // all interaction and styling. aria-hidden + tabIndex -1 keep
@@ -1032,16 +970,11 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
                     aria-hidden
                   />
                 ) : (
-                  <RadioPrimitive.Root
-                    value={oid}
-                    className="sr-only"
-                    tabIndex={-1}
-                    aria-hidden
-                  />
+                  <RadioPrimitive.Root value={oid} className="sr-only" tabIndex={-1} aria-hidden />
                 )
               }
             >
-              {question.layout === "stacked" ? (
+              {question.layout === 'stacked' ? (
                 <>
                   <span className="inline-grid">
                     <span
@@ -1065,8 +998,8 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
                   {opt.description && (
                     <span
                       className={cn(
-                        typeClass("caption", compact ? "compact" : "default"),
-                        "text-muted-foreground"
+                        typeClass('caption', compact ? 'compact' : 'default'),
+                        'text-muted-foreground',
                       )}
                     >
                       {opt.description}
@@ -1096,10 +1029,8 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
                   </span>
                   {opt.description && (
                     <>
-                      {" "}
-                      <span className="text-muted-foreground">
-                        {opt.description}
-                      </span>
+                      {' '}
+                      <span className="text-muted-foreground">{opt.description}</span>
                     </>
                   )}
                 </span>
@@ -1125,41 +1056,29 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
             // the 1-line empty / single-line state stays visually
             // centred like the surrounding option rows.
             topAlign={isOtherMultiline}
-            chipPosition={question.chipPosition ?? "right"}
-            ariaLabel={
-              question.otherPlaceholder ?? "Describe in your own words"
-            }
+            chipPosition={question.chipPosition ?? 'right'}
+            ariaLabel={question.otherPlaceholder ?? 'Describe in your own words'}
             showArrow={
               !isMulti &&
-              (focusedIndex === otherIndex ||
-                activeIndex === otherIndex) &&
+              (focusedIndex === otherIndex || activeIndex === otherIndex) &&
               otherText.trim().length > 0
             }
             arrowIcon={
               <ArrowRight
                 size={compact ? 12 : 14}
                 strokeWidth={2}
-                className={compact ? "h-3 w-3" : "h-3.5 w-3.5"}
+                className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'}
               />
             }
-            onArrowClick={
-              !isMulti && otherText.trim().length > 0
-                ? handleOtherSubmit
-                : undefined
-            }
+            onArrowClick={!isMulti && otherText.trim().length > 0 ? handleOtherSubmit : undefined}
           >
             <span className="inline-grid w-full">
               <textarea
                 ref={otherInputRef}
                 rows={1}
                 value={otherText}
-                placeholder={
-                  question.otherPlaceholder ??
-                  "Describe in your own words…"
-                }
-                aria-label={
-                  question.otherPlaceholder ?? "Describe in your own words"
-                }
+                placeholder={question.otherPlaceholder ?? 'Describe in your own words…'}
+                aria-label={question.otherPlaceholder ?? 'Describe in your own words'}
                 onChange={(e) => handleOtherChange(e.target.value)}
                 onKeyDown={(e) => {
                   // Standard chat pattern: plain Enter submits,
@@ -1170,7 +1089,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
                   // root handler catch ⌘/⌃+Enter for Continue —
                   // multi-select has its own Continue button as the
                   // primary submit affordance.
-                  if (e.key !== "Enter") return;
+                  if (e.key !== 'Enter') return;
                   if (e.shiftKey) return; // Shift+Enter = newline
                   if (!isMulti) {
                     e.preventDefault();
@@ -1184,13 +1103,13 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
                   // input it replaces — no border, no padding, no
                   // resize handle, no scrollbars (height is JS-driven,
                   // see the auto-resize effect above).
-                  "col-start-1 row-start-1 block w-full bg-transparent border-0 p-0 m-0 outline-none resize-none overflow-hidden text-foreground placeholder:text-muted-foreground",
+                  'col-start-1 row-start-1 block w-full bg-transparent border-0 p-0 m-0 outline-none resize-none overflow-hidden text-foreground placeholder:text-muted-foreground',
                   sizeClasses.field,
                   // Touch screens get 16px text, which overhangs the compact
                   // 18px line by about 0.7px. 1px of padding holds it, so the
                   // auto-resize's scrollHeight doesn't round up a pixel, and
                   // the -1px margins keep the row's height.
-                  "pointer-coarse:py-px pointer-coarse:-my-px"
+                  'pointer-coarse:py-px pointer-coarse:-my-px',
                 )}
                 style={{ fontVariationSettings: fontWeights.normal }}
               />
@@ -1204,17 +1123,16 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
       <div
         ref={(node) => {
           rootRef.current = node;
-          if (typeof ref === "function") ref(node);
-          else if (ref)
-            (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
         }}
         className={cn(
           // overflow-hidden crops the footer buttons to the card's rounded
           // bounds, so a button animating out (e.g. Continue on exit) is
           // clipped at the edge instead of visibly flying outside the card.
-          "relative w-full max-w-[520px] overflow-hidden bg-card border border-border",
+          'relative w-full max-w-[520px] overflow-hidden bg-card border border-border',
           shape.container,
-          className
+          className,
         )}
         {...rest}
         onKeyDown={(e) => {
@@ -1226,13 +1144,13 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
             changes. Lives outside the morphing region so it never shifts. */}
         <div
           className={cn(
-            "flex items-center text-muted-foreground",
+            'flex items-center text-muted-foreground',
             // The card's outer padding drops a notch at compact. px-3.5 is the
             // floor: the option rows bleed by -mx-3, so anything tighter puts
             // their hover background flush against the card edge.
             compact
-              ? "px-3.5 sm:px-4 pt-2.5 sm:pt-3 pb-1.5 text-[length:var(--fs-caption-compact,11px)] leading-[var(--lh-caption-compact,14px)]"
-              : "px-4 sm:px-5 pt-3.5 sm:pt-4 pb-2 text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)]"
+              ? 'px-3.5 sm:px-4 pt-2.5 sm:pt-3 pb-1.5 text-[length:var(--fs-caption-compact,11px)] leading-[var(--lh-caption-compact,14px)]'
+              : 'px-4 sm:px-5 pt-3.5 sm:pt-4 pb-2 text-[length:var(--fs-caption,12px)] leading-[var(--lh-caption,16px)]',
           )}
         >
           <span>
@@ -1266,69 +1184,61 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
             <div
               ref={contentMeasureRef}
               className={cn(
-                compact ? "px-3.5 sm:px-4" : "px-4 sm:px-5",
-                showFooter
-                  ? "pb-1"
-                  : compact
-                    ? "pb-2 sm:pb-2.5"
-                    : "pb-2.5 sm:pb-3"
+                compact ? 'px-3.5 sm:px-4' : 'px-4 sm:px-5',
+                showFooter ? 'pb-1' : compact ? 'pb-2 sm:pb-2.5' : 'pb-2.5 sm:pb-3',
               )}
             >
               <div key={qId} className="flex flex-col gap-2">
-              {/* Question title */}
-              <h3
-                id={`${reactId}-${qId}-title`}
-                className="text-[length:var(--fs-title,16px)] leading-[var(--lh-title,22px)] text-foreground"
-                style={{ fontVariationSettings: fontWeights.semibold }}
-              >
-                {question.title}
-              </h3>
+                {/* Question title */}
+                <h3
+                  id={`${reactId}-${qId}-title`}
+                  className="text-[length:var(--fs-title,16px)] leading-[var(--lh-title,22px)] text-foreground"
+                  style={{ fontVariationSettings: fontWeights.semibold }}
+                >
+                  {question.title}
+                </h3>
 
-              {/* freeText: a single open-ended textarea is the whole answer —
+                {/* freeText: a single open-ended textarea is the whole answer —
                   no option rows, no chips. It auto-focuses (see the freeText
                   effect) and commits via ⌘/⌃+Enter or the bottom submit
                   button. The field auto-resizes via the shared resize effect
                   (otherInputRef), and its value is stored in `otherText`. */}
-              {isFreeText ? (
-                // The min-height lives on the CONTAINER, not the textarea: the
-                // shared auto-resize effect drives the textarea's `height`
-                // explicitly (1 line → grows as it wraps), so a min-height on
-                // the field itself fights that and mis-measures. The box gives
-                // the field a few lines of presence at rest; clicking anywhere
-                // in it focuses the caret.
-                <div
-                  onClick={() => otherInputRef.current?.focus()}
-                  className={cn(
-                    // Negative margin + the px token mirrors the option rows /
-                    // "Something else" field: the box bleeds each side by the
-                    // same amount the rows pad (so its fill spans the same
-                    // width as the hover/selected backgrounds) while the text
-                    // starts at the content edge, aligned with the option
-                    // titles and the question heading.
-                    "relative mt-1 cursor-text transition-colors",
-                    compact ? "-mx-2.5 py-2" : "-mx-3 py-2.5",
-                    sizeClasses.px,
-                    // Resting height: a few lines for multi-line, one row for
-                    // single-line. The textarea still auto-resizes above this
-                    // floor as content wraps.
-                    isFreeTextMultiline
-                      ? "min-h-[76px]"
-                      : compact
-                      ? "min-h-8"
-                      : "min-h-10",
-                    shape.bg,
-                    // Mirror the "Something else" field instead of a blue focus
-                    // ring. Empty + at rest: no border, fully quiet. Hover
-                    // lightens with bg-hover; focus shows the bg-card + border
-                    // hint. Once it has text it fills with the same bg-active
-                    // overlay the selected option rows use (focus-within comes
-                    // after hover in the cascade, so focusing wins over hovering).
-                    otherText.length > 0
-                      ? "bg-active"
-                      : "hover:bg-hover focus-within:bg-card focus-within:ring-1 focus-within:ring-inset focus-within:ring-border"
-                  )}
-                >
-                  {/* Base UI Field.Control wires the textarea into the Field:
+                {isFreeText ? (
+                  // The min-height lives on the CONTAINER, not the textarea: the
+                  // shared auto-resize effect drives the textarea's `height`
+                  // explicitly (1 line → grows as it wraps), so a min-height on
+                  // the field itself fights that and mis-measures. The box gives
+                  // the field a few lines of presence at rest; clicking anywhere
+                  // in it focuses the caret.
+                  <div
+                    onClick={() => otherInputRef.current?.focus()}
+                    className={cn(
+                      // Negative margin + the px token mirrors the option rows /
+                      // "Something else" field: the box bleeds each side by the
+                      // same amount the rows pad (so its fill spans the same
+                      // width as the hover/selected backgrounds) while the text
+                      // starts at the content edge, aligned with the option
+                      // titles and the question heading.
+                      'relative mt-1 cursor-text transition-colors',
+                      compact ? '-mx-2.5 py-2' : '-mx-3 py-2.5',
+                      sizeClasses.px,
+                      // Resting height: a few lines for multi-line, one row for
+                      // single-line. The textarea still auto-resizes above this
+                      // floor as content wraps.
+                      isFreeTextMultiline ? 'min-h-[76px]' : compact ? 'min-h-8' : 'min-h-10',
+                      shape.bg,
+                      // Mirror the "Something else" field instead of a blue focus
+                      // ring. Empty + at rest: no border, fully quiet. Hover
+                      // lightens with bg-hover; focus shows the bg-card + border
+                      // hint. Once it has text it fills with the same bg-active
+                      // overlay the selected option rows use (focus-within comes
+                      // after hover in the cascade, so focusing wins over hovering).
+                      otherText.length > 0
+                        ? 'bg-active'
+                        : 'hover:bg-hover focus-within:bg-card focus-within:ring-1 focus-within:ring-inset focus-within:ring-border',
+                    )}
+                  >
+                    {/* Base UI Field.Control wires the textarea into the Field:
                       the footer Field.Error's generated id lands in this
                       element's aria-describedby, and Field.Root's `invalid`
                       drives aria-invalid — the association the previous bare
@@ -1336,67 +1246,65 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
                       flows through onValueChange into the same
                       handleOtherChange path; all visual props live on the
                       rendered textarea. */}
-                  <Field.Control
-                    value={otherText}
-                    onValueChange={handleOtherChange}
-                    render={
-                      <textarea
-                        ref={otherInputRef}
-                        rows={1}
-                        placeholder={
-                          question.freeTextPlaceholder ?? "Type your answer…"
-                        }
-                        aria-labelledby={`${reactId}-${qId}-title`}
-                        onKeyDown={(e) => {
-                          // Multi-line: plain Enter is a newline; ⌘/⌃+Enter
-                          // submits (caught by the root handler). Single-line:
-                          // plain Enter submits like an input, so a newline is
-                          // never inserted.
-                          if (e.key !== "Enter") return;
-                          if (e.shiftKey || e.metaKey || e.ctrlKey) return;
-                          if (!isFreeTextMultiline) {
-                            e.preventDefault();
-                            handleOtherSubmit();
-                          }
-                        }}
-                        className={cn(
-                          "block w-full bg-transparent border-0 p-0 m-0 outline-none resize-none overflow-hidden text-foreground placeholder:text-muted-foreground",
-                          sizeClasses.field,
-                          // Same touch padding as the Other row's textarea.
-                          "pointer-coarse:py-px pointer-coarse:-my-px"
-                        )}
-                        style={{ fontVariationSettings: fontWeights.normal }}
-                      />
-                    }
+                    <Field.Control
+                      value={otherText}
+                      onValueChange={handleOtherChange}
+                      render={
+                        <textarea
+                          ref={otherInputRef}
+                          rows={1}
+                          placeholder={question.freeTextPlaceholder ?? 'Type your answer…'}
+                          aria-labelledby={`${reactId}-${qId}-title`}
+                          onKeyDown={(e) => {
+                            // Multi-line: plain Enter is a newline; ⌘/⌃+Enter
+                            // submits (caught by the root handler). Single-line:
+                            // plain Enter submits like an input, so a newline is
+                            // never inserted.
+                            if (e.key !== 'Enter') return;
+                            if (e.shiftKey || e.metaKey || e.ctrlKey) return;
+                            if (!isFreeTextMultiline) {
+                              e.preventDefault();
+                              handleOtherSubmit();
+                            }
+                          }}
+                          className={cn(
+                            'block w-full bg-transparent border-0 p-0 m-0 outline-none resize-none overflow-hidden text-foreground placeholder:text-muted-foreground',
+                            sizeClasses.field,
+                            // Same touch padding as the Other row's textarea.
+                            'pointer-coarse:py-px pointer-coarse:-my-px',
+                          )}
+                          style={{ fontVariationSettings: fontWeights.normal }}
+                        />
+                      }
+                    />
+                  </div>
+                ) : isMulti ? (
+                  // Multi-select: Base UI Checkbox.Group supplies group state to
+                  // the hidden per-row checkbox primitives, rendered onto the
+                  // rows container itself (see rowsContent above) so the DOM
+                  // stays one flat container the absolute overlays can measure.
+                  <CheckboxGroupPrimitive
+                    value={selectedIds}
+                    onValueChange={handleGroupValueChange}
+                    render={rowsContent}
                   />
-                </div>
-              ) : isMulti ? (
-                // Multi-select: Base UI Checkbox.Group supplies group state to
-                // the hidden per-row checkbox primitives, rendered onto the
-                // rows container itself (see rowsContent above) so the DOM
-                // stays one flat container the absolute overlays can measure.
-                <CheckboxGroupPrimitive
-                  value={selectedIds}
-                  onValueChange={handleGroupValueChange}
-                  render={rowsContent}
-                />
-              ) : (
-                // Single-select: Base UI Radio.Group, same render-onto-the-
-                // container trick. `null` (not undefined) when unanswered keeps
-                // the group controlled from the first render. onValueChange
-                // routes hidden-primitive selection through the same
-                // handleSingleSelect path as row clicks — the two never
-                // double-fire, since clicking a row doesn't click its sr-only
-                // child.
-                <RadioGroupPrimitive
-                  value={selectedIds[0] ?? null}
-                  onValueChange={(value) => {
-                    if (typeof value === "string") handleSingleSelect(value);
-                  }}
-                  render={rowsContent}
-                />
-              )}
-            </div>
+                ) : (
+                  // Single-select: Base UI Radio.Group, same render-onto-the-
+                  // container trick. `null` (not undefined) when unanswered keeps
+                  // the group controlled from the first render. onValueChange
+                  // routes hidden-primitive selection through the same
+                  // handleSingleSelect path as row clicks — the two never
+                  // double-fire, since clicking a row doesn't click its sr-only
+                  // child.
+                  <RadioGroupPrimitive
+                    value={selectedIds[0] ?? null}
+                    onValueChange={(value) => {
+                      if (typeof value === 'string') handleSingleSelect(value);
+                    }}
+                    render={rowsContent}
+                  />
+                )}
+              </div>
             </div>
           </motion.div>
 
@@ -1405,12 +1313,7 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
               transform), the footer reflows frame-by-frame and rides the morph
               in lockstep. */}
           {showFooter && (
-            <div
-              className={cn(
-                "pt-1",
-                compact ? "px-3.5 sm:px-4 pb-1.5" : "px-4 sm:px-5 pb-2"
-              )}
-            >
+            <div className={cn('pt-1', compact ? 'px-3.5 sm:px-4 pb-1.5' : 'px-4 sm:px-5 pb-2')}>
               <div className="flex items-center justify-between gap-2 -mx-2 sm:-mx-3">
                 {/* Each button is wrapped in a motion.div so it fades + scales
                     when it appears/disappears (e.g. Continue on multi-select).
@@ -1525,14 +1428,11 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
                         <Button
                           variant="primary"
                           size="sm"
-                          onClick={
-                            isFreeText ? handleOtherSubmit : handleMultiNext
-                          }
+                          onClick={isFreeText ? handleOtherSubmit : handleMultiNext}
                           disabled={
                             isFreeText
                               ? otherText.trim().length === 0
-                              : selectedIds.length === 0 &&
-                                otherText.trim().length === 0
+                              : selectedIds.length === 0 && otherText.trim().length === 0
                           }
                           // The shortcut chip acts as a trailing icon, so tighten
                           // the right padding to match the Button's iconRight on
@@ -1541,16 +1441,13 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
                           className="pr-3 sm:pr-2"
                         >
                           <span className="inline-flex items-center gap-1.5">
-                            {question.nextLabel ??
-                              (safeIndex >= total - 1 ? "Finish" : "Continue")}
+                            {question.nextLabel ?? (safeIndex >= total - 1 ? 'Finish' : 'Continue')}
                             {/* Shortcut hint — replaces the trailing arrow. Sits
                                 inside the button so it dims with the disabled
                                 state. ⌘↵ on macOS, ⌃↵ elsewhere. Desktop-only:
                                 mobile has no physical keyboard to trigger it. */}
                             <span className="hidden sm:contents">
-                              <ShortcutChip tone="inverted">
-                                {isMac ? "⌘↵" : "⌃↵"}
-                              </ShortcutChip>
+                              <ShortcutChip tone="inverted">{isMac ? '⌘↵' : '⌃↵'}</ShortcutChip>
                             </span>
                           </span>
                         </Button>
@@ -1568,10 +1465,10 @@ const AskUserQuestions = forwardRef<HTMLDivElement, AskUserQuestionsProps>(
     // A size prop pins the whole flow (rows, chips, footer) to one ladder
     // step; otherwise it follows the surrounding SizeProvider.
     return size ? <SizeProvider size={size}>{root}</SizeProvider> : root;
-  }
+  },
 );
 
-AskUserQuestions.displayName = "AskUserQuestions";
+AskUserQuestions.displayName = 'AskUserQuestions';
 
 // ── Shortcut chip ─────────────────────────────────────────────
 // Small keycap showing the keyboard shortcut for an action, so Back (←),
@@ -1583,10 +1480,10 @@ AskUserQuestions.displayName = "AskUserQuestions";
 // passes the flag down to each cap, where the differing text lives.
 function ShortcutChip({
   children,
-  tone = "default",
+  tone = 'default',
 }: {
   children: string;
-  tone?: "default" | "inverted";
+  tone?: 'default' | 'inverted';
 }) {
   return <KeyCaps aria-hidden suppressHydrationWarning keys={children} tone={tone} />;
 }
@@ -1596,7 +1493,7 @@ function ShortcutChip({
 interface RowProps {
   index: number;
   registerItem: (index: number, element: HTMLElement | null) => void;
-  role: "radio" | "checkbox" | null;
+  role: 'radio' | 'checkbox' | null;
   isSelected: boolean;
   tabIndex: number;
   onClick: () => void;
@@ -1606,13 +1503,13 @@ interface RowProps {
   chipFilled: boolean;
   isMulti: boolean;
   ariaLabel?: string;
-  "aria-checked"?: boolean;
+  'aria-checked'?: boolean;
   showArrow?: boolean;
   arrowIcon?: React.ReactNode;
   onArrowClick?: () => void;
   /** Body content layout. "inline" keeps title + description on one line;
    *  "stacked" puts description below the title with extra vertical padding. */
-  bodyLayout?: "inline" | "stacked";
+  bodyLayout?: 'inline' | 'stacked';
   /** Anchor the chip to the first line of the body instead of vertically
    *  centering it on the row. Use when the body can grow taller than one
    *  line (Other row's textarea, stacked title + description, or any
@@ -1622,7 +1519,7 @@ interface RowProps {
   /** Mirrors the per-question `chipPosition`. "left" moves the chip to
    *  the leading edge of the row; the trailing arrow slot still sits on
    *  the right. Defaults to "right". */
-  chipPosition?: "left" | "right";
+  chipPosition?: 'left' | 'right';
   /** Hidden sr-only Base UI Radio/Checkbox primitive that binds the row to
    *  its Radio.Group / Checkbox.Group parent. Kept out of the a11y tree
    *  (aria-hidden) and the tab order (tabIndex -1) — the visible wrapper is
@@ -1647,16 +1544,16 @@ function Row({
   showArrow,
   arrowIcon,
   onArrowClick,
-  bodyLayout = "inline",
+  bodyLayout = 'inline',
   topAlign = false,
-  chipPosition = "right",
+  chipPosition = 'right',
   hiddenControl,
   children,
   ...aria
 }: RowProps) {
   const rowRef = useRef<HTMLDivElement>(null);
   const sizeClasses = useSize();
-  const compact = sizeClasses.variant === "compact";
+  const compact = sizeClasses.variant === 'compact';
 
   useRegisterFluidHoverItem(registerItem, index, rowRef);
 
@@ -1668,7 +1565,7 @@ function Row({
       {showArrow && (
         <motion.span
           aria-hidden={!onArrowClick}
-          role={onArrowClick ? "button" : undefined}
+          role={onArrowClick ? 'button' : undefined}
           onClick={
             onArrowClick
               ? (e) => {
@@ -1678,9 +1575,9 @@ function Row({
               : undefined
           }
           className={cn(
-            "absolute inset-0 inline-flex items-center justify-center bg-foreground text-background",
+            'absolute inset-0 inline-flex items-center justify-center bg-foreground text-background',
             shape.bg,
-            onArrowClick && "cursor-pointer"
+            onArrowClick && 'cursor-pointer',
           )}
           initial={{ opacity: 0, scale: 0.6 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -1715,39 +1612,36 @@ function Row({
   const chipSlot = (
     <span
       className={cn(
-        "shrink-0 relative inline-flex items-center justify-center",
-        compact ? "w-6 h-6" : "w-7 h-7",
-        topAlign &&
-          (bodyLayout === "stacked" ? "-mt-[1px]" : "-mt-[5px]")
+        'shrink-0 relative inline-flex items-center justify-center',
+        compact ? 'w-6 h-6' : 'w-7 h-7',
+        topAlign && (bodyLayout === 'stacked' ? '-mt-[1px]' : '-mt-[5px]'),
       )}
     >
       <span
         aria-hidden
         className={cn(
-          "absolute inline-flex items-center justify-center text-[length:var(--fs-micro,11px)] leading-[var(--lh-micro,14px)] transition-[opacity,font-variation-settings] duration-80",
-          compact ? "w-[18px] h-[18px]" : "w-5 h-5",
+          'absolute inline-flex items-center justify-center text-[length:var(--fs-micro,11px)] leading-[var(--lh-micro,14px)] transition-[opacity,font-variation-settings] duration-80',
+          compact ? 'w-[18px] h-[18px]' : 'w-5 h-5',
           isMulti && shape.bg,
           isMulti
             ? chipFilled
-              ? "bg-foreground text-background"
-              : "border border-border text-muted-foreground"
+              ? 'bg-foreground text-background'
+              : 'border border-border text-muted-foreground'
             : chipFilled
-            ? "text-foreground"
-            : "text-muted-foreground",
+              ? 'text-foreground'
+              : 'text-muted-foreground',
           // Only fade the chip when it shares a slot with the arrow — for
           // chip-on-left the arrow has its own slot on the right, so the
           // chip stays in place.
-          chipPosition === "right" && showArrow && "opacity-0"
+          chipPosition === 'right' && showArrow && 'opacity-0',
         )}
         style={{
-          fontVariationSettings: chipFilled
-            ? fontWeights.semibold
-            : fontWeights.normal,
+          fontVariationSettings: chipFilled ? fontWeights.semibold : fontWeights.normal,
         }}
       >
         {chipContent}
       </span>
-      {chipPosition === "right" && arrowOverlay}
+      {chipPosition === 'right' && arrowOverlay}
     </span>
   );
 
@@ -1756,12 +1650,11 @@ function Row({
   // showArrow is always false and there's nothing to anchor here). Mirrors
   // the chip slot's stacked-vs-inline shift so both end markers stay on
   // the same horizontal line at all times.
-  const rightArrowSlot = chipPosition === "left" && !isMulti && (
+  const rightArrowSlot = chipPosition === 'left' && !isMulti && (
     <span
       className={cn(
-        "shrink-0 w-7 h-7 relative inline-flex items-center justify-center",
-        topAlign &&
-          (bodyLayout === "stacked" ? "-mt-[1px]" : "-mt-[5px]")
+        'shrink-0 w-7 h-7 relative inline-flex items-center justify-center',
+        topAlign && (bodyLayout === 'stacked' ? '-mt-[1px]' : '-mt-[5px]'),
       )}
     >
       {arrowOverlay}
@@ -1772,9 +1665,9 @@ function Row({
     <div
       ref={rowRef}
       data-fluid-hover-index={index}
-      data-state={isSelected ? "checked" : "unchecked"}
+      data-state={isSelected ? 'checked' : 'unchecked'}
       role={role ?? undefined}
-      aria-checked={role === "radio" || role === "checkbox" ? !!aria["aria-checked"] : undefined}
+      aria-checked={role === 'radio' || role === 'checkbox' ? !!aria['aria-checked'] : undefined}
       aria-label={ariaLabel}
       tabIndex={tabIndex}
       onMouseDown={(e) => {
@@ -1785,7 +1678,7 @@ function Row({
         // instead. Skip genuinely interactive children — the Other row's
         // textarea must keep taking focus from clicks.
         const interactive = (e.target as HTMLElement).closest(
-          'button:not([tabindex="-1"]), a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          'button:not([tabindex="-1"]), a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
         );
         if (interactive && interactive !== e.currentTarget) return;
         e.preventDefault();
@@ -1802,57 +1695,51 @@ function Row({
       onClick={onClick}
       onKeyDown={onKeyDown}
       className={cn(
-        "relative z-10 flex cursor-pointer select-none outline-none",
+        'relative z-10 flex cursor-pointer select-none outline-none',
         // Tighter gap when the chip sits on the left — it reads as a
         // leading list marker, so coupling it close to the title looks
         // more intentional than the larger right-side gap (where the
         // chip is a trailing affordance instead).
-        chipPosition === "left" ? "gap-2" : "gap-3",
+        chipPosition === 'left' ? 'gap-2' : 'gap-3',
         // items-start when the body may exceed one line (stacked layouts,
         // multi-line textareas) so the chip tracks the first line instead
         // of sliding to the row's vertical centre. When topAlign is OFF,
         // items-center keeps a 1-line row visually centred — that's why
         // the Other row defers topAlign until its textarea actually wraps.
-        topAlign ? "items-start" : "items-center",
-        bodyLayout === "stacked"
+        topAlign ? 'items-start' : 'items-center',
+        bodyLayout === 'stacked'
           ? compact
-            ? "min-h-12 py-1.5"
-            : "min-h-14 py-2"
+            ? 'min-h-12 py-1.5'
+            : 'min-h-14 py-2'
           : compact
-            ? "min-h-8 py-1"
-            : "min-h-10 py-1.5",
+            ? 'min-h-8 py-1'
+            : 'min-h-10 py-1.5',
         // Mirror the horizontal padding based on chip side so the row
         // reads visually balanced in both orientations. For chip-on-left
         // + multi-select there's no right slot, so widen the right padding
         // to match the chip-on-right's 12px / 6px asymmetry mirrored.
-        chipPosition === "left"
-          ? isMulti
-            ? "pl-1.5 pr-3"
-            : "pl-1.5 pr-1.5"
-          : "pl-3 pr-1.5",
-        shape.item
+        chipPosition === 'left' ? (isMulti ? 'pl-1.5 pr-3' : 'pl-1.5 pr-1.5') : 'pl-3 pr-1.5',
+        shape.item,
       )}
     >
       {/* Selected background is drawn at the container level so contiguous
           selections can merge into a single block (see AskUserQuestions's
           selectedGroups / merged-bg block). Row keeps z-10 to sit above it. */}
 
-      {chipPosition === "left" && chipSlot}
+      {chipPosition === 'left' && chipSlot}
 
       {/* Body — fills row */}
       <span
         className={cn(
-          "min-w-0 flex-1",
+          'min-w-0 flex-1',
           sizeClasses.text,
-          bodyLayout === "stacked"
-            ? "flex flex-col gap-0.5"
-            : "inline-flex items-center gap-0"
+          bodyLayout === 'stacked' ? 'flex flex-col gap-0.5' : 'inline-flex items-center gap-0',
         )}
       >
         {children}
       </span>
 
-      {chipPosition === "right" ? chipSlot : rightArrowSlot}
+      {chipPosition === 'right' ? chipSlot : rightArrowSlot}
 
       {/* Hidden Base UI Radio/Checkbox primitive (see RowProps) — rendered
           last so it never disturbs the flex layout of chip/body/arrow. */}

@@ -1,19 +1,33 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { ArrowLeft, ArrowRight, RotateCw, Copy, Link, Mail, Share, Pencil, Trash2 } from "lucide-react";
-import { ContextMenu, ContextMenuContent, ContextMenuTrigger } from "@/registry/default/context-menu";
+import { useState } from 'react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  RotateCw,
+  Copy,
+  Link,
+  Mail,
+  Share,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuTrigger,
+} from '#registry/default/context-menu';
 import {
   DropdownSeparator,
   DropdownSub,
   DropdownSubContent,
   DropdownSubTrigger,
-} from "@/components/flavored/dropdown";
-import { MenuItem } from "@/registry/default/menu-item";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { apiReference } from "@/lib/docs/api/context-menu";
+} from '#components/flavored/dropdown';
+import { MenuItem } from '#registry/default/menu-item';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { apiReference } from '#lib/docs/api/context-menu';
 
 const basicCode = `import {
   ContextMenu, ContextMenuTrigger, ContextMenuContent,
@@ -77,7 +91,7 @@ const [open, setOpen] = useState(false);
   </ContextMenuContent>
 </ContextMenu>`;
 
-const FILES = ["Q3 report.pdf", "Roadmap.fig", "Notes.md"];
+const FILES = ['Q3 report.pdf', 'Roadmap.fig', 'Notes.md'];
 
 function BasicDemo() {
   const [last, setLast] = useState<string | null>(null);
@@ -88,21 +102,26 @@ function BasicDemo() {
           Right-click here
         </ContextMenuTrigger>
         <ContextMenuContent className="w-56">
-          <MenuItem index={0} icon={ArrowLeft} label="Back" onSelect={() => setLast("Back")} />
+          <MenuItem index={0} icon={ArrowLeft} label="Back" onSelect={() => setLast('Back')} />
           <MenuItem index={1} icon={ArrowRight} label="Forward" disabled />
-          <MenuItem index={2} icon={RotateCw} label="Reload" onSelect={() => setLast("Reload")} />
+          <MenuItem index={2} icon={RotateCw} label="Reload" onSelect={() => setLast('Reload')} />
           <DropdownSeparator />
           <DropdownSub>
             <DropdownSubTrigger index={3} icon={Share} label="Share" />
             <DropdownSubContent>
-              <MenuItem index={0} icon={Link} label="Copy link" onSelect={() => setLast("Copy link")} />
-              <MenuItem index={1} icon={Mail} label="Email" onSelect={() => setLast("Email")} />
+              <MenuItem
+                index={0}
+                icon={Link}
+                label="Copy link"
+                onSelect={() => setLast('Copy link')}
+              />
+              <MenuItem index={1} icon={Mail} label="Email" onSelect={() => setLast('Email')} />
             </DropdownSubContent>
           </DropdownSub>
         </ContextMenuContent>
       </ContextMenu>
       <p className="h-5 text-site-caption text-muted-foreground" aria-live="polite">
-        {last ? `Chose ${last}` : " "}
+        {last ? `Chose ${last}` : ' '}
       </p>
     </div>
   );
@@ -117,13 +136,13 @@ function FilterDemo() {
       <ContextMenu onOpenChange={setOpen}>
         <ContextMenuTrigger
           className="flex flex-col gap-1 rounded-lg border border-border p-1"
-          filter={(target) => !!target.closest("[data-file]")}
+          filter={(target) => !!target.closest('[data-file]')}
           onContextMenu={(e) => {
-            const row = (e.target as Element).closest<HTMLElement>("[data-file]");
+            const row = (e.target as Element).closest<HTMLElement>('[data-file]');
             setFile(row?.dataset.file ?? null);
           }}
           onKeyDown={(e) => {
-            const row = (e.target as Element).closest<HTMLElement>("[data-file]");
+            const row = (e.target as Element).closest<HTMLElement>('[data-file]');
             if (row) setFile(row.dataset.file ?? null);
           }}
         >
@@ -131,7 +150,7 @@ function FilterDemo() {
             <div
               key={name}
               data-file={name}
-              data-menu-open={open && file === name ? "" : undefined}
+              data-menu-open={open && file === name ? '' : undefined}
               tabIndex={0}
               className="select-none rounded-md px-2 py-1.5 text-site-body outline-none hover:bg-hover focus-visible:bg-hover data-[menu-open]:bg-hover"
             >
@@ -140,13 +159,28 @@ function FilterDemo() {
           ))}
         </ContextMenuTrigger>
         <ContextMenuContent className="w-48">
-          <MenuItem index={0} icon={Pencil} label="Rename" onSelect={() => setLast(`Rename ${file}`)} />
-          <MenuItem index={1} icon={Copy} label="Duplicate" onSelect={() => setLast(`Duplicate ${file}`)} />
-          <MenuItem index={2} icon={Trash2} label="Delete" onSelect={() => setLast(`Delete ${file}`)} />
+          <MenuItem
+            index={0}
+            icon={Pencil}
+            label="Rename"
+            onSelect={() => setLast(`Rename ${file}`)}
+          />
+          <MenuItem
+            index={1}
+            icon={Copy}
+            label="Duplicate"
+            onSelect={() => setLast(`Duplicate ${file}`)}
+          />
+          <MenuItem
+            index={2}
+            icon={Trash2}
+            label="Delete"
+            onSelect={() => setLast(`Delete ${file}`)}
+          />
         </ContextMenuContent>
       </ContextMenu>
       <p className="h-5 text-site-caption text-muted-foreground" aria-live="polite">
-        {last ?? " "}
+        {last ?? ' '}
       </p>
     </div>
   );

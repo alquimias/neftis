@@ -3,11 +3,7 @@
   "name": "accordion",
   "title": "Accordion",
   "description": "Collapsible accordion with animated height transitions, spring-animated chevron, and fluid hover in grouped mode. Built on Radix UI Accordion.",
-  "dependencies": [
-    "motion",
-    "@radix-ui/react-accordion",
-    "lucide-react"
-  ],
+  "dependencies": ["motion", "@radix-ui/react-accordion", "lucide-react"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -28,8 +24,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/accordion. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#accordion.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

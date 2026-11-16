@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Card,
   CardGroup,
@@ -13,14 +13,14 @@ import {
   CardImage,
   CardFeature,
   CardButton,
-} from "@/registry/default/card";
-import { useIcon } from "@/lib/icon-context";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import { CardPlayground, useCardArt } from "@/lib/docs/playgrounds/card";
-import { groupProps, cardProps, partProps, buttonProps } from "@/lib/docs/api/card";
+} from '#registry/default/card';
+import { useIcon } from '#lib/icon-context';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { CardPlayground, useCardArt } from '#lib/docs/playgrounds/card';
+import { groupProps, cardProps, partProps, buttonProps } from '#lib/docs/api/card';
 
 // ── Code snippets ────────────────────────────────────────
 
@@ -152,15 +152,31 @@ const [selected, setSelected] = useState(1);
 // Every example below composes the *same four feature cards* a different way —
 // swap the media, borders, columns, and actions to see how far one API stretches.
 function useFeatures() {
-  const Circle = useIcon("circle");
-  const Shield = useIcon("shield");
-  const Palette = useIcon("palette");
-  const Moon = useIcon("moon");
+  const Circle = useIcon('circle');
+  const Shield = useIcon('shield');
+  const Palette = useIcon('palette');
+  const Moon = useIcon('moon');
   return [
-    { icon: Circle, title: "Fluid motion", description: "Spring-tuned transitions calibrated across three tiers" },
-    { icon: Shield, title: "Accessible by default", description: "Focus-visible rings and ARIA roles in every part" },
-    { icon: Palette, title: "Yours to theme", description: "Swap radius, icons, and primitive at runtime" },
-    { icon: Moon, title: "Dark mode ready", description: "Tokens adapt to light and dark automatically" },
+    {
+      icon: Circle,
+      title: 'Fluid motion',
+      description: 'Spring-tuned transitions calibrated across three tiers',
+    },
+    {
+      icon: Shield,
+      title: 'Accessible by default',
+      description: 'Focus-visible rings and ARIA roles in every part',
+    },
+    {
+      icon: Palette,
+      title: 'Yours to theme',
+      description: 'Swap radius, icons, and primitive at runtime',
+    },
+    {
+      icon: Moon,
+      title: 'Dark mode ready',
+      description: 'Tokens adapt to light and dark automatically',
+    },
   ];
 }
 
@@ -267,8 +283,8 @@ function SeparatedDemo() {
 
 function PromoDemo() {
   const art = useCardArt();
-  const Paintbrush = useIcon("paintbrush");
-  const SquareLibrary = useIcon("square-library");
+  const Paintbrush = useIcon('paintbrush');
+  const SquareLibrary = useIcon('square-library');
   const [dismissed, setDismissed] = useState(false);
   if (dismissed) {
     return (

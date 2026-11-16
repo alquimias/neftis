@@ -9,11 +9,11 @@ does the other.
 
 ## Spring tokens (`registry/default/lib/springs.ts`)
 
-| Token | Duration | Bounce | Use for |
-|---|---|---|---|
-| `spring.fast` | 0.08s | 0 | Hover, focus rings, fades, tooltips, selection indicators, the accordion panel (it lands with its own chevron) |
-| `spring.moderate` | 0.16s | 0 | Critically damped — short travel / small expansion (dropdown & tab indicators, switch thumb) and panels/sheets that must land exactly (mobile drawer, merged selection backgrounds) |
-| `spring.slow` | 0.24s | 0.12 | Large surfaces: dialogs, side panels, stepped flows |
+| Token             | Duration | Bounce | Use for                                                                                                                                                                             |
+| ----------------- | -------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `spring.fast`     | 0.08s    | 0      | Hover, focus rings, fades, tooltips, selection indicators, the accordion panel (it lands with its own chevron)                                                                      |
+| `spring.moderate` | 0.16s    | 0      | Critically damped — short travel / small expansion (dropdown & tab indicators, switch thumb) and panels/sheets that must land exactly (mobile drawer, merged selection backgrounds) |
+| `spring.slow`     | 0.24s    | 0.12   | Large surfaces: dialogs, side panels, stepped flows                                                                                                                                 |
 
 **Rule:** the bigger the thing that moves, the slower the spring. No component
 invents its own duration — always import the token from `@/lib/springs` so
@@ -42,20 +42,20 @@ entrance in reverse. Pair each spring with its exit and never hand-write an exit
 `{ duration }` (that is exactly how exit timings drifted before they were
 tokenised).
 
-| Enter spring | Exit token | Exit value |
-|---|---|---|
-| `spring.fast` (0.08s) | `spring.fast.exit` | `{ duration: 0.06 }` |
+| Enter spring              | Exit token             | Exit value           |
+| ------------------------- | ---------------------- | -------------------- |
+| `spring.fast` (0.08s)     | `spring.fast.exit`     | `{ duration: 0.06 }` |
 | `spring.moderate` (0.16s) | `spring.moderate.exit` | `{ duration: 0.12 }` |
-| `spring.slow` (0.24s) | `spring.slow.exit` | `{ duration: 0.16 }` |
+| `spring.slow` (0.24s)     | `spring.slow.exit`     | `{ duration: 0.16 }` |
 
 ```tsx
-import { spring } from "@/lib/springs";
+import { spring } from '@/lib/springs';
 
 <motion.div
   animate={{ opacity: 1 }}
   exit={{ opacity: 0, transition: spring.fast.exit }}
   transition={spring.fast}
-/>
+/>;
 ```
 
 A couple of exits stay bespoke because they are not a simple timed fade: the
@@ -80,10 +80,10 @@ the button's `aria-live="polite"` region.
 
 Three properties move together, on two tweens from the `fast` tier:
 
-| Glyph | Opacity | Blur | Scale | Transition |
-|---|---|---|---|---|
-| Leaving | 1 → 0 | 0 → 4px | 1 → 0.6 | `spring.fast.exit` (0.06s), `ease: "easeIn"` |
-| Arriving | 0 → 1 | 4px → 0 | 0.6 → 1 | `spring.fast.duration` (0.08s), `ease: "easeOut"` |
+| Glyph    | Opacity | Blur    | Scale   | Transition                                        |
+| -------- | ------- | ------- | ------- | ------------------------------------------------- |
+| Leaving  | 1 → 0   | 0 → 4px | 1 → 0.6 | `spring.fast.exit` (0.06s), `ease: "easeIn"`      |
+| Arriving | 0 → 1   | 4px → 0 | 0.6 → 1 | `spring.fast.duration` (0.08s), `ease: "easeOut"` |
 
 The arriving glyph rides the tier's full duration and the leaving one its exit
 token, so an appear always outlasts a disappear. Both are tweens on purpose: a
@@ -92,13 +92,13 @@ would invert that order, and blur is a `filter` string a spring cannot drive
 anyway. Reduced motion swaps the glyphs in place.
 
 ```tsx
-import { motion } from "motion/react";
-import { spring } from "@/lib/springs";
+import { motion } from 'motion/react';
+import { spring } from '@/lib/springs';
 
-const SHOWN = { opacity: 1, scale: 1, filter: "blur(0px)" };
-const HIDDEN = { opacity: 0, scale: 0.6, filter: "blur(4px)" };
-const enter = { type: "tween", duration: spring.fast.duration, ease: "easeOut" };
-const leave = { type: "tween", ...spring.fast.exit, ease: "easeIn" };
+const SHOWN = { opacity: 1, scale: 1, filter: 'blur(0px)' };
+const HIDDEN = { opacity: 0, scale: 0.6, filter: 'blur(4px)' };
+const enter = { type: 'tween', duration: spring.fast.duration, ease: 'easeOut' };
+const leave = { type: 'tween', ...spring.fast.exit, ease: 'easeIn' };
 
 <span className="grid" style={{ width: size, height: size }}>
   <motion.span
@@ -117,7 +117,7 @@ const leave = { type: "tween", ...spring.fast.exit, ease: "easeIn" };
   >
     <CheckIcon size={size} />
   </motion.span>
-</span>
+</span>;
 ```
 
 Reference implementation: [`lib/docs/copy-prompt-button.tsx`](lib/docs/copy-prompt-button.tsx),
@@ -247,21 +247,21 @@ tab: past it, a new pill fades in.
 
 ## Where each speed shows up
 
-The Motion page renders a high-level map of which component *leads* with which
+The Motion page renders a high-level map of which component _leads_ with which
 spring, generated from the `REFERENCE_TIERS` array in `app/docs/motion/page.tsx`.
 Keep this table and that array identical.
 
-| fast (0.08s) | moderate (0.16s, no bounce) | slow (0.24s) |
-|---|---|---|
+| fast (0.08s)                                                                                                                                                                | moderate (0.16s, no bounce)                                                                                                                                                                         | slow (0.24s)                                                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
 | Fluid hover, Focus rings, Checkbox, Radio, Table rows, Card grid, Tooltip, Input copy, Slider, Select / Combobox / Color picker / Date picker open, Command menu, Accordion | Dropdown / Select highlight, Tabs indicator, Carousel dots, Calendar month, Banner dismiss, Switch thumb, Chat & message bubbles, Mobile drawer, Sidebar, Selection merge / split, Reveal (product) | Dialog, Ask-user questions, Thinking steps, Reveal (landing) |
 
-Most components *also* use `fast` for their hover and focus states on top of
+Most components _also_ use `fast` for their hover and focus states on top of
 their headline tier — the table lists each component once, by its headline
 motion.
 
 ## Reduced motion
 
-`prefers-reduced-motion` means *fewer and gentler*, not *none*. Keep opacity and
+`prefers-reduced-motion` means _fewer and gentler_, not _none_. Keep opacity and
 colour fades (they aid comprehension); drop the movement — transforms, position,
 scale, and layout shifts.
 
@@ -269,9 +269,7 @@ The whole system is switched on at the root in
 [`app/layout.tsx`](app/layout.tsx):
 
 ```tsx
-<MotionConfig reducedMotion="user">
-  {/* providers + app */}
-</MotionConfig>
+<MotionConfig reducedMotion="user">{/* providers + app */}</MotionConfig>
 ```
 
 `reducedMotion="user"` makes **every** Motion component honour the OS
@@ -285,13 +283,13 @@ wrapping their tree the same way — one line, like a `ThemeProvider`.
 
 ### Never stack two measured-height collapses
 
-A wrapper that pins its height to a ResizeObserver-measured value and *animates*
+A wrapper that pins its height to a ResizeObserver-measured value and _animates_
 to it — `SidebarGroup`, `SidebarMenuSub`, `AccordionContent` — must spring only
 when **it** toggles. When the measured height changes underneath it because a
 child collapsed, it has to snap (`{ duration: 0 }`).
 
 Spring on a re-measure and the outer wrapper chases a target that moves every
-frame: it lags its own child badly, then needs a full settle time *after* the
+frame: it lags its own child badly, then needs a full settle time _after_ the
 child has already landed, dragging everything below it along late. Measured on
 the sidebar playground before the guard, collapsing a sub-menu inside a
 collapsible group: the sub-menu finished in 218ms, the group's wrapper in 326ms,
@@ -305,7 +303,7 @@ one, cleared in `onAnimationComplete` — see `SidebarGroup` in `sidebar-core`.
 ### The catch — and why it pushes you toward `transform`
 
 `MotionConfig` only neutralises **transform / layout** animations. A component
-that moves by animating `top` / `left` / `width` / `height` directly is *not*
+that moves by animating `top` / `left` / `width` / `height` directly is _not_
 auto-reduced, and it's also off the GPU's fast path. Both problems have the same
 fix:
 
@@ -340,7 +338,7 @@ Do this as part of the [new-component checklist](component-documentation-guideli
    `REFERENCE_TIERS` array in `app/docs/motion/page.tsx`, and update the table above
    to match.
 5. **Move with `transform` / `opacity`, not `top` / `left` / `width` /
-   `height`.** That keeps it on the GPU *and* lets the root `MotionConfig`
+   `height`.** That keeps it on the GPU _and_ lets the root `MotionConfig`
    reduce it for free (see [Reduced motion](#reduced-motion)). If you must
    animate a layout property, gate the movement on `useReducedMotion()`.
 6. **Animated weight?** Follow the ghost-span pattern (link above).

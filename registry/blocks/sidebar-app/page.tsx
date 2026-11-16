@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidebar-app/app-sidebar";
-import { SidebarInsetTopbar } from "@/components/sidebar-app/inset-topbar";
+import { SidebarProvider, SidebarInset } from '#components/ui/sidebar';
+import { AppSidebar } from '#components/sidebar-app/app-sidebar';
+import { SidebarInsetTopbar } from '#components/sidebar-app/inset-topbar';
 
 // ---------------------------------------------------------------------------
 // Paste-and-run app shell. peek="hover" floats the collapsed rail back out
@@ -20,9 +20,7 @@ export default function Page() {
       <AppSidebar />
       <SidebarInset>
         <SidebarInsetTopbar />
-        <main className="flex flex-1 flex-col gap-4 p-4">
-          {/* your page */}
-        </main>
+        <main className="flex flex-1 flex-col gap-4 p-4">{/* your page */}</main>
       </SidebarInset>
     </SidebarProvider>
   );

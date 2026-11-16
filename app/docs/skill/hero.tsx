@@ -1,19 +1,35 @@
-"use client";
+'use client';
 
-import { DocSection } from "@/lib/docs/DocPage";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { cn } from "@/registry/default/lib/utils";
-import { MenuExample } from "./menu-example";
-import { CopyExample, PressExample, TabsExample } from "./examples";
+import { DocSection } from '#lib/docs/DocPage';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { cn } from '#registry/default/lib/utils';
+import { MenuExample } from './menu-example';
+import { CopyExample, PressExample, TabsExample } from './examples';
 
 /** One example per recipe the skill teaches: weight without reflow, fluid
  *  hover, the icon swap, and a press that never warps. */
 const EXAMPLES = [
-  { label: "Tabs", caption: "Active labels get heavier without shifting neighboring tabs.", Example: TabsExample },
-  { label: "Menu", caption: "One highlight follows your pointer smoothly between menu items.", Example: MenuExample },
-  { label: "Copy field", caption: "Hover and click anywhere on the text to copy.", Example: CopyExample },
-  { label: "Button press", caption: "Buttons scale down the same size no matter the width.", Example: PressExample },
+  {
+    label: 'Tabs',
+    caption: 'Active labels get heavier without shifting neighboring tabs.',
+    Example: TabsExample,
+  },
+  {
+    label: 'Menu',
+    caption: 'One highlight follows your pointer smoothly between menu items.',
+    Example: MenuExample,
+  },
+  {
+    label: 'Copy field',
+    caption: 'Hover and click anywhere on the text to copy.',
+    Example: CopyExample,
+  },
+  {
+    label: 'Button press',
+    caption: 'Buttons scale down the same size no matter the width.',
+    Example: PressExample,
+  },
 ];
 
 /** The Examples section: one subsection per example, every one looping
@@ -26,7 +42,7 @@ export function SkillExamples() {
         What your agent writes on its own, next to what it writes with the skill.
       </p>
       {EXAMPLES.map(({ label, caption, Example }, i) => (
-        <div key={label} className={cn("flex flex-col gap-4", i === 0 ? "mt-2" : "mt-6")}>
+        <div key={label} className={cn('flex flex-col gap-4', i === 0 ? 'mt-2' : 'mt-6')}>
           <h3
             className="-mb-2 text-site-subtitle text-foreground leading-none"
             style={{ fontVariationSettings: fontWeights.semibold }}

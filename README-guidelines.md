@@ -5,7 +5,6 @@ the front page for a visitor arriving from GitHub, not a second docs site.
 These rules bind the weekly README audit routine as much as a person editing
 the file.
 
-
 ## 4 jobs
 
 1. Say what this is in 10 seconds: name, tagline, one paragraph, links to
@@ -17,31 +16,29 @@ the file.
 A section earns its place only if a GitHub visitor needs it before reaching
 the site.
 
-
 ## Carries
 
-| Section | Source of truth | Guard |
-|---|---|---|
-| Wordmark: tracked caps between two rules, top of the file | this file | test: present, first thing in the file |
-| Tagline and intro | `app/page.tsx` tagline; the docs Introduction for the principles | routine |
-| Starter command and its settings words | `lib/starter/settings.ts`, `app/r/starter/[slug]/route.ts` | routine |
-| Install: `registry add @fluid`, `@fluid/<name>`, the URL form | shadcn CLI; the registry is listed in shadcn's directory | routine |
-| Flavor rule: the `base/` prefix | `lib/dual-flavor-slugs.mjs` | test: names resolve to `public/r` |
-| `--overwrite` note | `lib/docs/install-prompt.ts` | routine |
-| Inter with its `opsz` axis | `registry/default/lib/font-weight.ts`, `app/globals.css` | routine |
-| Copy prompt paragraph | `lib/docs/install-prompt.ts` | routine |
-| Agent skill paragraph | `skills/fluid-functionalism/SKILL.md` | routine |
-| Components table | `componentList` in `lib/docs/components.ts` | test: every slug linked |
-| Systems table | `systemList` in `lib/docs/components.ts`; `installSlug` on each system page | test |
-| Blocks table: top-level compositions only | `registry:block` items in `registry.json`, minus the parts of `sidebar-app` | test: names resolve |
-| Presets: the named playgrounds and the URL shapes | `lib/preset/*-options.ts`, `app/r/preset/[code]/route.ts` | routine |
-| Icons: the `IconProvider` example and the icon sets | `registry/default/lib/icon-context.tsx`, `registry/default/lib/icons-*.tsx` | routine |
-| Principles | the docs Introduction, `app/docs/page.tsx` | stable; changes only with the site |
-| Tech stack | `package.json` | routine, major versions only |
-| Development: scripts, the `public/r` commit rule, guide links | `package.json` scripts, `.github/workflows/ci.yml`, the root `*-guidelines.md` files | routine |
-| Contributing: issue first, then a link to CONTRIBUTING.md | `CONTRIBUTING.md` | stable |
-| License | `LICENSE` | stable |
-
+| Section                                                       | Source of truth                                                                      | Guard                                  |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------- |
+| Wordmark: tracked caps between two rules, top of the file     | this file                                                                            | test: present, first thing in the file |
+| Tagline and intro                                             | `app/page.tsx` tagline; the docs Introduction for the principles                     | routine                                |
+| Starter command and its settings words                        | `lib/starter/settings.ts`, `app/r/starter/[slug]/route.ts`                           | routine                                |
+| Install: `registry add @fluid`, `@fluid/<name>`, the URL form | shadcn CLI; the registry is listed in shadcn's directory                             | routine                                |
+| Flavor rule: the `base/` prefix                               | `lib/dual-flavor-slugs.mjs`                                                          | test: names resolve to `public/r`      |
+| `--overwrite` note                                            | `lib/docs/install-prompt.ts`                                                         | routine                                |
+| Inter with its `opsz` axis                                    | `registry/default/lib/font-weight.ts`, `app/globals.css`                             | routine                                |
+| Copy prompt paragraph                                         | `lib/docs/install-prompt.ts`                                                         | routine                                |
+| Agent skill paragraph                                         | `skills/fluid-functionalism/SKILL.md`                                                | routine                                |
+| Components table                                              | `componentList` in `lib/docs/components.ts`                                          | test: every slug linked                |
+| Systems table                                                 | `systemList` in `lib/docs/components.ts`; `installSlug` on each system page          | test                                   |
+| Blocks table: top-level compositions only                     | `registry:block` items in `registry.json`, minus the parts of `sidebar-app`          | test: names resolve                    |
+| Presets: the named playgrounds and the URL shapes             | `lib/preset/*-options.ts`, `app/r/preset/[code]/route.ts`                            | routine                                |
+| Icons: the `IconProvider` example and the icon sets           | `registry/default/lib/icon-context.tsx`, `registry/default/lib/icons-*.tsx`          | routine                                |
+| Principles                                                    | the docs Introduction, `app/docs/page.tsx`                                           | stable; changes only with the site     |
+| Tech stack                                                    | `package.json`                                                                       | routine, major versions only           |
+| Development: scripts, the `public/r` commit rule, guide links | `package.json` scripts, `.github/workflows/ci.yml`, the root `*-guidelines.md` files | routine                                |
+| Contributing: issue first, then a link to CONTRIBUTING.md     | `CONTRIBUTING.md`                                                                    | stable                                 |
+| License                                                       | `LICENSE`                                                                            | stable                                 |
 
 ## Defers
 
@@ -63,7 +60,6 @@ the site.
 - Badges: none for now. A single CI badge is the only one worth adding,
   and only once main is reliably green.
 
-
 ## Rules
 
 1. **The README documents main.** Prod may lag. The weekly audit reports
@@ -84,7 +80,6 @@ the site.
 8. **Contributions:** open an issue before a pull request. The README says
    so in 2 sentences and points at `CONTRIBUTING.md`, which holds the
    setup, the rules and the checks.
-
 
 ## Guards
 

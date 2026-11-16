@@ -1,11 +1,7 @@
-"use client";
+'use client';
 
-import {
-  forwardRef,
-  type ComponentProps,
-  type ComponentType,
-} from "react";
-import { useBase } from "@/lib/base-context";
+import { forwardRef, type ComponentProps, type ComponentType } from 'react';
+import { useBase } from '#lib/base-context';
 
 /**
  * Site-only flavor switching for the dual-flavor components that ship a
@@ -25,16 +21,14 @@ import { useBase } from "@/lib/base-context";
 export function flavored<C extends ComponentType<any>>(
   BaseImpl: C,
   RadixImpl: C,
-  displayName: string
+  displayName: string,
 ): C {
-  const Flavored = forwardRef<unknown, ComponentProps<C>>(
-    function FlavoredComponent(props, ref) {
-      const { base } = useBase();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const Impl: ComponentType<any> = base === "base" ? BaseImpl : RadixImpl;
-      return <Impl {...props} ref={ref} />;
-    }
-  );
+  const Flavored = forwardRef<unknown, ComponentProps<C>>(function FlavoredComponent(props, ref) {
+    const { base } = useBase();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const Impl: ComponentType<any> = base === 'base' ? BaseImpl : RadixImpl;
+    return <Impl {...props} ref={ref} />;
+  });
   Flavored.displayName = displayName;
   return Flavored as unknown as C;
 }

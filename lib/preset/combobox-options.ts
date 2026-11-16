@@ -17,10 +17,10 @@ import {
   decodePreset,
   type PresetField,
   type PresetComponentDef,
-} from "./codec";
-import { DEFAULT_GLOBALS, type PresetGlobals } from "./sidebar-options";
+} from './codec';
+import { DEFAULT_GLOBALS, type PresetGlobals } from './sidebar-options';
 
-export type ComboboxFieldVariant = "bordered" | "borderless";
+export type ComboboxFieldVariant = 'bordered' | 'borderless';
 
 export interface ComboboxPlayState {
   /** Any number of picks, shown as chips. */
@@ -43,7 +43,7 @@ export type ComboboxPreset = ComboboxPlayState & PresetGlobals;
 
 export const DEFAULT_COMBOBOX_STATE: ComboboxPlayState = {
   multiple: true,
-  variant: "bordered",
+  variant: 'bordered',
   icon: false,
   clearable: false,
   error: false,
@@ -60,46 +60,46 @@ export const DEFAULT_COMBOBOX_PRESET: ComboboxPreset = {
 // Value arrays are ordered DEFAULT-FIRST. The three site-global fields stay
 // LAST, mirroring SIDEBAR_PRESET_FIELDS exactly.
 const GLOBAL_FIELDS: readonly PresetField[] = [
-  { key: "flavor", values: ["radix", "base"], bits: 3 },
-  { key: "shape", values: ["rounded", "pill", "sharp"], bits: 2 },
-  { key: "size", values: ["default", "compact"], bits: 2 },
+  { key: 'flavor', values: ['radix', 'base'], bits: 3 },
+  { key: 'shape', values: ['rounded', 'pill', 'sharp'], bits: 2 },
+  { key: 'size', values: ['default', 'compact'], bits: 2 },
 ];
 
 /** Version "a": the table the first published codes used. Kept so those
  *  codes still decode (the new fields take their defaults). */
 const COMBOBOX_PRESET_FIELDS_A: readonly PresetField[] = [
-  { key: "multiple", values: [true, false], bits: 1 },
-  { key: "variant", values: ["bordered", "borderless"], bits: 2 },
-  { key: "icon", values: [false, true], bits: 1 },
-  { key: "clearable", values: [false, true], bits: 1 },
-  { key: "error", values: [false, true], bits: 1 },
-  { key: "disabled", values: [false, true], bits: 1 },
+  { key: 'multiple', values: [true, false], bits: 1 },
+  { key: 'variant', values: ['bordered', 'borderless'], bits: 2 },
+  { key: 'icon', values: [false, true], bits: 1 },
+  { key: 'clearable', values: [false, true], bits: 1 },
+  { key: 'error', values: [false, true], bits: 1 },
+  { key: 'disabled', values: [false, true], bits: 1 },
   ...GLOBAL_FIELDS,
 ];
 
 /** Version "b" (2026-09-08): creatable + hideSelected, ahead of the globals
  *  so the tail keeps the sidebar's layout. A layout change, hence the bump. */
 export const COMBOBOX_PRESET_FIELDS: readonly PresetField[] = [
-  { key: "multiple", values: [true, false], bits: 1 },
-  { key: "variant", values: ["bordered", "borderless"], bits: 2 },
-  { key: "icon", values: [false, true], bits: 1 },
-  { key: "clearable", values: [false, true], bits: 1 },
-  { key: "error", values: [false, true], bits: 1 },
-  { key: "disabled", values: [false, true], bits: 1 },
-  { key: "creatable", values: [false, true], bits: 1 },
-  { key: "hideSelected", values: [false, true], bits: 1 },
+  { key: 'multiple', values: [true, false], bits: 1 },
+  { key: 'variant', values: ['bordered', 'borderless'], bits: 2 },
+  { key: 'icon', values: [false, true], bits: 1 },
+  { key: 'clearable', values: [false, true], bits: 1 },
+  { key: 'error', values: [false, true], bits: 1 },
+  { key: 'disabled', values: [false, true], bits: 1 },
+  { key: 'creatable', values: [false, true], bits: 1 },
+  { key: 'hideSelected', values: [false, true], bits: 1 },
   ...GLOBAL_FIELDS,
 ];
 
 // ── Registration (tag "b") ──────────────────────────────────────────────────
 
 export const COMBOBOX_PRESET_DEF: PresetComponentDef = {
-  tag: "b",
-  label: "Combobox",
-  docsPath: "/docs/combobox",
+  tag: 'b',
+  label: 'Combobox',
+  docsPath: '/docs/combobox',
   versions: { a: COMBOBOX_PRESET_FIELDS_A, b: COMBOBOX_PRESET_FIELDS },
-  currentVersion: "b",
-  defaults: DEFAULT_COMBOBOX_PRESET as unknown as PresetComponentDef["defaults"],
+  currentVersion: 'b',
+  defaults: DEFAULT_COMBOBOX_PRESET as unknown as PresetComponentDef['defaults'],
   installable: true,
 };
 registerPresetComponent(COMBOBOX_PRESET_DEF);
@@ -109,13 +109,12 @@ export function encodeComboboxPreset(config: Partial<ComboboxPreset>): string {
 }
 
 export type ComboboxDecodeResult =
-  | { ok: true; preset: ComboboxPreset; version: string }
-  | { ok: false; error: string };
+  { ok: true; preset: ComboboxPreset; version: string } | { ok: false; error: string };
 
 export function decodeComboboxPreset(code: string): ComboboxDecodeResult {
   const res = decodePreset(code);
   if (!res.ok) return res;
-  if (res.def.tag !== "b") {
+  if (res.def.tag !== 'b') {
     return { ok: false, error: `Not a combobox preset (tag "${res.def.tag}").` };
   }
   return {
@@ -136,40 +135,40 @@ export function deriveCombobox(p: ComboboxPlayState) {
 
 /** How a created row becomes an item: the typed label, slugged as its value. */
 export function comboboxItemFromQuery(query: string) {
-  return { value: query.toLowerCase().replace(/\s+/g, "-"), label: query };
+  return { value: query.toLowerCase().replace(/\s+/g, '-'), label: query };
 }
 
 // ── Demo content, shared by the playground preview and the generator ────────
 
 /** The library's own components: long enough for the list to scroll. */
 export const COMBOBOX_COMPONENTS = [
-  { value: "accordion", label: "Accordion" },
-  { value: "badge", label: "Badge" },
-  { value: "button", label: "Button" },
-  { value: "card", label: "Card" },
-  { value: "checkbox-group", label: "CheckboxGroup" },
-  { value: "color-picker", label: "ColorPicker" },
-  { value: "combobox", label: "Combobox" },
-  { value: "dialog", label: "Dialog" },
-  { value: "dropdown", label: "Dropdown" },
-  { value: "input-group", label: "InputGroup" },
-  { value: "radio-group", label: "RadioGroup" },
-  { value: "select", label: "Select" },
-  { value: "sidebar", label: "Sidebar" },
-  { value: "slider", label: "Slider" },
-  { value: "switch", label: "Switch" },
-  { value: "table", label: "Table" },
-  { value: "tabs", label: "Tabs" },
+  { value: 'accordion', label: 'Accordion' },
+  { value: 'badge', label: 'Badge' },
+  { value: 'button', label: 'Button' },
+  { value: 'card', label: 'Card' },
+  { value: 'checkbox-group', label: 'CheckboxGroup' },
+  { value: 'color-picker', label: 'ColorPicker' },
+  { value: 'combobox', label: 'Combobox' },
+  { value: 'dialog', label: 'Dialog' },
+  { value: 'dropdown', label: 'Dropdown' },
+  { value: 'input-group', label: 'InputGroup' },
+  { value: 'radio-group', label: 'RadioGroup' },
+  { value: 'select', label: 'Select' },
+  { value: 'sidebar', label: 'Sidebar' },
+  { value: 'slider', label: 'Slider' },
+  { value: 'switch', label: 'Switch' },
+  { value: 'table', label: 'Table' },
+  { value: 'tabs', label: 'Tabs' },
 ] as const;
 
 /** The two chips a multiple combobox starts with: the home bento tile, the
  *  docs playground, and the /demo pen all open on these. */
-export const COMBOBOX_DEFAULT_VALUES = ["button", "combobox"];
+export const COMBOBOX_DEFAULT_VALUES = ['button', 'combobox'];
 
 export const COMBOBOX_COPY = {
-  placeholder: "Pick a component…",
-  placeholderMultiple: "Add components…",
-  empty: "No component found.",
-  allSelected: "Every component is added.",
-  error: "Pick one to continue.",
+  placeholder: 'Pick a component…',
+  placeholderMultiple: 'Add components…',
+  empty: 'No component found.',
+  allSelected: 'Every component is added.',
+  error: 'Pick one to continue.',
 } as const;

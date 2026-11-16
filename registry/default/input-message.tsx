@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   forwardRef,
@@ -15,26 +15,25 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type TextareaHTMLAttributes,
-} from "react";
-import { AnimatePresence, motion, Reorder, useReducedMotion } from "motion/react";
-import { cn } from "@/lib/utils";
-import { KeyCap } from "@/lib/key-cap";
-import { fontWeights } from "@/lib/font-weight";
-import { spring } from "@/lib/springs";
-import { omit } from "@/lib/omit";
-import { nestedRadius, useShape } from "@/lib/shape-context";
-import { SizeProvider, useSize, fieldTouchClass, type SizeVariant } from "@/lib/size-context";
-import { useIcons } from "@/lib/icon-context";
-import { surfaceClasses } from "@/lib/surface-classes";
-import { SurfaceProvider } from "@/lib/surface-context";
-import { useFluidHover, useRegisterFluidHoverItem } from "@/hooks/use-fluid-hover";
-import { FileThumbnail } from "@/registry/default/file-thumbnail";
-import { Button } from "@/registry/radix/button";
-import { Tooltip, TooltipGroup } from "@/registry/radix/tooltip";
-import { FluidHoverHighlight } from "@/components/ui/fluid-hover-highlight";
+} from 'react';
+import { AnimatePresence, motion, Reorder, useReducedMotion } from 'motion/react';
+import { cn } from '#lib/utils';
+import { KeyCap } from '#lib/key-cap';
+import { fontWeights } from '#lib/font-weight';
+import { spring } from '#lib/springs';
+import { omit } from '#lib/omit';
+import { nestedRadius, useShape } from '#lib/shape-context';
+import { SizeProvider, useSize, fieldTouchClass, type SizeVariant } from '#lib/size-context';
+import { useIcons } from '#lib/icon-context';
+import { surfaceClasses } from '#lib/surface-classes';
+import { SurfaceProvider } from '#lib/surface-context';
+import { useFluidHover, useRegisterFluidHoverItem } from '#hooks/use-fluid-hover';
+import { FileThumbnail } from '#registry/default/file-thumbnail';
+import { Button } from '#registry/radix/button';
+import { Tooltip, TooltipGroup } from '#registry/radix/tooltip';
+import { FluidHoverHighlight } from '#components/ui/fluid-hover-highlight';
 
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 /**
  * Measured layout height for one of the composer's collapsible regions
@@ -79,16 +78,16 @@ function useRegionHeight() {
 function useIsTouch() {
   const [isTouch, setIsTouch] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia("(hover: none)");
+    const mq = window.matchMedia('(hover: none)');
     const update = () => setIsTouch(mq.matches);
     update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
   }, []);
   return isTouch;
 }
 
-const DEFAULT_ACCEPT = "image/png,image/jpeg,application/pdf";
+const DEFAULT_ACCEPT = 'image/png,image/jpeg,application/pdf';
 
 // Queue item keys. A counter with a time prefix is unique within a page and,
 // unlike the Web Crypto UUID helper, also works on plain-HTTP origins.
@@ -104,9 +103,7 @@ interface InputMessageSlotContext {
   files: File[];
 }
 
-type InputMessageSlot =
-  | ReactNode
-  | ((ctx: InputMessageSlotContext) => ReactNode);
+type InputMessageSlot = ReactNode | ((ctx: InputMessageSlotContext) => ReactNode);
 
 /** Renders a slot. A function slot is called here, in its own component,
  *  so InputMessage's render never hands consumer code the context's
@@ -118,7 +115,7 @@ function InputMessageSlotContent({
   slot: InputMessageSlot;
   ctx: InputMessageSlotContext;
 }) {
-  return <>{typeof slot === "function" ? slot(ctx) : slot}</>;
+  return <>{typeof slot === 'function' ? slot(ctx) : slot}</>;
 }
 
 /** A message held in the queue while the assistant is responding. Carries the
@@ -130,8 +127,7 @@ interface QueuedMessage {
   files: File[];
 }
 
-interface InputMessageProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
+interface InputMessageProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   /** Step on the size ladder. Wins over the surrounding SizeProvider and
    *  propagates to the composer's rows, buttons and queued messages. */
   size?: SizeVariant;
@@ -144,11 +140,7 @@ interface InputMessageProps
    *  and — for auto-dispatched queue items — `meta.queuedId` (the originating
    *  QueuedMessage id), so a consumer can e.g. morph the queued item into the
    *  sent message via a shared-layout (`layoutId`) transition. */
-  onSend?: (
-    value: string,
-    files: File[],
-    meta?: { queuedId?: string }
-  ) => void;
+  onSend?: (value: string, files: File[], meta?: { queuedId?: string }) => void;
   /** Placeholder text shown when the value is empty. */
   placeholder?: string;
   /** Content rendered in the bottom-left action area. Can be a function that
@@ -181,13 +173,13 @@ interface InputMessageProps
   /** Extra props forwarded to the underlying textarea. */
   textareaProps?: Omit<
     TextareaHTMLAttributes<HTMLTextAreaElement>,
-    "value" | "onChange" | "onKeyDown" | "disabled" | "placeholder"
+    'value' | 'onChange' | 'onKeyDown' | 'disabled' | 'placeholder'
   >;
   /** Assistant response state. When `"streaming"`, the send button becomes a
    *  Stop control (empty draft) or a Queue action (non-empty draft); on the
    *  `streaming → idle` edge the next queued message auto-dispatches via `onSend`.
    *  Leave undefined to keep the legacy send-immediately behavior. */
-  status?: "idle" | "streaming";
+  status?: 'idle' | 'streaming';
   /** Fired when the Stop control is pressed (streaming, empty draft). The
    *  consumer should halt the current response and flip `status` to `"idle"`,
    *  which immediately dispatches the next queued message. */
@@ -263,16 +255,16 @@ function FilePreviewTile({ file, onRemove, size, isTouch }: FilePreviewTileProps
           // over arbitrary image/PDF content, so it sits at a fixed contrast
           // instead of flipping with the surrounding surface.
           className={cn(
-            "absolute top-1 right-1 w-5 h-5 rounded-full bg-neutral-900 text-white transition-opacity duration-80 flex items-center justify-center cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]",
+            'absolute top-1 right-1 w-5 h-5 rounded-full bg-neutral-900 text-white transition-opacity duration-80 flex items-center justify-center cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
             // The 20px badge takes taps across a 32px square (a pseudo-element
             // that stays inside the tile's corner).
-            "before:absolute before:-inset-1.5",
+            'before:absolute before:-inset-1.5',
             // Hover devices reveal × on tile-hover; touch has no hover, so keep
             // it persistently visible there. While hidden it must not take
             // taps meant for the thumbnail.
             isTouch
-              ? "opacity-100"
-              : "pointer-events-none opacity-0 group-hover/tile:pointer-events-auto group-hover/tile:opacity-100 focus-visible:pointer-events-auto focus-visible:opacity-100"
+              ? 'opacity-100'
+              : 'pointer-events-none opacity-0 group-hover/tile:pointer-events-auto group-hover/tile:opacity-100 focus-visible:pointer-events-auto focus-visible:opacity-100',
           )}
         >
           <XIcon size={12} strokeWidth={2.5} />
@@ -311,10 +303,9 @@ function QueuedRow({
   const icons = useIcons();
   const XIcon = icons.x;
   const ImageIcon = icons.image;
-  const compactStep = useSize().variant === "compact";
+  const compactStep = useSize().variant === 'compact';
   const fileCount = item.files.length;
-  const label =
-    item.text || `${fileCount} attachment${fileCount === 1 ? "" : "s"}`;
+  const label = item.text || `${fileCount} attachment${fileCount === 1 ? '' : 's'}`;
 
   return (
     <Reorder.Item
@@ -325,36 +316,34 @@ function QueuedRow({
       initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={
-        reduceMotion
-          ? { opacity: 0 }
-          : { opacity: 0, scale: 0.97, transition: spring.fast.exit }
+        reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.97, transition: spring.fast.exit }
       }
       transition={spring.fast}
       aria-label={`Queued message ${index + 1} of ${total}: ${label}`}
       tabIndex={0}
       onDoubleClick={() => onEdit(item)}
       onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === "F2") {
+        if (e.key === 'Enter' || e.key === 'F2') {
           e.preventDefault();
           onEdit(item);
-        } else if (e.key === "Delete" || e.key === "Backspace") {
+        } else if (e.key === 'Delete' || e.key === 'Backspace') {
           e.preventDefault();
           onRemove(item);
-        } else if (e.altKey && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+        } else if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
           e.preventDefault();
-          onMove(item, e.key === "ArrowUp" ? -1 : 1);
+          onMove(item, e.key === 'ArrowUp' ? -1 : 1);
         }
       }}
       className={cn(
         // Fixed height (was py-1.5 around a 19.5px line box ≈ 31.5px) so the
         // text-box trim on the label doesn't shrink the row.
-        "group/qrow flex items-center gap-2 rounded-lg bg-muted",
+        'group/qrow flex items-center gap-2 rounded-lg bg-muted',
         compactStep
-          ? "h-7 px-2 text-[length:var(--fs-body-compact,12px)] leading-[var(--lh-body-compact,18px)]"
-          : "h-8 px-2.5 text-[length:var(--fs-body,13px)] leading-[var(--lh-body,20px)]",
-        "text-foreground select-none outline-none",
-        "cursor-grab active:cursor-grabbing",
-        "focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]"
+          ? 'h-7 px-2 text-[length:var(--fs-body-compact,12px)] leading-[var(--lh-body-compact,18px)]'
+          : 'h-8 px-2.5 text-[length:var(--fs-body,13px)] leading-[var(--lh-body,20px)]',
+        'text-foreground select-none outline-none',
+        'cursor-grab active:cursor-grabbing',
+        'focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
       )}
       style={{ fontVariationSettings: fontWeights.normal }}
     >
@@ -366,7 +355,9 @@ function QueuedRow({
       )}
       {/* py-1/-my-1 keeps truncate's overflow:hidden from clipping
           ascenders/descenders outside the trimmed box. */}
-      <span className="min-w-0 flex-1 truncate [text-box:trim-both_cap_alphabetic] py-1 -my-1">{label}</span>
+      <span className="min-w-0 flex-1 truncate [text-box:trim-both_cap_alphabetic] py-1 -my-1">
+        {label}
+      </span>
       <Tooltip content="Remove" side="top">
         <button
           type="button"
@@ -379,17 +370,17 @@ function QueuedRow({
           }}
           aria-label={`Remove queued message: ${label}`}
           className={cn(
-            "relative shrink-0 flex h-5 w-5 items-center justify-center rounded-full",
-            "text-muted-foreground hover:text-foreground hover:bg-hover",
+            'relative shrink-0 flex h-5 w-5 items-center justify-center rounded-full',
+            'text-muted-foreground hover:text-foreground hover:bg-hover',
             // A 32px target that stays inside the row's padding.
-            "before:absolute before:-inset-1.5",
+            'before:absolute before:-inset-1.5',
             // Hover devices reveal × on row-hover; touch has no hover, so keep
             // it persistently visible there.
             isTouch
-              ? "opacity-100"
-              : "opacity-0 group-hover/qrow:opacity-100 focus-visible:opacity-100",
-            "transition-opacity duration-80 cursor-pointer outline-none",
-            "focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]"
+              ? 'opacity-100'
+              : 'opacity-0 group-hover/qrow:opacity-100 focus-visible:opacity-100',
+            'transition-opacity duration-80 cursor-pointer outline-none',
+            'focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
           )}
         >
           <XIcon size={13} strokeWidth={2.5} />
@@ -427,9 +418,9 @@ function SuggestionRow({
   onSelect,
 }: SuggestionRowProps) {
   const icons = useIcons();
-  const EnterIcon = icons["corner-down-left"];
-  const ArrowDownIcon = icons["arrow-down"];
-  const compactStep = useSize().variant === "compact";
+  const EnterIcon = icons['corner-down-left'];
+  const ArrowDownIcon = icons['arrow-down'];
+  const compactStep = useSize().variant === 'compact';
   const ref = useRef<HTMLDivElement>(null);
 
   useRegisterFluidHoverItem(registerItem, index, ref);
@@ -442,13 +433,15 @@ function SuggestionRow({
       aria-selected={active}
       onClick={onSelect}
       className={cn(
-        "relative flex cursor-pointer items-center gap-2",
+        'relative flex cursor-pointer items-center gap-2',
         // Text size mirrors the composer's textarea/placeholder (the rows
         // read as prompt candidates, not metadata); heights follow the
         // QueuedRow step ladder.
-        compactStep ? "h-7 px-2 text-[length:var(--fs-subtitle-compact,13px)] leading-[var(--lh-subtitle-compact,18px)]" : "h-8 px-2.5 text-[length:var(--fs-subtitle,14px)] leading-[var(--lh-subtitle,20px)]",
-        "text-muted-foreground transition-colors duration-80",
-        active && "text-foreground"
+        compactStep
+          ? 'h-7 px-2 text-[length:var(--fs-subtitle-compact,13px)] leading-[var(--lh-subtitle-compact,18px)]'
+          : 'h-8 px-2.5 text-[length:var(--fs-subtitle,14px)] leading-[var(--lh-subtitle,20px)]',
+        'text-muted-foreground transition-colors duration-80',
+        active && 'text-foreground',
       )}
       style={{ fontVariationSettings: fontWeights.normal }}
     >
@@ -469,8 +462,8 @@ function SuggestionRow({
         <EnterIcon
           size={13}
           className={cn(
-            "shrink-0 transition-opacity duration-80",
-            active ? "opacity-100" : "opacity-0"
+            'shrink-0 transition-opacity duration-80',
+            active ? 'opacity-100' : 'opacity-0',
           )}
         />
       )}
@@ -487,14 +480,14 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
       value,
       onValueChange,
       onSend,
-      placeholder = "Ask me anything…",
+      placeholder = 'Ask me anything…',
       leftSlot,
       rightSlot,
       disabled,
       minRows = 1,
       maxRows = 8,
       clickToFocus = true,
-      sendLabel = "Send",
+      sendLabel = 'Send',
       files,
       onFilesChange,
       accept = DEFAULT_ACCEPT,
@@ -513,12 +506,12 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
       style,
       ...props
     },
-    ref
+    ref,
   ) => {
     const shape = useShape();
-    const compactStep = useSize(size).variant === "compact";
+    const compactStep = useSize(size).variant === 'compact';
     const icons = useIcons();
-    const ArrowUpIcon = icons["arrow-up"];
+    const ArrowUpIcon = icons['arrow-up'];
     const reduceMotion = useReducedMotion() ?? false;
     const isTouch = useIsTouch();
 
@@ -532,11 +525,11 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
     // clobber the composed handlers below, and className so it merges with
     // the field's own classes instead of replacing them.
     const {
-      "aria-describedby": textareaDescribedBy,
+      'aria-describedby': textareaDescribedBy,
       className: textareaClassName,
       ...textareaRest
     } = textareaProps ?? {};
-    const restTextareaProps = omit(textareaRest, ["onFocus", "onBlur"]);
+    const restTextareaProps = omit(textareaRest, ['onFocus', 'onBlur']);
 
     const filesArr = useMemo(() => files ?? [], [files]);
     const supportsFiles = onFilesChange !== undefined;
@@ -552,14 +545,14 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
       queueRef.current = queueArr;
     });
     const supportsQueue = status !== undefined && onQueueChange !== undefined;
-    const streaming = status === "streaming";
-    const [liveMsg, setLiveMsg] = useState("");
+    const streaming = status === 'streaming';
+    const [liveMsg, setLiveMsg] = useState('');
 
     // Sent-message history navigation (readline-style). `historyIndex` is null
     // when not browsing; `draftBeforeHistory` stashes the in-progress text so
     // ArrowDown past the newest entry restores it.
     const [historyIndex, setHistoryIndex] = useState<number | null>(null);
-    const draftBeforeHistory = useRef("");
+    const draftBeforeHistory = useRef('');
 
     // Suggested prompts. The list only shows while the draft is empty, and
     // `activeSuggestion` is the highlighted row — focus never leaves the
@@ -568,7 +561,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
     // keyboard drive the same sliding bg-hover overlay (Dropdown's pattern):
     // mouse movement resolves the nearest row, ↓/↑ set the index directly.
     const suggestionsArr = useMemo(() => suggestions ?? [], [suggestions]);
-    const suggestionsOpen = suggestionsArr.length > 0 && value === "";
+    const suggestionsOpen = suggestionsArr.length > 0 && value === '';
     const suggestionListRef = useRef<HTMLDivElement>(null);
     // Pixel heights for the three collapsible regions (see useRegionHeight).
     const [filesRegionRef, filesRegionHeight] = useRegionHeight();
@@ -590,8 +583,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
     }, [suggestionsOpen, remeasure]);
     const suggestionListId = useId();
     const ghostHintId = useId();
-    const showGhost =
-      !!placeholderSuggestion && value === "" && !(dragOver && supportsFiles);
+    const showGhost = !!placeholderSuggestion && value === '' && !(dragOver && supportsFiles);
 
     useEffect(() => {
       if (!suggestionsOpen) setActiveSuggestion(null);
@@ -611,7 +603,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
           el.setSelectionRange(el.value.length, el.value.length);
         });
       },
-      [onValueChange, setActiveSuggestion]
+      [onValueChange, setActiveSuggestion],
     );
 
     // Parsed line-height, cached per textarea element — getComputedStyle on
@@ -622,7 +614,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
     const resizeTextarea = useCallback(() => {
       const el = textareaRef.current;
       if (!el) return;
-      el.style.height = "auto";
+      el.style.height = 'auto';
       let cache = lineHeightCache.current;
       if (!cache || cache.el !== el) {
         const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
@@ -633,7 +625,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
       const max = cache.value * maxRows;
       const next = Math.min(Math.max(el.scrollHeight, min), max);
       el.style.height = `${next}px`;
-      el.style.overflowY = el.scrollHeight > max ? "auto" : "hidden";
+      el.style.overflowY = el.scrollHeight > max ? 'auto' : 'hidden';
     }, [minRows, maxRows]);
 
     useIsoLayoutEffect(() => {
@@ -647,7 +639,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
     // doesn't loop on its own height writes.
     useEffect(() => {
       const el = textareaRef.current;
-      if (!el || typeof ResizeObserver === "undefined") return;
+      if (!el || typeof ResizeObserver === 'undefined') return;
       let lastWidth = el.offsetWidth;
       const ro = new ResizeObserver(() => {
         const width = el.offsetWidth;
@@ -669,7 +661,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
     // `shadow-*` utility, which mangles multi-layer arbitrary values) with the
     // precedence drag > focus > hover; when none are active, the className's
     // `shadow-surface-2` supplies the resting edge.
-    const EDGE_DROP = "0 1px 1px -0.5px var(--shadow-color)";
+    const EDGE_DROP = '0 1px 1px -0.5px var(--shadow-color)';
     const edgeShadow = dragOver
       ? `0 0 0 1px var(--fluid-accent, #6B97FF), ${EDGE_DROP}`
       : focusVisible
@@ -691,7 +683,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
           files: filesArr,
         };
         onQueueChange?.([...queueRef.current, item]);
-        onValueChange("");
+        onValueChange('');
         if (supportsFiles) onFilesChange?.([]);
         requestAnimationFrame(() => textareaRef.current?.focus());
         return;
@@ -721,13 +713,11 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
       const prev = prevStatusRef.current;
       prevStatusRef.current = status;
       if (!supportsQueue) return;
-      if (prev === "streaming" && status === "idle" && queueArr.length > 0) {
+      if (prev === 'streaming' && status === 'idle' && queueArr.length > 0) {
         const [next, ...rest] = queueArr;
         onQueueChange?.(rest);
         onSend?.(next.text, next.files, { queuedId: next.id });
-        setLiveMsg(
-          `Message sent.${rest.length ? ` ${rest.length} still queued.` : ""}`
-        );
+        setLiveMsg(`Message sent.${rest.length ? ` ${rest.length} still queued.` : ''}`);
       }
     }, [status, supportsQueue, queueArr, onQueueChange, onSend]);
 
@@ -740,9 +730,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         setHistoryIndex(null);
         onValueChange(item.text);
         if (supportsFiles) {
-          onFilesChange?.(
-            maxFiles != null ? item.files.slice(0, maxFiles) : item.files
-          );
+          onFilesChange?.(maxFiles != null ? item.files.slice(0, maxFiles) : item.files);
         }
         onQueueChange?.(queueRef.current.filter((q) => q.id !== item.id));
         requestAnimationFrame(() => {
@@ -752,20 +740,12 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
           el.setSelectionRange(el.value.length, el.value.length);
         });
       },
-      [
-        supportsQueue,
-        supportsFiles,
-        onValueChange,
-        onFilesChange,
-        maxFiles,
-        onQueueChange,
-      ]
+      [supportsQueue, supportsFiles, onValueChange, onFilesChange, maxFiles, onQueueChange],
     );
 
     const removeQueued = useCallback(
-      (item: QueuedMessage) =>
-        onQueueChange?.(queueRef.current.filter((q) => q.id !== item.id)),
-      [onQueueChange]
+      (item: QueuedMessage) => onQueueChange?.(queueRef.current.filter((q) => q.id !== item.id)),
+      [onQueueChange],
     );
 
     const moveQueued = useCallback(
@@ -778,25 +758,21 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         [next[i], next[j]] = [next[j], next[i]];
         onQueueChange?.(next);
       },
-      [onQueueChange]
+      [onQueueChange],
     );
 
     // Send button morph: Stop (streaming + empty draft) → Queue (streaming +
     // draft) → Send (idle). Send and Queue share the arrow-up glyph; only the
     // Stop⇄arrow swap animates.
-    const buttonMode: "send" | "queue" | "stop" = !streaming
-      ? "send"
+    const buttonMode: 'send' | 'queue' | 'stop' = !streaming
+      ? 'send'
       : canSend && supportsQueue
-        ? "queue"
+        ? 'queue'
         : onStop
-          ? "stop"
-          : "send";
+          ? 'stop'
+          : 'send';
     const buttonLabel =
-      buttonMode === "stop"
-        ? "Stop"
-        : buttonMode === "queue"
-          ? "Queue message"
-          : sendLabel;
+      buttonMode === 'stop' ? 'Stop' : buttonMode === 'queue' ? 'Queue message' : sendLabel;
 
     const setCaretEnd = useCallback(() => {
       requestAnimationFrame(() => {
@@ -814,34 +790,26 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         // textarea behavior), Enter fills the highlighted prompt, Escape
         // drops the highlight. With no highlight, ArrowUp still falls through
         // to history recall below.
-        if (
-          suggestionsOpen &&
-          !e.shiftKey &&
-          !e.altKey &&
-          !e.metaKey &&
-          !e.ctrlKey
-        ) {
-          if (e.key === "ArrowDown") {
+        if (suggestionsOpen && !e.shiftKey && !e.altKey && !e.metaKey && !e.ctrlKey) {
+          if (e.key === 'ArrowDown') {
             e.preventDefault();
             setActiveSuggestion((prev) =>
-              prev == null ? 0 : Math.min(prev + 1, suggestionsArr.length - 1)
+              prev == null ? 0 : Math.min(prev + 1, suggestionsArr.length - 1),
             );
             return;
           }
           if (activeSuggestion != null) {
-            if (e.key === "ArrowUp") {
+            if (e.key === 'ArrowUp') {
               e.preventDefault();
-              setActiveSuggestion(
-                activeSuggestion === 0 ? null : activeSuggestion - 1
-              );
+              setActiveSuggestion(activeSuggestion === 0 ? null : activeSuggestion - 1);
               return;
             }
-            if (e.key === "Enter") {
+            if (e.key === 'Enter') {
               e.preventDefault();
               acceptSuggestion(suggestionsArr[activeSuggestion]);
               return;
             }
-            if (e.key === "Escape") {
+            if (e.key === 'Escape') {
               e.preventDefault();
               setActiveSuggestion(null);
               return;
@@ -852,12 +820,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         // Tab fills the suggested placeholder prompt into the empty composer
         // (Shift+Tab still moves focus backward, and once the draft is
         // non-empty Tab resumes normal focus traversal).
-        if (
-          e.key === "Tab" &&
-          !e.shiftKey &&
-          placeholderSuggestion &&
-          value === ""
-        ) {
+        if (e.key === 'Tab' && !e.shiftKey && placeholderSuggestion && value === '') {
           e.preventDefault();
           acceptSuggestion(placeholderSuggestion);
           return;
@@ -868,7 +831,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         // multi-line editing still works normally.
         if (
           history.length > 0 &&
-          (e.key === "ArrowUp" || e.key === "ArrowDown") &&
+          (e.key === 'ArrowUp' || e.key === 'ArrowDown') &&
           !e.shiftKey &&
           !e.altKey &&
           !e.metaKey &&
@@ -877,7 +840,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
           const el = e.currentTarget;
           const caret = el.selectionStart ?? 0;
           const end = el.selectionEnd ?? caret;
-          if (e.key === "ArrowUp" && !value.slice(0, caret).includes("\n")) {
+          if (e.key === 'ArrowUp' && !value.slice(0, caret).includes('\n')) {
             const start = historyIndex == null ? history.length : historyIndex;
             if (start > 0) {
               e.preventDefault();
@@ -889,11 +852,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
             }
             return;
           }
-          if (
-            e.key === "ArrowDown" &&
-            historyIndex != null &&
-            !value.slice(end).includes("\n")
-          ) {
+          if (e.key === 'ArrowDown' && historyIndex != null && !value.slice(end).includes('\n')) {
             e.preventDefault();
             const ni = historyIndex + 1;
             if (ni >= history.length) {
@@ -908,7 +867,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
           }
         }
 
-        if (e.key === "Enter" && !e.shiftKey) {
+        if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
           handleSend();
         }
@@ -926,7 +885,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         setActiveSuggestion,
         acceptSuggestion,
         placeholderSuggestion,
-      ]
+      ],
     );
 
     const handleContainerMouseDown = useCallback(
@@ -936,7 +895,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         if (target === textareaRef.current) return;
         if (
           target.closest(
-            'button, a, input, select, textarea, [contenteditable], [role="button"], [data-im-queue]'
+            'button, a, input, select, textarea, [contenteditable], [role="button"], [data-im-queue]',
           )
         ) {
           return;
@@ -944,13 +903,17 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         e.preventDefault();
         textareaRef.current?.focus();
       },
-      [clickToFocus, disabled]
+      [clickToFocus, disabled],
     );
 
     // ── File helpers ──────────────────────────────────────────────────
     const acceptTokens = useMemo(
-      () => accept.split(",").map((s) => s.trim()).filter(Boolean),
-      [accept]
+      () =>
+        accept
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean),
+      [accept],
     );
 
     const matchesAccept = useCallback(
@@ -958,12 +921,12 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         // An empty accept, like the native attribute, takes any file.
         acceptTokens.length === 0 ||
         acceptTokens.some((token) => {
-          if (token === "*/*") return true;
-          if (token.endsWith("/*")) return file.type.startsWith(token.slice(0, -1));
-          if (token.startsWith(".")) return file.name.toLowerCase().endsWith(token.toLowerCase());
+          if (token === '*/*') return true;
+          if (token.endsWith('/*')) return file.type.startsWith(token.slice(0, -1));
+          if (token.startsWith('.')) return file.name.toLowerCase().endsWith(token.toLowerCase());
           return file.type === token;
         }),
-      [acceptTokens]
+      [acceptTokens],
     );
 
     const addFiles = useCallback(
@@ -986,7 +949,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         const next = [...filesArr, ...accepted];
         onFilesChange(maxFiles != null ? next.slice(0, maxFiles) : next);
       },
-      [onFilesChange, filesArr, matchesAccept, maxFiles]
+      [onFilesChange, filesArr, matchesAccept, maxFiles],
     );
 
     const removeFile = useCallback(
@@ -994,7 +957,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         if (!onFilesChange) return;
         onFilesChange(filesArr.filter((_, i) => i !== idx));
       },
-      [onFilesChange, filesArr]
+      [onFilesChange, filesArr],
     );
 
     const openFilePicker = useCallback(
@@ -1015,13 +978,13 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         }
         el.click();
       },
-      [accept]
+      [accept],
     );
 
     // ── Slot rendering ────────────────────────────────────────────────
     const slotCtx = useMemo<InputMessageSlotContext>(
       () => ({ openFilePicker, files: filesArr }),
-      [openFilePicker, filesArr]
+      [openFilePicker, filesArr],
     );
     const leftContent = <InputMessageSlotContent slot={leftSlot} ctx={slotCtx} />;
     const rightContent = <InputMessageSlotContent slot={rightSlot} ctx={slotCtx} />;
@@ -1031,23 +994,20 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
       (e: ReactDragEvent<HTMLDivElement>) => {
         if (!supportsFiles || disabled) return;
         // Only treat as a file drag — text/HTML drags shouldn't trigger.
-        if (!Array.from(e.dataTransfer.types).includes("Files")) return;
+        if (!Array.from(e.dataTransfer.types).includes('Files')) return;
         e.preventDefault();
-        e.dataTransfer.dropEffect = "copy";
+        e.dataTransfer.dropEffect = 'copy';
         setDragOver(true);
       },
-      [supportsFiles, disabled]
+      [supportsFiles, disabled],
     );
 
-    const handleDragLeave = useCallback(
-      (e: ReactDragEvent<HTMLDivElement>) => {
-        const wrapper = e.currentTarget;
-        const next = e.relatedTarget as Node | null;
-        if (next && wrapper.contains(next)) return;
-        setDragOver(false);
-      },
-      []
-    );
+    const handleDragLeave = useCallback((e: ReactDragEvent<HTMLDivElement>) => {
+      const wrapper = e.currentTarget;
+      const next = e.relatedTarget as Node | null;
+      if (next && wrapper.contains(next)) return;
+      setDragOver(false);
+    }, []);
 
     const handleDrop = useCallback(
       (e: ReactDragEvent<HTMLDivElement>) => {
@@ -1056,16 +1016,16 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
         if (!supportsFiles || disabled) return;
         addFiles(Array.from(e.dataTransfer.files));
       },
-      [supportsFiles, disabled, addFiles]
+      [supportsFiles, disabled, addFiles],
     );
 
     const handleFileInputChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
         addFiles(Array.from(e.target.files));
-        e.target.value = ""; // Allow re-selecting the same file.
+        e.target.value = ''; // Allow re-selecting the same file.
       },
-      [addFiles]
+      [addFiles],
     );
 
     const composer = (
@@ -1080,12 +1040,12 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
           // border. State changes recolor that same 1px ring in place rather
           // than layering a second colored border beside it — so hover / focus
           // bump *contrast* without ever appearing to thicken the stroke.
-          "flex flex-col gap-1 p-2 transition-[box-shadow,color] duration-80",
+          'flex flex-col gap-1 p-2 transition-[box-shadow,color] duration-80',
           surfaceClasses(2, 2),
           shape.container,
-          clickToFocus && !disabled && "cursor-text",
-          disabled && "opacity-50 pointer-events-none",
-          className
+          clickToFocus && !disabled && 'cursor-text',
+          disabled && 'opacity-50 pointer-events-none',
+          className,
         )}
         style={edgeShadow ? { boxShadow: edgeShadow, ...style } : style}
         onMouseEnter={() => setHovered(true)}
@@ -1205,7 +1165,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
               // focus-visible tracking (the spread below would otherwise
               // overwrite these).
               onFocus={(e) => {
-                if (e.target.matches(":focus-visible")) setFocusVisible(true);
+                if (e.target.matches(':focus-visible')) setFocusVisible(true);
                 textareaProps?.onFocus?.(e);
               }}
               onBlur={(e) => {
@@ -1215,32 +1175,29 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
               }}
               placeholder={
                 dragOver && supportsFiles
-                  ? "Drop files here to add to chat"
+                  ? 'Drop files here to add to chat'
                   : placeholderSuggestion
                     ? undefined // the ghost overlay below renders it
                     : placeholder
               }
               disabled={disabled}
               rows={minRows}
-              aria-label={textareaProps?.["aria-label"] ?? "Message"}
+              aria-label={textareaProps?.['aria-label'] ?? 'Message'}
               aria-describedby={
-                [showGhost ? ghostHintId : null, textareaDescribedBy]
-                  .filter(Boolean)
-                  .join(" ") || undefined
+                [showGhost ? ghostHintId : null, textareaDescribedBy].filter(Boolean).join(' ') ||
+                undefined
               }
               aria-activedescendant={
-                activeSuggestion != null
-                  ? `${suggestionListId}-${activeSuggestion}`
-                  : undefined
+                activeSuggestion != null ? `${suggestionListId}-${activeSuggestion}` : undefined
               }
               className={cn(
-                "w-full resize-none rounded-none bg-transparent outline-none",
-                "text-foreground placeholder:text-muted-foreground",
+                'w-full resize-none rounded-none bg-transparent outline-none',
+                'text-foreground placeholder:text-muted-foreground',
                 compactStep
-                  ? "text-[length:var(--fs-subtitle-compact,13px)] leading-[var(--lh-subtitle-compact,18px)] px-1.5 py-1.5"
-                  : "text-[length:var(--fs-subtitle,14px)] leading-[var(--lh-subtitle,20px)] px-2 py-2",
+                  ? 'text-[length:var(--fs-subtitle-compact,13px)] leading-[var(--lh-subtitle-compact,18px)] px-1.5 py-1.5'
+                  : 'text-[length:var(--fs-subtitle,14px)] leading-[var(--lh-subtitle,20px)] px-2 py-2',
                 fieldTouchClass,
-                textareaClassName
+                textareaClassName,
               )}
               style={{ fontVariationSettings: fontWeights.normal }}
               {...restTextareaProps}
@@ -1253,13 +1210,13 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
               <div
                 aria-hidden="true"
                 className={cn(
-                  "pointer-events-none absolute inset-0 overflow-hidden text-muted-foreground",
+                  'pointer-events-none absolute inset-0 overflow-hidden text-muted-foreground',
                   // Mirror the textarea's step typography exactly so the ghost
                   // sits where typed text will, 16px touch size included.
                   compactStep
-                    ? "text-[length:var(--fs-subtitle-compact,13px)] leading-[var(--lh-subtitle-compact,18px)] px-1.5 py-1.5"
-                    : "text-[length:var(--fs-subtitle,14px)] leading-[var(--lh-subtitle,20px)] px-2 py-2",
-                  fieldTouchClass
+                    ? 'text-[length:var(--fs-subtitle-compact,13px)] leading-[var(--lh-subtitle-compact,18px)] px-1.5 py-1.5'
+                    : 'text-[length:var(--fs-subtitle,14px)] leading-[var(--lh-subtitle,20px)] px-2 py-2',
+                  fieldTouchClass,
                 )}
                 style={{ fontVariationSettings: fontWeights.normal }}
               >
@@ -1275,21 +1232,20 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
             )}
             {showGhost && (
               <span id={ghostHintId} className="sr-only">
-                Suggested prompt: {placeholderSuggestion}. Press Tab to fill
-                the composer with it.
+                Suggested prompt: {placeholderSuggestion}. Press Tab to fill the composer with it.
               </span>
             )}
           </div>
           <div
             className={cn(
-              "flex items-center justify-between",
+              'flex items-center justify-between',
               // The footer's controls sit one notch below the composer's step:
               // slot content is consumer-authored (usually sm/icon-sm pinned
               // Buttons), so the compact step scales any button in the row —
               // send button included — down to 24px via a scoped override.
               compactStep
-                ? "gap-1.5 [&_button]:h-6 [&_button.w-7]:w-6 [&_button]:text-[length:var(--fs-caption-compact,11px)] [&_button]:leading-[var(--lh-caption-compact,14px)]"
-                : "gap-2"
+                ? 'gap-1.5 [&_button]:h-6 [&_button.w-7]:w-6 [&_button]:text-[length:var(--fs-caption-compact,11px)] [&_button]:leading-[var(--lh-caption-compact,14px)]'
+                : 'gap-2',
             )}
           >
             <div className="flex items-center gap-1.5 min-w-0">{leftContent}</div>
@@ -1299,18 +1255,14 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
                 type="button"
                 variant="primary"
                 size="icon-sm"
-                onClick={buttonMode === "stop" ? handleStop : handleSend}
-                disabled={buttonMode === "stop" ? disabled : !canSend}
+                onClick={buttonMode === 'stop' ? handleStop : handleSend}
+                disabled={buttonMode === 'stop' ? disabled : !canSend}
                 aria-label={buttonLabel}
               >
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.span
-                    key={buttonMode === "stop" ? "stop" : "arrow"}
-                    initial={
-                      reduceMotion
-                        ? { opacity: 0 }
-                        : { opacity: 0, scale: 0.6 }
-                    }
+                    key={buttonMode === 'stop' ? 'stop' : 'arrow'}
+                    initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.6 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={
                       reduceMotion
@@ -1320,7 +1272,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
                     transition={spring.fast}
                     className="flex items-center justify-center leading-none"
                   >
-                    {buttonMode === "stop" ? (
+                    {buttonMode === 'stop' ? (
                       <span className="h-3 w-3 rounded-[3px] bg-current" />
                     ) : (
                       // Override icon-sm's small 14px svg — the send glyph reads
@@ -1329,10 +1281,8 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
                       <ArrowUpIcon
                         size={compactStep ? 15 : 19}
                         className={cn(
-                          "block",
-                          compactStep
-                            ? "!h-[15px] !w-[15px]"
-                            : "!h-[19px] !w-[19px]"
+                          'block',
+                          compactStep ? '!h-[15px] !w-[15px]' : '!h-[19px] !w-[19px]',
                         )}
                       />
                     )}
@@ -1385,10 +1335,7 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
                   >
                     {/* Hover / keyboard highlight: one overlay sliding
                         between rows instead of per-row backgrounds. */}
-                    <FluidHoverHighlight
-                      hover={suggestionHover}
-                      className={shape.bg}
-                    />
+                    <FluidHoverHighlight hover={suggestionHover} className={shape.bg} />
                     {suggestionsArr.map((s, i) => (
                       <SuggestionRow
                         key={`${s}-${i}`}
@@ -1417,10 +1364,10 @@ const InputMessage = forwardRef<HTMLDivElement, InputMessageProps>(
     // A size prop pins the whole composer — inner buttons, rows and queued
     // messages included — to one ladder step (matches InputGroup).
     return size ? <SizeProvider size={size}>{composer}</SizeProvider> : composer;
-  }
+  },
 );
 
-InputMessage.displayName = "InputMessage";
+InputMessage.displayName = 'InputMessage';
 
 export { InputMessage };
 export type { InputMessageProps, InputMessageSlotContext, QueuedMessage };

@@ -5,10 +5,10 @@
  * pins a hover-opened menu; and a request a controlled parent turns down
  * leaves no stale ownership behind.
  */
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, renderHook } from "@testing-library/react";
-import { useState } from "react";
-import { useHoverControl } from "@/registry/radix/dropdown";
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, cleanup, renderHook } from '@testing-library/react';
+import { useState } from 'react';
+import { useHoverControl } from '#registry/radix/dropdown';
 
 /** The menu's open state plus the hover control over it. `accept` false
  *  plays a controlled parent that turns every change down. */
@@ -22,15 +22,15 @@ function useHarness(accept = true) {
 }
 
 beforeEach(() => {
-  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "performance"] });
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'performance'] });
 });
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
 });
 
-describe("Radix openOnHover timer", () => {
-  it("opens after the rest delay and closes after the close delay", () => {
+describe('Radix openOnHover timer', () => {
+  it('opens after the rest delay and closes after the close delay', () => {
     const { result } = renderHook(() => useHarness());
     act(() => result.current.hover.enter(100));
     act(() => vi.advanceTimersByTime(99));
@@ -44,7 +44,7 @@ describe("Radix openOnHover timer", () => {
     expect(result.current.open).toBe(false);
   });
 
-  it("keeps the menu while the pointer crosses into it", () => {
+  it('keeps the menu while the pointer crosses into it', () => {
     const { result } = renderHook(() => useHarness());
     act(() => result.current.hover.enter(100));
     act(() => vi.advanceTimersByTime(100));
@@ -55,7 +55,7 @@ describe("Radix openOnHover timer", () => {
     expect(result.current.open).toBe(true);
   });
 
-  it("leaves a click-opened menu alone", () => {
+  it('leaves a click-opened menu alone', () => {
     const { result } = renderHook(() => useHarness());
     act(() => result.current.setOpenState(true)); // Radix's own toggle
     expect(result.current.hover.openedByHover()).toBe(false);
@@ -66,7 +66,7 @@ describe("Radix openOnHover timer", () => {
     expect(result.current.open).toBe(true);
   });
 
-  it("pins a hover-opened menu on click, once", () => {
+  it('pins a hover-opened menu on click, once', () => {
     const { result } = renderHook(() => useHarness());
     act(() => result.current.hover.enter(100));
     act(() => vi.advanceTimersByTime(100));
@@ -83,7 +83,7 @@ describe("Radix openOnHover timer", () => {
     expect(result.current.hover.openedByHover()).toBe(false);
   });
 
-  it("drops a hover request the parent turned down", () => {
+  it('drops a hover request the parent turned down', () => {
     const { result, rerender } = renderHook(({ accept }) => useHarness(accept), {
       initialProps: { accept: false },
     });
@@ -105,7 +105,7 @@ describe("Radix openOnHover timer", () => {
     expect(result.current.hover.openedByHover()).toBe(false);
   });
 
-  it("does not claim a stale request when the menu opens much later", () => {
+  it('does not claim a stale request when the menu opens much later', () => {
     const { result } = renderHook(() => useHarness(false));
     act(() => result.current.hover.enter(100));
     act(() => vi.advanceTimersByTime(100));

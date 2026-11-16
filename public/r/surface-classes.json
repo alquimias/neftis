@@ -3,9 +3,7 @@
   "name": "surface-classes",
   "title": "Surface Class Lookup",
   "description": "Static lookup tables for bg-surface-N and shadow-surface-N utilities. Required because Tailwind v4 cannot detect template-literal class names.",
-  "registryDependencies": [
-    "https://www.fluidfunctionalism.com/r/surfaces.json"
-  ],
+  "registryDependencies": ["https://www.fluidfunctionalism.com/r/surfaces.json"],
   "files": [
     {
       "path": "registry/default/lib/surface-classes.ts",
@@ -14,8 +12,6 @@
     }
   ],
   "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "lib"
-  ],
+  "categories": ["lib"],
   "type": "registry:lib"
 }

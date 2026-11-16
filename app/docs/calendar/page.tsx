@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import { Calendar, type DateRange } from "@/components/ui/calendar";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import { CalendarPlayground, demoBookedDays } from "@/lib/docs/playgrounds/calendar";
-import { apiReference } from "@/lib/docs/api/calendar";
-import { demoToday } from "@/lib/demo-today";
+import { useMemo, useState } from 'react';
+import { Calendar, type DateRange } from '#components/ui/calendar';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { CalendarPlayground, demoBookedDays } from '#lib/docs/playgrounds/calendar';
+import { apiReference } from '#lib/docs/api/calendar';
+import { demoToday } from '#lib/demo-today';
 
 // ---------------------------------------------------------------------------
 // Code snippets
@@ -134,7 +134,8 @@ export default function CalendarDoc() {
 
       <DocSection title="Single">
         <p className="text-site-body text-muted-foreground">
-          Click a day, or arrow to it and press <code>Enter</code>. <code>PageUp</code> and <code>PageDown</code> change the month.
+          Click a day, or arrow to it and press <code>Enter</code>. <code>PageUp</code> and{' '}
+          <code>PageDown</code> change the month.
         </p>
         <ComponentPreview code={singleCode} minHeightClass="min-h-[360px]">
           <Calendar selected={date} onSelect={setDate} />
@@ -143,7 +144,8 @@ export default function CalendarDoc() {
 
       <DocSection title="Range">
         <p className="text-site-body text-muted-foreground">
-          2 months, one hover. Pick a start, then move: the band follows the pointer across the month break.
+          2 months, one hover. Pick a start, then move: the band follows the pointer across the
+          month break.
         </p>
         <ComponentPreview code={rangeCode} minHeightClass="min-h-[360px]">
           <Calendar
@@ -158,7 +160,9 @@ export default function CalendarDoc() {
 
       <DocSection title="Stacked months">
         <p className="text-site-body text-muted-foreground">
-          <code>orientation=&quot;vertical&quot;</code> stacks the months under one weekday row, which stays put when they scroll in a shorter box. <code>auto</code> picks this when 2 months don&apos;t fit side by side.
+          <code>orientation=&quot;vertical&quot;</code> stacks the months under one weekday row,
+          which stays put when they scroll in a shorter box. <code>auto</code> picks this when 2
+          months don&apos;t fit side by side.
         </p>
         <ComponentPreview code={verticalCode}>
           <Calendar
@@ -198,7 +202,9 @@ export default function CalendarDoc() {
 
       <DocSection title="Cell size">
         <p className="text-site-body text-muted-foreground">
-          <code>cellSize</code> sets the cell in px; the numbers keep their size. <code>dayDetail</code> puts a line under each number, a price here, and needs the room of a taller cell. It takes any node: good deals show green.
+          <code>cellSize</code> sets the cell in px; the numbers keep their size.{' '}
+          <code>dayDetail</code> puts a line under each number, a price here, and needs the room of
+          a taller cell. It takes any node: good deals show green.
         </p>
         <ComponentPreview code={sizeCode} minHeightClass="min-h-[420px]">
           <Calendar
@@ -208,7 +214,7 @@ export default function CalendarDoc() {
             dayDetail={(day) => {
               const rate = demoRate(day);
               return (
-                <span className={rate <= 119 ? "text-[color:var(--success)]" : undefined}>
+                <span className={rate <= 119 ? 'text-[color:var(--success)]' : undefined}>
                   ${rate}
                 </span>
               );

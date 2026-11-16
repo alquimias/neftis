@@ -3,11 +3,7 @@
   "name": "dialog",
   "title": "Dialog",
   "description": "Animated modal dialog with spring-based scale and opacity transitions in three widths (sm, lg, and an xl canvas for composed layouts such as a sidebar), plus a container prop to scope it to a region. Built on Radix UI Dialog with overlay, header, footer, title, and description sub-components.",
-  "dependencies": [
-    "motion",
-    "@radix-ui/react-dialog",
-    "lucide-react"
-  ],
+  "dependencies": ["motion", "@radix-ui/react-dialog", "lucide-react"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -28,8 +24,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/dialog. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#dialog.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

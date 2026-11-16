@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useIcon, type IconComponent } from "@/lib/icon-context";
+import { useState } from 'react';
+import { useIcon, type IconComponent } from '#lib/icon-context';
 import {
   Combobox,
   ComboboxInput,
@@ -10,59 +10,67 @@ import {
   ComboboxList,
   ComboboxItem,
   ComboboxEmpty,
-} from "@/components/flavored/combobox";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import { ComboboxPlayground } from "@/lib/docs/playgrounds/combobox";
+} from '#components/flavored/combobox';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { ComboboxPlayground } from '#lib/docs/playgrounds/combobox';
 import {
   COMBOBOX_COMPONENTS,
   COMBOBOX_DEFAULT_VALUES,
   comboboxItemFromQuery,
-} from "@/lib/preset/combobox-options";
-import { comboboxProps, inputProps, chipsProps, contentProps, listProps, emptyProps, itemProps } from "@/lib/docs/api/combobox";
+} from '#lib/preset/combobox-options';
+import {
+  comboboxProps,
+  inputProps,
+  chipsProps,
+  contentProps,
+  listProps,
+  emptyProps,
+  itemProps,
+} from '#lib/docs/api/combobox';
 
 // ---------------------------------------------------------------------------
 // Demo data
 // ---------------------------------------------------------------------------
 
 const FRAMEWORKS = [
-  { value: "next", label: "Next.js" },
-  { value: "sveltekit", label: "SvelteKit" },
-  { value: "nuxt", label: "Nuxt" },
-  { value: "remix", label: "Remix" },
-  { value: "astro", label: "Astro" },
-  { value: "solid", label: "SolidStart" },
-  { value: "qwik", label: "Qwik City" },
+  { value: 'next', label: 'Next.js' },
+  { value: 'sveltekit', label: 'SvelteKit' },
+  { value: 'nuxt', label: 'Nuxt' },
+  { value: 'remix', label: 'Remix' },
+  { value: 'astro', label: 'Astro' },
+  { value: 'solid', label: 'SolidStart' },
+  { value: 'qwik', label: 'Qwik City' },
 ];
 
 const TIMEZONES = [
-  "(UTC−12) Baker Island",
-  "(UTC−10) Honolulu",
-  "(UTC−9) Anchorage",
-  "(UTC−8) Los Angeles",
-  "(UTC−7) Denver",
-  "(UTC−6) Mexico City",
-  "(UTC−5) New York",
-  "(UTC−4) Santiago",
-  "(UTC−3) São Paulo",
-  "(UTC−2) South Georgia",
-  "(UTC−1) Azores",
-  "(UTC+0) London",
-  "(UTC+1) Paris",
-  "(UTC+2) Cairo",
-  "(UTC+3) Moscow",
-  "(UTC+4) Dubai",
-  "(UTC+5) Karachi",
-  "(UTC+5:30) Mumbai",
-  "(UTC+6) Dhaka",
-  "(UTC+7) Bangkok",
-  "(UTC+8) Singapore",
-  "(UTC+9) Tokyo",
-  "(UTC+10) Sydney",
-  "(UTC+11) Nouméa",
-  "(UTC+12) Auckland",
+  '(UTC−12) Baker Island',
+  '(UTC−10) Honolulu',
+  '(UTC−9) Anchorage',
+  '(UTC−8) Los Angeles',
+  '(UTC−7) Denver',
+  '(UTC−6) Mexico City',
+  '(UTC−5) New York',
+  '(UTC−4) Santiago',
+  '(UTC−3) São Paulo',
+  '(UTC−2) South Georgia',
+  '(UTC−1) Azores',
+  '(UTC+0) London',
+  '(UTC+1) Paris',
+  '(UTC+2) Cairo',
+  '(UTC+3) Moscow',
+  '(UTC+4) Dubai',
+  '(UTC+5) Karachi',
+  '(UTC+5:30) Mumbai',
+  '(UTC+6) Dhaka',
+  '(UTC+7) Bangkok',
+  '(UTC+8) Singapore',
+  '(UTC+9) Tokyo',
+  '(UTC+10) Sydney',
+  '(UTC+11) Nouméa',
+  '(UTC+12) Auckland',
 ];
 
 // ---------------------------------------------------------------------------
@@ -282,38 +290,37 @@ function ComboboxPlaygroundSection() {
 }
 
 export default function ComboboxDoc() {
-  const SearchIcon = useIcon("search");
-  const Globe = useIcon("globe");
-  const Users = useIcon("users");
-  const Star = useIcon("star");
-  const Clock = useIcon("clock");
-  const Lock = useIcon("lock");
-  const Mail = useIcon("mail");
+  const SearchIcon = useIcon('search');
+  const Globe = useIcon('globe');
+  const Users = useIcon('users');
+  const Star = useIcon('star');
+  const Clock = useIcon('clock');
+  const Lock = useIcon('lock');
+  const Mail = useIcon('mail');
 
   const views: { value: string; label: string; icon: IconComponent }[] = [
-    { value: "shared", label: "Shared with me", icon: Users },
-    { value: "starred", label: "Starred", icon: Star },
-    { value: "recent", label: "Recent", icon: Clock },
-    { value: "private", label: "Private", icon: Lock },
-    { value: "inbox", label: "Inbox", icon: Mail },
+    { value: 'shared', label: 'Shared with me', icon: Users },
+    { value: 'starred', label: 'Starred', icon: Star },
+    { value: 'recent', label: 'Recent', icon: Clock },
+    { value: 'private', label: 'Private', icon: Lock },
+    { value: 'inbox', label: 'Inbox', icon: Mail },
   ];
 
-  const [framework, setFramework] = useState("");
-  const [view, setView] = useState("");
-  const [bordered, setBordered] = useState("");
-  const [borderless, setBorderless] = useState("");
-  const [timezone, setTimezone] = useState("");
-  const [errored, setErrored] = useState("");
-  const [stack, setStack] = useState<string[]>(["next", "astro"]);
-  const [components, setComponents] = useState<readonly { value: string; label: string }[]>(
-    COMBOBOX_COMPONENTS
-  );
+  const [framework, setFramework] = useState('');
+  const [view, setView] = useState('');
+  const [bordered, setBordered] = useState('');
+  const [borderless, setBorderless] = useState('');
+  const [timezone, setTimezone] = useState('');
+  const [errored, setErrored] = useState('');
+  const [stack, setStack] = useState<string[]>(['next', 'astro']);
+  const [components, setComponents] =
+    useState<readonly { value: string; label: string }[]>(COMBOBOX_COMPONENTS);
   const [picked, setPicked] = useState<string[]>(COMBOBOX_DEFAULT_VALUES);
   const [remaining, setRemaining] = useState<string[]>(COMBOBOX_DEFAULT_VALUES);
 
   const frameworkRows = (item: { value: string; label: string } | string) => {
-    const value = typeof item === "string" ? item : item.value;
-    const label = typeof item === "string" ? item : item.label;
+    const value = typeof item === 'string' ? item : item.value;
+    const label = typeof item === 'string' ? item : item.label;
     return (
       <ComboboxItem key={value} value={value}>
         {label}
@@ -333,8 +340,8 @@ export default function ComboboxDoc() {
 
       <DocSection title="Basic">
         <p className="text-site-body text-muted-foreground">
-          Items are data on the root, <code>ComboboxList</code> renders a row
-          per match. Type, then press Enter to pick the highlighted row.
+          Items are data on the root, <code>ComboboxList</code> renders a row per match. Type, then
+          press Enter to pick the highlighted row.
         </p>
         <ComponentPreview code={basicCode}>
           <Combobox items={FRAMEWORKS} value={framework} onValueChange={setFramework}>
@@ -370,9 +377,8 @@ export default function ComboboxDoc() {
 
       <DocSection title="Multiple selection">
         <p className="text-site-body text-muted-foreground">
-          <code>multiple</code> plus <code>ComboboxChips</code>: 1 chip per
-          pick, touching picks share one background. Press Backspace in an
-          empty field to drop the last chip.
+          <code>multiple</code> plus <code>ComboboxChips</code>: 1 chip per pick, touching picks
+          share one background. Press Backspace in an empty field to drop the last chip.
         </p>
         <ComponentPreview code={multipleCode} minHeightClass="min-h-[160px]">
           <Combobox multiple items={FRAMEWORKS} value={stack} onValueChange={setStack}>
@@ -387,8 +393,8 @@ export default function ComboboxDoc() {
 
       <DocSection title="Create from the query">
         <p className="text-site-body text-muted-foreground">
-          <code>onCreate</code> adds a last row whenever the query matches no
-          label exactly. Type a component that is not there, then press Enter.
+          <code>onCreate</code> adds a last row whenever the query matches no label exactly. Type a
+          component that is not there, then press Enter.
         </p>
         <ComponentPreview code={creatableCode} minHeightClass="min-h-[160px]">
           <Combobox
@@ -413,14 +419,22 @@ export default function ComboboxDoc() {
 
       <DocSection title="Hide picked rows">
         <p className="text-site-body text-muted-foreground">
-          <code>hideSelected</code> takes a pick out of the list, so it reads
-          as what is left to add. Remove a chip to bring its row back.
+          <code>hideSelected</code> takes a pick out of the list, so it reads as what is left to
+          add. Remove a chip to bring its row back.
         </p>
         <ComponentPreview code={hideSelectedCode} minHeightClass="min-h-[160px]">
-          <Combobox multiple hideSelected items={COMBOBOX_COMPONENTS} value={remaining} onValueChange={setRemaining}>
+          <Combobox
+            multiple
+            hideSelected
+            items={COMBOBOX_COMPONENTS}
+            value={remaining}
+            onValueChange={setRemaining}
+          >
             <ComboboxChips placeholder="Add components…" className="w-[360px] max-w-full" />
             <ComboboxContent>
-              <ComboboxEmpty allSelected="Every component is added.">No component found.</ComboboxEmpty>
+              <ComboboxEmpty allSelected="Every component is added.">
+                No component found.
+              </ComboboxEmpty>
               <ComboboxList>{frameworkRows}</ComboboxList>
             </ComboboxContent>
           </Combobox>
@@ -450,8 +464,7 @@ export default function ComboboxDoc() {
 
       <DocSection title="Long list">
         <p className="text-site-body text-muted-foreground">
-          String items are their own value and label. The list scrolls past
-          300px.
+          String items are their own value and label. The list scrolls past 300px.
         </p>
         <ComponentPreview code={longListCode} minHeightClass="min-h-[160px]">
           <Combobox items={TIMEZONES} value={timezone} onValueChange={setTimezone}>
@@ -468,7 +481,10 @@ export default function ComboboxDoc() {
         <ComponentPreview code={statesCode}>
           <div className="flex flex-wrap items-start gap-3">
             <Combobox items={FRAMEWORKS} value={errored} onValueChange={setErrored}>
-              <ComboboxInput placeholder="Select a framework…" error="Pick a framework to continue." />
+              <ComboboxInput
+                placeholder="Select a framework…"
+                error="Pick a framework to continue."
+              />
               <ComboboxContent>
                 <ComboboxEmpty>No framework found.</ComboboxEmpty>
                 <ComboboxList>{frameworkRows}</ComboboxList>

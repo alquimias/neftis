@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Textarea } from "@/registry/default/textarea";
-import { Field, FieldDescription, FieldError, FieldLabel } from "@/registry/default/field";
-import { Button } from "@/components/ui/button";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { textareaProps } from "@/lib/docs/api/textarea";
+import { Textarea } from '#registry/default/textarea';
+import { Field, FieldDescription, FieldError, FieldLabel } from '#registry/default/field';
+import { Button } from '#components/ui/button';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { textareaProps } from '#lib/docs/api/textarea';
 
 const basicCode = `import { Textarea } from "./components";
 

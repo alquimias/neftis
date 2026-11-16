@@ -204,7 +204,7 @@ describe("date picker preset install generator", () => {
       const p = { ...DEFAULT_DATE_PICKER_PRESET, ...randomPreset(rand) };
       for (const file of generateDatePickerPresetFiles(p)) {
         expect(file.content).not.toContain("@/lib/docs");
-        expect(file.content).not.toContain('from "@/registry/');
+        expect(file.content).not.toContain('from "#registry/');
         expect(file.content).not.toContain("—");
       }
     }

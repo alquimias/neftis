@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { cn } from "@/lib/utils";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { PopupShield } from "@/lib/popup";
+import { useEffect, useState } from 'react';
+import * as PopoverPrimitive from '@radix-ui/react-popover';
+import { cn } from '#lib/utils';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { PopupShield } from '#lib/popup';
 import {
   DatePickerCore,
   DatePickerPopupFrame,
   type DatePickerPopoverProps,
   type DatePickerProps,
-} from "@/components/ui/date-picker-core";
+} from '#components/ui/date-picker-core';
 
 // ---------------------------------------------------------------------------
 // DatePicker on Radix Popover. Radix owns positioning, the portal, outside
@@ -27,7 +27,7 @@ function DatePickerPopover({
   anchorRef,
   liveRef,
   escapeBlocked,
-  align = "start",
+  align = 'start',
   className,
   children,
 }: DatePickerPopoverProps) {
@@ -51,50 +51,50 @@ function DatePickerPopover({
 
   return (
     <>
-    {/* The picker's own segments stay live under the open popover. */}
-    <PopupShield open={open} anchor={liveRef ?? anchorRef} />
-    <PopoverPrimitive.Root open={open} onOpenChange={onOpenChange} modal={false}>
-      {kind === "trigger" ? (
-        <PopoverPrimitive.Trigger asChild>{anchor}</PopoverPrimitive.Trigger>
-      ) : (
-        <PopoverPrimitive.Anchor asChild>{anchor}</PopoverPrimitive.Anchor>
-      )}
-      {mounted && (
-        <PopoverPrimitive.Portal forceMount>
-          <PopoverPrimitive.Content
-            asChild
-            forceMount
-            side="bottom"
-            align={align}
-            sideOffset={6}
-            collisionPadding={8}
-            // The calendar focuses its day; a time field keeps focus.
-            onOpenAutoFocus={(e) => e.preventDefault()}
-            onCloseAutoFocus={kind === "anchor" ? (e) => e.preventDefault() : undefined}
-            onEscapeKeyDown={(e) => {
-              if (escapeBlocked?.()) e.preventDefault();
-            }}
-            onFocusOutside={guardAnchor}
-            onPointerDownOutside={guardAnchor}
-            onInteractOutside={guardAnchor}
-            className={cn(
-              "z-[var(--z-popover,60)] outline-none",
-              "[--popup-available-height:var(--radix-popover-content-available-height)]"
-            )}
-          >
-            <div>
-              <DatePickerPopupFrame
-                open={open}
-                onExitComplete={() => setMounted(false)}
-                className={className}
-              >
-                {children}
-              </DatePickerPopupFrame>
-            </div>
-          </PopoverPrimitive.Content>
-        </PopoverPrimitive.Portal>
-      )}
-    </PopoverPrimitive.Root>
+      {/* The picker's own segments stay live under the open popover. */}
+      <PopupShield open={open} anchor={liveRef ?? anchorRef} />
+      <PopoverPrimitive.Root open={open} onOpenChange={onOpenChange} modal={false}>
+        {kind === 'trigger' ? (
+          <PopoverPrimitive.Trigger asChild>{anchor}</PopoverPrimitive.Trigger>
+        ) : (
+          <PopoverPrimitive.Anchor asChild>{anchor}</PopoverPrimitive.Anchor>
+        )}
+        {mounted && (
+          <PopoverPrimitive.Portal forceMount>
+            <PopoverPrimitive.Content
+              asChild
+              forceMount
+              side="bottom"
+              align={align}
+              sideOffset={6}
+              collisionPadding={8}
+              // The calendar focuses its day; a time field keeps focus.
+              onOpenAutoFocus={(e) => e.preventDefault()}
+              onCloseAutoFocus={kind === 'anchor' ? (e) => e.preventDefault() : undefined}
+              onEscapeKeyDown={(e) => {
+                if (escapeBlocked?.()) e.preventDefault();
+              }}
+              onFocusOutside={guardAnchor}
+              onPointerDownOutside={guardAnchor}
+              onInteractOutside={guardAnchor}
+              className={cn(
+                'z-[var(--z-popover,60)] outline-none',
+                '[--popup-available-height:var(--radix-popover-content-available-height)]',
+              )}
+            >
+              <div>
+                <DatePickerPopupFrame
+                  open={open}
+                  onExitComplete={() => setMounted(false)}
+                  className={className}
+                >
+                  {children}
+                </DatePickerPopupFrame>
+              </div>
+            </PopoverPrimitive.Content>
+          </PopoverPrimitive.Portal>
+        )}
+      </PopoverPrimitive.Root>
     </>
   );
 }
@@ -103,7 +103,7 @@ function DatePicker(props: DatePickerProps) {
   return <DatePickerCore {...props} Popover={DatePickerPopover} />;
 }
 
-DatePicker.displayName = "DatePicker";
+DatePicker.displayName = 'DatePicker';
 
 export { DatePicker };
 export {
@@ -114,7 +114,7 @@ export {
   parseTime,
   shiftEnd,
   buildSlots,
-} from "@/components/ui/date-picker-core";
+} from '#components/ui/date-picker-core';
 export type {
   DatePickerProps,
   DatePickerSingleProps,
@@ -122,4 +122,4 @@ export type {
   DatePickerPreset,
   TimeRange,
   DateRange,
-} from "@/components/ui/date-picker-core";
+} from '#components/ui/date-picker-core';

@@ -3,10 +3,7 @@
   "name": "sidebar-inset-topbar",
   "title": "Sidebar Inset Topbar",
   "description": "The main region's topbar: h-12 with the trigger that hides while the rail peeks and fades back in at its settled spot after a pin.",
-  "registryDependencies": [
-    "utils",
-    "https://www.fluidfunctionalism.com/r/radix/sidebar.json"
-  ],
+  "registryDependencies": ["utils", "https://www.fluidfunctionalism.com/r/radix/sidebar.json"],
   "files": [
     {
       "path": "registry/blocks/sidebar-app/inset-topbar.tsx",

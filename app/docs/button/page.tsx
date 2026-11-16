@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useIcon } from "@/lib/icon-context";
-import { Button } from "@/registry/radix/button";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import { ButtonPlayground } from "@/lib/docs/playgrounds/button";
-import { buttonProps } from "@/lib/docs/api/button";
+import { useState } from 'react';
+import { useIcon } from '#lib/icon-context';
+import { Button } from '#registry/radix/button';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { ButtonPlayground } from '#lib/docs/playgrounds/button';
+import { buttonProps } from '#lib/docs/api/button';
 
 const variantsCode = `import { Button } from "./components";
 
@@ -70,10 +70,10 @@ function ButtonPlaygroundSection() {
 }
 
 export default function ButtonDoc() {
-  const Plus = useIcon("plus");
-  const ArrowRight = useIcon("arrow-right");
-  const Search = useIcon("search");
-  const Loader = useIcon("loader");
+  const Plus = useIcon('plus');
+  const ArrowRight = useIcon('arrow-right');
+  const Search = useIcon('search');
+  const Loader = useIcon('loader');
 
   const [loading, setLoading] = useState(false);
 
@@ -89,8 +89,8 @@ export default function ButtonDoc() {
 
       <DocSection title="Variants">
         <p className="text-site-body text-muted-foreground">
-          5 variants, inline or full width: add <code>className=&quot;w-full&quot;</code>{" "}
-          to stretch one to its container.
+          5 variants, inline or full width: add <code>className=&quot;w-full&quot;</code> to stretch
+          one to its container.
         </p>
         <ComponentPreview code={variantsCode}>
           {/* w-fit: the frame hugs the inline row, and the full-width column
@@ -104,11 +104,21 @@ export default function ButtonDoc() {
               <Button variant="destructive">Delete</Button>
             </div>
             <div className="flex flex-col gap-2">
-              <Button variant="primary" className="w-full">Primary</Button>
-              <Button variant="secondary" className="w-full">Secondary</Button>
-              <Button variant="tertiary" className="w-full">Tertiary</Button>
-              <Button variant="ghost" className="w-full">Ghost</Button>
-              <Button variant="destructive" className="w-full">Delete</Button>
+              <Button variant="primary" className="w-full">
+                Primary
+              </Button>
+              <Button variant="secondary" className="w-full">
+                Secondary
+              </Button>
+              <Button variant="tertiary" className="w-full">
+                Tertiary
+              </Button>
+              <Button variant="ghost" className="w-full">
+                Ghost
+              </Button>
+              <Button variant="destructive" className="w-full">
+                Delete
+              </Button>
             </div>
           </div>
         </ComponentPreview>
@@ -118,8 +128,12 @@ export default function ButtonDoc() {
         <ComponentPreview code={iconsCode}>
           <div className="flex flex-wrap items-center gap-2">
             <Button leadingIcon={Plus}>Create</Button>
-            <Button variant="secondary" trailingIcon={ArrowRight}>Next</Button>
-            <Button variant="tertiary" leadingIcon={Search} trailingIcon={ArrowRight}>Search</Button>
+            <Button variant="secondary" trailingIcon={ArrowRight}>
+              Next
+            </Button>
+            <Button variant="tertiary" leadingIcon={Search} trailingIcon={ArrowRight}>
+              Search
+            </Button>
           </div>
         </ComponentPreview>
       </DocSection>
@@ -127,13 +141,18 @@ export default function ButtonDoc() {
       <DocSection title="Loading & Disabled">
         <ComponentPreview code={loadingCode}>
           <div className="flex flex-wrap items-center gap-2">
-            <Button loading={loading} onClick={() => {
-              setLoading(true);
-              setTimeout(() => setLoading(false), 2000);
-            }}>
+            <Button
+              loading={loading}
+              onClick={() => {
+                setLoading(true);
+                setTimeout(() => setLoading(false), 2000);
+              }}
+            >
               Click me
             </Button>
-            <Button variant="secondary" loading leadingIcon={Loader}>Saving</Button>
+            <Button variant="secondary" loading leadingIcon={Loader}>
+              Saving
+            </Button>
             <Button disabled>Disabled</Button>
           </div>
         </ComponentPreview>

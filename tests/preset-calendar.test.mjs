@@ -190,7 +190,7 @@ describe("calendar preset install generator", () => {
       const p = { ...DEFAULT_CALENDAR_PRESET, ...randomPreset(rand) };
       for (const file of generateCalendarPresetFiles(p)) {
         expect(file.content).not.toContain("@/lib/docs");
-        expect(file.content).not.toContain('from "@/registry/');
+        expect(file.content).not.toContain('from "#registry/');
         expect(file.content).not.toContain("—");
       }
     }

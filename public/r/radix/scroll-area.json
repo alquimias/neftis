@@ -3,9 +3,7 @@
   "name": "scroll-area",
   "title": "Scroll Area",
   "description": "Scroll container with a restyled overlay scrollbar that stays discoverable on hover and follows the shape system. Falls back to native overflow scrolling on touch-primary devices. Built on Radix UI Scroll Area; adapted from Lina (https://lina.sameer.sh).",
-  "dependencies": [
-    "@radix-ui/react-scroll-area"
-  ],
+  "dependencies": ["@radix-ui/react-scroll-area"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/omit.json",
@@ -159,8 +157,6 @@
     }
   },
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/scrollbars. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#scrollbars.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

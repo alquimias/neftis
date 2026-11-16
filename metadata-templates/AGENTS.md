@@ -19,7 +19,7 @@ Each file exports a single function (named or default):
 
 ```js
 export function layoutX(config) {
-  return { /* Satori JSX object */ };
+  return {/* Satori JSX object */};
 }
 ```
 
@@ -29,21 +29,21 @@ The rendered canvas is **1200×630**. Fill the full width and height.
 
 ## Config shape
 
-| Key                   | Type         | Default  | Notes                                              |
-| --------------------- | ------------ | -------- | -------------------------------------------------- |
-| `headline`            | string       | —        | Main text. Always present.                         |
-| `tagline`             | string       | `''`     | Optional sub-text. Render only if truthy.          |
-| `colors.background`   | string       | —        | Page background.                                   |
-| `colors.foreground`   | string       | —        | Headline / primary text.                           |
-| `colors.accent`       | string       | —        | Secondary (borders, highlights, panels).           |
-| `colors.tagline`      | string\|null | `null`   | If set, overrides tagline color (full opacity).    |
-| `logoBase64`          | string\|null | `null`   | Data URI. Render only if truthy.                   |
-| `headingSize`         | number       | 56–72px  | Your choice. Bold weight assumed (fontWeight 700). |
-| `taglineSize`         | number       | 22–28px  | Your choice.                                       |
-| `align`               | string       | your choice | `'left'` \| `'center'` \| `'right'`.            |
-| `logoSize`            | number       | 80       | Square, in px. Honor if logo is rendered.          |
-| `logoGap`             | number       | 32       | Space (px) between logo and headline.              |
-| `logoPosition`        | string       | `'top'`  | `'top'` \| `'left'`.                               |
+| Key                 | Type         | Default     | Notes                                              |
+| ------------------- | ------------ | ----------- | -------------------------------------------------- |
+| `headline`          | string       | —           | Main text. Always present.                         |
+| `tagline`           | string       | `''`        | Optional sub-text. Render only if truthy.          |
+| `colors.background` | string       | —           | Page background.                                   |
+| `colors.foreground` | string       | —           | Headline / primary text.                           |
+| `colors.accent`     | string       | —           | Secondary (borders, highlights, panels).           |
+| `colors.tagline`    | string\|null | `null`      | If set, overrides tagline color (full opacity).    |
+| `logoBase64`        | string\|null | `null`      | Data URI. Render only if truthy.                   |
+| `headingSize`       | number       | 56–72px     | Your choice. Bold weight assumed (fontWeight 700). |
+| `taglineSize`       | number       | 22–28px     | Your choice.                                       |
+| `align`             | string       | your choice | `'left'` \| `'center'` \| `'right'`.               |
+| `logoSize`          | number       | 80          | Square, in px. Honor if logo is rendered.          |
+| `logoGap`           | number       | 32          | Space (px) between logo and headline.              |
+| `logoPosition`      | string       | `'top'`     | `'top'` \| `'left'`.                               |
 
 ## Satori constraints — read this before writing CSS
 
@@ -81,14 +81,7 @@ Copy this into a new `layout-<letter>.js` and modify the style:
 
 ```js
 export function layoutD(config) {
-  const {
-    headline,
-    tagline,
-    colors,
-    logoBase64,
-    headingSize = 64,
-    taglineSize = 26,
-  } = config;
+  const { headline, tagline, colors, logoBase64, headingSize = 64, taglineSize = 26 } = config;
 
   return {
     type: 'div',

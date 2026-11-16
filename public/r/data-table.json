@@ -3,10 +3,7 @@
   "name": "data-table",
   "title": "Data Table",
   "description": "TanStack Table drawn with the library's Table: the fluid hover row highlight plus resizable, draggable columns, sorting headers with an animated sort glyph, a ghost search field with a magnifying glass, an icon Columns menu that shows and hides columns, a checkbox selection column with a select-all dash, a row actions menu, pagination with arrow buttons, and skeleton loading rows that hand over cell by cell. A useDataTable hook wires the row models; every part reads and sets TanStack state, so each one is optional.",
-  "dependencies": [
-    "@tanstack/react-table@^8.21.3",
-    "motion"
-  ],
+  "dependencies": ["@tanstack/react-table@^8.21.3", "motion"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -43,8 +40,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/data-table. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#data-table.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

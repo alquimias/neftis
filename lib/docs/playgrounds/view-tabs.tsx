@@ -1,17 +1,24 @@
-"use client";
+'use client';
 
 // Saved views as tabs you can rename, delete and reorder: the playground's
 // and the Saved views demo's. Docs code, built from the library's Tabs.
-import { useContext, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { createPortal } from "react-dom";
-import { AnimatePresence, PresenceContext, animate, motion, usePresence, useReducedMotion } from "motion/react";
-import { spring } from "@/lib/springs";
-import { useShape } from "@/lib/shape-context";
-import { useIcons } from "@/lib/icon-context";
-import { fieldTouchClass, typeClass, useSize } from "@/lib/size-context";
-import { cn } from "@/lib/utils";
-import { Tabs, TabsItem } from "@/components/ui/tabs";
-import { Tooltip } from "@/components/ui/tooltip";
+import { useContext, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+import {
+  AnimatePresence,
+  PresenceContext,
+  animate,
+  motion,
+  usePresence,
+  useReducedMotion,
+} from 'motion/react';
+import { spring } from '#lib/springs';
+import { useShape } from '#lib/shape-context';
+import { useIcons } from '#lib/icon-context';
+import { fieldTouchClass, typeClass, useSize } from '#lib/size-context';
+import { cn } from '#lib/utils';
+import { Tabs, TabsItem } from '#components/ui/tabs';
+import { Tooltip } from '#components/ui/tooltip';
 
 export interface ViewTab {
   /** Stable through renames and reorders: the tab's key, so a dragged tab
@@ -60,7 +67,7 @@ interface ViewTabsProps {
  *  text box is trimmed to the cap height, and a full clip would cut their
  *  descenders. */
 const VIEW_NAME_CAP =
-  "[&_span>span]:max-w-48 [&_span>span]:overflow-x-clip [&_span>span]:text-ellipsis [&_span>span]:whitespace-nowrap";
+  '[&_span>span]:max-w-48 [&_span>span]:overflow-x-clip [&_span>span]:text-ellipsis [&_span>span]:whitespace-nowrap';
 
 export function ViewTabs({
   first,
@@ -78,7 +85,7 @@ export function ViewTabs({
   const icons = useIcons();
   // The tabs take the page's size setting: their dragged copy and the name
   // field over a tab follow the same type.
-  const tabType = useSize().variant === "compact" ? "compact" : "default";
+  const tabType = useSize().variant === 'compact' ? 'compact' : 'default';
 
   const tabsRef = useRef<HTMLDivElement>(null);
   const [naming, setNaming] = useState<{ at: number; draft: string } | null>(null);
@@ -101,8 +108,8 @@ export function ViewTabs({
   useLayoutEffect(() => {
     if (!naming) return;
     const box = tabsRef.current;
-    const tab = box?.querySelectorAll<HTMLElement>("[role=tab]")[naming.at + 1];
-    const label = tab?.querySelector<HTMLElement>("span > span:not([aria-hidden])");
+    const tab = box?.querySelectorAll<HTMLElement>('[role=tab]')[naming.at + 1];
+    const label = tab?.querySelector<HTMLElement>('span > span:not([aria-hidden])');
     if (!box || !tab || !label) return;
     const b = box.getBoundingClientRect();
     const t = tab.getBoundingClientRect();
@@ -122,7 +129,8 @@ export function ViewTabs({
   const [asked, setAsked] = useState<number | null>(null);
   if (nameRequest !== asked) {
     setAsked(nameRequest);
-    if (nameRequest !== null) setNaming({ at: nameRequest - 1, draft: views[nameRequest - 1]?.name ?? "" });
+    if (nameRequest !== null)
+      setNaming({ at: nameRequest - 1, draft: views[nameRequest - 1]?.name ?? '' });
   }
   useLayoutEffect(() => {
     if (nameRequest !== null) onNameRequested?.();
@@ -146,19 +154,27 @@ export function ViewTabs({
   // (The tabs fire no change for the tab already open: its own click does.)
   const renameView = (i: number) => {
     if (i !== selected || i === 0) return;
-    nameView(i, views[i - 1]?.name ?? "");
+    nameView(i, views[i - 1]?.name ?? '');
   };
 
   const dragged = useRef(false);
   const tabGhostRef = useRef<HTMLDivElement>(null);
-  const [tabGhost, setTabGhost] = useState<{ label: string; top: number; left: number; width: number; height: number } | null>(null);
+  const [tabGhost, setTabGhost] = useState<{
+    label: string;
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  } | null>(null);
   const [tabDrag, setTabDrag] = useState<{ from: number; bar: number | null } | null>(null);
   // Tab lefts before a move, by view id, so the next commit slides them.
   const tabLefts = useRef<Map<number, number> | null>(null);
-  const tabEls = () => [...(tabsRef.current?.querySelectorAll<HTMLElement>("[role=tab]") ?? [])];
+  const tabEls = () => [...(tabsRef.current?.querySelectorAll<HTMLElement>('[role=tab]') ?? [])];
   const moveViewTab = (from: number, to: number) => {
     if (to === from || to < 1 || from < 1) return;
-    tabLefts.current = new Map(tabEls().map((t) => [Number(t.dataset.viewId), t.getBoundingClientRect().left]));
+    tabLefts.current = new Map(
+      tabEls().map((t) => [Number(t.dataset.viewId), t.getBoundingClientRect().left]),
+    );
     onMove(from, to);
   };
   useLayoutEffect(() => {
@@ -185,12 +201,18 @@ export function ViewTabs({
     // saved tab whose middle is past it, or last.
     const land = (x: number) => {
       const els = tabEls();
-      const i = els.findIndex((t, k) => k >= 1 && x < t.getBoundingClientRect().left + t.getBoundingClientRect().width / 2);
+      const i = els.findIndex(
+        (t, k) =>
+          k >= 1 && x < t.getBoundingClientRect().left + t.getBoundingClientRect().width / 2,
+      );
       const slot = i === -1 ? els.length : i;
       // A slot right before or after itself is no move.
       const target = slot > from ? slot - 1 : slot;
       const b = box.getBoundingClientRect();
-      const barX = i === -1 ? els[els.length - 1].getBoundingClientRect().right - b.left + 1 : els[i].getBoundingClientRect().left - b.left - 3;
+      const barX =
+        i === -1
+          ? els[els.length - 1].getBoundingClientRect().right - b.left + 1
+          : els[i].getBoundingClientRect().left - b.left - 3;
       return { target: Math.max(1, target), bar: target === from ? null : barX };
     };
     const move = (ev: PointerEvent) => {
@@ -198,7 +220,13 @@ export function ViewTabs({
       if (!moved) {
         moved = true;
         dragged.current = true;
-        setTabGhost({ label: tab.textContent?.slice(0, (tab.textContent?.length ?? 0) / 2) ?? "", top: rect.top, left: rect.left, width: rect.width, height: rect.height });
+        setTabGhost({
+          label: tab.textContent?.slice(0, (tab.textContent?.length ?? 0) / 2) ?? '',
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+        });
       }
       // The ghost stays within the row of tabs.
       const b = box.getBoundingClientRect();
@@ -209,9 +237,9 @@ export function ViewTabs({
       setTabDrag({ from, bar: next.bar });
     };
     const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      window.removeEventListener("pointercancel", up);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
       setTabGhost(null);
       setTabDrag(null);
       if (!moved) return;
@@ -219,22 +247,22 @@ export function ViewTabs({
       // gesture (a drop off the tab fires none, so the guard comes off on
       // the next tick).
       const swallow = (ev: Event) => ev.stopPropagation();
-      window.addEventListener("click", swallow, { capture: true, once: true });
+      window.addEventListener('click', swallow, { capture: true, once: true });
       setTimeout(() => {
-        window.removeEventListener("click", swallow, { capture: true });
+        window.removeEventListener('click', swallow, { capture: true });
         dragged.current = false;
       }, 0);
       moveViewTab(from, to);
     };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
-    window.addEventListener("pointercancel", up);
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
   };
   const onTabsKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!e.altKey || (e.key !== "ArrowLeft" && e.key !== "ArrowRight")) return;
+    if (!e.altKey || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
     const from = tabEls().findIndex((t) => t === document.activeElement);
     if (from < 1) return;
-    const to = from + (e.key === "ArrowLeft" ? -1 : 1);
+    const to = from + (e.key === 'ArrowLeft' ? -1 : 1);
     if (to < 1 || to > views.length) return;
     e.preventDefault();
     e.stopPropagation();
@@ -242,7 +270,7 @@ export function ViewTabs({
   };
 
   return (
-    <div ref={tabsRef} className={cn("relative flex items-center gap-1", className)}>
+    <div ref={tabsRef} className={cn('relative flex items-center gap-1', className)}>
       <Tabs
         selectedIndex={selected}
         onSelect={(i) => !dragged.current && onSelect(i)}
@@ -259,14 +287,14 @@ export function ViewTabs({
               // Being named, the tab sizes to the draft (spaces kept, so a
               // trailing one widens it too), its own text hidden under the
               // field, with room at its end for the ×.
-              label={editing ? naming.draft.replace(/ /g, " ") || " " : name}
+              label={editing ? naming.draft.replace(/ /g, ' ') || ' ' : name}
               data-view-id={id}
               // The dragged tab's slot shows empty; its copy rides the pointer.
               className={cn(
                 VIEW_NAME_CAP,
-                i > 0 && "touch-none select-none",
-                tabDrag?.from === i && "invisible",
-                editing && "pr-8 [&_span]:!text-transparent"
+                i > 0 && 'touch-none select-none',
+                tabDrag?.from === i && 'invisible',
+                editing && 'pr-8 [&_span]:!text-transparent',
               )}
               onClick={() => renameView(i)}
             />
@@ -290,23 +318,33 @@ export function ViewTabs({
             aria-hidden
             // The dragged tab's own corners and type.
             className={cn(
-              "pointer-events-none fixed z-[var(--z-popover,60)] flex items-center justify-center whitespace-nowrap bg-background bg-[linear-gradient(var(--active),var(--active))] px-3 text-foreground opacity-80",
-              typeClass("body", tabType),
-              shape.item
+              'pointer-events-none fixed z-[var(--z-popover,60)] flex items-center justify-center whitespace-nowrap bg-background bg-[linear-gradient(var(--active),var(--active))] px-3 text-foreground opacity-80',
+              typeClass('body', tabType),
+              shape.item,
             )}
-            style={{ top: tabGhost.top, left: tabGhost.left, width: tabGhost.width, height: tabGhost.height }}
+            style={{
+              top: tabGhost.top,
+              left: tabGhost.left,
+              width: tabGhost.width,
+              height: tabGhost.height,
+            }}
           >
             {tabGhost.label}
           </div>,
-          document.body
+          document.body,
         )}
       {naming && nameBox && (
         // The bare field on the tab's label, in the label's own type and
         // weight, so the name doesn't move or change size as it turns
         // editable; the tab's fill behind it is the only surface.
         <span
-          className={cn("absolute z-10 flex items-center", typeClass("body", tabType))}
-          style={{ left: nameBox.left, top: nameBox.top, width: nameBox.width, height: nameBox.height }}
+          className={cn('absolute z-10 flex items-center', typeClass('body', tabType))}
+          style={{
+            left: nameBox.left,
+            top: nameBox.top,
+            width: nameBox.width,
+            height: nameBox.height,
+          }}
         >
           <input
             ref={nameRef}
@@ -315,16 +353,19 @@ export function ViewTabs({
             onChange={(e) => setNaming({ ...naming, draft: e.target.value })}
             onBlur={(e) => {
               // Leaving for the field's own ×: that click decides.
-              if (e.relatedTarget?.closest("[data-view-delete]")) return;
+              if (e.relatedTarget?.closest('[data-view-delete]')) return;
               commitName();
             }}
             onKeyDown={(e) => {
-              if (e.key === "Enter") commitName();
-              if (e.key === "Escape") endNaming();
+              if (e.key === 'Enter') commitName();
+              if (e.key === 'Escape') endNaming();
             }}
             style={{ fontVariationSettings: nameBox.weight }}
             // 16px on touch screens, so iOS doesn't zoom into the field.
-            className={cn("h-full min-w-0 flex-1 bg-transparent p-0 text-foreground outline-none", fieldTouchClass)}
+            className={cn(
+              'h-full min-w-0 flex-1 bg-transparent p-0 text-foreground outline-none',
+              fieldTouchClass,
+            )}
           />
           <Tooltip content="Delete view">
             <motion.button
@@ -340,7 +381,10 @@ export function ViewTabs({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={spring.fast}
-              className={cn("mr-0.5 grid size-6 shrink-0 cursor-pointer place-items-center text-muted-foreground outline-none hover:bg-hover hover:text-destructive", shape.item)}
+              className={cn(
+                'mr-0.5 grid size-6 shrink-0 cursor-pointer place-items-center text-muted-foreground outline-none hover:bg-hover hover:text-destructive',
+                shape.item,
+              )}
             >
               <icons.x size={14} strokeWidth={1.5} />
             </motion.button>
@@ -356,7 +400,11 @@ export function ViewTabs({
  *  "auto", with the column's gap folded in, so the table glides. The same
  *  reveal DataTableFilterChips gives its row. */
 export function RowReveal({ show, children }: { show: boolean; children: ReactNode }) {
-  return <AnimatePresence initial={false}>{show && <RowRevealPart key="row">{children}</RowRevealPart>}</AnimatePresence>;
+  return (
+    <AnimatePresence initial={false}>
+      {show && <RowRevealPart key="row">{children}</RowRevealPart>}
+    </AnimatePresence>
+  );
 }
 
 function RowRevealPart({ children }: { children: ReactNode }) {
@@ -386,22 +434,30 @@ function RowRevealPart({ children }: { children: ReactNode }) {
     // field focused inside it as it grows (a new chip's input, a view's
     // name) scrolled the row to show it, shifting its content, which then
     // jumped back when the clip came off.
-    el.style.overflow = "clip";
+    el.style.overflow = 'clip';
     // The start, set before this frame paints: animate() only applies its
     // first keyframe on the next one, which showed the row whole for a frame.
     if (isPresent) {
-      el.style.height = "0px";
+      el.style.height = '0px';
       el.style.marginTop = `${-gap}px`;
-      el.style.opacity = "0";
+      el.style.opacity = '0';
     }
     const run = isPresent
-      ? animate(el, { height: [0, height], marginTop: [-gap, 0], opacity: [0, 1] }, { ...spring.moderate })
-      : animate(el, { height: [height, 0], marginTop: [0, -gap], opacity: [1, 0] }, { ...spring.moderate, ...spring.moderate.exit });
+      ? animate(
+          el,
+          { height: [0, height], marginTop: [-gap, 0], opacity: [0, 1] },
+          { ...spring.moderate },
+        )
+      : animate(
+          el,
+          { height: [height, 0], marginTop: [0, -gap], opacity: [1, 0] },
+          { ...spring.moderate, ...spring.moderate.exit },
+        );
     const clear = () => {
-      el.style.height = "";
-      el.style.marginTop = "";
-      el.style.overflow = "";
-      el.style.opacity = "";
+      el.style.height = '';
+      el.style.marginTop = '';
+      el.style.overflow = '';
+      el.style.opacity = '';
     };
     run.then(() => (isPresent ? clear() : safeToRemove?.()));
     // Stopped early (a re-run, Strict Mode's double effect): back to its

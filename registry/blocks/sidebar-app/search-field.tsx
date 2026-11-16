@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { type ComponentProps } from "react";
-import { SidebarInput } from "@/components/ui/sidebar";
-import { KeyCaps } from "@/lib/key-cap";
-import { useSize } from "@/lib/size-context";
-import { useIcons } from "@/lib/icon-context";
+import { type ComponentProps } from 'react';
+import { SidebarInput } from '#components/ui/sidebar';
+import { KeyCaps } from '#lib/key-cap';
+import { useSize } from '#lib/size-context';
+import { useIcons } from '#lib/icon-context';
 
 // ---------------------------------------------------------------------------
 // The header's search field, on the menu rows' own rhythm. The leading icon
@@ -13,15 +13,17 @@ import { useIcons } from "@/lib/icon-context";
 // on hover/focus — the placeholder owns the field at rest.
 // ---------------------------------------------------------------------------
 
-export interface SidebarSearchFieldProps
-  extends Omit<ComponentProps<typeof SidebarInput>, "className"> {
+export interface SidebarSearchFieldProps extends Omit<
+  ComponentProps<typeof SidebarInput>,
+  'className'
+> {
   /** Keystroke shown in the trailing chip. Pass null to drop the chip. */
   shortcut?: string | null;
 }
 
 export function SidebarSearchField({
-  placeholder = "Search…",
-  shortcut = "⌘K",
+  placeholder = 'Search…',
+  shortcut = '⌘K',
   ...props
 }: SidebarSearchFieldProps) {
   const iconSize = useSize().icon;

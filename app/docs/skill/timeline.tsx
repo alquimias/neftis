@@ -1,14 +1,11 @@
-"use client";
+'use client';
 
-import { useLayoutEffect, useRef, type ReactNode } from "react";
-import { animate, motion, useMotionValue, type MotionValue } from "motion/react";
-import { cn } from "@/registry/default/lib/utils";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { spring } from "@/registry/default/lib/springs";
-import {
-  useFluidHover,
-  useRegisterFluidHoverItem,
-} from "@/registry/default/hooks/use-fluid-hover";
+import { useLayoutEffect, useRef, type ReactNode } from 'react';
+import { animate, motion, useMotionValue, type MotionValue } from 'motion/react';
+import { cn } from '#registry/default/lib/utils';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { spring } from '#registry/default/lib/springs';
+import { useFluidHover, useRegisterFluidHoverItem } from '#registry/default/hooks/use-fluid-hover';
 
 // ---------------------------------------------------------------------------
 // The "What it does" timeline: one continuous line from the top of the first
@@ -70,13 +67,9 @@ export function Timeline({ steps }: { steps: Array<{ title: string; body: ReactN
   const lineStart = first ? first.top + TITLE_TOP : 0;
   const lineEnd = last ? last.top + last.height : 0;
   const above =
-    centers[i] !== undefined
-      ? segment(centers[i - 1] ?? lineStart, centers[i] - DOT / 2)
-      : null;
+    centers[i] !== undefined ? segment(centers[i - 1] ?? lineStart, centers[i] - DOT / 2) : null;
   const below =
-    centers[i] !== undefined
-      ? segment(centers[i] + DOT / 2, centers[i + 1] ?? lineEnd)
-      : null;
+    centers[i] !== undefined ? segment(centers[i] + DOT / 2, centers[i + 1] ?? lineEnd) : null;
   const shown = active !== null;
   const dotY = centers[i] !== undefined ? centers[i] - DOT / 2 : 0;
   const aboveAt = above ?? { y: 0, scaleY: 0 };
@@ -109,7 +102,19 @@ export function Timeline({ steps }: { steps: Array<{ title: string; body: ReactN
     });
     wasShown.current = shown;
     return () => controls.forEach((c) => c?.stop());
-  }, [shown, dotY, aboveAt.y, aboveAt.scaleY, belowAt.y, belowAt.scaleY, dotYMv, aboveYMv, aboveSMv, belowYMv, belowSMv]);
+  }, [
+    shown,
+    dotY,
+    aboveAt.y,
+    aboveAt.scaleY,
+    belowAt.y,
+    belowAt.scaleY,
+    dotYMv,
+    aboveYMv,
+    aboveSMv,
+    belowYMv,
+    belowSMv,
+  ]);
 
   return (
     // mt-2: 16px under the section title instead of the usual 8px, so the
@@ -200,9 +205,9 @@ function Step({
       />
       <span
         className={cn(
-          "text-site-body transition-colors duration-80",
+          'text-site-body transition-colors duration-80',
           // Touch never hovers, so its titles stay at full strength.
-          active ? "text-foreground" : "text-muted-foreground [@media(hover:none)]:text-foreground"
+          active ? 'text-foreground' : 'text-muted-foreground [@media(hover:none)]:text-foreground',
         )}
         style={{ fontVariationSettings: fontWeights.semibold }}
       >
@@ -210,10 +215,8 @@ function Step({
       </span>
       <p
         className={cn(
-          "mt-0.5 text-site-body leading-4.5 transition-colors duration-80",
-          active
-            ? "text-muted-foreground"
-            : "text-muted-foreground"
+          'mt-0.5 text-site-body leading-4.5 transition-colors duration-80',
+          active ? 'text-muted-foreground' : 'text-muted-foreground',
         )}
       >
         {children}

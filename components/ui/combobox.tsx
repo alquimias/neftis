@@ -1,1 +1,1 @@
-export * from "@/components/flavored/combobox";
+export * from '#components/flavored/combobox';

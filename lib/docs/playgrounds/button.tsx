@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useIcon } from "@/lib/icon-context";
-import { useSizeVariant, fieldTouchClass } from "@/lib/size-context";
-import { cn } from "@/lib/utils";
-import { Button } from "@/registry/radix/button";
-import { Switch } from "@/registry/radix/switch";
+import { useState } from 'react';
+import { useIcon } from '#lib/icon-context';
+import { useSizeVariant, fieldTouchClass } from '#lib/size-context';
+import { cn } from '#lib/utils';
+import { Button } from '#registry/radix/button';
+import { Switch } from '#registry/radix/switch';
 import {
   PLAY_SWITCH,
   PlayField,
@@ -13,21 +13,21 @@ import {
   PlaySection,
   PlayDivider,
   PlaygroundPanel,
-} from "@/lib/docs/playground";
-import type { PlaygroundProps } from "./types";
+} from '#lib/docs/playground';
+import type { PlaygroundProps } from './types';
 
 // ── Button playground ────────────────────────────────────
 // A live sandbox: the controls drive a single real Button so every
 // combination of the props can be previewed, with the matching code kept in
 // sync in the doc page's Code tab.
 
-type PlayVariant = "primary" | "secondary" | "tertiary" | "ghost" | "destructive";
-type PlaySize = "compact" | "default";
+type PlayVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'destructive';
+type PlaySize = 'compact' | 'default';
 
 // "Icon only" swaps the text sizes for their square counterparts.
-const ICON_ONLY_SIZE: Record<PlaySize, "icon-compact" | "icon"> = {
-  compact: "icon-compact",
-  default: "icon",
+const ICON_ONLY_SIZE: Record<PlaySize, 'icon-compact' | 'icon'> = {
+  compact: 'icon-compact',
+  default: 'icon',
 };
 
 function buildButtonCode(o: {
@@ -43,32 +43,26 @@ function buildButtonCode(o: {
 }) {
   const size = o.iconOnly ? ICON_ONLY_SIZE[o.size] : o.size;
   const props: string[] = [];
-  if (o.variant !== "primary") props.push(`variant="${o.variant}"`);
-  if (size !== "default") props.push(`size="${size}"`);
-  if (!o.iconOnly && o.leading) props.push("leadingIcon={Plus}");
-  if (!o.iconOnly && o.trailing) props.push("trailingIcon={ArrowRight}");
-  if (o.loading) props.push("loading");
-  if (o.active) props.push("active");
-  if (o.disabled) props.push("disabled");
+  if (o.variant !== 'primary') props.push(`variant="${o.variant}"`);
+  if (size !== 'default') props.push(`size="${size}"`);
+  if (!o.iconOnly && o.leading) props.push('leadingIcon={Plus}');
+  if (!o.iconOnly && o.trailing) props.push('trailingIcon={ArrowRight}');
+  if (o.loading) props.push('loading');
+  if (o.active) props.push('active');
+  if (o.disabled) props.push('disabled');
   // Icon-only buttons have no visible text, so the label becomes the
   // accessible name instead.
   if (o.iconOnly) props.push(`aria-label="${o.label}"`);
-  const child = o.iconOnly ? "<Plus />" : o.label;
+  const child = o.iconOnly ? '<Plus />' : o.label;
 
-  const oneLine = `<Button${props.length ? " " + props.join(" ") : ""}>${child}</Button>`;
+  const oneLine = `<Button${props.length ? ' ' + props.join(' ') : ''}>${child}</Button>`;
   if (oneLine.length <= 60) return oneLine;
-  return `<Button\n${props.map((p) => "  " + p).join("\n")}\n>\n  ${child}\n</Button>`;
+  return `<Button\n${props.map((p) => '  ' + p).join('\n')}\n>\n  ${child}\n</Button>`;
 }
 
 // A borderless text input styled to match the select rows. Like the
 // library's fields, it takes 16px on touch screens (fieldTouchClass).
-function PlayText({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
+function PlayText({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
     <input
       type="text"
@@ -76,20 +70,20 @@ function PlayText({
       onChange={(e) => onChange(e.target.value)}
       aria-label="Button label"
       className={cn(
-        "h-7 w-[124px] rounded-md bg-transparent px-2 text-right text-site-body text-foreground transition-colors duration-80 hover:bg-hover focus:bg-hover outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]",
-        fieldTouchClass
+        'h-7 w-[124px] rounded-md bg-transparent px-2 text-right text-site-body text-foreground transition-colors duration-80 hover:bg-hover focus:bg-hover outline-none focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
+        fieldTouchClass,
       )}
     />
   );
 }
 
-const LABELS = ["Get started", "Learn more", "Deploy", "Continue", "Ship it"] as const;
+const LABELS = ['Get started', 'Learn more', 'Deploy', 'Continue', 'Ship it'] as const;
 
 export function ButtonPlayground({ children }: PlaygroundProps) {
-  const Plus = useIcon("plus");
-  const ArrowRight = useIcon("arrow-right");
+  const Plus = useIcon('plus');
+  const ArrowRight = useIcon('arrow-right');
 
-  const [variant, setVariant] = useState<PlayVariant>("primary");
+  const [variant, setVariant] = useState<PlayVariant>('primary');
   // The Size control follows the site-wide step (right panel / S) until the
   // user picks a value here — then the explicit choice pins it.
   const globalSize = useSizeVariant();
@@ -105,7 +99,7 @@ export function ButtonPlayground({ children }: PlaygroundProps) {
 
   // An emptied label field would render a collapsed button (and an empty
   // accessible name when icon-only) — fall back to the default label instead.
-  const labelText = label.trim() === "" ? LABELS[0] : label;
+  const labelText = label.trim() === '' ? LABELS[0] : label;
 
   const code = buildButtonCode({
     variant,
@@ -120,10 +114,9 @@ export function ButtonPlayground({ children }: PlaygroundProps) {
   });
 
   const randomize = () => {
-    const pick = <T,>(arr: readonly T[]) =>
-      arr[Math.floor(Math.random() * arr.length)];
-    setVariant(pick(["primary", "secondary", "tertiary", "ghost"] as const));
-    setSizeOverride(pick(["compact", "default"] as const));
+    const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
+    setVariant(pick(['primary', 'secondary', 'tertiary', 'ghost'] as const));
+    setSizeOverride(pick(['compact', 'default'] as const));
     setIconOnly(Math.random() > 0.85);
     setLeading(Math.random() > 0.5);
     setTrailing(Math.random() > 0.75);
@@ -142,11 +135,11 @@ export function ButtonPlayground({ children }: PlaygroundProps) {
             value={variant}
             onChange={(v) => setVariant(v as PlayVariant)}
             options={[
-              { value: "primary", label: "Primary" },
-              { value: "secondary", label: "Secondary" },
-              { value: "tertiary", label: "Tertiary" },
-              { value: "ghost", label: "Ghost" },
-              { value: "destructive", label: "Destructive" },
+              { value: 'primary', label: 'Primary' },
+              { value: 'secondary', label: 'Secondary' },
+              { value: 'tertiary', label: 'Tertiary' },
+              { value: 'ghost', label: 'Ghost' },
+              { value: 'destructive', label: 'Destructive' },
             ]}
           />
         </PlayField>
@@ -155,8 +148,8 @@ export function ButtonPlayground({ children }: PlaygroundProps) {
             value={size}
             onChange={(v) => setSizeOverride(v as PlaySize)}
             options={[
-              { value: "compact", label: "Compact" },
-              { value: "default", label: "Default" },
+              { value: 'compact', label: 'Compact' },
+              { value: 'default', label: 'Default' },
             ]}
           />
         </PlayField>
@@ -184,7 +177,6 @@ export function ButtonPlayground({ children }: PlaygroundProps) {
           className={PLAY_SWITCH}
         />
       </div>
-
 
       <PlayDivider />
       <PlaySection label="State" />

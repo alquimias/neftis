@@ -1,11 +1,16 @@
-"use client";
+'use client';
 
-import { useMemo, useRef } from "react";
-import { useDataTable, DataTable, DataTableSearch, type ColumnDef } from "@/components/ui/data-table";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import type { ApiTable } from "@/lib/docs/api/types";
-import { Description } from "@/lib/docs/api/description";
-import { DocSectionTitle } from "@/lib/docs/DocPage";
+import { useMemo, useRef } from 'react';
+import {
+  useDataTable,
+  DataTable,
+  DataTableSearch,
+  type ColumnDef,
+} from '#components/ui/data-table';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import type { ApiTable } from '#lib/docs/api/types';
+import { Description } from '#lib/docs/api/description';
+import { DocSectionTitle } from '#lib/docs/DocPage';
 
 /** A row of the reference: a group (a component, a hook) with its props
  *  under it, or one prop. */
@@ -20,15 +25,18 @@ interface ApiRow {
 
 const columns: ColumnDef<ApiRow>[] = [
   {
-    accessorKey: "name",
-    header: "Prop",
+    accessorKey: 'name',
+    header: 'Prop',
     cell: ({ row }) =>
       row.original.children ? (
         <span className="text-foreground" style={{ fontVariationSettings: fontWeights.semibold }}>
           {row.original.name}
           {/* How much is under it, while it is closed. */}
           {!row.getIsExpanded() && (
-            <span className="ml-2 font-mono text-site-caption text-muted-foreground" style={{ fontVariationSettings: fontWeights.normal }}>
+            <span
+              className="ml-2 font-mono text-site-caption text-muted-foreground"
+              style={{ fontVariationSettings: fontWeights.normal }}
+            >
               {row.original.children.length}
             </span>
           )}
@@ -37,26 +45,34 @@ const columns: ColumnDef<ApiRow>[] = [
         <span className="font-mono text-site-caption text-foreground">{row.original.name}</span>
       ),
     // 24px past what its names need: the longest sat tight against Type.
-    meta: { filter: false, lines: "wrap", className: "min-w-55" },
+    meta: { filter: false, lines: 'wrap', className: 'min-w-55' },
   },
   {
-    accessorKey: "type",
-    header: "Type",
-    cell: ({ row }) => <span className="font-mono text-site-caption [overflow-wrap:anywhere]">{row.original.type}</span>,
-    meta: { filter: false, lines: "wrap", className: "min-w-32 text-muted-foreground" },
+    accessorKey: 'type',
+    header: 'Type',
+    cell: ({ row }) => (
+      <span className="font-mono text-site-caption [overflow-wrap:anywhere]">
+        {row.original.type}
+      </span>
+    ),
+    meta: { filter: false, lines: 'wrap', className: 'min-w-32 text-muted-foreground' },
   },
   {
-    accessorKey: "default",
-    header: "Default",
-    cell: ({ row }) => <span className="font-mono text-site-caption [overflow-wrap:anywhere]">{row.original.default}</span>,
+    accessorKey: 'default',
+    header: 'Default',
+    cell: ({ row }) => (
+      <span className="font-mono text-site-caption [overflow-wrap:anywhere]">
+        {row.original.default}
+      </span>
+    ),
     // A floor: "the page size" on three lines read as a column squeezed.
-    meta: { filter: false, lines: "wrap", className: "min-w-20 text-muted-foreground" },
+    meta: { filter: false, lines: 'wrap', className: 'min-w-20 text-muted-foreground' },
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: 'description',
+    header: 'Description',
     cell: ({ row }) => <Description text={row.original.description} />,
-    meta: { filter: false, lines: "wrap", className: "w-full min-w-48 text-muted-foreground" },
+    meta: { filter: false, lines: 'wrap', className: 'w-full min-w-48 text-muted-foreground' },
   },
 ];
 
@@ -69,18 +85,18 @@ export function ApiReferenceTable({ groups, title }: { groups: ApiTable[]; title
       groups.map((group) => ({
         id: group.title,
         name: group.title,
-        type: "",
-        default: "",
-        description: group.description ?? "",
+        type: '',
+        default: '',
+        description: group.description ?? '',
         children: group.props.map((prop) => ({
           id: `${group.title}/${prop.name}`,
           name: prop.name,
           type: prop.type,
-          default: prop.default ?? "",
+          default: prop.default ?? '',
           description: prop.description,
         })),
       })),
-    [groups]
+    [groups],
   );
   const table = useDataTable({
     data,
@@ -92,7 +108,9 @@ export function ApiReferenceTable({ groups, title }: { groups: ApiTable[]; title
     enableSorting: false,
     enableColumnPinning: false,
     initialState: {
-      expanded: Object.fromEntries(groups.filter((g) => g.collapsed !== true).map((g) => [g.title, true])),
+      expanded: Object.fromEntries(
+        groups.filter((g) => g.collapsed !== true).map((g) => [g.title, true]),
+      ),
     },
   });
   const rootRef = useRef<HTMLDivElement>(null);
@@ -108,13 +126,15 @@ export function ApiReferenceTable({ groups, title }: { groups: ApiTable[]; title
       <DataTable
         table={table}
         resizeColumns
-        empty={{ title: "No props match" }}
+        empty={{ title: 'No props match' }}
         // A group opens from anywhere on its row, through its own chevron,
         // so it moves the way the table opens rows.
         onRowClick={(row) => {
           if (!row.getCanExpand()) return;
           rootRef.current
-            ?.querySelector<HTMLElement>(`tbody tr[data-row-id="${CSS.escape(row.id)}"] button[aria-expanded]`)
+            ?.querySelector<HTMLElement>(
+              `tbody tr[data-row-id="${CSS.escape(row.id)}"] button[aria-expanded]`,
+            )
             ?.click();
         }}
       />

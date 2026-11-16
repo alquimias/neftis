@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useState,
@@ -11,22 +11,21 @@ import {
   forwardRef,
   type ReactNode,
   type HTMLAttributes,
-} from "react";
-import { motion, AnimatePresence } from "motion/react";
-import * as Collapsible from "@radix-ui/react-collapsible";
+} from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import * as Collapsible from '@radix-ui/react-collapsible';
 
 // SSR-safe layout effect (client components still server-render in Next).
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
-import { cn } from "@/lib/utils";
-import { useIcons } from "@/lib/icon-context";
-import type { IconName } from "@/lib/icon-context";
-import { spring } from "@/lib/springs";
-import { fontWeights } from "@/lib/font-weight";
-import { useShape } from "@/lib/shape-context";
-import { SizeProvider, useSize, typeClass, type SizeVariant } from "@/lib/size-context";
-import { Badge } from "@/registry/default/badge";
-import type { BadgeColor } from "@/registry/default/badge";
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+import { cn } from '#lib/utils';
+import { useIcons } from '#lib/icon-context';
+import type { IconName } from '#lib/icon-context';
+import { spring } from '#lib/springs';
+import { fontWeights } from '#lib/font-weight';
+import { useShape } from '#lib/shape-context';
+import { SizeProvider, useSize, typeClass, type SizeVariant } from '#lib/size-context';
+import { Badge } from '#registry/default/badge';
+import type { BadgeColor } from '#registry/default/badge';
 
 // ─── Shared collapsible parts ───────────────────────────────────────────────
 //
@@ -50,7 +49,7 @@ interface TriggerRowProps extends HTMLAttributes<HTMLButtonElement> {
 const TriggerRow = forwardRef<HTMLButtonElement, TriggerRowProps>(
   ({ open, children, className, ...props }, ref) => {
     const icons = useIcons();
-    const ChevronRight = icons["chevron-right"];
+    const ChevronRight = icons['chevron-right'];
     const shape = useShape();
     const sizeClasses = useSize();
     const [isHovered, setIsHovered] = useState(false);
@@ -79,15 +78,15 @@ const TriggerRow = forwardRef<HTMLButtonElement, TriggerRowProps>(
           ref={ref}
           className={cn(
             `relative z-10 flex items-center gap-2.5 ${shape.item} ${sizeClasses.px} ${
-              sizeClasses.variant === "compact" ? "py-1.5" : "py-2"
+              sizeClasses.variant === 'compact' ? 'py-1.5' : 'py-2'
             } cursor-pointer outline-none select-none`,
-            "focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] focus-visible:ring-offset-0",
-            className
+            'focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)] focus-visible:ring-offset-0',
+            className,
           )}
           {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
         >
           {/* Label with dual-layer text (invisible bold layer reserves width) */}
-          <span className={cn("inline-grid text-left", sizeClasses.text)}>
+          <span className={cn('inline-grid text-left', sizeClasses.text)}>
             <span
               className="col-start-1 row-start-1 invisible"
               style={{ fontVariationSettings: fontWeights.semibold }}
@@ -97,13 +96,11 @@ const TriggerRow = forwardRef<HTMLButtonElement, TriggerRowProps>(
             </span>
             <span
               className={cn(
-                "col-start-1 row-start-1 transition-[color,font-variation-settings] duration-80",
-                highlighted ? "text-foreground" : "text-muted-foreground"
+                'col-start-1 row-start-1 transition-[color,font-variation-settings] duration-80',
+                highlighted ? 'text-foreground' : 'text-muted-foreground',
               )}
               style={{
-                fontVariationSettings: open
-                  ? fontWeights.semibold
-                  : fontWeights.normal,
+                fontVariationSettings: open ? fontWeights.semibold : fontWeights.normal,
               }}
             >
               {children}
@@ -120,17 +117,17 @@ const TriggerRow = forwardRef<HTMLButtonElement, TriggerRowProps>(
               size={sizeClasses.icon}
               strokeWidth={highlighted ? 2 : 1.5}
               className={cn(
-                "transition-[color,stroke-width] duration-80",
-                highlighted ? "text-foreground" : "text-muted-foreground"
+                'transition-[color,stroke-width] duration-80',
+                highlighted ? 'text-foreground' : 'text-muted-foreground',
               )}
             />
           </motion.span>
         </Collapsible.Trigger>
       </div>
     );
-  }
+  },
 );
-TriggerRow.displayName = "ThinkingStepsTriggerRow";
+TriggerRow.displayName = 'ThinkingStepsTriggerRow';
 
 interface CollapsePanelProps {
   open: boolean;
@@ -151,7 +148,7 @@ interface CollapsePanelProps {
  * trigger's `aria-controls` id lives on it).
  */
 function CollapsePanel({ open, children }: CollapsePanelProps) {
-  const compactStep = useSize().variant === "compact";
+  const compactStep = useSize().variant === 'compact';
   // The open height is animated to a self-measured LAYOUT pixel value, not
   // `height: "auto"`: framer resolves an "auto" target by measuring the
   // element's *visual* (transformed) size, so under a scaled ancestor
@@ -211,14 +208,10 @@ function CollapsePanel({ open, children }: CollapsePanelProps) {
       <div>
         <motion.div
           className="overflow-hidden"
-          initial={{ height: open ? "auto" : 0 }}
-          animate={{ height: open ? contentHeight ?? 0 : 0 }}
+          initial={{ height: open ? 'auto' : 0 }}
+          animate={{ height: open ? (contentHeight ?? 0) : 0 }}
           // bounce: 0 — pure height looks better without overshoot.
-          transition={
-            needsSnap
-              ? { duration: 0 }
-              : { ...spring.moderate, bounce: 0 }
-          }
+          transition={needsSnap ? { duration: 0 } : { ...spring.moderate, bounce: 0 }}
           onAnimationComplete={() => {
             if (!open) setExitComplete(true);
           }}
@@ -226,8 +219,8 @@ function CollapsePanel({ open, children }: CollapsePanelProps) {
           <div
             ref={measureRef}
             className={cn(
-              "px-3 pb-3 pt-1 text-muted-foreground",
-              typeClass("body", compactStep ? "compact" : "default")
+              'px-3 pb-3 pt-1 text-muted-foreground',
+              typeClass('body', compactStep ? 'compact' : 'default'),
             )}
           >
             {children}
@@ -265,7 +258,7 @@ const ThinkingSteps = forwardRef<HTMLDivElement, ThinkingStepsProps>(
           if (open === undefined) setInternalOpen(next);
           onOpenChange?.(next);
         }}
-        className={cn("w-80 max-w-full", className)}
+        className={cn('w-80 max-w-full', className)}
         {...props}
       >
         <ThinkingStepsOpenContext.Provider value={isOpen}>
@@ -276,9 +269,9 @@ const ThinkingSteps = forwardRef<HTMLDivElement, ThinkingStepsProps>(
 
     // A size prop pins every row inside to one ladder step.
     return size ? <SizeProvider size={size}>{root}</SizeProvider> : root;
-  }
+  },
 );
-ThinkingSteps.displayName = "ThinkingSteps";
+ThinkingSteps.displayName = 'ThinkingSteps';
 
 // ─── ThinkingStepsHeader ────────────────────────────────────────────────────
 
@@ -286,18 +279,17 @@ interface ThinkingStepsHeaderProps extends HTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
 }
 
-const ThinkingStepsHeader = forwardRef<
-  HTMLButtonElement,
-  ThinkingStepsHeaderProps
->(({ children = "Thinking", className, ...props }, ref) => {
-  const isOpen = useContext(ThinkingStepsOpenContext);
-  return (
-    <TriggerRow ref={ref} open={isOpen} className={className} {...props}>
-      {children}
-    </TriggerRow>
-  );
-});
-ThinkingStepsHeader.displayName = "ThinkingStepsHeader";
+const ThinkingStepsHeader = forwardRef<HTMLButtonElement, ThinkingStepsHeaderProps>(
+  ({ children = 'Thinking', className, ...props }, ref) => {
+    const isOpen = useContext(ThinkingStepsOpenContext);
+    return (
+      <TriggerRow ref={ref} open={isOpen} className={className} {...props}>
+        {children}
+      </TriggerRow>
+    );
+  },
+);
+ThinkingStepsHeader.displayName = 'ThinkingStepsHeader';
 
 // ─── ThinkingStepsContent ───────────────────────────────────────────────────
 
@@ -305,28 +297,23 @@ interface ThinkingStepsContentProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
 }
 
-const ThinkingStepsContent = forwardRef<
-  HTMLDivElement,
-  ThinkingStepsContentProps
->(({ children, className, ...props }, ref) => {
-  const isOpen = useContext(ThinkingStepsOpenContext);
-  return (
-    <CollapsePanel open={isOpen}>
-      <div
-        ref={ref}
-        className={cn("flex flex-col", className)}
-        {...props}
-      >
-        {children}
-      </div>
-    </CollapsePanel>
-  );
-});
-ThinkingStepsContent.displayName = "ThinkingStepsContent";
+const ThinkingStepsContent = forwardRef<HTMLDivElement, ThinkingStepsContentProps>(
+  ({ children, className, ...props }, ref) => {
+    const isOpen = useContext(ThinkingStepsOpenContext);
+    return (
+      <CollapsePanel open={isOpen}>
+        <div ref={ref} className={cn('flex flex-col', className)} {...props}>
+          {children}
+        </div>
+      </CollapsePanel>
+    );
+  },
+);
+ThinkingStepsContent.displayName = 'ThinkingStepsContent';
 
 // ─── ThinkingStep ───────────────────────────────────────────────────────────
 
-type StepStatus = "complete" | "active" | "pending";
+type StepStatus = 'complete' | 'active' | 'pending';
 
 interface ThinkingStepProps {
   icon?: IconName;
@@ -365,89 +352,83 @@ function useStepHeight() {
 }
 
 function ThinkingStep({
-  icon = "dot",
+  icon = 'dot',
   showIcon = true,
   label,
   description,
-  status = "complete",
+  status = 'complete',
   delay = 0.08,
   isLast = false,
   children,
   className,
 }: ThinkingStepProps) {
-    const icons = useIcons();
-    const Icon = icons[icon];
-    const shape = useShape();
-    const sizeClasses = useSize();
-    const [stepRef, stepHeight] = useStepHeight();
+  const icons = useIcons();
+  const Icon = icons[icon];
+  const shape = useShape();
+  const sizeClasses = useSize();
+  const [stepRef, stepHeight] = useStepHeight();
 
-    if (status === "pending") return null;
+  if (status === 'pending') return null;
 
-    const isActive = status === "active";
+  const isActive = status === 'active';
 
-    return (
-      /* Outer: animates height to create space smoothly */
-      <motion.div
-        className={cn("relative z-10 overflow-hidden", className)}
-        initial={{ height: 0 }}
-        animate={{ height: stepHeight ?? 0 }}
-        transition={spring.slow}
-      >
-        {/* Inner: fades content in after space starts opening — and is the
+  return (
+    /* Outer: animates height to create space smoothly */
+    <motion.div
+      className={cn('relative z-10 overflow-hidden', className)}
+      initial={{ height: 0 }}
+      animate={{ height: stepHeight ?? 0 }}
+      transition={spring.slow}
+    >
+      {/* Inner: fades content in after space starts opening — and is the
             element measured for the height above. */}
-        <motion.div
-          ref={stepRef}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.24, delay, ease: "easeOut" }}
-        >
-          {/* Content row — this is the fluid hover target */}
-          <div className={cn("flex gap-2.5 px-2 py-1.5", shape.item)}>
-            {/* Icon column with continuous connector line */}
-            <div className="flex flex-col items-center shrink-0 w-[14px]">
-              <div className="pt-0.5">
-                {showIcon ? (
-                  <Icon
-                    size={sizeClasses.variant === "compact" ? 12 : 14}
-                    strokeWidth={1.5}
-                    className="text-muted-foreground"
-                  />
-                ) : (
-                  <div className="w-[14px] h-[14px] flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60" />
-                  </div>
-                )}
-              </div>
-              {/* Line stretches from icon to bottom of this step */}
-              {!isLast && (
-                <div className="flex-1 w-px bg-border/60 mt-1" />
+      <motion.div
+        ref={stepRef}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.24, delay, ease: 'easeOut' }}
+      >
+        {/* Content row — this is the fluid hover target */}
+        <div className={cn('flex gap-2.5 px-2 py-1.5', shape.item)}>
+          {/* Icon column with continuous connector line */}
+          <div className="flex flex-col items-center shrink-0 w-[14px]">
+            <div className="pt-0.5">
+              {showIcon ? (
+                <Icon
+                  size={sizeClasses.variant === 'compact' ? 12 : 14}
+                  strokeWidth={1.5}
+                  className="text-muted-foreground"
+                />
+              ) : (
+                <div className="w-[14px] h-[14px] flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60" />
+                </div>
               )}
             </div>
-
-            {/* Text content */}
-            <div className="flex-1 flex flex-col gap-1 min-w-0">
-              <span
-                className={cn(
-                  sizeClasses.type.body,
-                  "text-foreground",
-                  isActive && "shimmer-text"
-                )}
-                style={{ fontVariationSettings: fontWeights.semibold }}
-              >
-                {label}
-                {isActive && "…"}
-              </span>
-              {description && (
-                <span className={cn(sizeClasses.type.body, "text-muted-foreground")}>
-                  {description}
-                </span>
-              )}
-              {children}
-            </div>
+            {/* Line stretches from icon to bottom of this step */}
+            {!isLast && <div className="flex-1 w-px bg-border/60 mt-1" />}
           </div>
-        </motion.div>
+
+          {/* Text content */}
+          <div className="flex-1 flex flex-col gap-1 min-w-0">
+            <span
+              className={cn(sizeClasses.type.body, 'text-foreground', isActive && 'shimmer-text')}
+              style={{ fontVariationSettings: fontWeights.semibold }}
+            >
+              {label}
+              {isActive && '…'}
+            </span>
+            {description && (
+              <span className={cn(sizeClasses.type.body, 'text-muted-foreground')}>
+                {description}
+              </span>
+            )}
+            {children}
+          </div>
+        </div>
       </motion.div>
-    );
+    </motion.div>
+  );
 }
 
 // ─── ThinkingStepDetails (nested collapsible) ───────────────────────────────
@@ -467,15 +448,11 @@ function ThinkingStepDetails({
   children,
   className,
 }: ThinkingStepDetailsProps) {
-  const compactStep = useSize().variant === "compact";
+  const compactStep = useSize().variant === 'compact';
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <Collapsible.Root
-      open={open}
-      onOpenChange={setOpen}
-      className={cn("mt-1 -ml-3", className)}
-    >
+    <Collapsible.Root open={open} onOpenChange={setOpen} className={cn('mt-1 -ml-3', className)}>
       <TriggerRow open={open} className="py-1 px-3 gap-1.5">
         {summary}
       </TriggerRow>
@@ -485,8 +462,8 @@ function ThinkingStepDetails({
             <span
               key={i}
               className={cn(
-                "text-muted-foreground",
-                typeClass("caption", compactStep ? "compact" : "default")
+                'text-muted-foreground',
+                typeClass('caption', compactStep ? 'compact' : 'default'),
               )}
             >
               {item}
@@ -508,17 +485,13 @@ interface ThinkingStepSourcesProps extends HTMLAttributes<HTMLDivElement> {
 const ThinkingStepSources = forwardRef<HTMLDivElement, ThinkingStepSourcesProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn("flex flex-wrap gap-1.5 mt-1", className)}
-        {...props}
-      >
+      <div ref={ref} className={cn('flex flex-wrap gap-1.5 mt-1', className)} {...props}>
         {children}
       </div>
     );
-  }
+  },
 );
-ThinkingStepSources.displayName = "ThinkingStepSources";
+ThinkingStepSources.displayName = 'ThinkingStepSources';
 
 // ─── ThinkingStepSource ─────────────────────────────────────────────────────
 
@@ -529,11 +502,16 @@ interface ThinkingStepSourceProps {
   className?: string;
 }
 
-function ThinkingStepSource({ color = "gray", delay = 0, children, className }: ThinkingStepSourceProps) {
+function ThinkingStepSource({
+  color = 'gray',
+  delay = 0,
+  children,
+  className,
+}: ThinkingStepSourceProps) {
   return (
     <motion.span
-      initial={{ opacity: 0, scale: 0.85, filter: "blur(4px)" }}
-      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+      initial={{ opacity: 0, scale: 0.85, filter: 'blur(4px)' }}
+      animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
       transition={{
         ...spring.moderate,
         delay,
@@ -546,7 +524,7 @@ function ThinkingStepSource({ color = "gray", delay = 0, children, className }: 
     </motion.span>
   );
 }
-ThinkingStepSource.displayName = "ThinkingStepSource";
+ThinkingStepSource.displayName = 'ThinkingStepSource';
 
 // ─── ThinkingStepImage ──────────────────────────────────────────────────────
 
@@ -558,17 +536,23 @@ interface ThinkingStepImageProps {
   className?: string;
 }
 
-function ThinkingStepImage({ src, alt = "", caption, delay = 0, className }: ThinkingStepImageProps) {
+function ThinkingStepImage({
+  src,
+  alt = '',
+  caption,
+  delay = 0,
+  className,
+}: ThinkingStepImageProps) {
   const shape = useShape();
   // The caption role of the type scale — see /docs/sizes.
-  const compact = useSize().variant === "compact";
+  const compact = useSize().variant === 'compact';
   return (
     <motion.div
-      className={cn("mt-1.5", className)}
-      initial={{ opacity: 0, filter: "blur(4px)" }}
-      animate={{ opacity: 1, filter: "blur(0px)" }}
+      className={cn('mt-1.5', className)}
+      initial={{ opacity: 0, filter: 'blur(4px)' }}
+      animate={{ opacity: 1, filter: 'blur(0px)' }}
       transition={{
-        opacity: { duration: 0.2, delay, ease: "easeOut" },
+        opacity: { duration: 0.2, delay, ease: 'easeOut' },
         filter: { duration: 0.15, delay },
       }}
     >
@@ -579,15 +563,15 @@ function ThinkingStepImage({ src, alt = "", caption, delay = 0, className }: Thi
         src={src}
         alt={alt}
         className={cn(
-          "w-full max-w-[200px] object-cover outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10",
-          shape.container
+          'w-full max-w-[200px] object-cover outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10',
+          shape.container,
         )}
       />
       {caption && (
         <span
           className={cn(
-            typeClass("caption", compact ? "compact" : "default"),
-            "text-muted-foreground mt-1 block"
+            typeClass('caption', compact ? 'compact' : 'default'),
+            'text-muted-foreground mt-1 block',
           )}
         >
           {caption}
@@ -596,7 +580,7 @@ function ThinkingStepImage({ src, alt = "", caption, delay = 0, className }: Thi
     </motion.div>
   );
 }
-ThinkingStepImage.displayName = "ThinkingStepImage";
+ThinkingStepImage.displayName = 'ThinkingStepImage';
 
 // ─── Exports ────────────────────────────────────────────────────────────────
 

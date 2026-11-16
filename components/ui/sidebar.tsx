@@ -1,1 +1,1 @@
-export * from "@/components/flavored/sidebar";
+export * from '#components/flavored/sidebar';

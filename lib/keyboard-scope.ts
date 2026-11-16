@@ -4,7 +4,7 @@
 // stand aside so the keys reach the component being tried. Registry parts
 // with page-wide shortcuts (Sidebar, CommandMenu) honor the same attribute.
 
-export const KEYBOARD_SCOPE_SELECTOR = "[data-keyboard-scope]";
+export const KEYBOARD_SCOPE_SELECTOR = '[data-keyboard-scope]';
 
 /** Whether a key event (or focus) comes from inside a keyboard scope. */
 export function inKeyboardScope(target: EventTarget | null): boolean {

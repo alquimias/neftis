@@ -1,7 +1,15 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { OgStage, OG_STILL, OG_W, OG_H, PRINCIPLES, SLIDER_TILE_ROTATE, type OgState } from "../og-stage";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  OgStage,
+  OG_STILL,
+  OG_W,
+  OG_H,
+  PRINCIPLES,
+  SLIDER_TILE_ROTATE,
+  type OgState,
+} from '../og-stage';
 
 // The OG card as a loop in two rounds. Round one: a cursor ticks two
 // checkboxes, picks a spring and slides the value up, reading it off the
@@ -23,7 +31,7 @@ const START: OgState = {
   ...OG_STILL,
   checked: [],
   satisfaction: 40,
-  spring: "fast",
+  spring: 'fast',
 };
 
 // [on, off] press times for each change. Both rounds take the tiles in the
@@ -45,7 +53,7 @@ function stateAt(t: number): OgState {
   return {
     ...START,
     checked: TICKS.filter(([, on, off]) => between(t, [on, off])).map(([i]) => i),
-    spring: between(t, MODERATE) ? "moderate" : "fast",
+    spring: between(t, MODERATE) ? 'moderate' : 'fast',
     satisfaction: between(t, SATISFACTION) ? OG_STILL.satisfaction : START.satisfaction,
   };
 }
@@ -96,9 +104,9 @@ const PATH: [number, Anchor][] = [
   [0.9, row(PRINCIPLES[0])],
   [1.5, row(PRINCIPLES[3])],
   [1.8, row(PRINCIPLES[3])],
-  [2.3, radio("Fast spring")],
-  [2.6, radio("Moderate spring")],
-  [2.9, radio("Moderate spring")],
+  [2.3, radio('Fast spring')],
+  [2.6, radio('Moderate spring')],
+  [2.9, radio('Moderate spring')],
   [3.4, sliderAt(START.satisfaction)],
   [SWEEP_UP.from, sliderAt(START.satisfaction)],
   [SWEEP_UP.to, sliderAt(OG_STILL.satisfaction)],
@@ -113,9 +121,9 @@ const PATH: [number, Anchor][] = [
   [7.8, row(PRINCIPLES[0])],
   [8.4, row(PRINCIPLES[3])],
   [8.7, row(PRINCIPLES[3])],
-  [9.2, radio("Moderate spring")],
-  [9.5, radio("Fast spring")],
-  [9.8, radio("Fast spring")],
+  [9.2, radio('Moderate spring')],
+  [9.5, radio('Fast spring')],
+  [9.8, radio('Fast spring')],
   [10.3, sliderAt(OG_STILL.satisfaction)],
   [SWEEP_DOWN.from, sliderAt(OG_STILL.satisfaction)],
   [SWEEP_DOWN.to, sliderAt(START.satisfaction)],
@@ -124,11 +132,7 @@ const PATH: [number, Anchor][] = [
   [DURATION, EXIT],
 ];
 const SWEEPS = [SWEEP_UP.from, SWEEP_DOWN.from];
-const PRESSES = [
-  ...TICKS.flatMap(([, on, off]) => [on, off]),
-  ...MODERATE,
-  ...SATISFACTION,
-];
+const PRESSES = [...TICKS.flatMap(([, on, off]) => [on, off]), ...MODERATE, ...SATISFACTION];
 
 // Groups that react to the pointer. Each gets enter/move/leave as the
 // cursor crosses its box, the events a real pointer would send.
@@ -151,7 +155,7 @@ export default function OgVideoPage() {
   const [record, setRecord] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
-  const lastKey = useRef("");
+  const lastKey = useRef('');
   const startedAt = useRef<number | null>(null);
   const inside = useRef<Set<Element>>(new Set());
 
@@ -160,7 +164,7 @@ export default function OgVideoPage() {
   }, []);
 
   useEffect(() => {
-    const isRecord = new URLSearchParams(window.location.search).has("record");
+    const isRecord = new URLSearchParams(window.location.search).has('record');
     setRecord(isRecord);
     window.__ogVideo = { duration: DURATION, start };
     let autostart: number | undefined;
@@ -200,13 +204,16 @@ export default function OgVideoPage() {
       // Stage coordinates, whatever the preview scale.
       const box = stage.getBoundingClientRect();
       const scale = box.width / OG_W;
-      const toStage = (x: number, y: number) => ({ x: (x - box.left) / scale, y: (y - box.top) / scale });
+      const toStage = (x: number, y: number) => ({
+        x: (x - box.left) / scale,
+        y: (y - box.top) / scale,
+      });
       const resolve = (a: Anchor): Point => {
-        if (typeof a === "function") {
+        if (typeof a === 'function') {
           const p = a();
           return p ? toStage(p.x, p.y) : { x: 0, y: 0 };
         }
-        if (typeof a !== "string") return a;
+        if (typeof a !== 'string') return a;
         const el = document.querySelector(a);
         if (!el) return { x: 0, y: 0 };
         const r = el.getBoundingClientRect();
@@ -234,8 +241,15 @@ export default function OgVideoPage() {
         const zone = document.querySelector(selector);
         if (!zone) continue;
         const r = zone.getBoundingClientRect();
-        const over = clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom;
-        const init = { bubbles: true, clientX, clientY, relatedTarget: stage, pointerType: "mouse" };
+        const over =
+          clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom;
+        const init = {
+          bubbles: true,
+          clientX,
+          clientY,
+          relatedTarget: stage,
+          pointerType: 'mouse',
+        };
         if (over) {
           if (!inside.current.has(zone)) {
             inside.current.add(zone);
@@ -243,19 +257,19 @@ export default function OgVideoPage() {
             // left (it drops `over` events whose relatedTarget it owns),
             // so entering is the stage's out, toward the target.
             const enter = { ...init, relatedTarget: zone };
-            stage.dispatchEvent(new PointerEvent("pointerout", enter));
-            stage.dispatchEvent(new MouseEvent("mouseout", enter));
+            stage.dispatchEvent(new PointerEvent('pointerout', enter));
+            stage.dispatchEvent(new MouseEvent('mouseout', enter));
           }
           // On what lies under the cursor, as a real pointer's move would
           // be: the hover hooks light only the item the move lands in.
           const hit = document.elementFromPoint(clientX, clientY);
           const target = hit && zone.contains(hit) ? hit : zone;
-          target.dispatchEvent(new PointerEvent("pointermove", init));
-          target.dispatchEvent(new MouseEvent("mousemove", init));
+          target.dispatchEvent(new PointerEvent('pointermove', init));
+          target.dispatchEvent(new MouseEvent('mousemove', init));
         } else if (inside.current.has(zone)) {
           inside.current.delete(zone);
-          zone.dispatchEvent(new PointerEvent("pointerout", init));
-          zone.dispatchEvent(new MouseEvent("mouseout", init));
+          zone.dispatchEvent(new PointerEvent('pointerout', init));
+          zone.dispatchEvent(new MouseEvent('mouseout', init));
         }
       }
     };
@@ -267,11 +281,16 @@ export default function OgVideoPage() {
     <div
       ref={cursorRef}
       className="absolute left-0 top-0 z-10"
-      style={{ transform: "translate(-100px, -100px)" }}
+      style={{ transform: 'translate(-100px, -100px)' }}
       aria-hidden
     >
       {/* Tip at the element's origin, sized to read in a ~500px preview. */}
-      <svg width="30" height="38" viewBox="-1.5 -1.5 21 27" className="origin-top-left drop-shadow-sm transition-transform duration-75">
+      <svg
+        width="30"
+        height="38"
+        viewBox="-1.5 -1.5 21 27"
+        className="origin-top-left drop-shadow-sm transition-transform duration-75"
+      >
         <path
           d="M0 0 L0 21 L5.5 16 L9.5 24.5 L13 23 L9 14.8 L16 14.8 Z"
           fill="#0a0a0a"

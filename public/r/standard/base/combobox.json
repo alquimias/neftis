@@ -3,12 +3,7 @@
   "name": "combobox",
   "title": "Combobox",
   "description": "Type-to-filter combobox with single or multiple (chips, merged selection backgrounds) selection: a text field that filters a list as you type, with keyboard highlight, fluid hover, spring-animated popover, animated checkmark, and clear/chevron controls. Optional create-from-query row (onCreate) and hideSelected for chips fields. Base UI flavor.",
-  "dependencies": [
-    "@base-ui/react@^1.9.0",
-    "motion",
-    "class-variance-authority",
-    "lucide-react"
-  ],
+  "dependencies": ["@base-ui/react@^1.9.0", "motion", "class-variance-authority", "lucide-react"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -35,8 +30,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/combobox. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#combobox.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

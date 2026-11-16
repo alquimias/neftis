@@ -34,20 +34,20 @@ describe("depUrl", () => {
 describe("neutralizeComponentImports", () => {
   it("rewrites component imports of every flavour to @/components/ui/*", () => {
     expect(
-      neutralizeComponentImports('import { Button } from "@/registry/radix/button";')
-    ).toBe('import { Button } from "@/components/ui/button";');
+      neutralizeComponentImports('import { Button } from "#registry/radix/button";')
+    ).toBe('import { Button } from "#components/ui/button";');
     expect(
-      neutralizeComponentImports('import { Slider } from "@/registry/base/slider";')
-    ).toBe('import { Slider } from "@/components/ui/slider";');
+      neutralizeComponentImports('import { Slider } from "#registry/base/slider";')
+    ).toBe('import { Slider } from "#components/ui/slider";');
     expect(
-      neutralizeComponentImports('import { FileThumbnail } from "@/registry/default/file-thumbnail";')
-    ).toBe('import { FileThumbnail } from "@/components/ui/file-thumbnail";');
+      neutralizeComponentImports('import { FileThumbnail } from "#registry/default/file-thumbnail";')
+    ).toBe('import { FileThumbnail } from "#components/ui/file-thumbnail";');
   });
 
   it("leaves lib and hook imports for the CLI's own alias mapping", () => {
     for (const src of [
-      'import { spring } from "@/registry/default/lib/springs";',
-      'import { useFluidHover } from "@/registry/default/hooks/use-fluid-hover";',
+      'import { spring } from "#registry/default/lib/springs";',
+      'import { useFluidHover } from "#registry/default/hooks/use-fluid-hover";',
     ]) {
       expect(neutralizeComponentImports(src)).toBe(src);
     }
@@ -107,9 +107,9 @@ describe("processRegistry pipeline", () => {
           path: "registry/default/composer.tsx",
           type: "registry:ui",
           content:
-            'import { Button } from "@/registry/radix/button";\n' +
-            'import { FileThumbnail } from "@/registry/default/file-thumbnail";\n' +
-            'import { spring } from "@/registry/default/lib/springs";\n',
+            'import { Button } from "#registry/radix/button";\n' +
+            'import { FileThumbnail } from "#registry/default/file-thumbnail";\n' +
+            'import { spring } from "#registry/default/lib/springs";\n',
         },
       ],
     });
@@ -175,14 +175,14 @@ describe("processRegistry pipeline", () => {
     // are left alone. Both flavours embed the same flavour-neutral source.
     for (const payload of [base, radix]) {
       const content = payload.files[0].content;
-      expect(content).toContain('from "@/components/ui/button"');
-      expect(content).toContain('from "@/components/ui/file-thumbnail"');
-      expect(content).toContain('from "@/registry/default/lib/springs"');
+      expect(content).toContain('from "#components/ui/button"');
+      expect(content).toContain('from "#components/ui/file-thumbnail"');
+      expect(content).toContain('from "#registry/default/lib/springs"');
       expect(content).not.toContain("@/registry/radix/");
     }
     // The flat payload keeps its original imports.
     const flat = await read("composer.json");
-    expect(flat.files[0].content).toContain('from "@/registry/radix/button"');
+    expect(flat.files[0].content).toContain('from "#registry/radix/button"');
   });
 
   it("rewrites the index per item flavour: -base entries get base URLs, others back-compat", async () => {

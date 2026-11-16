@@ -3,7 +3,7 @@
  *  copy here, so the two say the same thing. No imports: route handlers and
  *  client components both use it. */
 
-export const SITE = "https://www.fluidfunctionalism.com";
+export const SITE = 'https://www.fluidfunctionalism.com';
 
 /** Why the install command carries --overwrite: a stock shadcn project already
  *  has button.tsx, dialog.tsx, tooltip.tsx and friends, and this library's
@@ -17,7 +17,7 @@ export const OVERWRITE_NOTE =
 /** The craft (exact behaviors and values) ships in the skill, not in the
  *  brief: one pointer instead of a page of bullets. */
 export const SKILL_LINE =
-  "For the design details behind it (exact behaviors and values), add the Fluid Functionalism skill: npx skills add mickadesign/fluid-functionalism";
+  'For the design details behind it (exact behaviors and values), add the Fluid Functionalism skill: npx skills add mickadesign/fluid-functionalism';
 
 /** Where an agent checks for changes later: every month's release, with an
  *  install URL per entry and migration steps for anything breaking. */
@@ -28,22 +28,22 @@ export const CHANGELOG_LINE = `Changelog (what changed each month, how to update
  *  so an agent that already has it skips the install. Global (-g) keeps the
  *  skill out of the user's repo; -y skips the CLI's prompts, which an agent
  *  shell can't answer. */
-export const SKILL_INSTALL_COMMAND = "npx skills add mickadesign/fluid-functionalism -g -y";
+export const SKILL_INSTALL_COMMAND = 'npx skills add mickadesign/fluid-functionalism -g -y';
 export const SKILL_INSTALL_PROMPT = `Install the fluid-functionalism skill with \`${SKILL_INSTALL_COMMAND}\` (skip this if you already have it). Then read its SKILL.md and use it to audit this project.`;
 
 /** What the project has to have before an install works. */
 export const PROJECT_NEEDS =
-  "Needs a shadcn-style project: Tailwind v4, the `@/` alias, and the Inter variable font loaded for the weight animations.";
+  'Needs a shadcn-style project: Tailwind v4, the `@/` alias, and the Inter variable font loaded for the weight animations.';
 
 /** Where installed files land, and how to change them. */
 export const INSTALLED_FILES =
-  "Installed files land in components/ui, components, lib, and hooks. Compose with props and className rather than editing them.";
+  'Installed files land in components/ui, components, lib, and hooks. Compose with props and className rather than editing them.';
 
 /** Site copy allows a spaced em dash in descriptions; briefs do not. A
  *  pair around an aside becomes parentheses ("a ladder (36px and 28px)
  *  shared by"), a single one a colon. */
 export function plainDescription(description: string): string {
   return description
-    .replace(/\s+\u2014\s+([^\u2014]+?)\s+\u2014\s+/g, " ($1) ")
-    .replace(/\s+\u2014\s+/g, ": ");
+    .replace(/\s+\u2014\s+([^\u2014]+?)\s+\u2014\s+/g, ' ($1) ')
+    .replace(/\s+\u2014\s+/g, ': ');
 }

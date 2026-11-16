@@ -1,4 +1,4 @@
-const REPO = "mickadesign/fluid-functionalism";
+const REPO = 'mickadesign/fluid-functionalism';
 
 /**
  * The repo's GitHub star count, or null when GitHub can't say. Server only:
@@ -10,13 +10,13 @@ const REPO = "mickadesign/fluid-functionalism";
 export async function getGitHubStars(): Promise<number | null> {
   try {
     const res = await fetch(`https://api.github.com/repos/${REPO}`, {
-      headers: { Accept: "application/vnd.github.v3+json" },
+      headers: { Accept: 'application/vnd.github.v3+json' },
       next: { revalidate: 60 },
       signal: AbortSignal.timeout(1500),
     });
     if (!res.ok) return null;
     const data = await res.json();
-    return typeof data?.stargazers_count === "number" ? data.stargazers_count : null;
+    return typeof data?.stargazers_count === 'number' ? data.stargazers_count : null;
   } catch {
     return null;
   }

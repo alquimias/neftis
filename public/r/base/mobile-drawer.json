@@ -3,10 +3,7 @@
   "name": "mobile-drawer",
   "title": "Mobile Drawer",
   "description": "Slide-in navigation drawer with scrim, focus trap, and scroll lock. Base UI flavor.",
-  "dependencies": [
-    "@base-ui/react@^1.9.0",
-    "motion"
-  ],
+  "dependencies": ["@base-ui/react@^1.9.0", "motion"],
   "registryDependencies": [
     "https://www.fluidfunctionalism.com/r/springs.json",
     "https://www.fluidfunctionalism.com/r/omit.json",
@@ -23,8 +20,6 @@
     }
   ],
   "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

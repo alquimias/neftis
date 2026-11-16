@@ -205,7 +205,7 @@ describe("input-message preset install generator", () => {
         ...partial,
       })) {
         expect(file.content).not.toContain("@/lib/docs");
-        expect(file.content).not.toContain('from "@/registry/');
+        expect(file.content).not.toContain('from "#registry/');
       }
     }
   });

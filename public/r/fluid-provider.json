@@ -3,9 +3,7 @@
   "name": "fluid-provider",
   "title": "Fluid Provider",
   "description": "One wrapper for the whole system: reduced motion that follows the OS, the radius (rounded, pill or sharp), the size step (default or compact), and the icon set.",
-  "dependencies": [
-    "motion"
-  ],
+  "dependencies": ["motion"],
   "registryDependencies": [
     "https://www.fluidfunctionalism.com/r/shape-context.json",
     "https://www.fluidfunctionalism.com/r/size-context.json",
@@ -19,8 +17,6 @@
     }
   ],
   "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-  "categories": [
-    "lib"
-  ],
+  "categories": ["lib"],
   "type": "registry:lib"
 }

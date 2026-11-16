@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   CommandMenu,
@@ -12,12 +12,12 @@ import {
   CommandMenuList,
   CommandMenuTabs,
   type CommandMenuItemData,
-} from "@/registry/default/command-menu";
+} from '#registry/default/command-menu';
 import {
   POPULAR_GOOGLE_FONTS,
   googleFontPreviewHref,
   type GoogleFont,
-} from "@/lib/docs/google-fonts";
+} from '#lib/docs/google-fonts';
 
 /** Rows per query: enough to scan, few enough to preview in one request. */
 const LIMIT = 50;
@@ -32,17 +32,17 @@ const KEEP_ALL = () => true;
 /** Google's categories, as tabs. Display faces go under Other, with the
  *  families Google leaves uncategorized. */
 const TABS = [
-  { value: "all", label: "All" },
-  { value: "s", label: "Serif" },
-  { value: "a", label: "Sans serif" },
-  { value: "h", label: "Handwriting" },
-  { value: "m", label: "Mono" },
-  { value: "other", label: "Other" },
+  { value: 'all', label: 'All' },
+  { value: 's', label: 'Serif' },
+  { value: 'a', label: 'Sans serif' },
+  { value: 'h', label: 'Handwriting' },
+  { value: 'm', label: 'Mono' },
+  { value: 'other', label: 'Other' },
 ];
 
 function inTab(font: GoogleFont, tab: string): boolean {
-  if (tab === "all") return true;
-  if (tab === "other") return font.c !== "s" && font.c !== "a" && font.c !== "h" && font.c !== "m";
+  if (tab === 'all') return true;
+  if (tab === 'other') return font.c !== 's' && font.c !== 'a' && font.c !== 'h' && font.c !== 'm';
   return font.c === tab;
 }
 
@@ -68,19 +68,19 @@ export function GoogleFontPicker({
   // A failed load (offline, or a chunk swapped by a deploy) says so instead
   // of loading forever, and the next open tries again.
   const [failed, setFailed] = useState(false);
-  const [query, setQuery] = useState("");
-  const [tab, setTab] = useState("all");
+  const [query, setQuery] = useState('');
+  const [tab, setTab] = useState('all');
 
   useEffect(() => {
     if (!open || catalog || failed) return;
     let live = true;
-    import("@/lib/docs/google-fonts.json").then(
+    import('#lib/docs/google-fonts.json').then(
       (m) => {
         if (live) setCatalog(m.default as GoogleFont[]);
       },
       () => {
         if (live) setFailed(true);
-      }
+      },
     );
     return () => {
       live = false;
@@ -93,9 +93,13 @@ export function GoogleFontPicker({
     if (!catalog) return [];
     const q = query.trim().toLowerCase();
     if (!q) {
-      const names = current ? [current, ...POPULAR_GOOGLE_FONTS.filter((n) => n !== current)] : POPULAR_GOOGLE_FONTS;
-      const popular = names.map((n) => byName.get(n)).filter((f): f is GoogleFont => !!f && inTab(f, tab));
-      if (tab === "all") return popular;
+      const names = current
+        ? [current, ...POPULAR_GOOGLE_FONTS.filter((n) => n !== current)]
+        : POPULAR_GOOGLE_FONTS;
+      const popular = names
+        .map((n) => byName.get(n))
+        .filter((f): f is GoogleFont => !!f && inTab(f, tab));
+      if (tab === 'all') return popular;
       // A category lists its popular families first, then the rest in
       // alphabetical order: most categories have few popular ones or none.
       const rest = catalog.filter((f) => inTab(f, tab) && !popular.includes(f));
@@ -116,7 +120,7 @@ export function GoogleFontPicker({
   // stays until then, so rows already shown keep their faces.
   const resultsHref = results.length > 0 ? googleFontPreviewHref(results) : null;
   // The popular list on open needs no wait.
-  const settled = query.trim() === "";
+  const settled = query.trim() === '';
   const [previewHref, setPreviewHref] = useState<string | null>(null);
   useEffect(() => {
     if (!resultsHref) return;
@@ -126,7 +130,7 @@ export function GoogleFontPicker({
 
   const items = useMemo<CommandMenuItemData[]>(
     () => results.map((f) => ({ value: f.n, label: f.n })),
-    [results]
+    [results],
   );
 
   return (
@@ -135,8 +139,8 @@ export function GoogleFontPicker({
       onOpenChange={(next) => {
         onOpenChange(next);
         if (!next) {
-          setQuery("");
-          setTab("all");
+          setQuery('');
+          setTab('all');
           setFailed(false);
         }
       }}
@@ -158,10 +162,10 @@ export function GoogleFontPicker({
         <CommandMenuInput
           placeholder={
             catalog
-              ? `Search ${catalog.length.toLocaleString("en-US")} Google Fonts…`
+              ? `Search ${catalog.length.toLocaleString('en-US')} Google Fonts…`
               : failed
                 ? "Google Fonts didn't load"
-                : "Loading Google Fonts…"
+                : 'Loading Google Fonts…'
           }
         />
         <CommandMenuTabs tabs={TABS} value={tab} onValueChange={setTab} />
@@ -179,10 +183,10 @@ export function GoogleFontPicker({
         >
           <CommandMenuEmpty>
             {catalog
-              ? "No family matches."
+              ? 'No family matches.'
               : failed
                 ? "The font list didn't load. Close and reopen to try again."
-                : "Loading…"}
+                : 'Loading…'}
           </CommandMenuEmpty>
         </CommandMenuList>
         <CommandMenuFooter />

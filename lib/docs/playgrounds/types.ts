@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from "react";
+import type { ComponentType, ReactNode } from 'react';
 
 // ---------------------------------------------------------------------------
 // Shared playground contract. Each component playground module owns ONE copy

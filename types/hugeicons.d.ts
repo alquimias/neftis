@@ -1,4 +1,4 @@
-declare module "@hugeicons/core-free-icons/*" {
+declare module '@hugeicons/core-free-icons/*' {
   const icon: unknown;
   export default icon;
 }

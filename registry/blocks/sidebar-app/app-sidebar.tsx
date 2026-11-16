@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Sidebar,
   SidebarHeader,
@@ -15,18 +15,15 @@ import {
   SidebarMenuButton,
   SidebarMenuBadge,
   type SidebarProps,
-} from "@/components/ui/sidebar";
-import { Tooltip } from "@/components/ui/tooltip";
-import { KeyCaps } from "@/lib/key-cap";
-import { MenuItem } from "@/components/ui/menu-item";
-import { useIcons } from "@/lib/icon-context";
-import {
-  SidebarWorkspaceHeader,
-  WorkspaceTile,
-} from "@/components/sidebar-app/workspace-header";
-import { SidebarUserFooter } from "@/components/sidebar-app/user-footer";
-import { SidebarSearchField } from "@/components/sidebar-app/search-field";
-import { NAV_SECTIONS } from "@/components/sidebar-app/nav-data";
+} from '#components/ui/sidebar';
+import { Tooltip } from '#components/ui/tooltip';
+import { KeyCaps } from '#lib/key-cap';
+import { MenuItem } from '#components/ui/menu-item';
+import { useIcons } from '#lib/icon-context';
+import { SidebarWorkspaceHeader, WorkspaceTile } from '#components/sidebar-app/workspace-header';
+import { SidebarUserFooter } from '#components/sidebar-app/user-footer';
+import { SidebarSearchField } from '#components/sidebar-app/search-field';
+import { NAV_SECTIONS } from '#components/sidebar-app/nav-data';
 
 // ---------------------------------------------------------------------------
 // A complete app sidebar assembled from the workspace-header, search-field,
@@ -36,13 +33,13 @@ import { NAV_SECTIONS } from "@/components/sidebar-app/nav-data";
 // in nav-data.ts and the names below for your own.
 // ---------------------------------------------------------------------------
 
-export function AppSidebar(props: Omit<SidebarProps, "children">) {
-  const [active, setActive] = useState("Home");
+export function AppSidebar(props: Omit<SidebarProps, 'children'>) {
+  const [active, setActive] = useState('Home');
   const icons = useIcons();
   const PlusIcon = icons.plus;
   const UserIcon = icons.user;
   const SettingsIcon = icons.settings;
-  const ArrowLeftIcon = icons["arrow-left"];
+  const ArrowLeftIcon = icons['arrow-left'];
 
   return (
     <Sidebar variant="inset" {...props}>

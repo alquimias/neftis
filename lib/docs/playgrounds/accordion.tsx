@@ -1,21 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   AccordionGroup,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/registry/radix/accordion";
-import { Switch } from "@/registry/radix/switch";
-import {
-  PLAY_SWITCH,
-  PlayField,
-  PlaySelect,
-  PlaygroundPanel,
-} from "@/lib/docs/playground";
-import { ACCORDION_ITEMS } from "@/app/components/demo-data";
-import type { PlaygroundProps } from "./types";
+} from '#registry/radix/accordion';
+import { Switch } from '#registry/radix/switch';
+import { PLAY_SWITCH, PlayField, PlaySelect, PlaygroundPanel } from '#lib/docs/playground';
+import { ACCORDION_ITEMS } from '#app/components/demo-data';
+import type { PlaygroundProps } from './types';
 
 // ── Accordion playground ─────────────────────────────────
 // Two questions: how many items open at once, and what an open one tints.
@@ -25,14 +20,14 @@ import type { PlaygroundProps } from "./types";
 interface PlayState {
   /** one — always exactly one open · oneOrNone — single + collapsible ·
    *  any — multiple. */
-  expand: "one" | "oneOrNone" | "any";
+  expand: 'one' | 'oneOrNone' | 'any';
   /** On, an expanded item holds its tint (highlight="item"). Off, the fill
    *  scopes to the row and waits for hover (highlight="trigger"). */
   highlightExpanded: boolean;
 }
 
 const DEFAULT_STATE: PlayState = {
-  expand: "oneOrNone",
+  expand: 'oneOrNone',
   highlightExpanded: true,
 };
 
@@ -41,13 +36,13 @@ function pick<T>(options: readonly T[]): T {
 }
 
 export function buildAccordionPlaygroundCode(o: PlayState): string {
-  const single = o.expand !== "any";
+  const single = o.expand !== 'any';
   const props = [
-    `type="${single ? "single" : "multiple"}"`,
-    ...(o.expand === "oneOrNone" ? ["collapsible"] : []),
+    `type="${single ? 'single' : 'multiple'}"`,
+    ...(o.expand === 'oneOrNone' ? ['collapsible'] : []),
     ...(o.highlightExpanded ? [] : [`highlight="trigger"`]),
     single ? `defaultValue="item-1"` : `defaultValue={["item-1"]}`,
-  ].join(" ");
+  ].join(' ');
   return [
     `import {`,
     `  AccordionGroup, AccordionItem, AccordionTrigger, AccordionContent,`,
@@ -67,7 +62,7 @@ export function buildAccordionPlaygroundCode(o: PlayState): string {
     `    </AccordionItem>`,
     `  ))}`,
     `</AccordionGroup>`,
-  ].join("\n");
+  ].join('\n');
 }
 
 export function AccordionPlayground({ children }: PlaygroundProps) {
@@ -77,7 +72,7 @@ export function AccordionPlayground({ children }: PlaygroundProps) {
 
   const randomize = () =>
     setState({
-      expand: pick(["one", "oneOrNone", "oneOrNone", "any"] as const),
+      expand: pick(['one', 'oneOrNone', 'oneOrNone', 'any'] as const),
       highlightExpanded: Math.random() > 0.4,
     });
 
@@ -85,18 +80,18 @@ export function AccordionPlayground({ children }: PlaygroundProps) {
 
   // `key` remounts the group when type flips: single and multiple take
   // different defaultValue shapes, and an uncontrolled group keeps the first.
-  const single = state.expand !== "any";
+  const single = state.expand !== 'any';
   const group = (
     <AccordionGroup
       key={state.expand}
       {...(single
         ? {
-            type: "single" as const,
-            collapsible: state.expand === "oneOrNone",
+            type: 'single' as const,
+            collapsible: state.expand === 'oneOrNone',
             defaultValue: items[0].value,
           }
-        : { type: "multiple" as const, defaultValue: [items[0].value] })}
-      highlight={state.highlightExpanded ? "item" : "trigger"}
+        : { type: 'multiple' as const, defaultValue: [items[0].value] })}
+      highlight={state.highlightExpanded ? 'item' : 'trigger'}
     >
       {items.map((item, i) => (
         <AccordionItem key={item.value} value={item.value} index={i}>
@@ -112,18 +107,18 @@ export function AccordionPlayground({ children }: PlaygroundProps) {
       <PlayField label="Expand">
         <PlaySelect
           value={state.expand}
-          onChange={(v) => set("expand", v as PlayState["expand"])}
+          onChange={(v) => set('expand', v as PlayState['expand'])}
           options={[
-            { value: "one", label: "One at a time" },
-            { value: "oneOrNone", label: "One or none" },
-            { value: "any", label: "Any number" },
+            { value: 'one', label: 'One at a time' },
+            { value: 'oneOrNone', label: 'One or none' },
+            { value: 'any', label: 'Any number' },
           ]}
         />
       </PlayField>
       <Switch
         label="Highlight expanded"
         checked={state.highlightExpanded}
-        onToggle={() => set("highlightExpanded", !state.highlightExpanded)}
+        onToggle={() => set('highlightExpanded', !state.highlightExpanded)}
         className={PLAY_SWITCH}
       />
     </PlaygroundPanel>

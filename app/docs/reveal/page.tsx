@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // The Reveal page is the source the rest follows. When its content, values,
 // or classes change, update in the same change:
@@ -12,12 +12,12 @@
 //  - the Showcase (app/page.tsx + app/components/bento-grid.tsx) runs on
 //    reveal-landing-subtle and reveal-scroll: check it still reads right
 
-import { Fragment, type ReactNode } from "react";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { PresetDemo } from "./demos";
-import { apiReference } from "@/lib/docs/api/reveal";
+import { Fragment, type ReactNode } from 'react';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { PresetDemo } from './demos';
+import { apiReference } from '#lib/docs/api/reveal';
 
 /** Inline code chip used throughout the prose. */
 function Code({ children }: { children: ReactNode }) {
@@ -68,9 +68,8 @@ export default function RevealDoc() {
     >
       <DocSection title="Landing">
         <p className="text-site-body text-muted-foreground">
-          2 modes, default and subtle, for a page read once: each section
-          arrives as the reader reaches it, so the page tells its story in
-          order. Add <Code>reveal-landing</Code> or{" "}
+          2 modes, default and subtle, for a page read once: each section arrives as the reader
+          reaches it, so the page tells its story in order. Add <Code>reveal-landing</Code> or{' '}
           <Code>reveal-landing-subtle</Code> to its container.
         </p>
         <PresetDemo preset="Landing" />
@@ -78,16 +77,14 @@ export default function RevealDoc() {
 
       <DocSection title="Product">
         <p className="text-site-body text-muted-foreground">
-          2 modes, default and subtle, for the app people come back to: the
-          screen settles in once and nothing moves on scroll, so the 10th visit
-          stays as calm as the first. Add <Code>reveal-product</Code> or{" "}
-          <Code>reveal-product-subtle</Code> to its main column.
+          2 modes, default and subtle, for the app people come back to: the screen settles in once
+          and nothing moves on scroll, so the 10th visit stays as calm as the first. Add{' '}
+          <Code>reveal-product</Code> or <Code>reveal-product-subtle</Code> to its main column.
         </p>
         <PresetDemo preset="Product" />
         <p className="text-site-body text-muted-foreground">
-          Slow data shows shadcn&apos;s <Code>Skeleton</Code> in the
-          library&apos;s loading fill, <Code>bg-hover</Code>. Wrap it and the
-          real block in <Code>reveal-swap</Code>, and add{" "}
+          Slow data shows shadcn&apos;s <Code>Skeleton</Code> in the library&apos;s loading fill,{' '}
+          <Code>bg-hover</Code>. Wrap it and the real block in <Code>reveal-swap</Code>, and add{' '}
           <Code>reveal-items</Code> to both for rows one by one.
         </p>
       </DocSection>
@@ -98,18 +95,15 @@ export default function RevealDoc() {
         <List
           title="Set it up"
           items={[
-            <>
-              Put everything on screen at first paint in the hero, product shot
-              included.
-            </>,
+            <>Put everything on screen at first paint in the hero, product shot included.</>,
             <>Keep the header, sidebar, and footer outside the container.</>,
             <>
-              In a grid, add <Code>reveal-scroll</Code> to each card, and again
-              inside it so its content follows, like the Showcase.
+              In a grid, add <Code>reveal-scroll</Code> to each card, and again inside it so its
+              content follows, like the Showcase.
             </>,
             <>
-              Clip with <Code>overflow: clip</Code>, not <Code>hidden</Code>,
-              around anything that reveals on scroll.
+              Clip with <Code>overflow: clip</Code>, not <Code>hidden</Code>, around anything that
+              reveals on scroll.
             </>,
           ]}
         />
@@ -117,15 +111,14 @@ export default function RevealDoc() {
           title="Built in"
           items={[
             <>
-              Just CSS: nothing to load, nothing to hydrate. Landing steps ride{" "}
-              <Code>spring.slow</Code>, product steps{" "}
-              <Code>spring.moderate</Code>, and scroll steps follow the scroll.
+              Just CSS: nothing to load, nothing to hydrate. Landing steps ride{' '}
+              <Code>spring.slow</Code>, product steps <Code>spring.moderate</Code>, and scroll steps
+              follow the scroll.
             </>,
             <>Cards already on screen at load play right after the hero.</>,
             <>Browsers without scroll timelines show every section in place.</>,
             <>
-              Reduced motion keeps the fades and stops the rise, scale, scroll
-              motion, and pulse.
+              Reduced motion keeps the fades and stops the rise, scale, scroll motion, and pulse.
             </>,
           ]}
         />

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Input } from "@/registry/default/input";
-import { Field, FieldDescription, FieldError, FieldLabel } from "@/registry/default/field";
-import { Button } from "@/components/ui/button";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { inputProps } from "@/lib/docs/api/input";
+import { Input } from '#registry/default/input';
+import { Field, FieldDescription, FieldError, FieldLabel } from '#registry/default/field';
+import { Button } from '#components/ui/button';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { inputProps } from '#lib/docs/api/input';
 
 const basicCode = `import { Input } from "./components";
 

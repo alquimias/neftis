@@ -1,18 +1,17 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { Button } from "@/registry/radix/button";
-import { useIcon } from "@/lib/icon-context";
-import { useSizeVariant } from "@/lib/size-context";
-import { InputCopy } from "@/registry/default/input-copy";
-import { Tooltip, TooltipGroup } from "@/registry/radix/tooltip";
+import Link from 'next/link';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { Button } from '#registry/radix/button';
+import { useIcon } from '#lib/icon-context';
+import { useSizeVariant } from '#lib/size-context';
+import { InputCopy } from '#registry/default/input-copy';
+import { Tooltip, TooltipGroup } from '#registry/radix/tooltip';
 
 export default function DocsIndex() {
-  const ArrowRight = useIcon("arrow-right");
+  const ArrowRight = useIcon('arrow-right');
   // Square icon buttons follow the site-wide size step (see /docs/sizes).
-  const iconSize =
-    useSizeVariant() === "compact" ? ("icon-compact" as const) : ("icon" as const);
+  const iconSize = useSizeVariant() === 'compact' ? ('icon-compact' as const) : ('icon' as const);
 
   return (
     <div className="flex flex-col gap-8 px-6">
@@ -39,7 +38,12 @@ export default function DocsIndex() {
               </Link>
             </Tooltip>
             <Tooltip content="Changelog" shortcut="→">
-              <Link href="/changelog" aria-label="Next: Changelog" className="outline-none" tabIndex={-1}>
+              <Link
+                href="/changelog"
+                aria-label="Next: Changelog"
+                className="outline-none"
+                tabIndex={-1}
+              >
                 <Button variant="ghost" size={iconSize}>
                   <ArrowRight />
                 </Button>
@@ -58,11 +62,10 @@ export default function DocsIndex() {
             Motion that communicates
           </h3>
           <p>
-            Every animation here points at something. When two list items
-            merge their backgrounds, the component tells you they belong
-            together. The hover highlight follows your cursor before you
-            click, so the row you&apos;re about to land on confirms
-            itself first. Motion has a job to create meaning.
+            Every animation here points at something. When two list items merge their backgrounds,
+            the component tells you they belong together. The hover highlight follows your cursor
+            before you click, so the row you&apos;re about to land on confirms itself first. Motion
+            has a job to create meaning.
           </p>
         </div>
 
@@ -74,11 +77,9 @@ export default function DocsIndex() {
             Hover as preview
           </h3>
           <p>
-            The interaction starts before you click. The closest
-            interactive thing to your cursor gets a faint highlight;
-            buttons gain a little weight as you approach. By the time
-            your finger lands, you&apos;ve had a moment to reconsider,
-            which is mostly the point.
+            The interaction starts before you click. The closest interactive thing to your cursor
+            gets a faint highlight; buttons gain a little weight as you approach. By the time your
+            finger lands, you&apos;ve had a moment to reconsider, which is mostly the point.
           </p>
         </div>
 
@@ -90,11 +91,10 @@ export default function DocsIndex() {
             Spring physics, not durations
           </h3>
           <p>
-            Animations use springs, not fixed-duration eases. Toggle a
-            switch and immediately toggle it back: the spring picks up
-            wherever it was and reverses, instead of finishing the first
-            animation before starting the second. Three presets, named
-            fast, moderate, and slow, cover most of the library.
+            Animations use springs, not fixed-duration eases. Toggle a switch and immediately toggle
+            it back: the spring picks up wherever it was and reverses, instead of finishing the
+            first animation before starting the second. Three presets, named fast, moderate, and
+            slow, cover most of the library.
           </p>
         </div>
 
@@ -106,11 +106,10 @@ export default function DocsIndex() {
             Drop-in compatible
           </h3>
           <p>
-            Built on shadcn/ui. Each component comes in two flavors,
-            Radix or Base UI, so you can match whichever primitive
-            library you&apos;ve already chosen. Your theme tokens
-            (colors, radii, fonts) work as-is. One CLI command installs
-            a component along with whatever it needs.
+            Built on shadcn/ui. Each component comes in two flavors, Radix or Base UI, so you can
+            match whichever primitive library you&apos;ve already chosen. Your theme tokens (colors,
+            radii, fonts) work as-is. One CLI command installs a component along with whatever it
+            needs.
           </p>
         </div>
 
@@ -122,14 +121,12 @@ export default function DocsIndex() {
             Customize using the right panel
           </h3>
           <p>
-            The panel on the right lets you change things on the fly.
-            Switch between light and dark mode, set the corner radius to
-            rounded, pill or sharp, cycle through different icon libraries,
-            or pick whether the install command grabs the Radix flavor or
-            the Base UI one. Press T, R, or I to flip the first three
-            from the keyboard. The icon switcher is a preview tool that
-            lives on this site — installed components ship with Lucide
-            only, and you can swap in your own icons (see Icons below).
+            The panel on the right lets you change things on the fly. Switch between light and dark
+            mode, set the corner radius to rounded, pill or sharp, cycle through different icon
+            libraries, or pick whether the install command grabs the Radix flavor or the Base UI
+            one. Press T, R, or I to flip the first three from the keyboard. The icon switcher is a
+            preview tool that lives on this site — installed components ship with Lucide only, and
+            you can swap in your own icons (see Icons below).
           </p>
         </div>
       </section>
@@ -144,14 +141,24 @@ export default function DocsIndex() {
         </h2>
         <div className="flex flex-col gap-2 mt-2">
           <p className="text-site-body text-muted-foreground flex items-center gap-2 ml-1">
-            <span className="inline-flex items-center justify-center size-[18px] rounded-full bg-muted text-muted-foreground text-[11px] leading-3.5 shrink-0" style={{ fontVariationSettings: fontWeights.normal }}>1</span>
+            <span
+              className="inline-flex items-center justify-center size-[18px] rounded-full bg-muted text-muted-foreground text-[11px] leading-3.5 shrink-0"
+              style={{ fontVariationSettings: fontWeights.normal }}
+            >
+              1
+            </span>
             Add the registry to your project:
           </p>
           <InputCopy value="npx shadcn@latest registry add @fluid" align="left" className="w-fit" />
         </div>
         <div className="flex flex-col gap-2 mt-2">
           <p className="text-site-body text-muted-foreground flex items-center gap-2 ml-1">
-            <span className="inline-flex items-center justify-center size-[18px] rounded-full bg-muted text-muted-foreground text-[11px] leading-3.5 shrink-0" style={{ fontVariationSettings: fontWeights.normal }}>2</span>
+            <span
+              className="inline-flex items-center justify-center size-[18px] rounded-full bg-muted text-muted-foreground text-[11px] leading-3.5 shrink-0"
+              style={{ fontVariationSettings: fontWeights.normal }}
+            >
+              2
+            </span>
             Install any component:
           </p>
           <InputCopy value="npx shadcn@latest add @fluid/button" align="left" className="w-fit" />
@@ -160,10 +167,14 @@ export default function DocsIndex() {
         <p className="text-site-body text-muted-foreground">
           Or install directly without adding the registry:
         </p>
-        <InputCopy value="npx shadcn@latest add https://www.fluidfunctionalism.com/r/button.json" align="left" className="w-fit" />
+        <InputCopy
+          value="npx shadcn@latest add https://www.fluidfunctionalism.com/r/button.json"
+          align="left"
+          className="w-fit"
+        />
         <p className="text-site-body text-muted-foreground">
-          Dependencies and shared utilities are resolved automatically.
-          Font weight animations require the Inter variable font.
+          Dependencies and shared utilities are resolved automatically. Font weight animations
+          require the Inter variable font.
         </p>
       </div>
 
@@ -176,14 +187,13 @@ export default function DocsIndex() {
           Icons
         </h2>
         <p className="text-site-body text-muted-foreground">
-          Components render their icons through named slots with Lucide
-          defaults, so lucide-react is the only icon dependency an
-          install adds. To use another icon library, wrap your app in
-          the installed IconProvider and override any slot — names you
-          leave out keep their Lucide default:
+          Components render their icons through named slots with Lucide defaults, so lucide-react is
+          the only icon dependency an install adds. To use another icon library, wrap your app in
+          the installed IconProvider and override any slot — names you leave out keep their Lucide
+          default:
         </p>
         <pre className="text-site-caption text-muted-foreground bg-muted/60 rounded-lg px-4 py-3 overflow-x-auto w-fit max-w-full">
-          <code>{`import { IconProvider } from "@/lib/icon-context";
+          <code>{`import { IconProvider } from "#lib/icon-context";
 import { CaretRight, MagnifyingGlass } from "@phosphor-icons/react";
 
 <IconProvider icons={{ "chevron-right": CaretRight, "search": MagnifyingGlass }}>

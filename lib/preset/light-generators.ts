@@ -6,21 +6,17 @@
 // two source files as text.
 // ---------------------------------------------------------------------------
 
-import type { PresetFile } from "./sidebar-install";
-import {
-  generateSidebarPresetFiles,
-  presetRegistryDeps,
-  presetNpmDeps,
-} from "./sidebar-install";
-import type { SidebarPreset } from "./sidebar-options";
-import { CARD_PRESET_GENERATOR } from "./card-install";
-import { INPUT_MESSAGE_PRESET_GENERATOR } from "./input-message-install";
-import { AUQ_PRESET_GENERATOR } from "./ask-user-questions-install";
-import { DROPDOWN_PRESET_GENERATOR } from "./dropdown-install";
-import { COMBOBOX_PRESET_GENERATOR } from "./combobox-install";
-import { COMMAND_MENU_PRESET_GENERATOR } from "./command-menu-install";
-import { CALENDAR_PRESET_GENERATOR } from "./calendar-install";
-import { DATE_PICKER_PRESET_GENERATOR } from "./date-picker-install";
+import type { PresetFile } from './sidebar-install';
+import { generateSidebarPresetFiles, presetRegistryDeps, presetNpmDeps } from './sidebar-install';
+import type { SidebarPreset } from './sidebar-options';
+import { CARD_PRESET_GENERATOR } from './card-install';
+import { INPUT_MESSAGE_PRESET_GENERATOR } from './input-message-install';
+import { AUQ_PRESET_GENERATOR } from './ask-user-questions-install';
+import { DROPDOWN_PRESET_GENERATOR } from './dropdown-install';
+import { COMBOBOX_PRESET_GENERATOR } from './combobox-install';
+import { COMMAND_MENU_PRESET_GENERATOR } from './command-menu-install';
+import { CALENDAR_PRESET_GENERATOR } from './calendar-install';
+import { DATE_PICKER_PRESET_GENERATOR } from './date-picker-install';
 
 export interface PresetGenerator {
   title: string;
@@ -38,9 +34,9 @@ export interface PresetGenerator {
 
 export const LIGHT_PRESET_GENERATORS: Record<string, PresetGenerator> = {
   s: {
-    title: "Sidebar (playground preset)",
+    title: 'Sidebar (playground preset)',
     description:
-      "A sidebar generated from a fluidfunctionalism.com playground configuration — the exact variant you built, installable.",
+      'A sidebar generated from a fluidfunctionalism.com playground configuration — the exact variant you built, installable.',
     files: (p) => generateSidebarPresetFiles(p as unknown as SidebarPreset),
     registryDeps: (p) => presetRegistryDeps(p as unknown as SidebarPreset),
     npmDeps: (p) => presetNpmDeps(p as unknown as SidebarPreset),

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { forwardRef, useState } from "react";
-import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
-import { AnimatePresence, motion } from "motion/react";
-import { cn } from "@/lib/utils";
-import { omit } from "@/lib/omit";
-import { useSize, type SizeVariant } from "@/lib/size-context";
-import { useShape } from "@/lib/shape-context";
+import { forwardRef, useState } from 'react';
+import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
+import { AnimatePresence, motion } from 'motion/react';
+import { cn } from '#lib/utils';
+import { omit } from '#lib/omit';
+import { useSize, type SizeVariant } from '#lib/size-context';
+import { useShape } from '#lib/shape-context';
 
 // ---------------------------------------------------------------------------
 // A single checkbox: the CheckboxGroup square on its own. A 1.5px --border
@@ -14,11 +14,10 @@ import { useShape } from "@/lib/shape-context";
 // alone marks the state. Pair it with Field and FieldLabel for its text.
 // ---------------------------------------------------------------------------
 
-interface CheckboxProps
-  extends Omit<
-    CheckboxPrimitive.Root.Props,
-    "checked" | "defaultChecked" | "onCheckedChange" | "className"
-  > {
+interface CheckboxProps extends Omit<
+  CheckboxPrimitive.Root.Props,
+  'checked' | 'defaultChecked' | 'onCheckedChange' | 'className'
+> {
   checked?: boolean;
   defaultChecked?: boolean;
   /** Shows a dash instead of the check: some, not all, of what this box
@@ -33,15 +32,27 @@ interface CheckboxProps
 }
 
 const Checkbox = forwardRef<HTMLElement, CheckboxProps>(
-  ({ className, checked, defaultChecked = false, indeterminate = false, onCheckedChange, onKeyDown, size, ...props }, ref) => {
+  (
+    {
+      className,
+      checked,
+      defaultChecked = false,
+      indeterminate = false,
+      onCheckedChange,
+      onKeyDown,
+      size,
+      ...props
+    },
+    ref,
+  ) => {
     // Controlled or not, the check's enter and exit need the state in
     // render, so the uncontrolled value is mirrored here.
     const [uncontrolled, setUncontrolled] = useState(defaultChecked);
     const isChecked = checked ?? uncontrolled;
     // The dash wins over the check, the way the primitives report it.
-    const glyph = indeterminate ? "dash" : isChecked ? "check" : null;
-    const compact = useSize(size).variant === "compact";
-    const sharp = useShape().variant === "sharp";
+    const glyph = indeterminate ? 'dash' : isChecked ? 'check' : null;
+    const compact = useSize(size).variant === 'compact';
+    const sharp = useShape().variant === 'sharp';
 
     return (
       <CheckboxPrimitive.Root
@@ -58,15 +69,15 @@ const Checkbox = forwardRef<HTMLElement, CheckboxProps>(
           // reads as an option to pick, so Enter toggles it like Space. A
           // plain checkbox, even inside a label, leaves Enter to submit its
           // form.
-          const card = e.currentTarget.closest("[data-slot=field-label]");
-          if (e.key === "Enter" && !e.repeat && card?.querySelector(":scope > [data-slot=field]")) {
+          const card = e.currentTarget.closest('[data-slot=field-label]');
+          if (e.key === 'Enter' && !e.repeat && card?.querySelector(':scope > [data-slot=field]')) {
             e.preventDefault();
             e.currentTarget.click();
           }
           onKeyDown?.(e);
         }}
         className={cn(
-          "relative inline-block shrink-0 cursor-pointer border-[1.5px] border-solid border-border bg-transparent p-0 outline-none",
+          'relative inline-block shrink-0 cursor-pointer border-[1.5px] border-solid border-border bg-transparent p-0 outline-none',
           // Base UI's hidden form input is `position: fixed`, and every
           // fixed element is a layer of its own that splits what paints
           // around it into more: a box per row cut a 34-row table into 230
@@ -74,20 +85,20 @@ const Checkbox = forwardRef<HTMLElement, CheckboxProps>(
           // as hidden and costs nothing. Its fixed offsets go too, so it
           // stays where it is in the flow: at the top left of a far
           // ancestor, a label click that focuses it scrolled the page there.
-          "[&+input]:absolute! [&+input]:inset-auto!",
-          "transition-[border-color] duration-80",
+          '[&+input]:absolute! [&+input]:inset-auto!',
+          'transition-[border-color] duration-80',
           // Hovering the box, or the Field row it sits in, darkens the
           // border; a checked box keeps it clear at rest and brings it back
           // on hover.
-          "hover:not-data-checked:border-foreground/40 group-hover/field:not-data-checked:border-foreground/40",
-          "data-checked:border-transparent data-indeterminate:border-transparent",
-          "hover:data-checked:border-foreground/40 group-hover/field:not-data-disabled:data-checked:border-foreground/40",
-          "aria-invalid:not-data-checked:border-destructive/50",
-          "focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]",
-          "data-disabled:pointer-events-none data-disabled:opacity-50",
-          compact ? "size-[14px]" : "size-4",
-          sharp ? "rounded-none" : compact ? "rounded-[4px]" : "rounded-[5px]",
-          className
+          'hover:not-data-checked:border-foreground/40 group-hover/field:not-data-checked:border-foreground/40',
+          'data-checked:border-transparent data-indeterminate:border-transparent',
+          'hover:data-checked:border-foreground/40 group-hover/field:not-data-disabled:data-checked:border-foreground/40',
+          'aria-invalid:not-data-checked:border-destructive/50',
+          'focus-visible:ring-1 focus-visible:ring-[color:var(--focus-ring,#6B97FF)]',
+          'data-disabled:pointer-events-none data-disabled:opacity-50',
+          compact ? 'size-[14px]' : 'size-4',
+          sharp ? 'rounded-none' : compact ? 'rounded-[4px]' : 'rounded-[5px]',
+          className,
         )}
         {...props}
       >
@@ -100,13 +111,13 @@ const Checkbox = forwardRef<HTMLElement, CheckboxProps>(
               render={(indicatorProps) => {
                 // Motion owns these handlers and style on an svg.
                 const rest = omit(indicatorProps as React.HTMLAttributes<SVGSVGElement>, [
-                  "style",
-                  "onDrag",
-                  "onDragStart",
-                  "onDragEnd",
-                  "onAnimationStart",
-                  "onAnimationEnd",
-                  "onAnimationIteration",
+                  'style',
+                  'onDrag',
+                  'onDragStart',
+                  'onDragEnd',
+                  'onAnimationStart',
+                  'onAnimationEnd',
+                  'onAnimationIteration',
                 ]);
                 return (
                   <motion.svg
@@ -128,10 +139,10 @@ const Checkbox = forwardRef<HTMLElement, CheckboxProps>(
                         easeOut, back to 0 over 0.04s easeIn. */}
                     <motion.path
                       key={glyph}
-                      d={glyph === "dash" ? "M7 12H17" : "M6 12L10 16L18 8"}
+                      d={glyph === 'dash' ? 'M7 12H17' : 'M6 12L10 16L18 8'}
                       initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1, transition: { duration: 0.08, ease: "easeOut" } }}
-                      exit={{ pathLength: 0, transition: { duration: 0.04, ease: "easeIn" } }}
+                      animate={{ pathLength: 1, transition: { duration: 0.08, ease: 'easeOut' } }}
+                      exit={{ pathLength: 0, transition: { duration: 0.04, ease: 'easeIn' } }}
                     />
                   </motion.svg>
                 );
@@ -141,10 +152,10 @@ const Checkbox = forwardRef<HTMLElement, CheckboxProps>(
         </AnimatePresence>
       </CheckboxPrimitive.Root>
     );
-  }
+  },
 );
 
-Checkbox.displayName = "Checkbox";
+Checkbox.displayName = 'Checkbox';
 
 export { Checkbox };
 export type { CheckboxProps };

@@ -6,11 +6,11 @@ The registry ships 26 npm packages into people's apps, and installers get the ne
 
 ## The scripts
 
-| Command | What it does |
-|---|---|
+| Command                                                 | What it does                                                                                                                                                                                                                                                                                                                        |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `npm run deps:inventory -- --md inv.md --json inv.json` | Lists every package in 4 tiers (shipped, env, site, tooling): the site's version, the registry range, the latest release, every release since the site's version, the ones from the last 8 days, and the release notes link. Shipped packages also get a usage map: which registry files import them, and which subpaths and names. |
-| `npm run deps:popups -- --url http://localhost:3000` | Opens the site in headless Chromium and checks, in both flavors, that every popup plays its close animation instead of vanishing, that a programmatic close animates too, and that a checkbox square toggles once per click. Needs a running site. |
-| `npm run deps:install` | Serves this checkout's `public/r` on localhost, scaffolds a fresh `shadcn@latest` Next app per flavor, installs every item into it with the newest packages the ranges allow, then runs `tsc`, the app's own ESLint and `next build`. This is the setup an installer gets. |
+| `npm run deps:popups -- --url http://localhost:3000`    | Opens the site in headless Chromium and checks, in both flavors, that every popup plays its close animation instead of vanishing, that a programmatic close animates too, and that a checkbox square toggles once per click. Needs a running site.                                                                                  |
+| `npm run deps:install`                                  | Serves this checkout's `public/r` on localhost, scaffolds a fresh `shadcn@latest` Next app per flavor, installs every item into it with the newest packages the ranges allow, then runs `tsc`, the app's own ESLint and `next build`. This is the setup an installer gets.                                                          |
 
 Each script prints a summary and exits non-zero on a failure. `--json` writes the full result.
 

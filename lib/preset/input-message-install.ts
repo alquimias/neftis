@@ -10,14 +10,14 @@
 // space.
 // ---------------------------------------------------------------------------
 
-import type { PresetFile } from "./sidebar-install";
-import type { PresetGenerator } from "./light-generators";
+import type { PresetFile } from './sidebar-install';
+import type { PresetGenerator } from './light-generators';
 import {
   type InputMessagePreset,
   IM_SUGGESTIONS,
   IM_PLACEHOLDER_PROMPT,
   IM_SEED_MESSAGE,
-} from "./input-message-options";
+} from './input-message-options';
 
 export type { PresetFile };
 
@@ -26,10 +26,10 @@ export type { PresetFile };
 // layoutId on its own element. The parity test reads the first render only,
 // so it won't see this drift: when ChatMessage's bubble changes, change this.
 const USER_BUBBLE_CLASS =
-  "whitespace-pre-wrap break-words px-3.5 py-2 text-[14px] text-pretty bg-[color-mix(in_oklab,var(--accent),var(--background)_45%)] text-foreground";
+  'whitespace-pre-wrap break-words px-3.5 py-2 text-[14px] text-pretty bg-[color-mix(in_oklab,var(--accent),var(--background)_45%)] text-foreground';
 
 function composerFile(p: InputMessagePreset): string {
-  const queueOn = p.status !== "off";
+  const queueOn = p.status !== 'off';
   const filesOn = p.leftSlot || p.attachments;
   const slots = p.leftSlot || p.rightSlot;
 
@@ -37,23 +37,23 @@ function composerFile(p: InputMessagePreset): string {
   l.push(`"use client";`);
   l.push(``);
   l.push(`import { useEffect, useRef, useState } from "react";`);
-  l.push(`import { AnimatePresence${queueOn ? ", motion" : ""} } from "motion/react";`);
+  l.push(`import { AnimatePresence${queueOn ? ', motion' : ''} } from "motion/react";`);
   l.push(
-    `import { InputMessage${queueOn ? ", type QueuedMessage" : ""} } from "@/components/ui/input-message";`
+    `import { InputMessage${queueOn ? ', type QueuedMessage' : ''} } from "#components/ui/input-message";`,
   );
-  if (slots) l.push(`import { Button } from "@/components/ui/button";`);
-  if (p.leftSlot) l.push(`import { Tooltip } from "@/components/ui/tooltip";`);
-  l.push(`import { ChatMessage } from "@/components/ui/chat-message";`);
+  if (slots) l.push(`import { Button } from "#components/ui/button";`);
+  if (p.leftSlot) l.push(`import { Tooltip } from "#components/ui/tooltip";`);
+  l.push(`import { ChatMessage } from "#components/ui/chat-message";`);
   if (queueOn) {
     l.push(`import {`);
     l.push(`  QueuedStack,`);
     l.push(`  collapsedStackHeight,`);
     l.push(`  useQueueCardHeight,`);
-    l.push(`} from "@/components/queued-stack";`);
+    l.push(`} from "#components/queued-stack";`);
   }
-  if (slots) l.push(`import { useIcons } from "@/lib/icon-context";`);
-  if (queueOn) l.push(`import { useShape } from "@/lib/shape-context";`);
-  if (queueOn) l.push(`import { spring } from "@/lib/springs";`);
+  if (slots) l.push(`import { useIcons } from "#lib/icon-context";`);
+  if (queueOn) l.push(`import { useShape } from "#lib/shape-context";`);
+  if (queueOn) l.push(`import { spring } from "#lib/springs";`);
   l.push(``);
 
   if (p.suggestionsOn) {
@@ -81,20 +81,20 @@ function composerFile(p: InputMessagePreset): string {
   if (queueOn) l.push(`  const cardH = useQueueCardHeight();`);
   l.push(`  const [value, setValue] = useState("");`);
   const seed = queueOn
-    ? `    { id: "seed", from: "user", text: ${JSON.stringify(IM_SEED_MESSAGE)}${filesOn ? ", files: []" : ""} },`
-    : `    { text: ${JSON.stringify(IM_SEED_MESSAGE)}${filesOn ? ", files: []" : ""} },`;
+    ? `    { id: "seed", from: "user", text: ${JSON.stringify(IM_SEED_MESSAGE)}${filesOn ? ', files: []' : ''} },`
+    : `    { text: ${JSON.stringify(IM_SEED_MESSAGE)}${filesOn ? ', files: []' : ''} },`;
   l.push(`  const [messages, setMessages] = useState<Message[]>([`);
   l.push(seed);
   l.push(`  ]);`);
   if (filesOn) l.push(`  const [files, setFiles] = useState<File[]>([]);`);
   if (queueOn) {
     l.push(`  const [queue, setQueue] = useState<QueuedMessage[]>([]);`);
-    if (p.status === "streaming") {
+    if (p.status === 'streaming') {
       l.push(`  // Seeded mid-stream (the preset's configuration): sends enqueue`);
       l.push(`  // immediately; Stop flips to idle and dispatches the head.`);
     }
     l.push(
-      `  const [status, setStatus] = useState<"idle" | "streaming">(${JSON.stringify(p.status)});`
+      `  const [status, setStatus] = useState<"idle" | "streaming">(${JSON.stringify(p.status)});`,
     );
     l.push(``);
     l.push(`  // The id of the message currently playing its queued→sent morph. The`);
@@ -127,9 +127,7 @@ function composerFile(p: InputMessagePreset): string {
     l.push(`        {`);
     l.push(`          id: crypto.randomUUID(),`);
     l.push(`          from: "assistant",`);
-    l.push(
-      `          text: \`Replying to “\${text}” — swap this stub for your backend.\`,`
-    );
+    l.push(`          text: \`Replying to “\${text}” — swap this stub for your backend.\`,`);
     if (filesOn) l.push(`          files: [],`);
     l.push(`        },`);
     l.push(`      ]);`);
@@ -148,9 +146,7 @@ function composerFile(p: InputMessagePreset): string {
     l.push(`        .then((b) => new File([b], "sample.png", { type: "image/png" })),`);
     l.push(`      fetch("/sample.pdf")`);
     l.push(`        .then((r) => r.blob())`);
-    l.push(
-      `        .then((b) => new File([b], "sample.pdf", { type: "application/pdf" })),`
-    );
+    l.push(`        .then((b) => new File([b], "sample.pdf", { type: "application/pdf" })),`);
     l.push(`    ])`);
     l.push(`      .then(setFiles)`);
     l.push(`      .catch(() => {});`);
@@ -161,7 +157,7 @@ function composerFile(p: InputMessagePreset): string {
   l.push(
     queueOn
       ? `  // padding (plus the collapsed queue stack) and to position the stack, and`
-      : `  // padding, and keep the transcript pinned to the latest message.`
+      : `  // padding, and keep the transcript pinned to the latest message.`,
   );
   if (queueOn) l.push(`  // keep the transcript pinned to the latest message.`);
   l.push(`  const inputRef = useRef<HTMLDivElement>(null);`);
@@ -183,7 +179,7 @@ function composerFile(p: InputMessagePreset): string {
     l.push(`    // \`queue\` is a dep: enqueuing grows the reserved bottom padding,`);
     l.push(`    // which must re-pin the scroll too.`);
   }
-  l.push(`  }, [messages, inputH${queueOn ? ", queue" : ""}]);`);
+  l.push(`  }, [messages, inputH${queueOn ? ', queue' : ''}]);`);
   if (queueOn) {
     l.push(``);
     l.push(`  // Double-click a queued card (or its ✎) to pull it back into the composer.`);
@@ -215,13 +211,13 @@ function composerFile(p: InputMessagePreset): string {
   l.push(
     queueOn
       ? `          style={{ paddingBottom: inputH + 8 + (queue.length > 0 ? collapsedStackH + 8 : 0) }}`
-      : `          style={{ paddingBottom: inputH + 8 }}`
+      : `          style={{ paddingBottom: inputH + 8 }}`,
   );
   l.push(`        >`);
   // A sent message is the library's ChatMessage, as in the playground: its
   // bubble, its files and its entrance are the component's own.
   const userBubble = (ind: string, key: string) => [
-    `${ind}<ChatMessage ${key} from="user"${filesOn ? " files={m.files}" : ""}>`,
+    `${ind}<ChatMessage ${key} from="user"${filesOn ? ' files={m.files}' : ''}>`,
     `${ind}  {m.text}`,
     `${ind}</ChatMessage>`,
   ];
@@ -237,7 +233,9 @@ function composerFile(p: InputMessagePreset): string {
     l.push(`            m.from === "assistant" ? (`);
     l.push(`              <div`);
     l.push(`                key={m.id}`);
-    l.push(`                className="max-w-[80%] self-start whitespace-pre-wrap break-words py-2 text-[14px] text-foreground"`);
+    l.push(
+      `                className="max-w-[80%] self-start whitespace-pre-wrap break-words py-2 text-[14px] text-foreground"`,
+    );
     l.push(`              >`);
     l.push(`                {m.text}`);
     l.push(`              </div>`);
@@ -245,14 +243,14 @@ function composerFile(p: InputMessagePreset): string {
     l.push(`              // Mid-morph: shares a layoutId with the front stack card; the`);
     l.push(`              // inner span is layout-corrected so the text doesn't stretch.`);
     l.push(`              <motion.div`);
-    l.push("                key={m.id}");
-    l.push("                layoutId={`qm-${m.id}`}");
+    l.push('                key={m.id}');
+    l.push('                layoutId={`qm-${m.id}`}');
     l.push(`                layout`);
     l.push(`                initial={false}`);
     l.push(`                transition={spring.moderate}`);
     l.push(`                style={{ transformOrigin: "bottom right" }}`);
     l.push(
-      "                className={`max-w-[80%] self-end " + USER_BUBBLE_CLASS + " ${shape.bg}`}"
+      '                className={`max-w-[80%] self-end ' + USER_BUBBLE_CLASS + ' ${shape.bg}`}',
     );
     l.push(`              >`);
     l.push(`                <motion.span layout className="inline-block align-top">`);
@@ -277,7 +275,7 @@ function composerFile(p: InputMessagePreset): string {
     l.push(`        onEdit={editQueued}`);
     l.push(`        onRemove={(item) => setQueue((q) => q.filter((x) => x.id !== item.id))}`);
     l.push(`        bottom={inputH + 8}`);
-    l.push("        morphLayoutId={(item) => `qm-${item.id}`}");
+    l.push('        morphLayoutId={(item) => `qm-${item.id}`}');
     l.push(`      />`);
     l.push(``);
   }
@@ -291,7 +289,7 @@ function composerFile(p: InputMessagePreset): string {
     l.push(`          if (text || sent.length) {`);
     l.push(`            const id = meta?.queuedId ?? crypto.randomUUID();`);
     l.push(
-      `            setMessages((m) => [...m, { id, from: "user", text${filesOn ? ", files: sent" : ""} }]);`
+      `            setMessages((m) => [...m, { id, from: "user", text${filesOn ? ', files: sent' : ''} }]);`,
     );
     l.push(`            if (text) respond(text);`);
     l.push(`            // A dispatched (from-queue) text message morphs from its stack`);
@@ -312,23 +310,21 @@ function composerFile(p: InputMessagePreset): string {
   } else {
     l.push(`        onSend={(text, sent) => {`);
     l.push(
-      `          if (text || sent.length) setMessages((m) => [...m, { text${filesOn ? ", files: sent" : ""} }]);`
+      `          if (text || sent.length) setMessages((m) => [...m, { text${filesOn ? ', files: sent' : ''} }]);`,
     );
     l.push(`          setValue("");`);
     if (filesOn) l.push(`          setFiles([]);`);
     l.push(`        }}`);
   }
   if (p.suggestion)
-    l.push(
-      `        placeholderSuggestion=${JSON.stringify(IM_PLACEHOLDER_PROMPT)}`
-    );
+    l.push(`        placeholderSuggestion=${JSON.stringify(IM_PLACEHOLDER_PROMPT)}`);
   if (p.suggestionsOn) l.push(`        suggestions={SUGGESTIONS}`);
   if (p.historyOn) {
     l.push(`        // ArrowUp recalls sent messages, ArrowDown walks back to the draft.`);
     l.push(
       queueOn
         ? `        history={messages.filter((m) => m.from === "user").map((m) => m.text).filter(Boolean)}`
-        : `        history={messages.map((m) => m.text).filter(Boolean)}`
+        : `        history={messages.map((m) => m.text).filter(Boolean)}`,
     );
   }
   if (p.minRows > 1) l.push(`        minRows={${p.minRows}}`);
@@ -375,19 +371,19 @@ function composerFile(p: InputMessagePreset): string {
   l.push(`    </div>`);
   l.push(`  );`);
   l.push(`}`);
-  return l.join("\n") + "\n";
+  return l.join('\n') + '\n';
 }
 
 function pageFile(p: InputMessagePreset): string {
   const l: string[] = [];
   const providers: [string, string][] = [];
-  if (p.shape !== "rounded") providers.push(["ShapeProvider", ` defaultShape="${p.shape}"`]);
-  if (p.size === "compact") providers.push(["SizeProvider", ` size="compact"`]);
+  if (p.shape !== 'rounded') providers.push(['ShapeProvider', ` defaultShape="${p.shape}"`]);
+  if (p.size === 'compact') providers.push(['SizeProvider', ` size="compact"`]);
   l.push(`"use client";`);
   l.push(``);
-  l.push(`import { ChatComposer } from "@/components/chat-composer";`);
-  if (p.shape !== "rounded") l.push(`import { ShapeProvider } from "@/lib/shape-context";`);
-  if (p.size === "compact") l.push(`import { SizeProvider } from "@/lib/size-context";`);
+  l.push(`import { ChatComposer } from "#components/chat-composer";`);
+  if (p.shape !== 'rounded') l.push(`import { ShapeProvider } from "#lib/shape-context";`);
+  if (p.size === 'compact') l.push(`import { SizeProvider } from "#lib/size-context";`);
   l.push(``);
   l.push(`// Generated from a fluidfunctionalism.com playground preset.`);
   l.push(`// The flex row hands the composer stage its height; the composer floats`);
@@ -409,23 +405,21 @@ function pageFile(p: InputMessagePreset): string {
   }
   l.push(`  );`);
   l.push(`}`);
-  return l.join("\n") + "\n";
+  return l.join('\n') + '\n';
 }
 
-export function generateInputMessagePresetFiles(
-  p: InputMessagePreset
-): PresetFile[] {
+export function generateInputMessagePresetFiles(p: InputMessagePreset): PresetFile[] {
   return [
     {
-      path: "components/chat-composer.tsx",
-      type: "registry:component",
-      target: "components/chat-composer.tsx",
+      path: 'components/chat-composer.tsx',
+      type: 'registry:component',
+      target: 'components/chat-composer.tsx',
       content: composerFile(p),
     },
     {
-      path: "app/chat/page.tsx",
-      type: "registry:page",
-      target: "app/chat/page.tsx",
+      path: 'app/chat/page.tsx',
+      type: 'registry:page',
+      target: 'app/chat/page.tsx',
       content: pageFile(p),
     },
   ];
@@ -433,35 +427,32 @@ export function generateInputMessagePresetFiles(
 
 /** Registry dependencies the generated files need, as plain names — the
  *  route flavors them with the same helpers postbuild uses. */
-export function inputMessagePresetRegistryDeps(
-  p: InputMessagePreset
-): string[] {
-  const queueOn = p.status !== "off";
-  const deps = new Set<string>(["utils", "input-message", "chat-message", "shape-context"]);
+export function inputMessagePresetRegistryDeps(p: InputMessagePreset): string[] {
+  const queueOn = p.status !== 'off';
+  const deps = new Set<string>(['utils', 'input-message', 'chat-message', 'shape-context']);
   if (p.leftSlot || p.rightSlot) {
-    deps.add("icon-context");
-    deps.add("button");
+    deps.add('icon-context');
+    deps.add('button');
   }
-  if (p.leftSlot) deps.add("tooltip");
+  if (p.leftSlot) deps.add('tooltip');
   if (queueOn) {
-    deps.add("queued-stack");
-    deps.add("springs");
+    deps.add('queued-stack');
+    deps.add('springs');
   }
-  if (p.size === "compact") deps.add("size-context");
+  if (p.size === 'compact') deps.add('size-context');
   return [...deps];
 }
 
 /** npm dependencies beyond what registryDependencies pull transitively. */
 export function inputMessagePresetNpmDeps(_p: InputMessagePreset): string[] {
-  return ["lucide-react", "motion"];
+  return ['lucide-react', 'motion'];
 }
 
 export const INPUT_MESSAGE_PRESET_GENERATOR: PresetGenerator = {
-  title: "InputMessage (playground preset)",
+  title: 'InputMessage (playground preset)',
   description:
-    "A chat composer generated from a fluidfunctionalism.com playground configuration — the exact variant you built, installable.",
+    'A chat composer generated from a fluidfunctionalism.com playground configuration — the exact variant you built, installable.',
   files: (p) => generateInputMessagePresetFiles(p as unknown as InputMessagePreset),
-  registryDeps: (p) =>
-    inputMessagePresetRegistryDeps(p as unknown as InputMessagePreset),
+  registryDeps: (p) => inputMessagePresetRegistryDeps(p as unknown as InputMessagePreset),
   npmDeps: (p) => inputMessagePresetNpmDeps(p as unknown as InputMessagePreset),
 };

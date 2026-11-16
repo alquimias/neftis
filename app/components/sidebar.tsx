@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { fontWeights } from "@/lib/font-weight";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { fontWeights } from '#lib/font-weight';
+import { usePathname } from 'next/navigation';
 import {
   Sidebar,
   SidebarContent,
@@ -12,12 +12,12 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   useSidebar,
-} from "@/components/flavored/sidebar";
-import { componentList, systemNavList } from "@/lib/docs/components";
-import { KIND_DOT } from "@/lib/changelog/kind-style";
-import { useReleaseMarks } from "@/lib/changelog/marks";
-import { GitHubStarButton, SettingsContent } from "@/app/components/right-panel";
-import { SiteCommandMenuTrigger } from "@/app/components/site-command-menu";
+} from '#components/flavored/sidebar';
+import { componentList, systemNavList } from '#lib/docs/components';
+import { KIND_DOT } from '#lib/changelog/kind-style';
+import { useReleaseMarks } from '#lib/changelog/marks';
+import { GitHubStarButton, SettingsContent } from '#app/components/right-panel';
+import { SiteCommandMenuTrigger } from '#app/components/site-command-menu';
 
 interface NavEntry {
   slug: string;
@@ -52,7 +52,7 @@ function NavGroup({
   return (
     // A labelled group (System, Components) gets 16px above it instead of
     // the group's 8px, so each section starts clear of the one before.
-    <SidebarGroup className={label ? "pt-4" : undefined}>
+    <SidebarGroup className={label ? 'pt-4' : undefined}>
       {label && (
         // Foreground, not the component's muted default: on the site the
         // group names are wayfinding, and the counts beside them stay muted.
@@ -126,17 +126,20 @@ export function SiteSidebar() {
         <SidebarGroup>
           <SidebarMenu aria-label="Main navigation">
             <SidebarMenuItem>
-              <SidebarMenuButton render={<Link href="/" />} isActive={pathname === "/"}>
+              <SidebarMenuButton render={<Link href="/" />} isActive={pathname === '/'}>
                 Showcase
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton render={<Link href="/docs" />} isActive={pathname === "/docs"}>
+              <SidebarMenuButton render={<Link href="/docs" />} isActive={pathname === '/docs'}>
                 Introduction
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton render={<Link href="/changelog" />} isActive={pathname === "/changelog"}>
+              <SidebarMenuButton
+                render={<Link href="/changelog" />}
+                isActive={pathname === '/changelog'}
+              >
                 Changelog
                 {/* The page itself is new: dotted by hand, unlike the docs
                     rows, which follow the changelog. */}
@@ -159,7 +162,6 @@ export function SiteSidebar() {
           ariaLabel="Component navigation"
         />
       </SidebarContent>
-
     </Sidebar>
   );
 }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   ListFilter,
@@ -8,14 +8,14 @@ import {
   SlidersHorizontal,
   Square,
   Type,
-} from "lucide-react";
-import { Tooltip, TooltipGroup } from "@/registry/radix/tooltip";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { Button } from "@/components/ui/button";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { apiReference } from "@/lib/docs/api/tooltip";
+} from 'lucide-react';
+import { Tooltip, TooltipGroup } from '#registry/radix/tooltip';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { Button } from '#components/ui/button';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { apiReference } from '#lib/docs/api/tooltip';
 
 // ---------------------------------------------------------------------------
 // Code snippets
@@ -35,7 +35,7 @@ const placementCode = `import { Tooltip } from "./components";
 <Tooltip content="Left" side="left">...</Tooltip>`;
 
 const richCode = `import { Tooltip } from "./components";
-import { fontWeights } from "@/lib/font-weight";
+import { fontWeights } from "#lib/font-weight";
 
 <Tooltip
   content={
@@ -155,12 +155,8 @@ export default function TooltipDoc() {
           <Tooltip
             content={
               <div className="flex flex-col">
-                <span style={{ fontVariationSettings: fontWeights.semibold }}>
-                  Save changes
-                </span>
-                <span className="text-muted-foreground">
-                  Updates the draft on every device
-                </span>
+                <span style={{ fontVariationSettings: fontWeights.semibold }}>Save changes</span>
+                <span className="text-muted-foreground">Updates the draft on every device</span>
               </div>
             }
           >

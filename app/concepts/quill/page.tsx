@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { useIcon } from "@/lib/icon-context";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { surfaceClasses } from "@/lib/surface-classes";
-import { cn } from "@/lib/utils";
-import { ConceptFrame } from "@/app/concepts/_components/concept-frame";
-import { Button } from "@/registry/radix/button";
-import { Badge, type BadgeColor } from "@/registry/default/badge";
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useIcon } from '#lib/icon-context';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { surfaceClasses } from '#lib/surface-classes';
+import { cn } from '#lib/utils';
+import { ConceptFrame } from '#app/concepts/_components/concept-frame';
+import { Button } from '#registry/radix/button';
+import { Badge, type BadgeColor } from '#registry/default/badge';
 import {
   Table,
   TableHeader,
@@ -15,23 +15,19 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@/registry/default/table";
-import {
-  Tabs,
-  TabsItem,
-  TabsPanel,
-} from "@/components/flavored/tabs";
-import { Dropdown, DropdownLabel } from "@/components/flavored/dropdown";
-import { MenuItem } from "@/registry/default/menu-item";
-import { ChatMessage } from "@/registry/default/chat-message";
-import { AnimatePresence } from "motion/react";
-import { InputMessage } from "@/registry/default/input-message";
+} from '#registry/default/table';
+import { Tabs, TabsItem, TabsPanel } from '#components/flavored/tabs';
+import { Dropdown, DropdownLabel } from '#components/flavored/dropdown';
+import { MenuItem } from '#registry/default/menu-item';
+import { ChatMessage } from '#registry/default/chat-message';
+import { AnimatePresence } from 'motion/react';
+import { InputMessage } from '#registry/default/input-message';
 import {
   ThinkingSteps,
   ThinkingStepsHeader,
   ThinkingStepsContent,
   ThinkingStep,
-} from "@/components/flavored/thinking-steps";
+} from '#components/flavored/thinking-steps';
 
 // ── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -43,29 +39,57 @@ interface Initiative {
 }
 
 const INITIATIVES: Initiative[] = [
-  { name: "Self-serve onboarding", owner: "Dana", status: { label: "On track", color: "green" }, target: "Aug 15" },
-  { name: "Billing v2 migration", owner: "Mara", status: { label: "At risk", color: "amber" }, target: "Sep 1" },
-  { name: "Mobile offline mode", owner: "Alex", status: { label: "Planned", color: "gray" }, target: "Sep 20" },
-  { name: "SOC 2 Type II", owner: "Sam", status: { label: "On track", color: "green" }, target: "Oct 30" },
+  {
+    name: 'Self-serve onboarding',
+    owner: 'Dana',
+    status: { label: 'On track', color: 'green' },
+    target: 'Aug 15',
+  },
+  {
+    name: 'Billing v2 migration',
+    owner: 'Mara',
+    status: { label: 'At risk', color: 'amber' },
+    target: 'Sep 1',
+  },
+  {
+    name: 'Mobile offline mode',
+    owner: 'Alex',
+    status: { label: 'Planned', color: 'gray' },
+    target: 'Sep 20',
+  },
+  {
+    name: 'SOC 2 Type II',
+    owner: 'Sam',
+    status: { label: 'On track', color: 'green' },
+    target: 'Oct 30',
+  },
 ];
 
 const COMMENTS = [
-  { id: "c1", from: "user" as const, text: "Should Billing v2 block the mobile work, or can they run in parallel?" },
-  { id: "c2", from: "assistant" as const, text: "They can run in parallel — the only shared surface is the pricing API, and that's already versioned. I'd only serialize them if Mara's team gets pulled into the SOC 2 evidence collection." },
+  {
+    id: 'c1',
+    from: 'user' as const,
+    text: 'Should Billing v2 block the mobile work, or can they run in parallel?',
+  },
+  {
+    id: 'c2',
+    from: 'assistant' as const,
+    text: "They can run in parallel — the only shared surface is the pricing API, and that's already versioned. I'd only serialize them if Mara's team gets pulled into the SOC 2 evidence collection.",
+  },
 ];
 
 const BLOCK_TYPES = [
-  { label: "Text", icon: "pencil" },
-  { label: "Heading", icon: "square-library" },
-  { label: "To-do list", icon: "check" },
-  { label: "Table", icon: "rectangle-horizontal" },
-  { label: "AI block", icon: "brain" },
+  { label: 'Text', icon: 'pencil' },
+  { label: 'Heading', icon: 'square-library' },
+  { label: 'To-do list', icon: 'check' },
+  { label: 'Table', icon: 'rectangle-horizontal' },
+  { label: 'AI block', icon: 'brain' },
 ];
 
 // ── Slash / add-block menu ──────────────────────────────────────────────────
 
 function AddBlockMenu() {
-  const Plus = useIcon("plus");
+  const Plus = useIcon('plus');
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const icons = BLOCK_TYPES.map((b) => useIcon(b.icon as Parameters<typeof useIcon>[0]));
@@ -75,8 +99,8 @@ function AddBlockMenu() {
     const onDown = (e: MouseEvent) => {
       if (!ref.current?.contains(e.target as Node)) setOpen(false);
     };
-    document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
   }, [open]);
 
   return (
@@ -114,15 +138,15 @@ function AddBlockMenu() {
 // ── AI composer block ───────────────────────────────────────────────────────
 
 function AIBlock() {
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState('');
   const [drafting, setDrafting] = useState(false);
   const [blocks, setBlocks] = useState<string[]>([]);
-  const Sparkle = useIcon("brain");
+  const Sparkle = useIcon('brain');
 
   const handleSend = useCallback((value: string) => {
     const trimmed = value.trim();
     if (!trimmed) return;
-    setDraft("");
+    setDraft('');
     setDrafting(true);
     setTimeout(() => {
       setBlocks((prev) => [
@@ -136,10 +160,7 @@ function AIBlock() {
   return (
     <div className="flex flex-col gap-3">
       {blocks.map((b, i) => (
-        <div
-          key={i}
-          className={cn("flex gap-2.5 rounded-xl p-3.5", surfaceClasses(2, 2))}
-        >
+        <div key={i} className={cn('flex gap-2.5 rounded-xl p-3.5', surfaceClasses(2, 2))}>
           <Sparkle size={16} className="mt-0.5 shrink-0 text-muted-foreground" />
           <p className="text-site-subtitle text-foreground">{b}</p>
         </div>
@@ -149,7 +170,11 @@ function AIBlock() {
         <ThinkingSteps defaultOpen className="w-full max-w-full">
           <ThinkingStepsHeader>Drafting with Quill AI</ThinkingStepsHeader>
           <ThinkingStepsContent>
-            <ThinkingStep icon="square-library" label="Reading the page context" status="complete" />
+            <ThinkingStep
+              icon="square-library"
+              label="Reading the page context"
+              status="complete"
+            />
             <ThinkingStep icon="brain" label="Outlining the response" status="complete" />
             <ThinkingStep icon="pencil" label="Writing" status="active" isLast />
           </ThinkingStepsContent>
@@ -180,17 +205,16 @@ function DocumentBody() {
   return (
     <div className="flex flex-col gap-5">
       <p className="text-[15px] leading-6 text-muted-foreground">
-        The single source of truth for what we&rsquo;re building this quarter, why,
-        and who owns each bet. Edit freely — every block here is a Fluid
-        Functionalism component.
+        The single source of truth for what we&rsquo;re building this quarter, why, and who owns
+        each bet. Edit freely — every block here is a Fluid Functionalism component.
       </p>
 
       {/* Callout */}
-      <div className={cn("flex gap-3 rounded-xl p-4", surfaceClasses(2, 2))}>
+      <div className={cn('flex gap-3 rounded-xl p-4', surfaceClasses(2, 2))}>
         <span className="text-[18px] leading-none">💡</span>
         <p className="text-site-subtitle text-foreground">
-          Decisions are final once they land in the Initiatives table. Use
-          comments for anything still in debate.
+          Decisions are final once they land in the Initiatives table. Use comments for anything
+          still in debate.
         </p>
       </div>
 
@@ -202,9 +226,9 @@ function DocumentBody() {
       </h2>
       <ul className="flex flex-col gap-2 pl-1">
         {[
-          "Cut time-to-first-value to under 5 minutes",
-          "Move 60% of new accounts onto self-serve billing",
-          "Close SOC 2 Type II without slipping the roadmap",
+          'Cut time-to-first-value to under 5 minutes',
+          'Move 60% of new accounts onto self-serve billing',
+          'Close SOC 2 Type II without slipping the roadmap',
         ].map((g) => (
           <li key={g} className="flex items-start gap-2 text-site-subtitle text-foreground">
             <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground" />
@@ -240,9 +264,7 @@ function DocumentBody() {
                   {it.status.label}
                 </Badge>
               </TableCell>
-              <TableCell className="text-muted-foreground tabular-nums">
-                {it.target}
-              </TableCell>
+              <TableCell className="text-muted-foreground tabular-nums">{it.target}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -262,9 +284,9 @@ function DocumentBody() {
 // ── Page ────────────────────────────────────────────────────────────────────
 
 export default function QuillPage() {
-  const Doc = useIcon("pencil");
-  const Comment = useIcon("message-circle");
-  const Activity = useIcon("clock");
+  const Doc = useIcon('pencil');
+  const Comment = useIcon('message-circle');
+  const Activity = useIcon('clock');
 
   const [tab, setTab] = useState(0);
 

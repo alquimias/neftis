@@ -1,6 +1,6 @@
-import { docMetadata } from "@/lib/docs/metadata";
+import { docMetadata } from '#lib/docs/metadata';
 
-export const metadata = docMetadata("tabs");
+export const metadata = docMetadata('tabs');
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;

@@ -1,20 +1,20 @@
-import { AccordionPlayground } from "./accordion";
-import { AskUserQuestionsPlayground } from "./ask-user-questions";
-import { BannerPlayground } from "./banner";
-import { BreadcrumbPlayground } from "./breadcrumb";
-import { ButtonPlayground } from "./button";
-import { CalendarPlayground } from "./calendar";
-import { CardPlayground } from "./card";
-import { ComboboxPlayground } from "./combobox";
-import { CommandMenuPlayground } from "./command-menu";
-import { DataTablePlayground } from "./data-table";
-import { DatePickerPlayground } from "./date-picker";
-import { DropdownPlayground } from "./dropdown";
-import { InputMessagePlayground } from "./input-message";
-import { SidebarPlayground } from "./sidebar";
-import type { PlaygroundComponent } from "./types";
+import { AccordionPlayground } from './accordion';
+import { AskUserQuestionsPlayground } from './ask-user-questions';
+import { BannerPlayground } from './banner';
+import { BreadcrumbPlayground } from './breadcrumb';
+import { ButtonPlayground } from './button';
+import { CalendarPlayground } from './calendar';
+import { CardPlayground } from './card';
+import { ComboboxPlayground } from './combobox';
+import { CommandMenuPlayground } from './command-menu';
+import { DataTablePlayground } from './data-table';
+import { DatePickerPlayground } from './date-picker';
+import { DropdownPlayground } from './dropdown';
+import { InputMessagePlayground } from './input-message';
+import { SidebarPlayground } from './sidebar';
+import type { PlaygroundComponent } from './types';
 
-export type { PlaygroundParts, PlaygroundProps, PlaygroundComponent } from "./types";
+export type { PlaygroundParts, PlaygroundProps, PlaygroundComponent } from './types';
 
 // ---------------------------------------------------------------------------
 // The scalable rule: one entry per component slug. Registering a playground
@@ -29,17 +29,17 @@ export type { PlaygroundParts, PlaygroundProps, PlaygroundComponent } from "./ty
 
 export const playgroundMap: Record<string, PlaygroundComponent> = {
   accordion: AccordionPlayground,
-  "ask-user-questions": AskUserQuestionsPlayground,
+  'ask-user-questions': AskUserQuestionsPlayground,
   banner: BannerPlayground,
   breadcrumb: BreadcrumbPlayground,
   button: ButtonPlayground,
   calendar: CalendarPlayground,
   card: CardPlayground,
   combobox: ComboboxPlayground,
-  "command-menu": CommandMenuPlayground,
-  "data-table": DataTablePlayground,
-  "date-picker": DatePickerPlayground,
+  'command-menu': CommandMenuPlayground,
+  'data-table': DataTablePlayground,
+  'date-picker': DatePickerPlayground,
   dropdown: DropdownPlayground,
-  "input-message": InputMessagePlayground,
+  'input-message': InputMessagePlayground,
   sidebar: SidebarPlayground,
 };

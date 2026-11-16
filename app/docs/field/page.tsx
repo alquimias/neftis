@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent } from 'react';
 import {
   Field,
   FieldContent,
@@ -12,23 +12,18 @@ import {
   FieldSeparator,
   FieldSet,
   FieldTitle,
-} from "@/registry/default/field";
-import { Input } from "@/registry/default/input";
-import { Textarea } from "@/registry/default/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/flavored/select";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/flavored/checkbox";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { apiReference } from "@/lib/docs/api/field";
+} from '#registry/default/field';
+import { Input } from '#registry/default/input';
+import { Textarea } from '#registry/default/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '#components/flavored/select';
+import { Button } from '#components/ui/button';
+import { Checkbox } from '#components/flavored/checkbox';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { apiReference } from '#lib/docs/api/field';
 
-const STAGES = ["Pre-seed", "Seed", "Series A", "Series B", "Series C+", "Public"];
+const STAGES = ['Pre-seed', 'Seed', 'Series A', 'Series B', 'Series C+', 'Public'];
 
 const formCode = `import {
   Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSet, FieldLegend,
@@ -197,7 +192,7 @@ const separatorCode = `<FieldGroup>
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function RequestForm() {
-  const [stage, setStage] = useState("");
+  const [stage, setStage] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
 
@@ -205,11 +200,11 @@ function RequestForm() {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const next: Record<string, string> = {};
-    if (!String(data.get("company") ?? "").trim()) next.company = "Company is required";
-    const email = String(data.get("email") ?? "").trim();
-    if (!email) next.email = "Work email is required";
-    else if (!EMAIL_RE.test(email)) next.email = "Enter a valid email address";
-    if (!data.get("conduct")) next.conduct = "Required to join the event";
+    if (!String(data.get('company') ?? '').trim()) next.company = 'Company is required';
+    const email = String(data.get('email') ?? '').trim();
+    if (!email) next.email = 'Work email is required';
+    else if (!EMAIL_RE.test(email)) next.email = 'Enter a valid email address';
+    if (!data.get('conduct')) next.conduct = 'Required to join the event';
     setErrors(next);
     setSent(Object.keys(next).length === 0);
   };
@@ -257,7 +252,9 @@ function RequestForm() {
             </FieldContent>
           </Field>
           <Field>
-            <FieldLabel htmlFor="field-notes">Is there anything else you&apos;d like us to know?</FieldLabel>
+            <FieldLabel htmlFor="field-notes">
+              Is there anything else you&apos;d like us to know?
+            </FieldLabel>
             <Textarea id="field-notes" name="notes" />
           </Field>
         </FieldGroup>
@@ -277,8 +274,8 @@ function RequestForm() {
 }
 
 export default function FieldDoc() {
-  const [department, setDepartment] = useState("");
-  const [language, setLanguage] = useState("en");
+  const [department, setDepartment] = useState('');
+  const [language, setLanguage] = useState('en');
 
   return (
     <DocPage
@@ -322,11 +319,21 @@ export default function FieldDoc() {
             <Field>
               <FieldLabel htmlFor="field-department">Department</FieldLabel>
               <Select value={department} onValueChange={setDepartment}>
-                <SelectTrigger id="field-department" placeholder="Choose a department" className="w-full" />
+                <SelectTrigger
+                  id="field-department"
+                  placeholder="Choose a department"
+                  className="w-full"
+                />
                 <SelectContent>
-                  <SelectItem index={0} value="design">Design</SelectItem>
-                  <SelectItem index={1} value="engineering">Engineering</SelectItem>
-                  <SelectItem index={2} value="research">Research</SelectItem>
+                  <SelectItem index={0} value="design">
+                    Design
+                  </SelectItem>
+                  <SelectItem index={1} value="engineering">
+                    Engineering
+                  </SelectItem>
+                  <SelectItem index={2} value="research">
+                    Research
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <FieldDescription>Where you spend most of your week.</FieldDescription>
@@ -420,7 +427,9 @@ export default function FieldDoc() {
               <Input id="field-work-email" type="email" defaultValue="ada@anthropic" aria-invalid />
               <FieldError>Enter a valid email address</FieldError>
             </Field>
-            <FieldError errors={[{ message: "At least 8 characters" }, { message: "One number" }]} />
+            <FieldError
+              errors={[{ message: 'At least 8 characters' }, { message: 'One number' }]}
+            />
           </div>
         </ComponentPreview>
       </DocSection>
@@ -437,8 +446,12 @@ export default function FieldDoc() {
                 <Select value={language} onValueChange={setLanguage}>
                   <SelectTrigger id="field-language" placeholder="Pick one" />
                   <SelectContent>
-                    <SelectItem index={0} value="en">English</SelectItem>
-                    <SelectItem index={1} value="fr">Français</SelectItem>
+                    <SelectItem index={0} value="en">
+                      English
+                    </SelectItem>
+                    <SelectItem index={1} value="fr">
+                      Français
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </Field>

@@ -9,11 +9,11 @@
  * Focus drives the hovered tab here: it sets it in the same event, where the
  * pointer path waits for a frame.
  */
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, render } from "@testing-library/react";
-import type { ComponentType, ReactNode } from "react";
-import * as baseTabs from "@/registry/base/tabs";
-import * as radixTabs from "@/registry/radix/tabs";
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, cleanup, render } from '@testing-library/react';
+import type { ComponentType, ReactNode } from 'react';
+import * as baseTabs from '#registry/base/tabs';
+import * as radixTabs from '#registry/radix/tabs';
 
 class ResizeObserverStub {
   observe() {}
@@ -24,12 +24,12 @@ globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObse
 
 beforeEach(() => {
   // jsdom lays nothing out: every tab is 80px wide, placed by its index.
-  vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockReturnValue(80);
-  vi.spyOn(HTMLElement.prototype, "offsetHeight", "get").mockReturnValue(32);
-  vi.spyOn(HTMLElement.prototype, "offsetLeft", "get").mockImplementation(function (
-    this: HTMLElement
+  vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(80);
+  vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(32);
+  vi.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockImplementation(function (
+    this: HTMLElement,
   ) {
-    const index = this.getAttribute("data-fluid-hover-index");
+    const index = this.getAttribute('data-fluid-hover-index');
     return index === null ? 0 : Number(index) * 80;
   });
 });
@@ -39,7 +39,11 @@ afterEach(() => {
 });
 
 type Flavor = {
-  Tabs: ComponentType<{ selectedIndex: number; onSelect: (index: number) => void; children: ReactNode }>;
+  Tabs: ComponentType<{
+    selectedIndex: number;
+    onSelect: (index: number) => void;
+    children: ReactNode;
+  }>;
   TabsItem: ComponentType<{ index: number; label: string }>;
 };
 
@@ -50,16 +54,16 @@ function fills(container: HTMLElement) {
 }
 
 describe.each([
-  ["base", baseTabs as unknown as Flavor],
-  ["radix", radixTabs as unknown as Flavor],
-])("%s Tabs hover pill", (_name, { Tabs, TabsItem }) => {
+  ['base', baseTabs as unknown as Flavor],
+  ['radix', radixTabs as unknown as Flavor],
+])('%s Tabs hover pill', (_name, { Tabs, TabsItem }) => {
   async function setup() {
     const view = render(
       <Tabs selectedIndex={1} onSelect={() => {}}>
-        {["One", "Two", "Three", "Four"].map((label, index) => (
+        {['One', 'Two', 'Three', 'Four'].map((label, index) => (
           <TabsItem key={label} index={index} label={label} />
         ))}
-      </Tabs>
+      </Tabs>,
     );
     // The hover hook measures the tabs on a frame.
     await act(async () => {
@@ -72,22 +76,22 @@ describe.each([
     return { ...view, hover, pill };
   }
 
-  it("fades in on the hovered tab, not on the selected one", async () => {
+  it('fades in on the hovered tab, not on the selected one', async () => {
     const { container, hover, pill } = await setup();
     expect(fills(container)).toHaveLength(1);
     hover(3);
-    expect(pill()!.style.left).toBe("240px");
-    expect(pill()!.style.opacity).toBe("0");
+    expect(pill()!.style.left).toBe('240px');
+    expect(pill()!.style.opacity).toBe('0');
   });
 
-  it("keeps the selected pill at full opacity while another tab is hovered", async () => {
+  it('keeps the selected pill at full opacity while another tab is hovered', async () => {
     const { container, hover } = await setup();
     hover(3);
-    expect(fills(container)[0].style.opacity).not.toBe("0.8");
-    expect(fills(container)[0].style.left).toBe("80px");
+    expect(fills(container)[0].style.opacity).not.toBe('0.8');
+    expect(fills(container)[0].style.left).toBe('80px');
   });
 
-  it("glides the same pill between unselected tabs on one side", async () => {
+  it('glides the same pill between unselected tabs on one side', async () => {
     const { hover, pill } = await setup();
     hover(2);
     const first = pill();
@@ -95,22 +99,22 @@ describe.each([
     expect(pill()).toBe(first);
   });
 
-  it("starts a new pill when the hover jumps across the selected tab", async () => {
+  it('starts a new pill when the hover jumps across the selected tab', async () => {
     const { hover, pill } = await setup();
     hover(0);
     const first = pill();
     hover(2);
     expect(pill()).not.toBe(first);
-    expect(pill()!.style.left).toBe("160px");
+    expect(pill()!.style.left).toBe('160px');
   });
 
-  it("shows no hover pill over the selected tab, and a new one past it", async () => {
+  it('shows no hover pill over the selected tab, and a new one past it', async () => {
     const { hover, pill } = await setup();
     hover(0);
     const first = pill();
     hover(1);
     hover(2);
     expect(pill()).not.toBe(first);
-    expect(pill()!.style.left).toBe("160px");
+    expect(pill()!.style.left).toBe('160px');
   });
 });

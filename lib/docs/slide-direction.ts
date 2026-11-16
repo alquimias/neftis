@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useRef, useState } from "react";
-import { spring } from "@/registry/default/lib/springs";
+import { useRef, useState } from 'react';
+import { spring } from '#registry/default/lib/springs';
 
 // Shared by the CarouselDots demos (doc page and home tile): slide state
 // plus the direction of the last change, and the sideways label motion.

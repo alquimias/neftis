@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ThinkingIndicator } from "@/registry/default/thinking-indicator";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { indicatorProps } from "@/lib/docs/api/thinking-indicator";
+import { ThinkingIndicator } from '#registry/default/thinking-indicator';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { indicatorProps } from '#lib/docs/api/thinking-indicator';
 
 const basicCode = `import { ThinkingIndicator } from "./components";
 

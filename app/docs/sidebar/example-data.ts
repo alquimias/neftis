@@ -1,4 +1,4 @@
-import type { IconName } from "@/lib/icon-context";
+import type { IconName } from '#lib/icon-context';
 
 /**
  * Content for the Sidebar doc page's examples — one fictional AI product,
@@ -14,7 +14,7 @@ import type { IconName } from "@/lib/icon-context";
  * the component, and a nav of Home / Inbox / Calendar shows none of it.
  */
 
-export const AI_WORKSPACE = "Aurora AI";
+export const AI_WORKSPACE = 'Aurora AI';
 
 /** Top-level product nav — the layout and collapse examples. Every row owns
  *  a sub-tree, so those examples show the shape of a real tree rather than a
@@ -27,48 +27,48 @@ export const AI_NAV: readonly {
   children: readonly { label: string; badge?: string }[];
 }[] = [
   {
-    icon: "message-circle",
-    label: "Chat",
+    icon: 'message-circle',
+    label: 'Chat',
     children: [
-      { label: "Q3 board deck", badge: "12" },
-      { label: "Postgres 16 plan", badge: "4" },
-      { label: "Onboarding emails" },
+      { label: 'Q3 board deck', badge: '12' },
+      { label: 'Postgres 16 plan', badge: '4' },
+      { label: 'Onboarding emails' },
     ],
   },
   {
-    icon: "brain",
-    label: "Agents",
+    icon: 'brain',
+    label: 'Agents',
     children: [
-      { label: "Support triage", badge: "18" },
-      { label: "Release notes" },
-      { label: "SQL analyst" },
+      { label: 'Support triage', badge: '18' },
+      { label: 'Release notes' },
+      { label: 'SQL analyst' },
     ],
   },
   {
-    icon: "square-library",
-    label: "Knowledge",
+    icon: 'square-library',
+    label: 'Knowledge',
     children: [
-      { label: "Product docs", badge: "1.2k" },
-      { label: "Support macros" },
-      { label: "API reference" },
+      { label: 'Product docs', badge: '1.2k' },
+      { label: 'Support macros' },
+      { label: 'API reference' },
     ],
   },
   {
-    icon: "play",
-    label: "Runs",
+    icon: 'play',
+    label: 'Runs',
     children: [
-      { label: "In progress", badge: "3" },
-      { label: "Completed" },
-      { label: "Failed", badge: "1" },
+      { label: 'In progress', badge: '3' },
+      { label: 'Completed' },
+      { label: 'Failed', badge: '1' },
     ],
   },
   {
-    icon: "check",
-    label: "Evals",
+    icon: 'check',
+    label: 'Evals',
     children: [
-      { label: "Refusal suite", badge: "98%" },
-      { label: "Retrieval recall", badge: "91%" },
-      { label: "Jailbreak probes" },
+      { label: 'Refusal suite', badge: '98%' },
+      { label: 'Retrieval recall', badge: '91%' },
+      { label: 'Jailbreak probes' },
     ],
   },
 ];
@@ -84,19 +84,19 @@ export const WIKI_PRIVATE: readonly {
   children: readonly { icon: IconName; label: string }[];
 }[] = [
   {
-    icon: "pencil",
-    label: "Drafts",
+    icon: 'pencil',
+    label: 'Drafts',
     children: [
-      { icon: "star", label: "Onboarding revamp" },
-      { icon: "search", label: "Competitor teardown" },
+      { icon: 'star', label: 'Onboarding revamp' },
+      { icon: 'search', label: 'Competitor teardown' },
     ],
   },
   {
-    icon: "calendar",
-    label: "Weekly notes",
+    icon: 'calendar',
+    label: 'Weekly notes',
     children: [
-      { icon: "clock", label: "Week 35 — planning" },
-      { icon: "mail", label: "Week 34 — retro" },
+      { icon: 'clock', label: 'Week 35 — planning' },
+      { icon: 'mail', label: 'Week 34 — retro' },
     ],
   },
 ];
@@ -107,19 +107,19 @@ export const WIKI_SHARED: readonly {
   children: readonly { icon: IconName; label: string }[];
 }[] = [
   {
-    icon: "brain",
-    label: "Engineering",
+    icon: 'brain',
+    label: 'Engineering',
     children: [
-      { icon: "link", label: "API guidelines" },
-      { icon: "play", label: "Release process" },
+      { icon: 'link', label: 'API guidelines' },
+      { icon: 'play', label: 'Release process' },
     ],
   },
   {
-    icon: "globe",
-    label: "Product hub",
+    icon: 'globe',
+    label: 'Product hub',
     children: [
-      { icon: "message-circle", label: "Customer interviews" },
-      { icon: "star", label: "Roadmap" },
+      { icon: 'message-circle', label: 'Customer interviews' },
+      { icon: 'star', label: 'Roadmap' },
     ],
   },
 ];
@@ -133,19 +133,19 @@ export const WIKI_RECENT: readonly {
   children: readonly { icon: IconName; label: string }[];
 }[] = [
   {
-    icon: "clock",
-    label: "Today",
+    icon: 'clock',
+    label: 'Today',
     children: [
-      { icon: "star", label: "Onboarding revamp" },
-      { icon: "link", label: "API guidelines" },
+      { icon: 'star', label: 'Onboarding revamp' },
+      { icon: 'link', label: 'API guidelines' },
     ],
   },
   {
-    icon: "calendar",
-    label: "Yesterday",
+    icon: 'calendar',
+    label: 'Yesterday',
     children: [
-      { icon: "message-circle", label: "Customer interviews" },
-      { icon: "play", label: "Release process" },
+      { icon: 'message-circle', label: 'Customer interviews' },
+      { icon: 'play', label: 'Release process' },
     ],
   },
 ];
@@ -155,20 +155,20 @@ export const WIKI_RECENT: readonly {
  *  everything else. Every thread carries a badge — they count turns. */
 export const AI_THREADS: readonly {
   label: string;
-  status: "active" | "unread" | "idle";
+  status: 'active' | 'unread' | 'idle';
   badge: string;
 }[] = [
-  { label: "Summarise the Q3 board deck", status: "active", badge: "12" },
-  { label: "Migration plan for Postgres 16", status: "unread", badge: "4" },
-  { label: "Why does retrieval miss the changelog?", status: "idle", badge: "6" },
-  { label: "Rewrite the onboarding emails", status: "idle", badge: "8" },
-  { label: "Debug the eval harness timeout", status: "unread", badge: "9" },
-  { label: "Draft the launch announcement", status: "idle", badge: "5" },
-  { label: "Compare embedding models", status: "idle", badge: "3" },
+  { label: 'Summarise the Q3 board deck', status: 'active', badge: '12' },
+  { label: 'Migration plan for Postgres 16', status: 'unread', badge: '4' },
+  { label: 'Why does retrieval miss the changelog?', status: 'idle', badge: '6' },
+  { label: 'Rewrite the onboarding emails', status: 'idle', badge: '8' },
+  { label: 'Debug the eval harness timeout', status: 'unread', badge: '9' },
+  { label: 'Draft the launch announcement', status: 'idle', badge: '5' },
+  { label: 'Compare embedding models', status: 'idle', badge: '3' },
 ];
 
 export const AI_CALLOUT = {
-  title: "Aurora 2 is here",
-  media: "Longer context, faster agents",
-  icon: "See what changed",
+  title: 'Aurora 2 is here',
+  media: 'Longer context, faster agents',
+  icon: 'See what changed',
 } as const;

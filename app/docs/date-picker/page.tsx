@@ -1,18 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import {
-  DatePicker,
-  type DateRange,
-  type TimeRange,
-} from "@/components/ui/date-picker";
-import { ComponentPreview } from "@/lib/docs/ComponentPreview";
-import { PropsTable } from "@/lib/docs/PropsTable";
-import { DocPage, DocSection } from "@/lib/docs/DocPage";
-import { PlaygroundLayout } from "@/lib/docs/playground";
-import { DatePickerPlayground, demoPresets } from "@/lib/docs/playgrounds/date-picker";
-import { apiReference } from "@/lib/docs/api/date-picker";
-import { demoToday } from "@/lib/demo-today";
+import { useState } from 'react';
+import { DatePicker, type DateRange, type TimeRange } from '#components/ui/date-picker';
+import { ComponentPreview } from '#lib/docs/ComponentPreview';
+import { PropsTable } from '#lib/docs/PropsTable';
+import { DocPage, DocSection } from '#lib/docs/DocPage';
+import { PlaygroundLayout } from '#lib/docs/playground';
+import { DatePickerPlayground, demoPresets } from '#lib/docs/playgrounds/date-picker';
+import { apiReference } from '#lib/docs/api/date-picker';
+import { demoToday } from '#lib/demo-today';
 
 // ---------------------------------------------------------------------------
 // Code snippets
@@ -95,7 +91,7 @@ export default function DatePickerDoc() {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [presets] = useState(() => demoPresets());
   const [eventDate, setEventDate] = useState<Date | undefined>(demoToday);
-  const [eventTime, setEventTime] = useState<TimeRange | null>({ start: "11:00", end: "12:45" });
+  const [eventTime, setEventTime] = useState<TimeRange | null>({ start: '11:00', end: '12:45' });
   const [deadline, setDeadline] = useState<Date | undefined>(undefined);
   const [deadlineTime, setDeadlineTime] = useState<string | null>(null);
   const [stay, setStay] = useState<DateRange | undefined>(undefined);
@@ -124,7 +120,8 @@ export default function DatePickerDoc() {
 
       <DocSection title="Range with presets">
         <p className="text-site-body text-muted-foreground">
-          Pick a start and an end, or a preset. It closes once the end is set; <code>Escape</code> mid-pick puts the previous range back.
+          Pick a start and an end, or a preset. It closes once the end is set; <code>Escape</code>{' '}
+          mid-pick puts the previous range back.
         </p>
         <ComponentPreview code={rangeCode} minHeightClass="min-h-[460px]" align="top">
           <div className="w-full">
@@ -135,7 +132,8 @@ export default function DatePickerDoc() {
 
       <DocSection title="Date and time">
         <p className="text-site-body text-muted-foreground">
-          2 segments, 2 popovers. Type <code>1130</code> or <code>11:30am</code> in a time, or arrow through the slots. The end list counts the duration from the start.
+          2 segments, 2 popovers. Type <code>1130</code> or <code>11:30am</code> in a time, or arrow
+          through the slots. The end list counts the duration from the start.
         </p>
         <ComponentPreview code={eventCode} minHeightClass="min-h-[420px]" align="top">
           <div className="w-full">
@@ -149,7 +147,8 @@ export default function DatePickerDoc() {
           </div>
         </ComponentPreview>
         <p className="text-site-body text-muted-foreground">
-          <code>time</code> takes one time instead. <code>step</code> sets the minutes between slots.
+          <code>time</code> takes one time instead. <code>step</code> sets the minutes between
+          slots.
         </p>
         <ComponentPreview code={timeCode} minHeightClass="min-h-[420px]" align="top">
           <div className="w-full">
@@ -166,7 +165,8 @@ export default function DatePickerDoc() {
 
       <DocSection title="Booked days">
         <p className="text-site-body text-muted-foreground">
-          <code>calendarProps</code> reaches the calendar inside: booked nights, past days, cell size.
+          <code>calendarProps</code> reaches the calendar inside: booked nights, past days, cell
+          size.
         </p>
         <ComponentPreview code={bookingCode} minHeightClass="min-h-[460px]" align="top">
           <div className="w-full">

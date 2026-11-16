@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { type ReactNode, type CSSProperties, createContext } from "react";
-import { motion } from "motion/react";
-import { cn } from "@/registry/default/lib/utils";
-import { useShape } from "@/lib/shape-context";
-import { fontWeights } from "@/registry/default/lib/font-weight";
-import { spring } from "@/lib/springs";
-import { Badge } from "@/registry/default/badge";
+import Link from 'next/link';
+import { type ReactNode, type CSSProperties, createContext } from 'react';
+import { motion } from 'motion/react';
+import { cn } from '#registry/default/lib/utils';
+import { useShape } from '#lib/shape-context';
+import { fontWeights } from '#registry/default/lib/font-weight';
+import { spring } from '#lib/springs';
+import { Badge } from '#registry/default/badge';
 
 /** True inside a home Showcase tile (a 300px grid row). Previews that
  *  also serve the full /demo stage and the /compare pairs read it to trim
@@ -37,9 +37,19 @@ interface BentoCardProps {
   children: ReactNode;
 }
 
-export function BentoCard({ slug, name, isNew, animateLayout = false, action, className: extraClassName, previewClassName, style, children }: BentoCardProps) {
+export function BentoCard({
+  slug,
+  name,
+  isNew,
+  animateLayout = false,
+  action,
+  className: extraClassName,
+  previewClassName,
+  style,
+  children,
+}: BentoCardProps) {
   // Sharp squares the card and its footer; rounded and pill keep 12px.
-  const sharp = useShape().variant === "sharp";
+  const sharp = useShape().variant === 'sharp';
   // No click-to-focus wiring here. Previously a mousedown on empty space
   // inside the card routed focus to the preview's first interactive element
   // (so the user could keyboard-drive the demo afterwards). In practice it
@@ -50,14 +60,14 @@ export function BentoCard({ slug, name, isNew, animateLayout = false, action, cl
   // actually clicked; Tab still routes into the card naturally.
   const footerLabel = (
     <motion.div
-      layout={animateLayout ? "position" : false}
+      layout={animateLayout ? 'position' : false}
       transition={spring.moderate}
       className="flex items-center gap-2"
     >
       <span
         className={cn(
-          "text-site-body text-muted-foreground transition-colors duration-80",
-          slug && "group-hover/link:text-foreground"
+          'text-site-body text-muted-foreground transition-colors duration-80',
+          slug && 'group-hover/link:text-foreground',
         )}
         style={{ fontVariationSettings: fontWeights.normal }}
       >
@@ -86,20 +96,20 @@ export function BentoCard({ slug, name, isNew, animateLayout = false, action, cl
         // overflow-clip, not -hidden: hidden makes the card a scroll
         // container, which would capture the view() timeline of the
         // reveal-scroll content inside it on the Showcase.
-        "relative flex flex-col border overflow-clip outline-none transition-[shadow,border-color] duration-80 bento-card-border",
-        sharp ? "rounded-[1px]" : "rounded-xl",
+        'relative flex flex-col border overflow-clip outline-none transition-[shadow,border-color] duration-80 bento-card-border',
+        sharp ? 'rounded-[1px]' : 'rounded-xl',
         extraClassName,
       )}
       style={style}
     >
       <motion.div
-        layout={animateLayout ? "position" : false}
+        layout={animateLayout ? 'position' : false}
         transition={spring.moderate}
         // Keys typed in the tile reach its component, not the site's shortcuts.
         data-keyboard-scope=""
         className={cn(
-          "flex-1 min-h-0 flex items-center justify-center px-6 py-16",
-          previewClassName
+          'flex-1 min-h-0 flex items-center justify-center px-6 py-16',
+          previewClassName,
         )}
       >
         {children}
@@ -119,7 +129,10 @@ export function BentoCard({ slug, name, isNew, animateLayout = false, action, cl
           <Link
             href={`/docs/${slug}`}
             aria-label={`View ${name} documentation`}
-            className={cn("group/link flex items-center gap-2 px-4 py-3 transition-colors duration-80 hover:bg-hover outline-none focus-visible:shadow-[inset_0_0_0_1px_var(--focus-ring,#6B97FF)]", sharp ? "rounded-b-[1px]" : "rounded-b-xl")}
+            className={cn(
+              'group/link flex items-center gap-2 px-4 py-3 transition-colors duration-80 hover:bg-hover outline-none focus-visible:shadow-[inset_0_0_0_1px_var(--focus-ring,#6B97FF)]',
+              sharp ? 'rounded-b-[1px]' : 'rounded-b-xl',
+            )}
           >
             {footerLabel}
           </Link>
@@ -127,9 +140,7 @@ export function BentoCard({ slug, name, isNew, animateLayout = false, action, cl
           <div className="flex items-center gap-2 px-4 py-3">{footerLabel}</div>
         )}
         {action && (
-          <div className="absolute inset-y-0 right-2 z-10 flex items-center">
-            {action}
-          </div>
+          <div className="absolute inset-y-0 right-2 z-10 flex items-center">{action}</div>
         )}
       </div>
     </motion.div>

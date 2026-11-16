@@ -1,24 +1,20 @@
-"use client";
+'use client';
 
-import { type ReactNode } from "react";
+import { type ReactNode } from 'react';
 import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarTrigger,
   useSidebar,
-} from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownTrigger,
-  DropdownContent,
-} from "@/components/ui/dropdown";
-import { cn } from "@/lib/utils";
-import { useShape } from "@/lib/shape-context";
-import { useSize } from "@/lib/size-context";
-import { useIcons } from "@/lib/icon-context";
-import { fontWeights } from "@/lib/font-weight";
-import { SIDEBAR_MENU_POPUP } from "@/lib/sidebar-menu-grid";
+} from '#components/ui/sidebar';
+import { DropdownMenu, DropdownTrigger, DropdownContent } from '#components/ui/dropdown';
+import { cn } from '#lib/utils';
+import { useShape } from '#lib/shape-context';
+import { useSize } from '#lib/size-context';
+import { useIcons } from '#lib/icon-context';
+import { fontWeights } from '#lib/font-weight';
+import { SIDEBAR_MENU_POPUP } from '#lib/sidebar-menu-grid';
 
 // ---------------------------------------------------------------------------
 // Workspace brand row for a sidebar header.
@@ -55,7 +51,7 @@ export function SidebarWorkspaceHeader({
 }: SidebarWorkspaceHeaderProps) {
   const iconSize = useSize().icon;
   const icons = useIcons();
-  const ChevronDown = icons["chevron-down"];
+  const ChevronDown = icons['chevron-down'];
   const { isPeeking } = useSidebar();
 
   // The tile sits absolutely in the row's leading slot — 20px at left-1.5
@@ -64,7 +60,7 @@ export function SidebarWorkspaceHeader({
     <span
       aria-hidden
       className={`pointer-events-none absolute left-1.5 top-1/2 -translate-y-1/2 transition-opacity duration-80 ${
-        isPeeking ? "opacity-0" : "opacity-100"
+        isPeeking ? 'opacity-0' : 'opacity-100'
       }`}
     >
       {tile}
@@ -76,7 +72,7 @@ export function SidebarWorkspaceHeader({
   // [&_svg]:size-4 matches the topbar trigger's 16px glyph — icon-compact
   // would otherwise draw this one at 14px.
   const triggerFade = `[&>span:first-child]:hidden [&_svg]:size-4 transition-opacity duration-80 ${
-    isPeeking ? "opacity-100" : "pointer-events-none opacity-0"
+    isPeeking ? 'opacity-100' : 'pointer-events-none opacity-0'
   }`;
   const nameSpan = (
     <span
@@ -161,9 +157,9 @@ export function WorkspaceTile({
   return (
     <span
       className={cn(
-        "flex size-5 shrink-0 items-center justify-center bg-foreground text-[length:var(--fs-micro-compact,10px)] leading-[var(--lh-micro-compact,12px)] text-background",
-        { pill: "rounded-full", rounded: "rounded-md", sharp: "rounded-[1px]" }[shape.variant],
-        className
+        'flex size-5 shrink-0 items-center justify-center bg-foreground text-[length:var(--fs-micro-compact,10px)] leading-[var(--lh-micro-compact,12px)] text-background',
+        { pill: 'rounded-full', rounded: 'rounded-md', sharp: 'rounded-[1px]' }[shape.variant],
+        className,
       )}
       style={{ fontVariationSettings: fontWeights.semibold }}
     >

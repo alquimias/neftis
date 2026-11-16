@@ -5,7 +5,6 @@ the exact file format. These rules bind the first-Friday changelog routine as
 much as a person writing a release by hand. `tests/changelog.test.ts` enforces
 the format; the rest is judgment.
 
-
 ## The release
 
 - One Markdown file per calendar month: `content/changelog/YYYY-MM.md`.
@@ -16,14 +15,13 @@ the format; the rest is judgment.
   morning as a PR, the maintainer edits, merges, and deploys.
 - A month with nothing reader-facing gets no file. The page skips it.
 
-
 ## 3 kinds
 
-| Kind | Means | Examples |
-|---|---|---|
-| New | A component or system that just landed: a registry item, a system page, or a doc page that shipped publicly this month. | Banner, the Sizes system, the agent skill |
-| Updated | A change to something already here: a new prop or variant, new behavior, a visual change, a fix. | Dropdown submenus, 16px fields on touch screens |
-| Breaking | An API change that needs a migration: after re-running `shadcn add`, the reader has to change their own code or setup. | A removed or renamed prop, export, or class; a changed default that a prop can turn back; a token or dependency the app now has to add |
+| Kind     | Means                                                                                                                   | Examples                                                                                                                               |
+| -------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| New      | A component or system that just landed: a registry item, a system page, or a doc page that shipped publicly this month. | Banner, the Sizes system, the agent skill                                                                                              |
+| Updated  | A change to something already here: a new prop or variant, new behavior, a visual change, a fix.                        | Dropdown submenus, 16px fields on touch screens                                                                                        |
+| Breaking | An API change that needs a migration: after re-running `shadcn add`, the reader has to change their own code or setup.  | A removed or renamed prop, export, or class; a changed default that a prop can turn back; a token or dependency the app now has to add |
 
 Rules of thumb:
 
@@ -49,7 +47,6 @@ Rules of thumb:
   at most). A change across 2 components gets an entry under each.
 - Aim for 4 to 15 entries. Below that cut, leave the small fixes out.
 
-
 ## Leave out
 
 - Internal tooling: `evals/`, `tests/`, `scripts/`, CI, git hooks, lint rules
@@ -66,7 +63,6 @@ Rules of thumb:
 - Docs-only copy edits. A docs change makes the cut when it adds a page, a
   section, or a feature a reader would come back for (Copy prompt, presets).
 - A PR that is partly any of the above: cite it on the entries it does touch.
-
 
 ## Format
 
@@ -147,7 +143,6 @@ One optional line that says what the month was about.
   `AHEAD_OF_RELEASE` in `lib/changelog/load.ts`; its entry lapses once the
   release for its month exists, and the routine deletes it in its PR.
 
-
 ## Voice
 
 Follow `tone-of-voice.md`, including its **Changelog variant**: new state
@@ -156,7 +151,6 @@ spans and 25 words per sentence at most. Say what the reader gets, not what
 the commit did: "`Enter` selects the focused row" beats "Fix onClick wiring
 in MenuItem". The test fails on an em dash, a banned word, or a sentence
 over the limits.
-
 
 ## The routine
 

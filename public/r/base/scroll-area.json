@@ -3,9 +3,7 @@
   "name": "scroll-area",
   "title": "Scroll Area (Base UI)",
   "description": "Scroll container with a restyled overlay scrollbar that stays discoverable on hover and follows the shape system. Falls back to native overflow scrolling on touch-primary devices. Base UI flavor; adapted from Lina (https://lina.sameer.sh).",
-  "dependencies": [
-    "@base-ui/react@^1.9.0"
-  ],
+  "dependencies": ["@base-ui/react@^1.9.0"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/shape-context.json",
@@ -158,8 +156,6 @@
     }
   },
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/scrollbars. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#scrollbars.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

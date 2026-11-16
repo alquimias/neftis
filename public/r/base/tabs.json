@@ -3,11 +3,7 @@
   "name": "tabs",
   "title": "Tabs",
   "description": "Horizontal tab navigation with fluid hover, animated pill selection indicator, and fluid font-weight transitions. Base UI flavor.",
-  "dependencies": [
-    "@base-ui/react@^1.9.0",
-    "motion",
-    "lucide-react"
-  ],
+  "dependencies": ["@base-ui/react@^1.9.0", "motion", "lucide-react"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/springs.json",
@@ -36,8 +32,6 @@
     }
   },
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/tabs. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#tabs.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

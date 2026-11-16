@@ -1,1 +1,1 @@
-export * from "@/components/flavored/dropdown";
+export * from '#components/flavored/dropdown';

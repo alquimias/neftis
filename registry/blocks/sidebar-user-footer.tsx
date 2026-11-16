@@ -1,20 +1,12 @@
-"use client";
+'use client';
 
-import { type ReactNode } from "react";
-import {
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownTrigger,
-  DropdownContent,
-} from "@/components/ui/dropdown";
-import { cn } from "@/lib/utils";
-import { useSize } from "@/lib/size-context";
-import { useIcons } from "@/lib/icon-context";
-import { SIDEBAR_MENU_POPUP } from "@/lib/sidebar-menu-grid";
+import { type ReactNode } from 'react';
+import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '#components/ui/sidebar';
+import { DropdownMenu, DropdownTrigger, DropdownContent } from '#components/ui/dropdown';
+import { cn } from '#lib/utils';
+import { useSize } from '#lib/size-context';
+import { useIcons } from '#lib/icon-context';
+import { SIDEBAR_MENU_POPUP } from '#lib/sidebar-menu-grid';
 
 // ---------------------------------------------------------------------------
 // Footer user row: identity anchors the sidebar's outer edge. The 20px
@@ -38,15 +30,10 @@ export interface SidebarUserFooterProps {
   className?: string;
 }
 
-export function SidebarUserFooter({
-  name,
-  avatar,
-  menu,
-  className,
-}: SidebarUserFooterProps) {
+export function SidebarUserFooter({ name, avatar, menu, className }: SidebarUserFooterProps) {
   const iconSize = useSize().icon;
   const icons = useIcons();
-  const ChevronsUpDown = icons["chevrons-up-down"];
+  const ChevronsUpDown = icons['chevrons-up-down'];
   return (
     <SidebarMenu aria-label="User" className={cn(className)}>
       <SidebarMenuItem>
@@ -70,12 +57,7 @@ export function SidebarUserFooter({
               </SidebarMenuButton>
             }
           />
-          <DropdownContent
-            className={SIDEBAR_MENU_POPUP}
-            side="top"
-            align="start"
-            sideOffset={6}
-          >
+          <DropdownContent className={SIDEBAR_MENU_POPUP} side="top" align="start" sideOffset={6}>
             {menu}
           </DropdownContent>
         </DropdownMenu>

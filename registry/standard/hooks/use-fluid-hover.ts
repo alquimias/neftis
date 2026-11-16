@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useRef,
@@ -11,7 +11,7 @@ import {
   type Dispatch,
   type RefObject,
   type SetStateAction,
-} from "react";
+} from 'react';
 
 // ---------------------------------------------------------------------------
 // Standard hover: the same API as fluid hover, without the glide. The item
@@ -31,7 +31,7 @@ export interface ItemRect {
 export interface UseFluidHoverOptions {
   /** Kept for API parity with fluid hover. Standard hover lights the item
    *  under the pointer, so the axis has nothing to resolve. */
-  axis?: "x" | "y" | "xy";
+  axis?: 'x' | 'y' | 'xy';
   /**
    * Makes an item invisible to hit-testing without unregistering it, for
    * rows that stay mounted while clipped away (a collapsed sub-tree).
@@ -99,12 +99,11 @@ export function isOwnEvent(e: { currentTarget?: EventTarget | null; target?: Eve
 }
 
 /** Set on the highlighted item (boolean attribute). */
-export const ACTIVE_ATTR = "data-fluid-hover-active";
+export const ACTIVE_ATTR = 'data-fluid-hover-active';
 /** Set on the container: the highlighted index, or absent. */
-export const ACTIVE_INDEX_ATTR = "data-fluid-hover-active-index";
+export const ACTIVE_INDEX_ATTR = 'data-fluid-hover-active-index';
 
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 /** Frames a remeasure retries while the items still have no layout box (a
  *  popup in the DOM a frame before it is laid out). */
@@ -114,7 +113,7 @@ const noop = () => {};
 
 export function useFluidHover<T extends HTMLElement>(
   containerRef: RefObject<T | null>,
-  options: UseFluidHoverOptions = {}
+  options: UseFluidHoverOptions = {},
 ): UseFluidHoverReturn {
   const { isItemDisabled, followScroll = false } = options;
   const itemsRef = useRef(new Map<number, HTMLElement>());
@@ -131,7 +130,7 @@ export function useFluidHover<T extends HTMLElement>(
       },
       get: () => activeIndexRef.current,
     }),
-    []
+    [],
   );
   useIsoLayoutEffect(() => {
     activeIndexRef.current = activeIndex;
@@ -146,7 +145,7 @@ export function useFluidHover<T extends HTMLElement>(
     if (activeIndex === null) container?.removeAttribute(ACTIVE_INDEX_ATTR);
     else container?.setAttribute(ACTIVE_INDEX_ATTR, String(activeIndex));
     const active = activeIndex === null ? undefined : items.get(activeIndex);
-    active?.setAttribute(ACTIVE_ATTR, "");
+    active?.setAttribute(ACTIVE_ATTR, '');
     return () => {
       active?.removeAttribute(ACTIVE_ATTR);
       if (activeIndex !== null) items.get(activeIndex)?.removeAttribute(ACTIVE_ATTR);
@@ -169,7 +168,11 @@ export function useFluidHover<T extends HTMLElement>(
     const rects: ItemRect[] = [];
     let everyItemHasLayout = true;
     itemsRef.current.forEach((element, index) => {
-      if (element.offsetParent === null && element.offsetWidth === 0 && element.offsetHeight === 0) {
+      if (
+        element.offsetParent === null &&
+        element.offsetWidth === 0 &&
+        element.offsetHeight === 0
+      ) {
         everyItemHasLayout = false;
         return;
       }
@@ -191,7 +194,12 @@ export function useFluidHover<T extends HTMLElement>(
       const r = rects[i];
       if (p === r) continue;
       changed =
-        !p || !r || p.top !== r.top || p.left !== r.left || p.width !== r.width || p.height !== r.height;
+        !p ||
+        !r ||
+        p.top !== r.top ||
+        p.left !== r.left ||
+        p.width !== r.width ||
+        p.height !== r.height;
     }
     if (changed) {
       itemRectsRef.current = rects;
@@ -218,7 +226,7 @@ export function useFluidHover<T extends HTMLElement>(
       };
       attempt(attempts);
     },
-    [runMeasurement]
+    [runMeasurement],
   );
 
   const remeasure = useCallback(() => {
@@ -229,7 +237,7 @@ export function useFluidHover<T extends HTMLElement>(
   // Rows that change size in place invalidate the rects too.
   const itemRoRef = useRef<ResizeObserver | null>(null);
   const getItemRo = useCallback(() => {
-    if (itemRoRef.current === null && typeof ResizeObserver !== "undefined") {
+    if (itemRoRef.current === null && typeof ResizeObserver !== 'undefined') {
       itemRoRef.current = new ResizeObserver(() => scheduleMeasurement(measurementAttempts));
     }
     return itemRoRef.current;
@@ -240,7 +248,7 @@ export function useFluidHover<T extends HTMLElement>(
       if (element) {
         itemsRef.current.set(index, element);
         getItemRo()?.observe(element);
-        if (index === activeIndexRef.current) element.setAttribute(ACTIVE_ATTR, "");
+        if (index === activeIndexRef.current) element.setAttribute(ACTIVE_ATTR, '');
       } else {
         const previous = itemsRef.current.get(index);
         if (previous) itemRoRef.current?.unobserve(previous);
@@ -249,13 +257,13 @@ export function useFluidHover<T extends HTMLElement>(
         // The lit row is gone: nothing stays lit until the pointer moves.
         if (index === activeIndexRef.current) {
           setActiveIndex((current) =>
-            current === index && !itemsRef.current.has(index) ? null : current
+            current === index && !itemsRef.current.has(index) ? null : current,
           );
         }
       }
       remeasure();
     },
-    [remeasure, getItemRo]
+    [remeasure, getItemRo],
   );
 
   // The item holding a node, or none. Items can nest (a sidebar row's
@@ -273,7 +281,7 @@ export function useFluidHover<T extends HTMLElement>(
       }
       return next;
     },
-    [isItemDisabled]
+    [isItemDisabled],
   );
 
   // Where the pointer last moved inside the container, while the highlight
@@ -286,7 +294,7 @@ export function useFluidHover<T extends HTMLElement>(
       pointRef.current = { x: e.clientX, y: e.clientY };
       setActiveIndex(itemAt(e.target as Node));
     },
-    [itemAt]
+    [itemAt],
   );
 
   // Items scrolling under a pointer at rest: the highlight goes to the one
@@ -307,12 +315,12 @@ export function useFluidHover<T extends HTMLElement>(
     };
     const onScroll = () => {
       // A touch screen has no pointer at rest.
-      if (!pointRef.current || frame !== null || window.matchMedia("(hover: none)").matches) return;
+      if (!pointRef.current || frame !== null || window.matchMedia('(hover: none)').matches) return;
       frame = requestAnimationFrame(follow);
     };
-    window.addEventListener("scroll", onScroll, { capture: true, passive: true });
+    window.addEventListener('scroll', onScroll, { capture: true, passive: true });
     return () => {
-      window.removeEventListener("scroll", onScroll, { capture: true });
+      window.removeEventListener('scroll', onScroll, { capture: true });
       if (frame !== null) cancelAnimationFrame(frame);
     };
   }, [containerRef, itemAt, followScroll]);
@@ -329,16 +337,19 @@ export function useFluidHover<T extends HTMLElement>(
 
   // Set from outside (the keyboard, focus), the highlight is no longer the
   // pointer's: a scroll that follows must not hand it back.
-  const setActiveIndexFromOutside = useCallback<Dispatch<SetStateAction<number | null>>>((value) => {
-    pointRef.current = null;
-    setActiveIndex(value);
-  }, []);
+  const setActiveIndexFromOutside = useCallback<Dispatch<SetStateAction<number | null>>>(
+    (value) => {
+      pointRef.current = null;
+      setActiveIndex(value);
+    },
+    [],
+  );
 
   // Remeasure when the container resizes: a reflow moves items even though
   // the registered set is unchanged.
   useEffect(() => {
     const container = containerRef.current;
-    if (!container || typeof ResizeObserver === "undefined") return;
+    if (!container || typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(() => scheduleMeasurement(measurementAttempts));
     ro.observe(container);
     return () => ro.disconnect();
@@ -380,12 +391,12 @@ const subscribeNever = () => () => {};
  */
 export function useFluidHoverSelect<T>(
   store: FluidHoverActiveStore | null | undefined,
-  select: (activeIndex: number | null) => T
+  select: (activeIndex: number | null) => T,
 ): T {
   return useSyncExternalStore(
     store?.subscribe ?? subscribeNever,
     () => select(store ? store.get() : null),
-    () => select(null)
+    () => select(null),
   );
 }
 
@@ -397,7 +408,7 @@ export function useFluidHoverSelect<T>(
 export function useRegisterFluidHoverItem(
   registerItem: ((index: number, element: HTMLElement | null) => void) | undefined,
   index: number | undefined,
-  ref: RefObject<HTMLElement | null>
+  ref: RefObject<HTMLElement | null>,
 ) {
   useEffect(() => {
     if (!registerItem || index === undefined) return;

@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
-import { cn } from "@/lib/utils";
-import { spring, exitFallbackMs } from "@/lib/springs";
-import { PopupShield } from "@/lib/popup";
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
+import { cn } from '#lib/utils';
+import { spring, exitFallbackMs } from '#lib/springs';
+import { PopupShield } from '#lib/popup';
 import {
   DatePickerCore,
   DatePickerPopupFrame,
   type DatePickerPopoverProps,
   type DatePickerProps,
-} from "@/components/ui/date-picker-core";
+} from '#components/ui/date-picker-core';
 
 // ---------------------------------------------------------------------------
 // DatePicker on Base UI Popover. Base UI owns positioning, the portal,
@@ -40,10 +40,7 @@ function usePopupExit(open: boolean, setOpen: (open: boolean) => void) {
     if (actionsRef.current) actionsRef.current.close();
     else setRootOpen(false);
   }, [open, rootOpen]);
-  const onOpenChange = (
-    next: boolean,
-    details: { preventUnmountOnClose: () => void }
-  ) => {
+  const onOpenChange = (next: boolean, details: { preventUnmountOnClose: () => void }) => {
     if (!next) {
       details.preventUnmountOnClose();
       setRootOpen(false);
@@ -62,14 +59,11 @@ function DatePickerPopover({
   anchorRef,
   liveRef,
   escapeBlocked,
-  align = "start",
+  align = 'start',
   className,
   children,
 }: DatePickerPopoverProps) {
-  const { actionsRef, rootOpen, onOpenChange: handleOpenChange } = usePopupExit(
-    open,
-    onOpenChange
-  );
+  const { actionsRef, rootOpen, onOpenChange: handleOpenChange } = usePopupExit(open, onOpenChange);
 
   // Fallback release for the deferred unmount, for throttled tabs where the
   // exit's animation callback stalls.
@@ -81,54 +75,54 @@ function DatePickerPopover({
 
   return (
     <>
-    {/* The picker's own segments stay live under the open popover. */}
-    <PopupShield open={open} anchor={liveRef ?? anchorRef} />
-    <PopoverPrimitive.Root
-      open={rootOpen}
-      actionsRef={actionsRef}
-      modal={false}
-      onOpenChange={(next, details) => {
-        if (!next) {
-          // A press on the time field itself is not "outside", and Escape
-          // during a range pick undoes the pick instead of closing.
-          if (
-            details.reason === "outside-press" &&
-            anchorRef?.current?.contains(details.event.target as Node)
-          ) {
-            return;
+      {/* The picker's own segments stay live under the open popover. */}
+      <PopupShield open={open} anchor={liveRef ?? anchorRef} />
+      <PopoverPrimitive.Root
+        open={rootOpen}
+        actionsRef={actionsRef}
+        modal={false}
+        onOpenChange={(next, details) => {
+          if (!next) {
+            // A press on the time field itself is not "outside", and Escape
+            // during a range pick undoes the pick instead of closing.
+            if (
+              details.reason === 'outside-press' &&
+              anchorRef?.current?.contains(details.event.target as Node)
+            ) {
+              return;
+            }
+            if (details.reason === 'escape-key' && escapeBlocked?.()) return;
           }
-          if (details.reason === "escape-key" && escapeBlocked?.()) return;
-        }
-        handleOpenChange(next, details);
-      }}
-    >
-      {kind === "trigger" ? <PopoverPrimitive.Trigger render={anchor} /> : anchor}
-      <PopoverPrimitive.Portal>
-        <PopoverPrimitive.Positioner
-          side="bottom"
-          align={align}
-          sideOffset={6}
-          collisionPadding={8}
-          anchor={kind === "anchor" ? anchorRef : undefined}
-          className="z-[var(--z-popover,60)] outline-none [--popup-available-height:var(--available-height)]"
-        >
-          <PopoverPrimitive.Popup
-            // The calendar focuses its day; a time field keeps focus.
-            initialFocus={false}
-            finalFocus={kind === "trigger"}
-            className={cn("outline-none")}
+          handleOpenChange(next, details);
+        }}
+      >
+        {kind === 'trigger' ? <PopoverPrimitive.Trigger render={anchor} /> : anchor}
+        <PopoverPrimitive.Portal>
+          <PopoverPrimitive.Positioner
+            side="bottom"
+            align={align}
+            sideOffset={6}
+            collisionPadding={8}
+            anchor={kind === 'anchor' ? anchorRef : undefined}
+            className="z-[var(--z-popover,60)] outline-none [--popup-available-height:var(--available-height)]"
           >
-            <DatePickerPopupFrame
-              open={open}
-              onExitComplete={() => actionsRef.current?.unmount()}
-              className={className}
+            <PopoverPrimitive.Popup
+              // The calendar focuses its day; a time field keeps focus.
+              initialFocus={false}
+              finalFocus={kind === 'trigger'}
+              className={cn('outline-none')}
             >
-              {children}
-            </DatePickerPopupFrame>
-          </PopoverPrimitive.Popup>
-        </PopoverPrimitive.Positioner>
-      </PopoverPrimitive.Portal>
-    </PopoverPrimitive.Root>
+              <DatePickerPopupFrame
+                open={open}
+                onExitComplete={() => actionsRef.current?.unmount()}
+                className={className}
+              >
+                {children}
+              </DatePickerPopupFrame>
+            </PopoverPrimitive.Popup>
+          </PopoverPrimitive.Positioner>
+        </PopoverPrimitive.Portal>
+      </PopoverPrimitive.Root>
     </>
   );
 }
@@ -137,7 +131,7 @@ function DatePicker(props: DatePickerProps) {
   return <DatePickerCore {...props} Popover={DatePickerPopover} />;
 }
 
-DatePicker.displayName = "DatePicker";
+DatePicker.displayName = 'DatePicker';
 
 export { DatePicker };
 export {
@@ -148,7 +142,7 @@ export {
   parseTime,
   shiftEnd,
   buildSlots,
-} from "@/components/ui/date-picker-core";
+} from '#components/ui/date-picker-core';
 export type {
   DatePickerProps,
   DatePickerSingleProps,
@@ -156,4 +150,4 @@ export type {
   DatePickerPreset,
   TimeRange,
   DateRange,
-} from "@/components/ui/date-picker-core";
+} from '#components/ui/date-picker-core';

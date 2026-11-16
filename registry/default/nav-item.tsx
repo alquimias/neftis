@@ -1,16 +1,15 @@
-"use client";
+'use client';
 
-import { useRef, useEffect, forwardRef, type HTMLAttributes } from "react";
-import Link from "next/link";
-import { useNavMenu } from "@/components/ui/nav-menu";
-import type { IconComponent } from "@/lib/icon-context";
-import { cn } from "@/lib/utils";
-import { fontWeights } from "@/lib/font-weight";
-import { useShape } from "@/lib/shape-context";
-import { useSize } from "@/lib/size-context";
+import { useRef, useEffect, forwardRef, type HTMLAttributes } from 'react';
+import Link from 'next/link';
+import { useNavMenu } from '#components/ui/nav-menu';
+import type { IconComponent } from '#lib/icon-context';
+import { cn } from '#lib/utils';
+import { fontWeights } from '#lib/font-weight';
+import { useShape } from '#lib/shape-context';
+import { useSize } from '#lib/size-context';
 
-interface NavItemProps
-  extends Omit<HTMLAttributes<HTMLAnchorElement>, "href"> {
+interface NavItemProps extends Omit<HTMLAttributes<HTMLAnchorElement>, 'href'> {
   label: string;
   href: string;
   index: number;
@@ -23,10 +22,12 @@ interface NavItemProps
 }
 
 const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
-  ({ label, href, index, icon: Icon, isNew, isUpdated, dotColorClass, className, ...props }, ref) => {
+  (
+    { label, href, index, icon: Icon, isNew, isUpdated, dotColorClass, className, ...props },
+    ref,
+  ) => {
     const internalRef = useRef<HTMLAnchorElement>(null);
-    const { registerItem, registerSlug, activeIndex, activeSlug, activeRouteIndex } =
-      useNavMenu();
+    const { registerItem, registerSlug, activeIndex, activeSlug, activeRouteIndex } = useNavMenu();
 
     useEffect(() => {
       registerItem(index, internalRef.current);
@@ -51,26 +52,21 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
     return (
       <Link
         ref={(node) => {
-          (
-            internalRef as React.MutableRefObject<HTMLAnchorElement | null>
-          ).current = node;
-          if (typeof ref === "function") ref(node);
-          else if (ref)
-            (
-              ref as React.MutableRefObject<HTMLAnchorElement | null>
-            ).current = node;
+          (internalRef as React.MutableRefObject<HTMLAnchorElement | null>).current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) (ref as React.MutableRefObject<HTMLAnchorElement | null>).current = node;
         }}
         href={href}
         data-nav-index={index}
         tabIndex={tabIdx}
-        aria-current={isActiveRoute ? "page" : undefined}
+        aria-current={isActiveRoute ? 'page' : undefined}
         className={cn(
           // Fixed height (was py-1.5 around a 19.5px line box ≈ 31.5px) so the
           // text-box trim on the label doesn't shrink the row.
           `relative z-10 flex ${
-            sizeClasses.variant === "compact" ? "h-7" : "h-8"
+            sizeClasses.variant === 'compact' ? 'h-7' : 'h-8'
           } items-center ${shape.item} px-3 cursor-pointer outline-none`,
-          className
+          className,
         )}
         {...props}
       >
@@ -79,14 +75,14 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
             size={sizeClasses.icon}
             strokeWidth={isActiveRoute || isActive ? 2 : 1.5}
             className={cn(
-              "shrink-0 mr-2 transition-[color,stroke-width] duration-80",
-              isActiveRoute || isActive ? "text-foreground" : "text-muted-foreground"
+              'shrink-0 mr-2 transition-[color,stroke-width] duration-80',
+              isActiveRoute || isActive ? 'text-foreground' : 'text-muted-foreground',
             )}
           />
         )}
         {/* Both stacked spans carry the text-box trim so the invisible bold
             sizer and the visible label keep identical boxes. */}
-        <span className={cn("inline-grid flex-1", sizeClasses.text)}>
+        <span className={cn('inline-grid flex-1', sizeClasses.text)}>
           <span
             className="col-start-1 row-start-1 invisible [text-box:trim-both_cap_alphabetic]"
             style={{ fontVariationSettings: fontWeights.semibold }}
@@ -96,15 +92,11 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
           </span>
           <span
             className={cn(
-              "col-start-1 row-start-1 transition-[color,font-variation-settings] duration-80 [text-box:trim-both_cap_alphabetic]",
-              isActiveRoute || isActive
-                ? "text-foreground"
-                : "text-muted-foreground"
+              'col-start-1 row-start-1 transition-[color,font-variation-settings] duration-80 [text-box:trim-both_cap_alphabetic]',
+              isActiveRoute || isActive ? 'text-foreground' : 'text-muted-foreground',
             )}
             style={{
-              fontVariationSettings: isActiveRoute
-                ? fontWeights.semibold
-                : fontWeights.normal,
+              fontVariationSettings: isActiveRoute ? fontWeights.semibold : fontWeights.normal,
             }}
           >
             {label}
@@ -113,8 +105,8 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
             ) : isNew ? (
               <span
                 className={cn(
-                  "inline-block ml-2 size-1.5 rounded-full align-middle",
-                  dotColorClass ?? "bg-blue-500"
+                  'inline-block ml-2 size-1.5 rounded-full align-middle',
+                  dotColorClass ?? 'bg-blue-500',
                 )}
               />
             ) : null}
@@ -122,10 +114,10 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
         </span>
       </Link>
     );
-  }
+  },
 );
 
-NavItem.displayName = "NavItem";
+NavItem.displayName = 'NavItem';
 
 export { NavItem };
 export default NavItem;

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import { Calendar, type DateRange, type Matcher } from "@/components/ui/calendar";
-import { Switch } from "@/registry/radix/switch";
+import { useMemo, useState } from 'react';
+import { Calendar, type DateRange, type Matcher } from '#components/ui/calendar';
+import { Switch } from '#registry/radix/switch';
 import {
   PLAY_SWITCH,
   PlayField,
   PlaySelect,
   PlayDivider,
   PlaygroundPanel,
-} from "@/lib/docs/playground";
+} from '#lib/docs/playground';
 import {
   CALENDAR_PRESET_DEF,
   CALENDAR_DEFAULT_CODE,
@@ -20,16 +20,12 @@ import {
   decodeCalendarPreset,
   type CalendarDays as Days,
   type CalendarPlayState as PlayState,
-} from "@/lib/preset/calendar-options";
-import {
-  usePresetGlobals,
-  usePresetUrlSync,
-  GetCodeDialog,
-} from "@/lib/docs/preset-ui";
-import { omit } from "@/lib/omit";
-import { PRESET_GLOBAL_KEYS } from "@/lib/preset/sidebar-options";
-import type { PlaygroundProps } from "./types";
-import { demoToday } from "@/lib/demo-today";
+} from '#lib/preset/calendar-options';
+import { usePresetGlobals, usePresetUrlSync, GetCodeDialog } from '#lib/docs/preset-ui';
+import { omit } from '#lib/omit';
+import { PRESET_GLOBAL_KEYS } from '#lib/preset/sidebar-options';
+import type { PlaygroundProps } from './types';
+import { demoToday } from '#lib/demo-today';
 
 // ── Calendar playground ──────────────────────────────────
 // One calendar, driven by the questions a booking or scheduling screen
@@ -50,30 +46,30 @@ export function demoBookedDays(today = demoToday()): Date[] {
 }
 
 export function buildCalendarPlaygroundCode(o: PlayState): string {
-  const range = o.mode === "range";
+  const range = o.mode === 'range';
   const props = [
     ...(range ? [`mode="range"`] : []),
-    `selected={${range ? "range" : "date"}}`,
-    `onSelect={${range ? "setRange" : "setDate"}}`,
-    ...(o.months === "2" ? [`numberOfMonths={2}`] : []),
-    ...(o.months === "2" && o.orientation !== "auto" ? [`orientation="${o.orientation}"`] : []),
-    ...(o.cellSize !== "auto" ? [`cellSize={${o.cellSize}}`] : []),
-    ...(o.weekNumbers ? ["showWeekNumber"] : []),
-    ...(o.days === "booked" ? ["booked={booked}", "disabled={{ before: new Date() }}"] : []),
-    ...(o.days === "weekdays" ? ["available={{ dayOfWeek: [1, 2, 3, 4, 5] }}"] : []),
+    `selected={${range ? 'range' : 'date'}}`,
+    `onSelect={${range ? 'setRange' : 'setDate'}}`,
+    ...(o.months === '2' ? [`numberOfMonths={2}`] : []),
+    ...(o.months === '2' && o.orientation !== 'auto' ? [`orientation="${o.orientation}"`] : []),
+    ...(o.cellSize !== 'auto' ? [`cellSize={${o.cellSize}}`] : []),
+    ...(o.weekNumbers ? ['showWeekNumber'] : []),
+    ...(o.days === 'booked' ? ['booked={booked}', 'disabled={{ before: new Date() }}'] : []),
+    ...(o.days === 'weekdays' ? ['available={{ dayOfWeek: [1, 2, 3, 4, 5] }}'] : []),
   ];
   return [
-    `import { Calendar${range ? ", type DateRange" : ""} } from "./components";`,
+    `import { Calendar${range ? ', type DateRange' : ''} } from "./components";`,
     ``,
     range
       ? `const [range, setRange] = useState<DateRange | undefined>();`
       : `const [date, setDate] = useState<Date | undefined>(new Date());`,
-    ...(o.days === "booked" ? [`const booked = [/* Date[] of taken nights */];`] : []),
+    ...(o.days === 'booked' ? [`const booked = [/* Date[] of taken nights */];`] : []),
     ``,
     `<Calendar`,
     ...props.map((p) => `  ${p}`),
     `/>`,
-  ].join("\n");
+  ].join('\n');
 }
 
 export function CalendarPlayground({ children }: PlaygroundProps) {
@@ -97,18 +93,18 @@ export function CalendarPlayground({ children }: PlaygroundProps) {
 
   const randomize = () =>
     setState({
-      mode: pick(["single", "range", "range"] as const),
-      months: pick(["1", "2"] as const),
-      orientation: pick(["auto", "horizontal", "vertical"] as const),
-      cellSize: pick(["auto", "auto", "40", "44", "48"] as const),
+      mode: pick(['single', 'range', 'range'] as const),
+      months: pick(['1', '2'] as const),
+      orientation: pick(['auto', 'horizontal', 'vertical'] as const),
+      cellSize: pick(['auto', 'auto', '40', '44', '48'] as const),
       weekNumbers: Math.random() > 0.6,
-      days: pick(["all", "booked", "weekdays"] as const),
+      days: pick(['all', 'booked', 'weekdays'] as const),
     });
 
   const dayProps: { booked?: Matcher[]; disabled?: Matcher; available?: Matcher } =
-    state.days === "booked"
+    state.days === 'booked'
       ? { booked, disabled: { before: demoToday() } }
-      : state.days === "weekdays"
+      : state.days === 'weekdays'
         ? { available: { dayOfWeek: [...CALENDAR_WEEKDAYS] } }
         : {};
 
@@ -116,11 +112,11 @@ export function CalendarPlayground({ children }: PlaygroundProps) {
     ...dayProps,
     numberOfMonths: Number(state.months) as 1 | 2,
     orientation: state.orientation,
-    cellSize: state.cellSize === "auto" ? undefined : Number(state.cellSize),
+    cellSize: state.cellSize === 'auto' ? undefined : Number(state.cellSize),
     showWeekNumber: state.weekNumbers,
   };
   const calendar =
-    state.mode === "range" ? (
+    state.mode === 'range' ? (
       <Calendar {...common} mode="range" selected={range} onSelect={setRange} />
     ) : (
       <Calendar {...common} selected={date} onSelect={setDate} />
@@ -131,43 +127,43 @@ export function CalendarPlayground({ children }: PlaygroundProps) {
       <PlayField label="Mode">
         <PlaySelect
           value={state.mode}
-          onChange={(v) => set("mode", v as PlayState["mode"])}
+          onChange={(v) => set('mode', v as PlayState['mode'])}
           options={[
-            { value: "single", label: "Single" },
-            { value: "range", label: "Range" },
+            { value: 'single', label: 'Single' },
+            { value: 'range', label: 'Range' },
           ]}
         />
       </PlayField>
       <PlayField label="Months">
         <PlaySelect
           value={state.months}
-          onChange={(v) => set("months", v as PlayState["months"])}
+          onChange={(v) => set('months', v as PlayState['months'])}
           options={[
-            { value: "1", label: "1" },
-            { value: "2", label: "2" },
+            { value: '1', label: '1' },
+            { value: '2', label: '2' },
           ]}
         />
       </PlayField>
-      <PlayField label="Orientation" disabled={state.months === "1"}>
+      <PlayField label="Orientation" disabled={state.months === '1'}>
         <PlaySelect
           value={state.orientation}
-          onChange={(v) => set("orientation", v as PlayState["orientation"])}
+          onChange={(v) => set('orientation', v as PlayState['orientation'])}
           options={[
-            { value: "auto", label: "Auto" },
-            { value: "horizontal", label: "Horizontal" },
-            { value: "vertical", label: "Vertical" },
+            { value: 'auto', label: 'Auto' },
+            { value: 'horizontal', label: 'Horizontal' },
+            { value: 'vertical', label: 'Vertical' },
           ]}
         />
       </PlayField>
       <PlayField label="Cell size">
         <PlaySelect
           value={state.cellSize}
-          onChange={(v) => set("cellSize", v as PlayState["cellSize"])}
+          onChange={(v) => set('cellSize', v as PlayState['cellSize'])}
           options={[
-            { value: "auto", label: "Size" },
-            { value: "40", label: "40px" },
-            { value: "44", label: "44px" },
-            { value: "48", label: "48px" },
+            { value: 'auto', label: 'Size' },
+            { value: '40', label: '40px' },
+            { value: '44', label: '44px' },
+            { value: '48', label: '48px' },
           ]}
         />
       </PlayField>
@@ -175,18 +171,18 @@ export function CalendarPlayground({ children }: PlaygroundProps) {
       <PlayField label="Days">
         <PlaySelect
           value={state.days}
-          onChange={(v) => set("days", v as Days)}
+          onChange={(v) => set('days', v as Days)}
           options={[
-            { value: "all", label: "All open" },
-            { value: "booked", label: "Booked + past" },
-            { value: "weekdays", label: "Weekdays only" },
+            { value: 'all', label: 'All open' },
+            { value: 'booked', label: 'Booked + past' },
+            { value: 'weekdays', label: 'Weekdays only' },
           ]}
         />
       </PlayField>
       <Switch
         label="Week numbers"
         checked={state.weekNumbers}
-        onToggle={() => set("weekNumbers", !state.weekNumbers)}
+        onToggle={() => set('weekNumbers', !state.weekNumbers)}
         className={PLAY_SWITCH}
       />
       <PlayDivider />

@@ -3,9 +3,7 @@
   "name": "breadcrumb",
   "title": "Breadcrumb",
   "description": "A trail of links to the current page with one fluid hover across every crumb. Steps can lead with an icon, open a Dropdown, or collapse behind an ellipsis.",
-  "dependencies": [
-    "motion"
-  ],
+  "dependencies": ["motion"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/font-weight.json",
@@ -25,8 +23,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/breadcrumb. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#breadcrumb.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

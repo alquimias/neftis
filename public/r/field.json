@@ -3,9 +3,7 @@
   "name": "field",
   "title": "Field",
   "description": "Compose a label, a control, helper text, and a validation message into one accessible field: fieldsets, legends, groups, separators, and vertical, horizontal, or responsive layouts.",
-  "dependencies": [
-    "lucide-react"
-  ],
+  "dependencies": ["lucide-react"],
   "registryDependencies": [
     "utils",
     "https://www.fluidfunctionalism.com/r/font-weight.json",
@@ -25,8 +23,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/field. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#field.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

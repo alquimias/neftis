@@ -3,11 +3,7 @@
   "name": "date-picker",
   "title": "Date Picker",
   "description": "Field or ghost trigger for a date, a range, or a date and a time: a calendar popover that opens on the selected day, optional range presets, and editable time fields with slot lists that show each duration. Radix flavor.",
-  "dependencies": [
-    "@radix-ui/react-popover",
-    "motion",
-    "lucide-react"
-  ],
+  "dependencies": ["@radix-ui/react-popover", "motion", "lucide-react"],
   "registryDependencies": [
     "https://www.fluidfunctionalism.com/r/calendar.json",
     "utils",
@@ -40,8 +36,6 @@
     }
   ],
   "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/date-picker. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#date-picker.",
-  "categories": [
-    "components"
-  ],
+  "categories": ["components"],
   "type": "registry:ui"
 }

@@ -1,1 +1,1 @@
-export { hugeiconsIcons } from "@/registry/default/lib/icons-hugeicons";
+export { hugeiconsIcons } from '#registry/default/lib/icons-hugeicons';

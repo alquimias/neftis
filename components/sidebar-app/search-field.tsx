@@ -1,1 +1,1 @@
-export * from "@/registry/blocks/sidebar-app/search-field";
+export * from '#registry/blocks/sidebar-app/search-field';

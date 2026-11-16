@@ -74,9 +74,7 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/surfaces. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#surfaces.",
-      "categories": [
-        "theme"
-      ]
+      "categories": ["theme"]
     },
     {
       "name": "tokens",
@@ -136,9 +134,7 @@
       },
       "files": [],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/surfaces. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#surfaces.",
-      "categories": [
-        "theme"
-      ]
+      "categories": ["theme"]
     },
     {
       "name": "type-scale",
@@ -188,18 +184,14 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/typography.",
-      "categories": [
-        "theme"
-      ]
+      "categories": ["theme"]
     },
     {
       "name": "typography",
       "type": "registry:item",
       "title": "Typography",
       "description": "The type scale and prose styles in one install. size-context brings the 6 roles, typeClass(), and the --fs-* / --lh-* tokens; the prose styles set rendered markdown and rich-text editors (Tiptap works as is) in those roles: wrap content in .typeset, and h1 is display in bold, h2 title, h3 to h6 subtitle, paragraphs body in the muted color, figcaption and code caption. Zero specificity inside @layer components, so any utility wins; .not-typeset opts a subtree out; spacing only above elements, so streamed content never reflows. Add .typeset-compact for the compact step.",
-      "registryDependencies": [
-        "https://www.fluidfunctionalism.com/r/size-context.json"
-      ],
+      "registryDependencies": ["https://www.fluidfunctionalism.com/r/size-context.json"],
       "css": {
         "@layer components": {
           ":where(.typeset)": {
@@ -533,19 +525,14 @@
         }
       },
       "docs": "Docs & builder: https://www.fluidfunctionalism.com/docs/typography.",
-      "categories": [
-        "theme"
-      ]
+      "categories": ["theme"]
     },
     {
       "name": "utils",
       "type": "registry:lib",
       "title": "Utilities",
       "description": "Utility function for merging Tailwind CSS classes with clsx and tailwind-merge.",
-      "dependencies": [
-        "clsx",
-        "tailwind-merge"
-      ],
+      "dependencies": ["clsx", "tailwind-merge"],
       "files": [
         {
           "path": "registry/default/lib/utils.ts",
@@ -553,9 +540,7 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "springs",
@@ -569,9 +554,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/motion. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#motion.",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "font-weight",
@@ -585,9 +568,7 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "surface-context",
@@ -601,9 +582,7 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "surface-classes",
@@ -616,13 +595,9 @@
           "type": "registry:lib"
         }
       ],
-      "registryDependencies": [
-        "https://www.fluidfunctionalism.com/r/surfaces.json"
-      ],
+      "registryDependencies": ["https://www.fluidfunctionalism.com/r/surfaces.json"],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "elevated",
@@ -642,18 +617,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/surfaces. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#surfaces.",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "popup",
       "type": "registry:lib",
       "title": "Popup chrome",
       "description": "Shared popup chrome for the dropdown, select, and combobox popups: side-aware enter/exit motion classes driven by the positioner's resolved data-side, the ScrollArea sizing the list scrolls inside, the navigation-key list, and the clear layer that keeps the page from reacting to the pointer while a popup is open.",
-      "registryDependencies": [
-        "https://www.fluidfunctionalism.com/r/tokens.json"
-      ],
+      "registryDependencies": ["https://www.fluidfunctionalism.com/r/tokens.json"],
       "files": [
         {
           "path": "registry/default/lib/popup.ts",
@@ -661,9 +632,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/motion. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#motion.",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "omit",
@@ -677,9 +646,7 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "key-cap",
@@ -693,13 +660,8 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ],
-      "registryDependencies": [
-        "utils",
-        "https://www.fluidfunctionalism.com/r/type-scale.json"
-      ]
+      "categories": ["lib"],
+      "registryDependencies": ["utils", "https://www.fluidfunctionalism.com/r/type-scale.json"]
     },
     {
       "name": "shape-context",
@@ -718,9 +680,7 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/sizes. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#sizes.",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "size-context",
@@ -738,21 +698,15 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/sizes. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#sizes.",
-      "categories": [
-        "lib"
-      ],
-      "registryDependencies": [
-        "https://www.fluidfunctionalism.com/r/type-scale.json"
-      ]
+      "categories": ["lib"],
+      "registryDependencies": ["https://www.fluidfunctionalism.com/r/type-scale.json"]
     },
     {
       "name": "icon-context",
       "type": "registry:lib",
       "title": "Icon Context",
       "description": "Named icon slots with a Lucide default set; swap any icon via IconProvider.",
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "registry/default/lib/icon-context.tsx",
@@ -760,21 +714,15 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "icons-tabler",
       "type": "registry:lib",
       "title": "Tabler Icon Set",
       "description": "Tabler glyphs for every icon slot the components look up. Pass the map to IconProvider (or FluidProvider's icons prop) and every component draws Tabler.",
-      "dependencies": [
-        "@tabler/icons-react"
-      ],
-      "registryDependencies": [
-        "https://www.fluidfunctionalism.com/r/icon-context.json"
-      ],
+      "dependencies": ["@tabler/icons-react"],
+      "registryDependencies": ["https://www.fluidfunctionalism.com/r/icon-context.json"],
       "files": [
         {
           "path": "registry/default/lib/icons-tabler.tsx",
@@ -782,21 +730,15 @@
         }
       ],
       "docs": "Docs: https://www.fluidfunctionalism.com/docs (Icons). Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "icons-phosphor",
       "type": "registry:lib",
       "title": "Phosphor Icon Set",
       "description": "Phosphor glyphs for every icon slot the components look up. Pass the map to IconProvider (or FluidProvider's icons prop) and every component draws Phosphor.",
-      "dependencies": [
-        "@phosphor-icons/react"
-      ],
-      "registryDependencies": [
-        "https://www.fluidfunctionalism.com/r/icon-context.json"
-      ],
+      "dependencies": ["@phosphor-icons/react"],
+      "registryDependencies": ["https://www.fluidfunctionalism.com/r/icon-context.json"],
       "files": [
         {
           "path": "registry/default/lib/icons-phosphor.tsx",
@@ -804,23 +746,15 @@
         }
       ],
       "docs": "Docs: https://www.fluidfunctionalism.com/docs (Icons). Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "icons-hugeicons",
       "type": "registry:lib",
       "title": "HugeIcons Icon Set",
       "description": "HugeIcons glyphs for every icon slot the components look up. Pass the map to IconProvider (or FluidProvider's icons prop) and every component draws HugeIcons.",
-      "dependencies": [
-        "@hugeicons/react",
-        "@hugeicons/core-free-icons",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "https://www.fluidfunctionalism.com/r/icon-context.json"
-      ],
+      "dependencies": ["@hugeicons/react", "@hugeicons/core-free-icons", "lucide-react"],
+      "registryDependencies": ["https://www.fluidfunctionalism.com/r/icon-context.json"],
       "files": [
         {
           "path": "registry/default/lib/icons-hugeicons.tsx",
@@ -828,22 +762,15 @@
         }
       ],
       "docs": "Docs: https://www.fluidfunctionalism.com/docs (Icons). Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "icons-untitledui",
       "type": "registry:lib",
       "title": "Untitled UI Icon Set",
       "description": "Untitled UI glyphs for every icon slot the components look up. Pass the map to IconProvider (or FluidProvider's icons prop) and every component draws Untitled UI.",
-      "dependencies": [
-        "@untitledui/icons",
-        "lucide-react"
-      ],
-      "registryDependencies": [
-        "https://www.fluidfunctionalism.com/r/icon-context.json"
-      ],
+      "dependencies": ["@untitledui/icons", "lucide-react"],
+      "registryDependencies": ["https://www.fluidfunctionalism.com/r/icon-context.json"],
       "files": [
         {
           "path": "registry/default/lib/icons-untitledui.tsx",
@@ -851,18 +778,14 @@
         }
       ],
       "docs": "Docs: https://www.fluidfunctionalism.com/docs (Icons). Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "fluid-provider",
       "type": "registry:lib",
       "title": "Fluid Provider",
       "description": "One wrapper for the whole system: reduced motion that follows the OS, the radius (rounded, pill or sharp), the size step (default or compact), and the icon set.",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "registryDependencies": [
         "https://www.fluidfunctionalism.com/r/shape-context.json",
         "https://www.fluidfunctionalism.com/r/size-context.json",
@@ -875,18 +798,14 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "use-fluid-hover",
       "type": "registry:hook",
       "title": "useFluidHover + FluidHoverHighlight",
       "description": "Fluid hover: the hook that tracks the item nearest the cursor within a container, and the one highlight component that springs between the rects it measures.",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -903,19 +822,14 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "hook"
-      ]
+      "categories": ["hook"]
     },
     {
       "name": "standard/use-fluid-hover",
       "type": "registry:hook",
       "title": "useFluidHover + FluidHoverHighlight (standard hover)",
       "description": "Standard hover: the same API as fluid hover, without the glide. The item under the pointer lights with a plain fill; nothing travels between items. Served as r/standard/use-fluid-hover.json.",
-      "registryDependencies": [
-        "utils",
-        "https://www.fluidfunctionalism.com/r/tokens.json"
-      ],
+      "registryDependencies": ["utils", "https://www.fluidfunctionalism.com/r/tokens.json"],
       "files": [
         {
           "path": "registry/standard/hooks/use-fluid-hover.ts",
@@ -927,9 +841,7 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "hook"
-      ]
+      "categories": ["hook"]
     },
     {
       "name": "use-touch-primary",
@@ -943,18 +855,14 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "hook"
-      ]
+      "categories": ["hook"]
     },
     {
       "name": "use-keyboard-nav-gate",
       "type": "registry:hook",
       "title": "useKeyboardNavGate",
       "description": "Gates a popup's keyboard focus ring on keyboard use: seeded at open from the focused element's :focus-visible state, then earned by navigation keys inside the popup.",
-      "registryDependencies": [
-        "https://www.fluidfunctionalism.com/r/popup.json"
-      ],
+      "registryDependencies": ["https://www.fluidfunctionalism.com/r/popup.json"],
       "files": [
         {
           "path": "registry/default/hooks/use-keyboard-nav-gate.ts",
@@ -962,9 +870,7 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "hook"
-      ]
+      "categories": ["hook"]
     },
     {
       "name": "use-merge-split",
@@ -983,20 +889,14 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "hook"
-      ]
+      "categories": ["hook"]
     },
     {
       "name": "accordion",
       "type": "registry:ui",
       "title": "Accordion",
       "description": "Collapsible accordion with animated height transitions, spring-animated chevron, and fluid hover in grouped mode. Built on Radix UI Accordion.",
-      "dependencies": [
-        "motion",
-        "@radix-ui/react-accordion",
-        "lucide-react"
-      ],
+      "dependencies": ["motion", "@radix-ui/react-accordion", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1016,20 +916,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/accordion. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#accordion.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/accordion",
       "type": "registry:ui",
       "title": "Accordion (Base UI)",
       "description": "Collapsible accordion with animated height transitions, spring-animated chevron, and fluid hover in grouped mode. Base UI flavor.",
-      "dependencies": [
-        "motion",
-        "@base-ui/react@^1.9.0",
-        "lucide-react"
-      ],
+      "dependencies": ["motion", "@base-ui/react@^1.9.0", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1049,19 +943,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/accordion. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#accordion.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "ask-user-questions",
       "type": "registry:ui",
       "title": "Ask User Questions",
       "description": "Stepped question flow with numbered options, keyboard shortcuts (1–9), single or multi-select, inline 'other' text input, optional skip, fluid hover, and multi-question navigation. Auto-advances on selection in single-select.",
-      "dependencies": [
-        "motion",
-        "@base-ui/react@^1.9.0"
-      ],
+      "dependencies": ["motion", "@base-ui/react@^1.9.0"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1083,18 +972,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/ask-user-questions. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#ask-user-questions.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "badge",
       "type": "registry:ui",
       "title": "Badge",
       "description": "Compact label with solid, dot, and ghost variants, Tailwind color palette, and three sizes.",
-      "dependencies": [
-        "class-variance-authority"
-      ],
+      "dependencies": ["class-variance-authority"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/shape-context.json",
@@ -1109,18 +994,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/badge. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#badge.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "banner",
       "type": "registry:ui",
       "title": "Banner",
       "description": "Status message built from parts (Banner, BannerTitle, BannerDescription, BannerActions, BannerAction): 5 statuses (filled glyphs for info, success, warning and error; the icon set's outline info icon for default), low or high contrast, primary, secondary and ghost actions (the library Button) that trail a one-line banner (primary at the edge) and drop under a description (primary first), a dismiss that collapses its height, and a fixed variant that sticks full-bleed to the top of the page.",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1150,9 +1031,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/banner. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#banner.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "button",
@@ -1200,9 +1079,7 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/button. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#button.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/button",
@@ -1250,19 +1127,14 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/button. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#button.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "dropdown",
       "type": "registry:ui",
       "title": "Dropdown",
       "description": "Dropdown menu with fluid hover, animated selection indicator, inline panel or triggered popup with collision-aware positioning, typeahead, and close-on-select. Includes MenuItem, DropdownSearch (a search field inside the popup), submenus (DropdownSub) whose trigger row stays lit across the safe area, and multiple selection with merged backgrounds. Radix flavor.",
-      "dependencies": [
-        "@radix-ui/react-dropdown-menu",
-        "motion"
-      ],
+      "dependencies": ["@radix-ui/react-dropdown-menu", "motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1304,19 +1176,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/dropdown. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#dropdown.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/dropdown",
       "type": "registry:ui",
       "title": "Dropdown",
       "description": "Dropdown menu with fluid hover, animated selection indicator, inline panel or triggered popup with collision-aware positioning, typeahead, and close-on-select. Includes MenuItem, DropdownSearch (a search field inside the popup), submenus (DropdownSub) whose trigger row stays lit across the safe area, and multiple selection with merged backgrounds. Base UI flavor.",
-      "dependencies": [
-        "@base-ui/react@^1.9.0",
-        "motion"
-      ],
+      "dependencies": ["@base-ui/react@^1.9.0", "motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1358,19 +1225,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/dropdown. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#dropdown.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "checkbox",
       "type": "registry:ui",
       "title": "Checkbox",
       "description": "A single checkbox: a hairline square that darkens on hover and a check that draws itself. Pairs with Field. Radix flavor.",
-      "dependencies": [
-        "motion",
-        "@radix-ui/react-checkbox"
-      ],
+      "dependencies": ["motion", "@radix-ui/react-checkbox"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/shape-context.json",
@@ -1385,19 +1247,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/checkbox. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#checkbox.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/checkbox",
       "type": "registry:ui",
       "title": "Checkbox (Base UI)",
       "description": "A single checkbox: a hairline square that darkens on hover and a check that draws itself. Pairs with Field. Base UI flavor.",
-      "dependencies": [
-        "motion",
-        "@base-ui/react@^1.9.0"
-      ],
+      "dependencies": ["motion", "@base-ui/react@^1.9.0"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/shape-context.json",
@@ -1413,19 +1270,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/checkbox. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#checkbox.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "checkbox-group",
       "type": "registry:ui",
       "title": "Checkbox Group",
       "description": "Animated checkbox group with fluid hover, contiguous selection merging, and spring-animated check marks. Built on Radix UI Checkbox.",
-      "dependencies": [
-        "motion",
-        "@radix-ui/react-checkbox"
-      ],
+      "dependencies": ["motion", "@radix-ui/react-checkbox"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1444,19 +1296,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/checkbox-group. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#checkbox-group.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/checkbox-group",
       "type": "registry:ui",
       "title": "Checkbox Group (Base UI)",
       "description": "Animated checkbox group with fluid hover, contiguous selection merging, and spring-animated check marks. Base UI flavor.",
-      "dependencies": [
-        "motion",
-        "@base-ui/react@^1.9.0"
-      ],
+      "dependencies": ["motion", "@base-ui/react@^1.9.0"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1476,19 +1323,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/checkbox-group. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#checkbox-group.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "radio-group",
       "type": "registry:ui",
       "title": "Radio Group",
       "description": "Animated radio group with fluid hover, spring-animated selection dot, and optional Radix UI integration. Supports both controlled index and value-based APIs.",
-      "dependencies": [
-        "motion",
-        "@radix-ui/react-radio-group"
-      ],
+      "dependencies": ["motion", "@radix-ui/react-radio-group"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1506,19 +1348,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/radio-group. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#radio-group.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/radio-group",
       "type": "registry:ui",
       "title": "Radio Group (Base UI)",
       "description": "Animated radio group with fluid hover, spring-animated selection dot. Base UI flavor.",
-      "dependencies": [
-        "motion",
-        "@base-ui/react@^1.9.0"
-      ],
+      "dependencies": ["motion", "@base-ui/react@^1.9.0"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1536,20 +1373,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/radio-group. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#radio-group.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
       "description": "Animated modal dialog with spring-based scale and opacity transitions in three widths (sm, lg, and an xl canvas for composed layouts such as a sidebar), plus a container prop to scope it to a region. Built on Radix UI Dialog with overlay, header, footer, title, and description sub-components.",
-      "dependencies": [
-        "motion",
-        "@radix-ui/react-dialog",
-        "lucide-react"
-      ],
+      "dependencies": ["motion", "@radix-ui/react-dialog", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1569,20 +1400,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/dialog. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#dialog.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/dialog",
       "type": "registry:ui",
       "title": "Dialog (Base UI)",
       "description": "Animated modal dialog with spring-based scale and opacity transitions in three widths (sm, lg, and an xl canvas for composed layouts such as a sidebar), plus a container prop to scope it to a region. Base UI flavor.",
-      "dependencies": [
-        "motion",
-        "@base-ui/react@^1.9.0",
-        "lucide-react"
-      ],
+      "dependencies": ["motion", "@base-ui/react@^1.9.0", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1603,19 +1428,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/dialog. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#dialog.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "mobile-drawer",
       "type": "registry:ui",
       "title": "Mobile Drawer",
       "description": "Slide-in navigation drawer with scrim, focus trap, and scroll lock. Radix flavor.",
-      "dependencies": [
-        "@radix-ui/react-dialog",
-        "motion"
-      ],
+      "dependencies": ["@radix-ui/react-dialog", "motion"],
       "registryDependencies": [
         "https://www.fluidfunctionalism.com/r/springs.json",
         "https://www.fluidfunctionalism.com/r/surface-context.json",
@@ -1630,19 +1450,14 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/mobile-drawer",
       "type": "registry:ui",
       "title": "Mobile Drawer",
       "description": "Slide-in navigation drawer with scrim, focus trap, and scroll lock. Base UI flavor.",
-      "dependencies": [
-        "@base-ui/react@^1.9.0",
-        "motion"
-      ],
+      "dependencies": ["@base-ui/react@^1.9.0", "motion"],
       "registryDependencies": [
         "https://www.fluidfunctionalism.com/r/springs.json",
         "https://www.fluidfunctionalism.com/r/omit.json",
@@ -1658,19 +1473,14 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "input-copy",
       "type": "registry:ui",
       "title": "Input Copy",
       "description": "Read-only input with a copy-to-clipboard button and animated check feedback. Supports optional label and shape context.",
-      "dependencies": [
-        "motion",
-        "lucide-react"
-      ],
+      "dependencies": ["motion", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1688,18 +1498,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/input-copy. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#input-copy.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "field",
       "type": "registry:ui",
       "title": "Field",
       "description": "Compose a label, a control, helper text, and a validation message into one accessible field: fieldsets, legends, groups, separators, and vertical, horizontal, or responsive layouts.",
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": ["lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/font-weight.json",
@@ -1718,18 +1524,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/field. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#field.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
       "description": "Single-line text field drawn like the Select trigger: a fixed hairline, a hover fill, and a neutral focus border; file inputs get an icon. Pairs with Field.",
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": ["lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/font-weight.json",
@@ -1746,18 +1548,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/input. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#input.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "breadcrumb",
       "type": "registry:ui",
       "title": "Breadcrumb",
       "description": "A trail of links to the current page with one fluid hover across every crumb. Steps can lead with an icon, open a Dropdown, or collapse behind an ellipsis.",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/font-weight.json",
@@ -1776,9 +1574,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/breadcrumb. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#breadcrumb.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "textarea",
@@ -1801,19 +1597,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/textarea. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#textarea.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "input-group",
       "type": "registry:ui",
       "title": "Input Group",
       "description": "Grouped input fields with fluid hover highlighting, animated label transitions, optional icons, and error states.",
-      "dependencies": [
-        "lucide-react",
-        "@base-ui/react@^1.9.0"
-      ],
+      "dependencies": ["lucide-react", "@base-ui/react@^1.9.0"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/font-weight.json",
@@ -1831,18 +1622,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/input-group. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#input-group.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "input-message",
       "type": "registry:ui",
       "title": "Input Message",
       "description": "Chat-style message composer with auto-resizing textarea, drag-and-drop file attachments (PNG / JPEG / PDF), flexible left/right action slots, and a built-in send button on a Surface-2 substrate.",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1868,22 +1655,15 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/input-message. Related block: queued-stack. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#input-message.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "file-thumbnail",
       "type": "registry:ui",
       "title": "File Thumbnail",
       "description": "Read-only square preview of a File. Images render via object-cover; PDFs render their first page via pdfjs; a spinner shows while either resolves. Adapts its corner radius to the global shape setting. The pdf.js worker loads from jsDelivr by default; setPdfWorkerSrc() points it at a self-hosted copy for strict CSPs.",
-      "dependencies": [
-        "pdfjs-dist"
-      ],
-      "registryDependencies": [
-        "utils",
-        "https://www.fluidfunctionalism.com/r/shape-context.json"
-      ],
+      "dependencies": ["pdfjs-dist"],
+      "registryDependencies": ["utils", "https://www.fluidfunctionalism.com/r/shape-context.json"],
       "files": [
         {
           "path": "registry/default/file-thumbnail.tsx",
@@ -1891,19 +1671,14 @@
         }
       ],
       "docs": "Part of Fluid Functionalism — https://www.fluidfunctionalism.com",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "queued-stack",
       "type": "registry:block",
       "title": "Queued message stack",
       "description": "Sonner-style stack of queued composer messages: collapsed cards fan out on hover (tap on touch), drag to reorder, a gutter arrow counts the overflow, edit/remove per card, and a shared-layout morph into the sent message.",
-      "dependencies": [
-        "motion",
-        "lucide-react"
-      ],
+      "dependencies": ["motion", "lucide-react"],
       "registryDependencies": [
         "https://www.fluidfunctionalism.com/r/springs.json",
         "https://www.fluidfunctionalism.com/r/shape-context.json",
@@ -1922,18 +1697,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/input-message. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#queued-stack.",
-      "categories": [
-        "blocks"
-      ]
+      "categories": ["blocks"]
     },
     {
       "name": "chat-message",
       "type": "registry:ui",
       "title": "Chat Message",
       "description": "A single chat transcript entry with baked-in entrance and layout motion. Right-aligned accent bubble for the user, left-aligned muted bubble for the assistant, with optional file attachments. Adapts to the global shape setting.",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1950,20 +1721,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/chat-message. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#chat-message.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "tabs",
       "type": "registry:ui",
       "title": "Tabs",
       "description": "Horizontal tab navigation with fluid hover, animated pill selection indicator, and fluid font-weight transitions. Radix flavor.",
-      "dependencies": [
-        "@radix-ui/react-tabs",
-        "motion",
-        "lucide-react"
-      ],
+      "dependencies": ["@radix-ui/react-tabs", "motion", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -1991,20 +1756,14 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/tabs. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#tabs.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/tabs",
       "type": "registry:ui",
       "title": "Tabs",
       "description": "Horizontal tab navigation with fluid hover, animated pill selection indicator, and fluid font-weight transitions. Base UI flavor.",
-      "dependencies": [
-        "@base-ui/react@^1.9.0",
-        "motion",
-        "lucide-react"
-      ],
+      "dependencies": ["@base-ui/react@^1.9.0", "motion", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -2032,19 +1791,14 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/tabs. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#tabs.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "switch",
       "type": "registry:ui",
       "title": "Switch",
       "description": "Animated toggle switch with spring-based thumb animation and fluid font-weight label transitions. Built on Radix UI Switch.",
-      "dependencies": [
-        "motion",
-        "@radix-ui/react-switch"
-      ],
+      "dependencies": ["motion", "@radix-ui/react-switch"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -2061,19 +1815,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/switch. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#switch.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/switch",
       "type": "registry:ui",
       "title": "Switch (Base UI)",
       "description": "Animated toggle switch with spring-based thumb animation and fluid font-weight label transitions. Base UI flavor.",
-      "dependencies": [
-        "motion",
-        "@base-ui/react@^1.9.0"
-      ],
+      "dependencies": ["motion", "@base-ui/react@^1.9.0"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -2091,18 +1840,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/switch. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#switch.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "carousel-dots",
       "type": "registry:ui",
       "title": "Carousel Dots",
       "description": "Carousel dots, static or on autoplay: fluid-hover click areas, and a current pill that fills over each slide's duration.",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/shape-context.json",
@@ -2117,18 +1862,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/carousel-dots. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#carousel-dots.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "table",
       "type": "registry:ui",
       "title": "Table",
       "description": "Animated table with fluid hover row highlighting and fluid border transitions. Includes TableHeader, TableBody, TableRow, TableHead, and TableCell sub-components.",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -2146,9 +1887,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/table. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#table.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "context-menu",
@@ -2168,19 +1907,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/context-menu.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "data-table",
       "type": "registry:ui",
       "title": "Data Table",
       "description": "TanStack Table drawn with the library's Table: the fluid hover row highlight plus resizable, draggable columns, sorting headers with an animated sort glyph, a ghost search field with a magnifying glass, an icon Columns menu that shows and hides columns, a checkbox selection column with a select-all dash, a row actions menu, pagination with arrow buttons, and skeleton loading rows that hand over cell by cell. A useDataTable hook wires the row models; every part reads and sets TanStack state, so each one is optional.",
-      "dependencies": [
-        "@tanstack/react-table@^8.21.3",
-        "motion"
-      ],
+      "dependencies": ["@tanstack/react-table@^8.21.3", "motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -2216,18 +1950,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/data-table. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#data-table.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "card",
       "type": "registry:ui",
       "title": "Card",
       "description": "shadcn's compositional card (Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter) with the Fluid Functionalism layer: transparent substrate, weight-animated title, media/logo/feature/image slots, and a CardGroup that owns stacked, inline, and grid layouts plus 2-D fluid-hover highlighting.",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -2246,9 +1976,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/card. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#card.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "sidebar",
@@ -2295,9 +2023,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/sidebar. Related blocks: sidebar-app, sidebar-workspace-header, sidebar-user-footer. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#sidebar.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/sidebar",
@@ -2345,9 +2071,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/sidebar. Related blocks: sidebar-app, sidebar-workspace-header, sidebar-user-footer. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#sidebar.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "sidebar-menu-grid",
@@ -2361,9 +2085,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/sidebar. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#sidebar.",
-      "categories": [
-        "lib"
-      ]
+      "categories": ["lib"]
     },
     {
       "name": "sidebar-workspace-header",
@@ -2389,9 +2111,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/sidebar. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#sidebar.",
-      "categories": [
-        "blocks"
-      ]
+      "categories": ["blocks"]
     },
     {
       "name": "sidebar-user-footer",
@@ -2415,9 +2135,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/sidebar. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#sidebar.",
-      "categories": [
-        "blocks"
-      ]
+      "categories": ["blocks"]
     },
     {
       "name": "sidebar-search-field",
@@ -2444,10 +2162,7 @@
       "type": "registry:block",
       "title": "Sidebar Inset Topbar",
       "description": "The main region's topbar: h-12 with the trigger that hides while the rail peeks and fades back in at its settled spot after a pin.",
-      "registryDependencies": [
-        "utils",
-        "https://www.fluidfunctionalism.com/r/sidebar.json"
-      ],
+      "registryDependencies": ["utils", "https://www.fluidfunctionalism.com/r/sidebar.json"],
       "files": [
         {
           "path": "registry/blocks/sidebar-app/inset-topbar.tsx",
@@ -2493,9 +2208,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/sidebar. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#sidebar-app.",
-      "categories": [
-        "blocks"
-      ]
+      "categories": ["blocks"]
     },
     {
       "name": "dialog-sidebar",
@@ -2523,19 +2236,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/dialog. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#dialog-sidebar.",
-      "categories": [
-        "blocks"
-      ]
+      "categories": ["blocks"]
     },
     {
       "name": "slider",
       "type": "registry:ui",
       "title": "Slider",
       "description": "Animated slider with spring-snapped thumb, step dots, range mode, and click-to-edit value display. Built on Radix UI Slider.",
-      "dependencies": [
-        "motion",
-        "@radix-ui/react-slider"
-      ],
+      "dependencies": ["motion", "@radix-ui/react-slider"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -2554,19 +2262,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/slider. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#slider.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/slider",
       "type": "registry:ui",
       "title": "Slider (Base UI)",
       "description": "Animated slider with spring-snapped thumb, step dots, range mode, and click-to-edit value display. Base UI flavor.",
-      "dependencies": [
-        "motion",
-        "@base-ui/react@^1.9.0"
-      ],
+      "dependencies": ["motion", "@base-ui/react@^1.9.0"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -2585,18 +2288,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/slider. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#slider.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "thinking-indicator",
       "type": "registry:ui",
       "title": "Thinking Indicator",
       "description": "Animated loading indicator with morphing SVG path (circle to infinity loop) and shimmer text rotation. Cycles through customizable status words.",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/font-weight.json",
@@ -2628,18 +2327,14 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/thinking-indicator. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#thinking-indicator.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "reveal",
       "type": "registry:item",
       "title": "Reveal",
       "description": "Page reveals in 1 class, on the existing spring tiers: slow for landing, moderate for product. .reveal-landing for a page read once: the hero rises and scales in on load, later sections do on scroll, and every section leaves the same way at the top; .reveal-scroll makes a deeper element, like a grid card, a section of its own. .reveal-product for the app: blocks fade in on load, nothing on scroll. Each has a -subtle step. For slow data, .reveal-swap crossfades shadcn's Skeleton into the real block and .reveal-items brings rows in one by one. Pure CSS; reduced motion keeps the fades and drops the rest.",
-      "registryDependencies": [
-        "skeleton"
-      ],
+      "registryDependencies": ["skeleton"],
       "css": {
         "@keyframes reveal-preset": {
           "from": {
@@ -2804,18 +2499,14 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/reveal. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#reveal.",
-      "categories": [
-        "theme"
-      ]
+      "categories": ["theme"]
     },
     {
       "name": "scroll-area",
       "type": "registry:ui",
       "title": "Scroll Area",
       "description": "Scroll container with a restyled overlay scrollbar that stays discoverable on hover and follows the shape system. Falls back to native overflow scrolling on touch-primary devices. Built on Radix UI Scroll Area; adapted from Lina (https://lina.sameer.sh).",
-      "dependencies": [
-        "@radix-ui/react-scroll-area"
-      ],
+      "dependencies": ["@radix-ui/react-scroll-area"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/omit.json",
@@ -2968,18 +2659,14 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/scrollbars. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#scrollbars.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/scroll-area",
       "type": "registry:ui",
       "title": "Scroll Area (Base UI)",
       "description": "Scroll container with a restyled overlay scrollbar that stays discoverable on hover and follows the shape system. Falls back to native overflow scrolling on touch-primary devices. Base UI flavor; adapted from Lina (https://lina.sameer.sh).",
-      "dependencies": [
-        "@base-ui/react@^1.9.0"
-      ],
+      "dependencies": ["@base-ui/react@^1.9.0"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/shape-context.json",
@@ -3131,9 +2818,7 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/scrollbars. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#scrollbars.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "select",
@@ -3170,9 +2855,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/select. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#select.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/select",
@@ -3209,9 +2892,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/select. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#select.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "combobox",
@@ -3250,9 +2931,7 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/combobox. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#combobox.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/combobox",
@@ -3290,19 +2969,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/combobox. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#combobox.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "command-menu",
       "type": "registry:ui",
       "title": "Command Menu",
       "description": "Search field over a list of actions: type to filter, arrows to move the fluid hover highlight, Enter to run. Grouped rows with icons, descriptions, and shortcut caps; suggestions listed first while nothing is typed; tabs or a borderless filter bar under the field; and a dialog shell opened by a global shortcut (default ⌘K / Ctrl+K). The list needs no primitive; the dialog is the library's Dialog in either flavor.",
-      "dependencies": [
-        "motion",
-        "lucide-react"
-      ],
+      "dependencies": ["motion", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -3328,20 +3002,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/command-menu. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#command-menu.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "calendar",
       "type": "registry:ui",
       "title": "Calendar",
       "description": "Month grid on DayPicker v10 for a single day or a range: one fluid hover highlight across one or two months that follows keyboard focus, a range band that previews the end under the pointer, booked (struck through) and unavailable days, ISO week numbers, a cellSize prop and fill mode, and a direction-aware month slide.",
-      "dependencies": [
-        "@daypicker/react@~10.0.2",
-        "motion",
-        "lucide-react"
-      ],
+      "dependencies": ["@daypicker/react@~10.0.2", "motion", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/omit.json",
@@ -3365,20 +3033,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/calendar. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#calendar.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "date-picker",
       "type": "registry:ui",
       "title": "Date Picker",
       "description": "Field or ghost trigger for a date, a range, or a date and a time: a calendar popover that opens on the selected day, optional range presets, and editable time fields with slot lists that show each duration. Radix flavor.",
-      "dependencies": [
-        "@radix-ui/react-popover",
-        "motion",
-        "lucide-react"
-      ],
+      "dependencies": ["@radix-ui/react-popover", "motion", "lucide-react"],
       "registryDependencies": [
         "https://www.fluidfunctionalism.com/r/calendar.json",
         "utils",
@@ -3409,20 +3071,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/date-picker. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#date-picker.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/date-picker",
       "type": "registry:ui",
       "title": "Date Picker",
       "description": "Field or ghost trigger for a date, a range, or a date and a time: a calendar popover that opens on the selected day, optional range presets, and editable time fields with slot lists that show each duration. Base UI flavor.",
-      "dependencies": [
-        "@base-ui/react@^1.9.0",
-        "motion",
-        "lucide-react"
-      ],
+      "dependencies": ["@base-ui/react@^1.9.0", "motion", "lucide-react"],
       "registryDependencies": [
         "https://www.fluidfunctionalism.com/r/base/calendar.json",
         "utils",
@@ -3453,19 +3109,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/date-picker. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#date-picker.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "tooltip",
       "type": "registry:ui",
       "title": "Tooltip",
       "description": "Floating tooltip with spring-based animations, configurable placement, and rich content support.",
-      "dependencies": [
-        "motion",
-        "@radix-ui/react-tooltip"
-      ],
+      "dependencies": ["motion", "@radix-ui/react-tooltip"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -3483,19 +3134,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/tooltip. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#tooltip.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/tooltip",
       "type": "registry:ui",
       "title": "Tooltip (Base UI)",
       "description": "Floating tooltip with spring-based animations, configurable placement, and rich content support. Base UI flavor.",
-      "dependencies": [
-        "motion",
-        "@base-ui/react@^1.9.0"
-      ],
+      "dependencies": ["motion", "@base-ui/react@^1.9.0"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -3514,20 +3160,14 @@
         }
       ],
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/tooltip. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#tooltip.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "thinking-steps",
       "type": "registry:ui",
       "title": "Thinking Steps",
       "description": "Collapsible AI reasoning steps with animated expand/collapse, per-step icons, sources, and nested details. Radix flavor.",
-      "dependencies": [
-        "@radix-ui/react-collapsible",
-        "motion",
-        "lucide-react"
-      ],
+      "dependencies": ["@radix-ui/react-collapsible", "motion", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -3565,20 +3205,14 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/thinking-steps. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#thinking-steps.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "base/thinking-steps",
       "type": "registry:ui",
       "title": "Thinking Steps",
       "description": "Collapsible AI reasoning steps with animated expand/collapse, per-step icons, sources, and nested details. Base UI flavor.",
-      "dependencies": [
-        "@base-ui/react@^1.9.0",
-        "motion",
-        "lucide-react"
-      ],
+      "dependencies": ["@base-ui/react@^1.9.0", "motion", "lucide-react"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -3617,19 +3251,14 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/thinking-steps. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#thinking-steps.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     },
     {
       "name": "color-picker",
       "type": "registry:ui",
       "title": "Color Picker",
       "description": "Color picker with HEX, RGB, HSL, and OKLCH formats, alpha channel, optional swatches, and a popover trigger. Built on Base UI's Popover, Menu, and NumberField primitives with native EyeDropper support.",
-      "dependencies": [
-        "@base-ui/react@^1.9.0",
-        "motion"
-      ],
+      "dependencies": ["@base-ui/react@^1.9.0", "motion"],
       "registryDependencies": [
         "utils",
         "https://www.fluidfunctionalism.com/r/springs.json",
@@ -3664,9 +3293,7 @@
         }
       },
       "docs": "Docs & live playground: https://www.fluidfunctionalism.com/docs/color-picker. Craft notes, the color, layout and motion decisions to keep when you change it: https://github.com/mickadesign/fluid-functionalism/blob/main/skills/fluid-functionalism/references/craft.md#color-picker.",
-      "categories": [
-        "components"
-      ]
+      "categories": ["components"]
     }
   ]
 }
